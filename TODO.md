@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Full Port Implementation Plan
 
-**Status:** Phase 7 in progress (real WOLFSRC menu/text parity)
+**Status:** Phase 8 in progress (real WOLFSRC audio parity)
 **Last Updated:** 2026-02-11
 
 ---
@@ -129,17 +129,17 @@ Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ---
 
-## Phase 7: Menu/Text/UI Flow - In Progress
+## Phase 7: Menu/Text/UI Flow - Complete
 
-- [ ] Oracle wrappers from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`
-- [ ] TS menu state and text layout parity
-- [ ] Scripted input and property suite
-- [ ] Local/CI gates green
-- [ ] Phase commit pushed (`phase-7: menu text parity complete`)
+- [x] Oracle wrappers from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`
+- [x] TS menu state and text layout parity
+- [x] Scripted input and property suite
+- [x] Local/CI gates green
+- [x] Phase commit pushed (`phase-7: menu text parity complete`)
 
 ---
 
-## Phase 8: Audio (Optional) - Not Started
+## Phase 8: Audio (Optional) - In Progress
 
 - [ ] Oracle wrappers from `ID_SD.C`, `ID_CA.C`, `WL_GAME.C`
 - [ ] TS audio state parity + WebAudio adapter

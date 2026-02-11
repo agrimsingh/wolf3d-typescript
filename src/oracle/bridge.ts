@@ -253,6 +253,19 @@ type OracleFns = {
     episode: number,
     difficulty: number,
   ) => number;
+  idUs1UsCPrintHash: (windowX: number, windowW: number, textLen: number, align: number, fontWidth: number) => number;
+  idUs1UsDrawWindowHash: (x: number, y: number, w: number, h: number, frameColor: number, fillColor: number) => number;
+  idUs1UsPrintHash: (cursorX: number, cursorY: number, textLen: number, color: number, fontWidth: number) => number;
+  wlMenuCpControlHash: (mouseEnabled: number, joystickEnabled: number, sensitivity: number, action: number) => number;
+  wlMenuCpNewGameHash: (difficulty: number, episode: number, startLevel: number, weapon: number) => number;
+  wlMenuCpSoundHash: (soundMode: number, musicMode: number, digiMode: number, action: number) => number;
+  wlMenuCpViewScoresHash: (top0: number, top1: number, top2: number, top3: number, top4: number, newScore: number) => number;
+  wlMenuDrawMainMenuHash: (selected: number, enabledMask: number, episode: number) => number;
+  wlMenuDrawMenuHash: (menuId: number, cursor: number, itemCount: number, disabledMask: number, scroll: number) => number;
+  wlMenuMessageHash: (messageLen: number, waitForAck: number, inputMask: number, rng: number) => number;
+  wlMenuUsControlPanelHash: (screen: number, cursor: number, inputMask: number, menuItems: number) => number;
+  wlTextEndTextHash: (textLen: number, scrollPos: number, speed: number, inputMask: number) => number;
+  wlTextHelpScreensHash: (page: number, totalPages: number, inputMask: number, rng: number) => number;
 };
 
 export class OracleBridge implements OracleBridgeContract {
@@ -467,6 +480,19 @@ export class OracleBridge implements OracleBridgeContract {
         'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
       ]),
       wlInterVictoryHash: cwrap('oracle_wl_inter_victory_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number']),
+      idUs1UsCPrintHash: cwrap('oracle_id_us_1_us_cprint_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idUs1UsDrawWindowHash: cwrap('oracle_id_us_1_us_draw_window_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      idUs1UsPrintHash: cwrap('oracle_id_us_1_us_print_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlMenuCpControlHash: cwrap('oracle_wl_menu_cp_control_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlMenuCpNewGameHash: cwrap('oracle_wl_menu_cp_new_game_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlMenuCpSoundHash: cwrap('oracle_wl_menu_cp_sound_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlMenuCpViewScoresHash: cwrap('oracle_wl_menu_cp_view_scores_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlMenuDrawMainMenuHash: cwrap('oracle_wl_menu_draw_main_menu_hash', 'number', ['number', 'number', 'number']),
+      wlMenuDrawMenuHash: cwrap('oracle_wl_menu_draw_menu_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlMenuMessageHash: cwrap('oracle_wl_menu_message_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlMenuUsControlPanelHash: cwrap('oracle_wl_menu_us_control_panel_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlTextEndTextHash: cwrap('oracle_wl_text_end_text_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlTextHelpScreensHash: cwrap('oracle_wl_text_help_screens_hash', 'number', ['number', 'number', 'number', 'number']),
     };
   }
 
@@ -1084,6 +1110,58 @@ export class OracleBridge implements OracleBridgeContract {
     ) >>> 0;
   }
 
+  idUs1UsCPrintHash(windowX: number, windowW: number, textLen: number, align: number, fontWidth: number): number {
+    return this.assertReady().idUs1UsCPrintHash(windowX | 0, windowW | 0, textLen | 0, align | 0, fontWidth | 0) >>> 0;
+  }
+
+  idUs1UsDrawWindowHash(x: number, y: number, w: number, h: number, frameColor: number, fillColor: number): number {
+    return this.assertReady().idUs1UsDrawWindowHash(x | 0, y | 0, w | 0, h | 0, frameColor | 0, fillColor | 0) >>> 0;
+  }
+
+  idUs1UsPrintHash(cursorX: number, cursorY: number, textLen: number, color: number, fontWidth: number): number {
+    return this.assertReady().idUs1UsPrintHash(cursorX | 0, cursorY | 0, textLen | 0, color | 0, fontWidth | 0) >>> 0;
+  }
+
+  wlMenuCpControlHash(mouseEnabled: number, joystickEnabled: number, sensitivity: number, action: number): number {
+    return this.assertReady().wlMenuCpControlHash(mouseEnabled | 0, joystickEnabled | 0, sensitivity | 0, action | 0) >>> 0;
+  }
+
+  wlMenuCpNewGameHash(difficulty: number, episode: number, startLevel: number, weapon: number): number {
+    return this.assertReady().wlMenuCpNewGameHash(difficulty | 0, episode | 0, startLevel | 0, weapon | 0) >>> 0;
+  }
+
+  wlMenuCpSoundHash(soundMode: number, musicMode: number, digiMode: number, action: number): number {
+    return this.assertReady().wlMenuCpSoundHash(soundMode | 0, musicMode | 0, digiMode | 0, action | 0) >>> 0;
+  }
+
+  wlMenuCpViewScoresHash(top0: number, top1: number, top2: number, top3: number, top4: number, newScore: number): number {
+    return this.assertReady().wlMenuCpViewScoresHash(top0 | 0, top1 | 0, top2 | 0, top3 | 0, top4 | 0, newScore | 0) >>> 0;
+  }
+
+  wlMenuDrawMainMenuHash(selected: number, enabledMask: number, episode: number): number {
+    return this.assertReady().wlMenuDrawMainMenuHash(selected | 0, enabledMask | 0, episode | 0) >>> 0;
+  }
+
+  wlMenuDrawMenuHash(menuId: number, cursor: number, itemCount: number, disabledMask: number, scroll: number): number {
+    return this.assertReady().wlMenuDrawMenuHash(menuId | 0, cursor | 0, itemCount | 0, disabledMask | 0, scroll | 0) >>> 0;
+  }
+
+  wlMenuMessageHash(messageLen: number, waitForAck: number, inputMask: number, rng: number): number {
+    return this.assertReady().wlMenuMessageHash(messageLen | 0, waitForAck | 0, inputMask | 0, rng | 0) >>> 0;
+  }
+
+  wlMenuUsControlPanelHash(screen: number, cursor: number, inputMask: number, menuItems: number): number {
+    return this.assertReady().wlMenuUsControlPanelHash(screen | 0, cursor | 0, inputMask | 0, menuItems | 0) >>> 0;
+  }
+
+  wlTextEndTextHash(textLen: number, scrollPos: number, speed: number, inputMask: number): number {
+    return this.assertReady().wlTextEndTextHash(textLen | 0, scrollPos | 0, speed | 0, inputMask | 0) >>> 0;
+  }
+
+  wlTextHelpScreensHash(page: number, totalPages: number, inputMask: number, rng: number): number {
+    return this.assertReady().wlTextHelpScreensHash(page | 0, totalPages | 0, inputMask | 0, rng | 0) >>> 0;
+  }
+
   call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
     switch (fn) {
       case 'wl_draw.FixedByFrac': {
@@ -1398,6 +1476,58 @@ export class OracleBridge implements OracleBridgeContract {
       case 'wl_inter.VictoryHash': {
         const { totalScore, totalTime, totalKills, totalSecrets, totalTreasures, episode, difficulty } = input as Record<string, number>;
         return this.wlInterVictoryHash(totalScore, totalTime, totalKills, totalSecrets, totalTreasures, episode, difficulty) as TOutput;
+      }
+      case 'id_us_1.US_CPrintHash': {
+        const { windowX, windowW, textLen, align, fontWidth } = input as Record<string, number>;
+        return this.idUs1UsCPrintHash(windowX, windowW, textLen, align, fontWidth) as TOutput;
+      }
+      case 'id_us_1.US_DrawWindowHash': {
+        const { x, y, w, h, frameColor, fillColor } = input as Record<string, number>;
+        return this.idUs1UsDrawWindowHash(x, y, w, h, frameColor, fillColor) as TOutput;
+      }
+      case 'id_us_1.US_PrintHash': {
+        const { cursorX, cursorY, textLen, color, fontWidth } = input as Record<string, number>;
+        return this.idUs1UsPrintHash(cursorX, cursorY, textLen, color, fontWidth) as TOutput;
+      }
+      case 'wl_menu.CP_ControlHash': {
+        const { mouseEnabled, joystickEnabled, sensitivity, action } = input as Record<string, number>;
+        return this.wlMenuCpControlHash(mouseEnabled, joystickEnabled, sensitivity, action) as TOutput;
+      }
+      case 'wl_menu.CP_NewGameHash': {
+        const { difficulty, episode, startLevel, weapon } = input as Record<string, number>;
+        return this.wlMenuCpNewGameHash(difficulty, episode, startLevel, weapon) as TOutput;
+      }
+      case 'wl_menu.CP_SoundHash': {
+        const { soundMode, musicMode, digiMode, action } = input as Record<string, number>;
+        return this.wlMenuCpSoundHash(soundMode, musicMode, digiMode, action) as TOutput;
+      }
+      case 'wl_menu.CP_ViewScoresHash': {
+        const { top0, top1, top2, top3, top4, newScore } = input as Record<string, number>;
+        return this.wlMenuCpViewScoresHash(top0, top1, top2, top3, top4, newScore) as TOutput;
+      }
+      case 'wl_menu.DrawMainMenuHash': {
+        const { selected, enabledMask, episode } = input as Record<string, number>;
+        return this.wlMenuDrawMainMenuHash(selected, enabledMask, episode) as TOutput;
+      }
+      case 'wl_menu.DrawMenuHash': {
+        const { menuId, cursor, itemCount, disabledMask, scroll } = input as Record<string, number>;
+        return this.wlMenuDrawMenuHash(menuId, cursor, itemCount, disabledMask, scroll) as TOutput;
+      }
+      case 'wl_menu.MessageHash': {
+        const { messageLen, waitForAck, inputMask, rng } = input as Record<string, number>;
+        return this.wlMenuMessageHash(messageLen, waitForAck, inputMask, rng) as TOutput;
+      }
+      case 'wl_menu.US_ControlPanelHash': {
+        const { screen, cursor, inputMask, menuItems } = input as Record<string, number>;
+        return this.wlMenuUsControlPanelHash(screen, cursor, inputMask, menuItems) as TOutput;
+      }
+      case 'wl_text.EndTextHash': {
+        const { textLen, scrollPos, speed, inputMask } = input as Record<string, number>;
+        return this.wlTextEndTextHash(textLen, scrollPos, speed, inputMask) as TOutput;
+      }
+      case 'wl_text.HelpScreensHash': {
+        const { page, totalPages, inputMask, rng } = input as Record<string, number>;
+        return this.wlTextHelpScreensHash(page, totalPages, inputMask, rng) as TOutput;
       }
       default:
         throw new Error(`call() not mapped for oracle function: ${fn}`);
