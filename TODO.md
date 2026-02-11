@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Full Port Implementation Plan
 
-**Status:** Phase -0.5 in progress
+**Status:** Phase 1 in progress (real WOLFSRC math parity)
 **Last Updated:** 2026-02-11
 
 ---
@@ -31,7 +31,7 @@ Convert prototype-complete claims into truthful full-port baseline.
 
 ---
 
-## Phase -0.5: WL1 Data Bootstrap - In Progress
+## Phase -0.5: WL1 Data Bootstrap - Complete
 
 Acquire and validate WL1 shareware data for playable verification.
 
@@ -45,29 +45,29 @@ Acquire and validate WL1 shareware data for playable verification.
 
 - [x] WL1 data files downloaded into `assets/wl1/`
 - [x] `pnpm verify:assets` passes
-- [ ] Phase commit pushed (`phase-0.5: wl1 asset bootstrap complete`)
+- [x] Phase commit pushed (`phase-0.5: wl1 asset bootstrap complete`)
 
 ---
 
-## Phase 1: Math and Fixed-Point from Real WOLFSRC - Not Started
+## Phase 1: Math and Fixed-Point from Real WOLFSRC - In Progress
 
 Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ### 1.1 Oracle C Tasks
 
-- [ ] Add phase-1 WOLFSRC-style oracle wrappers (`FixedByFrac`, `BuildTables`, `CalcProjection`).
+- [x] Add phase-1 WOLFSRC-style oracle wrappers (`FixedByFrac`, `BuildTables`, `CalcProjection`).
 - [ ] Verify wrappers match source behavior with deterministic fixture vectors.
 
 ### 1.2 TypeScript Tasks
 
-- [ ] Port fixed-point and projection-table logic with matching integer semantics.
+- [x] Port fixed-point and projection-table logic with matching integer semantics.
 - [ ] Integrate Phase 1 ported math into rendering path behind feature flag.
 
 ### 1.3 Test Tasks
 
-- [ ] Add property tests for `FixedByFrac` parity.
-- [ ] Add property tests for `BuildTables` hash parity.
-- [ ] Add property tests for `CalcProjection` hash parity.
+- [x] Add property tests for `FixedByFrac` parity.
+- [x] Add property tests for `BuildTables` hash parity.
+- [x] Add property tests for `CalcProjection` hash parity.
 - [ ] Add deterministic regression replay outputs under `test/repro/` on failures.
 
 ### 1.4 Gate
