@@ -1,157 +1,96 @@
-# Wolf3D TypeScript Full Port Implementation Plan
+# Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** All planned phases complete (0 through 8)
-**Last Updated:** 2026-02-11
+**Status:** Phase R0 in progress (truthful runtime reset)
+**Last Updated:** 2026-02-12
 
----
+## Scope Lock
 
-## Phase -1: Git Bootstrap and Initial Scaffold - Complete
+- Target: Full WL1 shareware gameplay-complete browser port.
+- Fidelity: Deterministic tick-state parity + frame-hash checkpoint parity.
+- Symbol policy: Runtime-path symbols only (derived from traced execution), not dead/debug-only paths.
+- Portability policy: Modernized low-level internals allowed, gameplay behavior must match oracle.
+- CI policy: PR `1k` runs, nightly/release sharded `10k` runs.
 
-- [x] Repository initialized.
-- [x] Base docs and workflow files created.
+## Legacy Status (Superseded)
 
----
+The previous phase `0..8` completion tracks prototype oracle parity wrappers and does **not** represent full WOLFSRC runtime completion.
 
-## Phase 0: Recovery to Truthful Baseline - Complete
+## Phase R0: Recovery Reset to Runtime Truth
 
-Convert prototype-complete claims into truthful full-port baseline.
+- [ ] Add `specs/runtime-gap-assessment.md` with objective gaps from current prototype to runtime-complete state.
+- [ ] Add `specs/runtime-symbol-manifest.md` as authoritative runtime-path symbol tracker.
+- [ ] Update specs/workflows/TODO to R-phase model and runtime acceptance gates.
+- [ ] Mark old completion claims as superseded in docs.
+- [ ] Gate: docs reflect runtime reality and new phase model.
+- [ ] Commit: `phase-r0: reset baseline for full wl1 gameplay parity`
 
-### 0.1 Recovery Tasks
+## Phase R1: Real WOLFSRC Oracle Bring-Up + Portability Layer
 
-- [x] Reopen plan status to reflect that full WOLFSRC port is not yet complete.
-- [x] Add canonical symbol manifest pipeline and generated outputs.
-- [x] Add stable type contracts for oracle/parity/state/io layers.
-- [x] Mark previous prototype code as spike history (kept in git history only).
+- [ ] Add compatibility layer for DOS/BIOS/asm-era includes and calling conventions.
+- [ ] Add runtime oracle entrypoints (`init/reset/step/snapshot/render/serialize`).
+- [ ] Build real WOLFSRC runtime path to WASM (not synthetic hash wrappers).
+- [ ] Add deterministic reset and state serialization API.
+- [ ] Gate: oracle boots, steps deterministically, can snapshot state.
+- [ ] Commit: `phase-r1: real wolfsrc oracle runtime + portability layer`
 
-### 0.2 Recovery Gate
+## Phase R2: Runtime-Path Symbol Discovery and Freeze
 
-- [x] Manifest generated from WOLFSRC and committed
-- [x] `specs/port-manifest.md` present and authoritative
-- [x] Phase commit pushed (`phase-0: recovery + true manifest baseline`)
+- [ ] Instrument oracle with symbol hit tracing.
+- [ ] Run deterministic traces across menu/gameplay for all WL1 maps.
+- [ ] Generate runtime-path symbol set from actual execution.
+- [ ] Freeze runtime symbol manifest (`required` vs `excluded-non-runtime`).
+- [ ] Gate: runtime-path manifest locked and reproducible from trace tooling.
+- [ ] Commit: `phase-r2: lock runtime symbol manifest from wl1 traces`
 
----
+## Phase R3: Deterministic Runtime Contracts + Harness
 
-## Phase -0.5: WL1 Data Bootstrap - Complete
+- [ ] Add `RuntimePort` contract for oracle and TS runtimes.
+- [ ] Build parity harness for step parity and frame parity.
+- [ ] Add deterministic replay tooling and artifact capture.
+- [ ] Gate: replay determinism and oracle self-consistency validated.
+- [ ] Commit: `phase-r3: deterministic runtime contracts + parity harness`
 
-Acquire and validate WL1 shareware data for playable verification.
+## Phase R4: Runtime-Path Function Porting (Manifest-Driven)
 
-### -0.5.1 Data Tasks
+- [ ] Port runtime-path functions subsystem by subsystem.
+- [ ] For every function: TS port + property parity test + green local gate.
+- [ ] Enforce no prototype fallback in runtime execution path.
+- [ ] Gate: all required runtime symbols marked complete with parity tests.
+- [ ] Commit: `phase-r4: runtime-path symbol parity complete`
 
-- [x] Add script to download and unpack WL1 archive into `assets/wl1/`.
-- [x] Add script to validate required WL1 files.
-- [x] Wire validation into `pnpm verify:assets`.
+## Phase R5: Tick + Frame Fidelity Lock
 
-### -0.5.2 Gate
+- [ ] Add checkpointed frame hashing from software framebuffer.
+- [ ] Run deterministic tick parity and frame-hash parity across map fixtures.
+- [ ] Gate: no drift on parity checkpoints.
+- [ ] Commit: `phase-r5: tick and frame hash parity locked`
 
-- [x] WL1 data files downloaded into `assets/wl1/`
-- [x] `pnpm verify:assets` passes
-- [x] Phase commit pushed (`phase-0.5: wl1 asset bootstrap complete`)
+## Phase R6: Browser Runtime Integration
 
----
+- [ ] Replace prototype app path with real runtime integration.
+- [ ] Wire WL1 assets + input + menu + audio adapters to runtime core.
+- [ ] Add browser smoke tests for boot/menu/new-game/level transitions.
+- [ ] Gate: browser runtime fully playable for WL1 flow.
+- [ ] Commit: `phase-r6: browser runtime integration complete`
 
-## Phase 1: Math and Fixed-Point from Real WOLFSRC - Complete
+## Phase R7: End-to-End WL1 Episode Parity Acceptance
 
-Port actual WOLFSRC math semantics and test against C oracle wrappers.
+- [ ] Build deterministic traces for all WL1 maps.
+- [ ] Validate full episode parity checkpoints (state + frame hashes).
+- [ ] Gate: all-map + full-episode acceptance green.
+- [ ] Commit: `phase-r7: full wl1 episode parity acceptance`
 
-### 1.1 Oracle C Tasks
+## Phase R8: CI Hardening + Release Gating
 
-- [x] Add phase-1 WOLFSRC-style oracle wrappers (`FixedByFrac`, `BuildTables`, `CalcProjection`).
-- [x] Verify wrappers match source behavior with deterministic fixture vectors.
-
-### 1.2 TypeScript Tasks
-
-- [x] Port fixed-point and projection-table logic with matching integer semantics.
-- [x] Integrate Phase 1 ported math into rendering path behind feature flag.
-
-### 1.3 Test Tasks
-
-- [x] Add property tests for `FixedByFrac` parity.
-- [x] Add property tests for `BuildTables` hash parity.
-- [x] Add property tests for `CalcProjection` hash parity.
-- [x] Add deterministic regression replay outputs under `test/repro/` on failures.
-
-### 1.4 Gate
-
-- [x] All Phase 1 manifest entries complete
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-1: math fixed-point parity complete`)
-
----
-
-## Phase 2: Map/Cache Loading and Parsing - Complete
-
-- [x] Oracle wrappers from `ID_CA.C` / `WL_GAME.C`
-- [x] TS Carmack + RLEW decode and map reconstruction
-- [x] Arbitrary input + real asset parity tests
-- [x] Local/CI gates green
-- [x] Phase commit pushed (`phase-2: map loading parity complete`)
-
----
-
-## Phase 3: Raycasting Core - Complete
-
-- [x] Oracle wrappers from `WL_DRAW.C`, `WL_MAIN.C`, `WL_SCALE.C`
-- [x] TS software raycasting parity implementation
-- [x] Column/frame hash parity tests
-- [x] Local/CI gates green
-- [x] Phase commit pushed (`phase-3: raycasting parity complete`)
-
----
-
-## Phase 4: Actors/AI State Machines - Complete
-
-- [x] Oracle wrappers from `WL_STATE.C`, `WL_ACT1.C`, `WL_ACT2.C`
-- [x] TS actor tick/state transition parity
-- [x] Stateful property parity suite
-- [x] Local/CI gates green
-- [x] Phase commit pushed (`phase-4: actors ai parity complete`)
-
----
-
-## Phase 5: Player Movement/Input/Collision - Complete
-
-- [x] Oracle wrappers from `WL_AGENT.C`, `WL_PLAY.C`
-- [x] TS keyboard+mouse movement/collision parity
-- [x] Trace and property parity suite
-- [x] Local/CI gates green
-- [x] Phase commit pushed (`phase-5: player movement parity complete`)
-
----
-
-## Phase 6: Game State Management - Complete
-
-- [x] Oracle wrappers from `WL_GAME.C`, `WL_INTER.C`, `WL_ACT1.C`
-- [x] TS score/lives/doors/intermission parity
-- [x] Event sequence property suite
-- [x] Local/CI gates green
-- [x] Phase commit pushed (`phase-6: game state parity complete`)
-
----
-
-## Phase 7: Menu/Text/UI Flow - Complete
-
-- [x] Oracle wrappers from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`
-- [x] TS menu state and text layout parity
-- [x] Scripted input and property suite
-- [x] Local/CI gates green
-- [x] Phase commit pushed (`phase-7: menu text parity complete`)
-
----
-
-## Phase 8: Audio (Optional) - Complete
-
-- [x] Oracle wrappers from `ID_SD.C`, `ID_CA.C`, `WL_GAME.C`
-- [x] TS audio state parity + WebAudio adapter
-- [x] Property/event sequence parity suite
-- [x] Local/CI gates green
-- [x] Phase commit pushed (`phase-8: audio parity complete`)
-
----
+- [ ] Add sharded nightly/release `10k` parity jobs.
+- [ ] Keep PR gate at `1k` with changed-symbol selection.
+- [ ] Add reproducible triage artifacts for parity failures.
+- [ ] Gate: stable CI over full runtime-path suite.
+- [ ] Commit: `phase-r8: parity ci hardening and release gates`
 
 ## Global Rules
 
-- No phase advancement unless current phase gates are all green.
-- One commit per completed phase gate.
-- Porting is function-by-function and manifest-driven.
-- No approximate parity assertions in core phases.
+- No phase advancement before current phase gate is green and committed.
+- Runtime-path manifest is authoritative for required function parity.
+- Every parity failure must emit seed/path and minimized repro artifact.
+- No approximate parity assertions in runtime-complete phases.

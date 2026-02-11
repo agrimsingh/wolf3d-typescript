@@ -4,6 +4,8 @@
 
 This project ports the original Wolfenstein 3D C codebase to TypeScript for browser execution, using a C-to-WASM oracle and property-based testing as the primary correctness mechanism. Correctness is defined by parity with original C behavior.
 
+Current execution track is the runtime-complete WL1 plan (`R0..R8`). Legacy phase `0..8` completion reflects prototype oracle wrappers and is superseded for full runtime acceptance.
+
 ## Architecture
 
 ```text
@@ -30,6 +32,8 @@ Read specs before implementing:
 - Spec index: `specs/README.md`
 - Required first read: `specs/testing-strategy.md`
 - Bridge contract: `specs/c-wasm-bridge.md`
+- Runtime truth baseline: `specs/runtime-gap-assessment.md`
+- Runtime symbol authority: `specs/runtime-symbol-manifest.md`
 
 Rules:
 
@@ -77,6 +81,7 @@ Rules:
   - Local: 1,000 random cases per function.
   - CI: 10,000 random cases per function.
 - Every completed phase requires a commit before phase advancement.
+- For runtime completion, `specs/runtime-symbol-manifest.md` `required-runtime` bucket is authoritative.
 
 ## Git Policy
 

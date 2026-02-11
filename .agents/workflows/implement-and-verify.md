@@ -2,35 +2,36 @@
 
 ## Purpose
 
-Enforce strict function-by-function oracle parity workflow for each phase of the Wolf3D TS port.
+Enforce strict function-by-function oracle parity workflow for runtime-complete WL1 execution phases (`R0..R8`).
 
 ## Trigger
 
-Use whenever implementing any phase task from `TODO.md`.
+Use whenever implementing any execution task from `TODO.md`.
 
 ## Steps
 
-1. Read `TODO.md` and identify the current phase and next unchecked function.
-2. Read the related system spec in `specs/` and `specs/testing-strategy.md`.
-3. Implement one function in TypeScript.
-4. Add property-based test comparing TS and C/WASM oracle outputs for that function.
-5. Run local parity gate (minimum 1,000 random runs).
-6. If failure occurs, fix implementation and rerun until green.
-7. Mark function task complete in `TODO.md`.
-8. Repeat until all phase tasks are complete.
-9. Run CI-strength parity gate (minimum 10,000 random runs per covered function).
-10. Create phase commit with required naming convention.
-11. Advance to next phase only after commit exists and all gates are green.
+1. Read `TODO.md` and identify current R-phase tasks.
+2. Read `specs/testing-strategy.md`, `specs/runtime-gap-assessment.md`, and `specs/runtime-symbol-manifest.md`.
+3. If in `R4`, select next unchecked symbol from `required-runtime`.
+4. Implement one function or one deterministic runtime contract unit.
+5. Add parity test (function-level or runtime-step/frame parity) against the oracle.
+6. Run local gate (minimum 1,000 random runs for function tests, deterministic replay for runtime traces).
+7. If failure occurs, fix and rerun until green.
+8. Mark task/symbol complete in tracker docs.
+9. Repeat until all tasks in current R-phase are complete.
+10. Run CI-strength gate (`10,000` random runs in sharded mode where configured).
+11. Create phase commit with required naming convention.
+12. Advance only after commit exists and all phase gates are green.
 
 ## Important Notes
 
-- Never skip property tests for ported functions.
-- Never advance phase while any current-phase test is red.
+- Never skip parity tests for required-runtime symbols.
+- Never advance phase while any gate is red.
 - Preserve deterministic seed replay output for any failure.
-- Keep specs and TODO in sync with implementation reality.
+- Keep specs, manifest, and TODO in sync with implementation reality.
 
 ## Success Criteria
 
-- Current phase has full function parity coverage.
-- Required test gates pass.
+- Current R-phase gates are all green.
+- Runtime-path symbol checklist is updated (where applicable).
 - Phase completion commit is created.

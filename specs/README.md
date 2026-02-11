@@ -2,6 +2,11 @@
 
 Design documentation for the browser-based TypeScript port of Wolfenstein 3D, validated against the original C code via a WebAssembly oracle.
 
+## Runtime Completion
+
+- [runtime-gap-assessment.md](./runtime-gap-assessment.md): objective gap from current prototype parity to full WL1 runtime-complete parity.
+- [runtime-symbol-manifest.md](./runtime-symbol-manifest.md): authoritative runtime-path symbol checklist used for R-phase execution.
+
 ## Core Systems
 
 | Spec | Planned Code | Purpose |
@@ -40,3 +45,5 @@ Design documentation for the browser-based TypeScript port of Wolfenstein 3D, va
 | game-state.md | Draft | Phase 6 target. |
 | menu-text.md | Draft | Phase 7 target. |
 | audio.md | Draft | Phase 8 optional target. |
+| runtime-gap-assessment.md | Active | Baseline truth document for runtime-complete work. |
+| runtime-symbol-manifest.md | Active | Runtime-path symbol tracker for full completion. |
