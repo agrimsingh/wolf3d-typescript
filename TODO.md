@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Full Port Implementation Plan
 
-**Status:** Phase 6 in progress (real WOLFSRC game-state parity)
+**Status:** Phase 7 in progress (real WOLFSRC menu/text parity)
 **Last Updated:** 2026-02-11
 
 ---
@@ -119,17 +119,17 @@ Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ---
 
-## Phase 6: Game State Management - In Progress
+## Phase 6: Game State Management - Complete
 
-- [ ] Oracle wrappers from `WL_GAME.C`, `WL_INTER.C`, `WL_ACT1.C`
-- [ ] TS score/lives/doors/intermission parity
-- [ ] Event sequence property suite
-- [ ] Local/CI gates green
-- [ ] Phase commit pushed (`phase-6: game state parity complete`)
+- [x] Oracle wrappers from `WL_GAME.C`, `WL_INTER.C`, `WL_ACT1.C`
+- [x] TS score/lives/doors/intermission parity
+- [x] Event sequence property suite
+- [x] Local/CI gates green
+- [x] Phase commit pushed (`phase-6: game state parity complete`)
 
 ---
 
-## Phase 7: Menu/Text/UI Flow - Not Started
+## Phase 7: Menu/Text/UI Flow - In Progress
 
 - [ ] Oracle wrappers from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`
 - [ ] TS menu state and text layout parity

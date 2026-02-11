@@ -196,6 +196,63 @@ type OracleFns = {
     rng: number,
   ) => number;
   wlPlayPlayLoopHash: (stateHash: number, tics: number, inputMask: number, rng: number) => number;
+  wlAct1CloseDoorHash: (doorMask: number, doorState: number, doorNum: number, speed: number, blocked: number) => number;
+  wlAct1MoveDoorsHash: (doorMask: number, doorState: number, tics: number, speed: number, activeMask: number) => number;
+  wlAct1OpenDoorHash: (doorMask: number, doorState: number, doorNum: number, speed: number, blocked: number) => number;
+  wlAct1OperateDoorHash: (
+    doorMask: number,
+    doorState: number,
+    doorNum: number,
+    action: number,
+    speed: number,
+    blocked: number,
+  ) => number;
+  wlAct1PushWallHash: (mapLo: number, mapHi: number, pushX: number, pushY: number, dir: number, steps: number) => number;
+  wlAct1SpawnDoorHash: (doorMask: number, doorState: number, tile: number, lock: number, vertical: number) => number;
+  wlAgentGetBonusHash: (
+    score: number,
+    lives: number,
+    health: number,
+    ammo: number,
+    keys: number,
+    bonusKind: number,
+    value: number,
+  ) => number;
+  wlAgentGiveAmmoHash: (ammo: number, maxAmmo: number, amount: number, weaponOwned: number) => number;
+  wlAgentGivePointsHash: (score: number, lives: number, nextExtra: number, points: number) => number;
+  wlAgentHealSelfHash: (health: number, maxHealth: number, amount: number) => number;
+  wlAgentTakeDamageHash: (health: number, lives: number, damage: number, godMode: number, rng: number) => number;
+  wlGameGameLoopHash: (
+    stateHash: number,
+    tics: number,
+    inputMask: number,
+    rng: number,
+    doorHash: number,
+    playerHash: number,
+    actorHash: number,
+  ) => number;
+  wlInterCheckHighScoreHash: (newScore: number, s0: number, s1: number, s2: number, s3: number, s4: number) => number;
+  wlInterLevelCompletedHash: (
+    score: number,
+    timeSec: number,
+    parSec: number,
+    killsFound: number,
+    killsTotal: number,
+    secretsFound: number,
+    secretsTotal: number,
+    treasureFound: number,
+    treasureTotal: number,
+    lives: number,
+  ) => number;
+  wlInterVictoryHash: (
+    totalScore: number,
+    totalTime: number,
+    totalKills: number,
+    totalSecrets: number,
+    totalTreasures: number,
+    episode: number,
+    difficulty: number,
+  ) => number;
 };
 
 export class OracleBridge implements OracleBridgeContract {
@@ -393,6 +450,23 @@ export class OracleBridge implements OracleBridgeContract {
         'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
       ]),
       wlPlayPlayLoopHash: cwrap('oracle_wl_play_play_loop_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlAct1CloseDoorHash: cwrap('oracle_wl_act1_close_door_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlAct1MoveDoorsHash: cwrap('oracle_wl_act1_move_doors_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlAct1OpenDoorHash: cwrap('oracle_wl_act1_open_door_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlAct1OperateDoorHash: cwrap('oracle_wl_act1_operate_door_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlAct1PushWallHash: cwrap('oracle_wl_act1_push_wall_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlAct1SpawnDoorHash: cwrap('oracle_wl_act1_spawn_door_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlAgentGetBonusHash: cwrap('oracle_wl_agent_get_bonus_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number']),
+      wlAgentGiveAmmoHash: cwrap('oracle_wl_agent_give_ammo_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlAgentGivePointsHash: cwrap('oracle_wl_agent_give_points_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlAgentHealSelfHash: cwrap('oracle_wl_agent_heal_self_hash', 'number', ['number', 'number', 'number']),
+      wlAgentTakeDamageHash: cwrap('oracle_wl_agent_take_damage_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlGameGameLoopHash: cwrap('oracle_wl_game_game_loop_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number']),
+      wlInterCheckHighScoreHash: cwrap('oracle_wl_inter_check_high_score_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlInterLevelCompletedHash: cwrap('oracle_wl_inter_level_completed_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlInterVictoryHash: cwrap('oracle_wl_inter_victory_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number', 'number']),
     };
   }
 
@@ -896,6 +970,120 @@ export class OracleBridge implements OracleBridgeContract {
     return this.assertReady().wlPlayPlayLoopHash(stateHash >>> 0, tics | 0, inputMask | 0, rng | 0) >>> 0;
   }
 
+  wlAct1CloseDoorHash(doorMask: number, doorState: number, doorNum: number, speed: number, blocked: number): number {
+    return this.assertReady().wlAct1CloseDoorHash(doorMask | 0, doorState | 0, doorNum | 0, speed | 0, blocked | 0) >>> 0;
+  }
+
+  wlAct1MoveDoorsHash(doorMask: number, doorState: number, tics: number, speed: number, activeMask: number): number {
+    return this.assertReady().wlAct1MoveDoorsHash(doorMask | 0, doorState | 0, tics | 0, speed | 0, activeMask | 0) >>> 0;
+  }
+
+  wlAct1OpenDoorHash(doorMask: number, doorState: number, doorNum: number, speed: number, blocked: number): number {
+    return this.assertReady().wlAct1OpenDoorHash(doorMask | 0, doorState | 0, doorNum | 0, speed | 0, blocked | 0) >>> 0;
+  }
+
+  wlAct1OperateDoorHash(doorMask: number, doorState: number, doorNum: number, action: number, speed: number, blocked: number): number {
+    return this.assertReady().wlAct1OperateDoorHash(doorMask | 0, doorState | 0, doorNum | 0, action | 0, speed | 0, blocked | 0) >>> 0;
+  }
+
+  wlAct1PushWallHash(mapLo: number, mapHi: number, pushX: number, pushY: number, dir: number, steps: number): number {
+    return this.assertReady().wlAct1PushWallHash(mapLo >>> 0, mapHi >>> 0, pushX | 0, pushY | 0, dir | 0, steps | 0) >>> 0;
+  }
+
+  wlAct1SpawnDoorHash(doorMask: number, doorState: number, tile: number, lock: number, vertical: number): number {
+    return this.assertReady().wlAct1SpawnDoorHash(doorMask | 0, doorState | 0, tile | 0, lock | 0, vertical | 0) >>> 0;
+  }
+
+  wlAgentGetBonusHash(score: number, lives: number, health: number, ammo: number, keys: number, bonusKind: number, value: number): number {
+    return this.assertReady().wlAgentGetBonusHash(score | 0, lives | 0, health | 0, ammo | 0, keys | 0, bonusKind | 0, value | 0) >>> 0;
+  }
+
+  wlAgentGiveAmmoHash(ammo: number, maxAmmo: number, amount: number, weaponOwned: number): number {
+    return this.assertReady().wlAgentGiveAmmoHash(ammo | 0, maxAmmo | 0, amount | 0, weaponOwned | 0) >>> 0;
+  }
+
+  wlAgentGivePointsHash(score: number, lives: number, nextExtra: number, points: number): number {
+    return this.assertReady().wlAgentGivePointsHash(score | 0, lives | 0, nextExtra | 0, points | 0) >>> 0;
+  }
+
+  wlAgentHealSelfHash(health: number, maxHealth: number, amount: number): number {
+    return this.assertReady().wlAgentHealSelfHash(health | 0, maxHealth | 0, amount | 0) >>> 0;
+  }
+
+  wlAgentTakeDamageHash(health: number, lives: number, damage: number, godMode: number, rng: number): number {
+    return this.assertReady().wlAgentTakeDamageHash(health | 0, lives | 0, damage | 0, godMode | 0, rng | 0) >>> 0;
+  }
+
+  wlGameGameLoopHash(
+    stateHash: number,
+    tics: number,
+    inputMask: number,
+    rng: number,
+    doorHash: number,
+    playerHash: number,
+    actorHash: number,
+  ): number {
+    return this.assertReady().wlGameGameLoopHash(
+      stateHash >>> 0,
+      tics | 0,
+      inputMask | 0,
+      rng | 0,
+      doorHash | 0,
+      playerHash | 0,
+      actorHash | 0,
+    ) >>> 0;
+  }
+
+  wlInterCheckHighScoreHash(newScore: number, s0: number, s1: number, s2: number, s3: number, s4: number): number {
+    return this.assertReady().wlInterCheckHighScoreHash(newScore | 0, s0 | 0, s1 | 0, s2 | 0, s3 | 0, s4 | 0) >>> 0;
+  }
+
+  wlInterLevelCompletedHash(
+    score: number,
+    timeSec: number,
+    parSec: number,
+    killsFound: number,
+    killsTotal: number,
+    secretsFound: number,
+    secretsTotal: number,
+    treasureFound: number,
+    treasureTotal: number,
+    lives: number,
+  ): number {
+    return this.assertReady().wlInterLevelCompletedHash(
+      score | 0,
+      timeSec | 0,
+      parSec | 0,
+      killsFound | 0,
+      killsTotal | 0,
+      secretsFound | 0,
+      secretsTotal | 0,
+      treasureFound | 0,
+      treasureTotal | 0,
+      lives | 0,
+    ) >>> 0;
+  }
+
+  wlInterVictoryHash(
+    totalScore: number,
+    totalTime: number,
+    totalKills: number,
+    totalSecrets: number,
+    totalTreasures: number,
+    episode: number,
+    difficulty: number,
+  ): number {
+    return this.assertReady().wlInterVictoryHash(
+      totalScore | 0,
+      totalTime | 0,
+      totalKills | 0,
+      totalSecrets | 0,
+      totalTreasures | 0,
+      episode | 0,
+      difficulty | 0,
+    ) >>> 0;
+  }
+
   call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
     switch (fn) {
       case 'wl_draw.FixedByFrac': {
@@ -1138,6 +1326,78 @@ export class OracleBridge implements OracleBridgeContract {
       case 'wl_play.PlayLoopHash': {
         const { stateHash, tics, inputMask, rng } = input as Record<string, number>;
         return this.wlPlayPlayLoopHash(stateHash, tics, inputMask, rng) as TOutput;
+      }
+      case 'wl_act1.CloseDoorHash': {
+        const { doorMask, doorState, doorNum, speed, blocked } = input as Record<string, number>;
+        return this.wlAct1CloseDoorHash(doorMask, doorState, doorNum, speed, blocked) as TOutput;
+      }
+      case 'wl_act1.MoveDoorsHash': {
+        const { doorMask, doorState, tics, speed, activeMask } = input as Record<string, number>;
+        return this.wlAct1MoveDoorsHash(doorMask, doorState, tics, speed, activeMask) as TOutput;
+      }
+      case 'wl_act1.OpenDoorHash': {
+        const { doorMask, doorState, doorNum, speed, blocked } = input as Record<string, number>;
+        return this.wlAct1OpenDoorHash(doorMask, doorState, doorNum, speed, blocked) as TOutput;
+      }
+      case 'wl_act1.OperateDoorHash': {
+        const { doorMask, doorState, doorNum, action, speed, blocked } = input as Record<string, number>;
+        return this.wlAct1OperateDoorHash(doorMask, doorState, doorNum, action, speed, blocked) as TOutput;
+      }
+      case 'wl_act1.PushWallHash': {
+        const { mapLo, mapHi, pushX, pushY, dir, steps } = input as Record<string, number>;
+        return this.wlAct1PushWallHash(mapLo, mapHi, pushX, pushY, dir, steps) as TOutput;
+      }
+      case 'wl_act1.SpawnDoorHash': {
+        const { doorMask, doorState, tile, lock, vertical } = input as Record<string, number>;
+        return this.wlAct1SpawnDoorHash(doorMask, doorState, tile, lock, vertical) as TOutput;
+      }
+      case 'wl_agent.GetBonusHash': {
+        const { score, lives, health, ammo, keys, bonusKind, value } = input as Record<string, number>;
+        return this.wlAgentGetBonusHash(score, lives, health, ammo, keys, bonusKind, value) as TOutput;
+      }
+      case 'wl_agent.GiveAmmoHash': {
+        const { ammo, maxAmmo, amount, weaponOwned } = input as Record<string, number>;
+        return this.wlAgentGiveAmmoHash(ammo, maxAmmo, amount, weaponOwned) as TOutput;
+      }
+      case 'wl_agent.GivePointsHash': {
+        const { score, lives, nextExtra, points } = input as Record<string, number>;
+        return this.wlAgentGivePointsHash(score, lives, nextExtra, points) as TOutput;
+      }
+      case 'wl_agent.HealSelfHash': {
+        const { health, maxHealth, amount } = input as Record<string, number>;
+        return this.wlAgentHealSelfHash(health, maxHealth, amount) as TOutput;
+      }
+      case 'wl_agent.TakeDamageHash': {
+        const { health, lives, damage, godMode, rng } = input as Record<string, number>;
+        return this.wlAgentTakeDamageHash(health, lives, damage, godMode, rng) as TOutput;
+      }
+      case 'wl_game.GameLoopHash': {
+        const { stateHash, tics, inputMask, rng, doorHash, playerHash, actorHash } = input as Record<string, number>;
+        return this.wlGameGameLoopHash(stateHash, tics, inputMask, rng, doorHash, playerHash, actorHash) as TOutput;
+      }
+      case 'wl_inter.CheckHighScoreHash': {
+        const { newScore, s0, s1, s2, s3, s4 } = input as Record<string, number>;
+        return this.wlInterCheckHighScoreHash(newScore, s0, s1, s2, s3, s4) as TOutput;
+      }
+      case 'wl_inter.LevelCompletedHash': {
+        const { score, timeSec, parSec, killsFound, killsTotal, secretsFound, secretsTotal, treasureFound, treasureTotal, lives } =
+          input as Record<string, number>;
+        return this.wlInterLevelCompletedHash(
+          score,
+          timeSec,
+          parSec,
+          killsFound,
+          killsTotal,
+          secretsFound,
+          secretsTotal,
+          treasureFound,
+          treasureTotal,
+          lives,
+        ) as TOutput;
+      }
+      case 'wl_inter.VictoryHash': {
+        const { totalScore, totalTime, totalKills, totalSecrets, totalTreasures, episode, difficulty } = input as Record<string, number>;
+        return this.wlInterVictoryHash(totalScore, totalTime, totalKills, totalSecrets, totalTreasures, episode, difficulty) as TOutput;
       }
       default:
         throw new Error(`call() not mapped for oracle function: ${fn}`);
