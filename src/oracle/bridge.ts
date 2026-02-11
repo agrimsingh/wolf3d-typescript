@@ -1,4 +1,5 @@
 import createModule from './generated/wolf_oracle.js';
+import type { OracleBridgeContract, OracleFunctionId } from './types';
 
 type OracleFns = {
   fixedMul: (a: number, b: number) => number;
@@ -19,9 +20,12 @@ type OracleFns = {
   menuReducePacked: (screen: number, cursor: number, action: number, itemCount: number) => number;
   measureTextPacked: (textLen: number, maxWidthChars: number) => number;
   audioReducePacked: (soundMode: number, musicMode: number, digiMode: number, eventKind: number, soundId: number) => number;
+  wlDrawFixedByFrac: (a: number, b: number) => number;
+  wlMainBuildTablesHash: () => number;
+  wlMainCalcProjectionHash: (viewWidth: number, focal: number) => number;
 };
 
-export class OracleBridge {
+export class OracleBridge implements OracleBridgeContract {
   private module: any | null = null;
   private fns: OracleFns | null = null;
 
@@ -52,6 +56,9 @@ export class OracleBridge {
       menuReducePacked: cwrap('oracle_menu_reduce_packed', 'number', ['number', 'number', 'number', 'number']),
       measureTextPacked: cwrap('oracle_measure_text_packed', 'number', ['number', 'number']),
       audioReducePacked: cwrap('oracle_audio_reduce_packed', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlDrawFixedByFrac: cwrap('oracle_wl_draw_fixed_by_frac', 'number', ['number', 'number']),
+      wlMainBuildTablesHash: cwrap('oracle_wl_main_build_tables_hash', 'number', []),
+      wlMainCalcProjectionHash: cwrap('oracle_wl_main_calc_projection_hash', 'number', ['number', 'number']),
     };
   }
 
@@ -121,6 +128,45 @@ export class OracleBridge {
 
   audioReducePacked(soundMode: number, musicMode: number, digiMode: number, eventKind: number, soundId: number): number {
     return this.assertReady().audioReducePacked(soundMode | 0, musicMode | 0, digiMode | 0, eventKind | 0, soundId | 0) | 0;
+  }
+
+  wlDrawFixedByFrac(a: number, b: number): number {
+    return this.assertReady().wlDrawFixedByFrac(a | 0, b | 0) | 0;
+  }
+
+  wlMainBuildTablesHash(): number {
+    return this.assertReady().wlMainBuildTablesHash() >>> 0;
+  }
+
+  wlMainCalcProjectionHash(viewWidth: number, focal: number): number {
+    return this.assertReady().wlMainCalcProjectionHash(viewWidth | 0, focal | 0) >>> 0;
+  }
+
+  call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
+    switch (fn) {
+      case 'wl_draw.FixedByFrac': {
+        const { a, b } = input as { a: number; b: number };
+        return this.wlDrawFixedByFrac(a, b) as TOutput;
+      }
+      case 'wl_main.BuildTablesHash': {
+        return this.wlMainBuildTablesHash() as TOutput;
+      }
+      case 'wl_main.CalcProjectionHash': {
+        const { viewWidth, focal } = input as { viewWidth: number; focal: number };
+        return this.wlMainCalcProjectionHash(viewWidth, focal) as TOutput;
+      }
+      default:
+        throw new Error(`call() not mapped for oracle function: ${fn}`);
+    }
+  }
+
+  resetState(): void {
+    // Current oracle exports are pure/stateless per call for supported functions.
+  }
+
+  async shutdown(): Promise<void> {
+    this.fns = null;
+    this.module = null;
   }
 }
 

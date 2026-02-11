@@ -49,37 +49,37 @@ Acquire and validate WL1 shareware data for playable verification.
 
 ---
 
-## Phase 1: Math and Fixed-Point from Real WOLFSRC - In Progress
+## Phase 1: Math and Fixed-Point from Real WOLFSRC - Complete
 
 Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ### 1.1 Oracle C Tasks
 
 - [x] Add phase-1 WOLFSRC-style oracle wrappers (`FixedByFrac`, `BuildTables`, `CalcProjection`).
-- [ ] Verify wrappers match source behavior with deterministic fixture vectors.
+- [x] Verify wrappers match source behavior with deterministic fixture vectors.
 
 ### 1.2 TypeScript Tasks
 
 - [x] Port fixed-point and projection-table logic with matching integer semantics.
-- [ ] Integrate Phase 1 ported math into rendering path behind feature flag.
+- [x] Integrate Phase 1 ported math into rendering path behind feature flag.
 
 ### 1.3 Test Tasks
 
 - [x] Add property tests for `FixedByFrac` parity.
 - [x] Add property tests for `BuildTables` hash parity.
 - [x] Add property tests for `CalcProjection` hash parity.
-- [ ] Add deterministic regression replay outputs under `test/repro/` on failures.
+- [x] Add deterministic regression replay outputs under `test/repro/` on failures.
 
 ### 1.4 Gate
 
-- [ ] All Phase 1 manifest entries complete
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-1: math fixed-point parity complete`)
+- [x] All Phase 1 manifest entries complete
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-1: math fixed-point parity complete`)
 
 ---
 
-## Phase 2: Map/Cache Loading and Parsing - Not Started
+## Phase 2: Map/Cache Loading and Parsing - In Progress
 
 - [ ] Oracle wrappers from `ID_CA.C` / `WL_GAME.C`
 - [ ] TS Carmack + RLEW decode and map reconstruction

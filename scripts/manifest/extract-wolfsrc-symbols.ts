@@ -26,23 +26,119 @@ const projectRoot = resolve(process.cwd());
 const wolfsrc = resolve('/Users/agrim/Downloads/ai fun projects/wolf3d-master/WOLFSRC');
 const outDir = join(projectRoot, 'specs', 'generated');
 
-const phaseMap: Record<string, PhaseName[]> = {
-  'WL_MAIN.C': ['phase-1-math', 'phase-3-raycast'],
-  'WL_DRAW.C': ['phase-1-math', 'phase-3-raycast'],
-  'WL_SCALE.C': ['phase-3-raycast'],
-  'ID_CA.C': ['phase-2-map', 'phase-8-audio'],
-  'WL_GAME.C': ['phase-2-map', 'phase-6-gamestate', 'phase-8-audio'],
-  'WL_STATE.C': ['phase-4-ai'],
-  'WL_ACT1.C': ['phase-4-ai', 'phase-6-gamestate'],
-  'WL_ACT2.C': ['phase-4-ai'],
-  'WL_AGENT.C': ['phase-5-player', 'phase-6-gamestate'],
-  'WL_PLAY.C': ['phase-5-player'],
-  'ID_IN.C': ['phase-5-player'],
-  'WL_INTER.C': ['phase-6-gamestate'],
-  'WL_MENU.C': ['phase-7-menu-text'],
-  'WL_TEXT.C': ['phase-7-menu-text'],
-  'ID_US_1.C': ['phase-7-menu-text'],
-  'ID_SD.C': ['phase-8-audio'],
+const targetedPhaseMap: Record<string, Record<string, PhaseName>> = {
+  'WL_DRAW.C': {
+    FixedByFrac: 'phase-1-math',
+    TransformActor: 'phase-3-raycast',
+    TransformTile: 'phase-3-raycast',
+    CalcHeight: 'phase-3-raycast',
+    HitVertWall: 'phase-3-raycast',
+    HitHorizWall: 'phase-3-raycast',
+    WallRefresh: 'phase-3-raycast',
+    ThreeDRefresh: 'phase-3-raycast',
+  },
+  'WL_MAIN.C': {
+    BuildTables: 'phase-1-math',
+    CalcProjection: 'phase-1-math',
+  },
+  'WL_SCALE.C': {
+    SetupScaling: 'phase-3-raycast',
+    ScaleShape: 'phase-3-raycast',
+    SimpleScaleShape: 'phase-3-raycast',
+  },
+  'ID_CA.C': {
+    CAL_CarmackExpand: 'phase-2-map',
+    CA_RLEWexpand: 'phase-2-map',
+    CA_CacheMap: 'phase-2-map',
+    CAL_SetupMapFile: 'phase-2-map',
+    CA_CacheAudioChunk: 'phase-8-audio',
+    CAL_SetupAudioFile: 'phase-8-audio',
+  },
+  'WL_GAME.C': {
+    SetupGameLevel: 'phase-2-map',
+    DrawPlayScreen: 'phase-2-map',
+    SetSoundLoc: 'phase-8-audio',
+    PlaySoundLocGlobal: 'phase-8-audio',
+    UpdateSoundLoc: 'phase-8-audio',
+    GameLoop: 'phase-6-gamestate',
+  },
+  'WL_STATE.C': {
+    SelectDodgeDir: 'phase-4-ai',
+    SelectChaseDir: 'phase-4-ai',
+    MoveObj: 'phase-4-ai',
+    DamageActor: 'phase-4-ai',
+    CheckLine: 'phase-4-ai',
+    CheckSight: 'phase-4-ai',
+    FirstSighting: 'phase-4-ai',
+    SightPlayer: 'phase-4-ai',
+  },
+  'WL_ACT1.C': {
+    SpawnDoor: 'phase-6-gamestate',
+    OpenDoor: 'phase-6-gamestate',
+    CloseDoor: 'phase-6-gamestate',
+    OperateDoor: 'phase-6-gamestate',
+    MoveDoors: 'phase-6-gamestate',
+    PushWall: 'phase-6-gamestate',
+  },
+  'WL_ACT2.C': {
+    T_Chase: 'phase-4-ai',
+    T_Path: 'phase-4-ai',
+    T_Shoot: 'phase-4-ai',
+    T_Bite: 'phase-4-ai',
+    T_DogChase: 'phase-4-ai',
+    T_Projectile: 'phase-4-ai',
+  },
+  'WL_AGENT.C': {
+    ControlMovement: 'phase-5-player',
+    TryMove: 'phase-5-player',
+    ClipMove: 'phase-5-player',
+    Thrust: 'phase-5-player',
+    Cmd_Fire: 'phase-5-player',
+    Cmd_Use: 'phase-5-player',
+    T_Player: 'phase-5-player',
+    TakeDamage: 'phase-6-gamestate',
+    HealSelf: 'phase-6-gamestate',
+    GivePoints: 'phase-6-gamestate',
+    GiveAmmo: 'phase-6-gamestate',
+    GetBonus: 'phase-6-gamestate',
+  },
+  'WL_PLAY.C': {
+    PlayLoop: 'phase-5-player',
+  },
+  'ID_IN.C': {
+    IN_ReadControl: 'phase-5-player',
+    IN_UserInput: 'phase-5-player',
+  },
+  'WL_INTER.C': {
+    LevelCompleted: 'phase-6-gamestate',
+    CheckHighScore: 'phase-6-gamestate',
+    Victory: 'phase-6-gamestate',
+  },
+  'WL_MENU.C': {
+    US_ControlPanel: 'phase-7-menu-text',
+    DrawMainMenu: 'phase-7-menu-text',
+    DrawMenu: 'phase-7-menu-text',
+    CP_NewGame: 'phase-7-menu-text',
+    CP_ViewScores: 'phase-7-menu-text',
+    CP_Sound: 'phase-7-menu-text',
+    CP_Control: 'phase-7-menu-text',
+    Message: 'phase-7-menu-text',
+  },
+  'WL_TEXT.C': {
+    HelpScreens: 'phase-7-menu-text',
+    EndText: 'phase-7-menu-text',
+  },
+  'ID_US_1.C': {
+    US_Print: 'phase-7-menu-text',
+    US_CPrint: 'phase-7-menu-text',
+    US_DrawWindow: 'phase-7-menu-text',
+  },
+  'ID_SD.C': {
+    SD_SetSoundMode: 'phase-8-audio',
+    SD_SetMusicMode: 'phase-8-audio',
+    SD_PlaySound: 'phase-8-audio',
+    SD_StopSound: 'phase-8-audio',
+  },
 };
 
 function primaryPhase(phases: PhaseName[]): PhaseName {
@@ -95,7 +191,8 @@ function extractFromFile(filePath: string): SymbolEntry[] {
     const before = text.slice(0, match.index);
     const line = before.split(/\r?\n/).length;
 
-    const phases = phaseMap[file] ?? ['shared'];
+    const mapped = targetedPhaseMap[file]?.[fnName];
+    const phases = mapped ? [mapped] : ['shared'];
     const signature = `${returnType} ${fnName}(${args})`;
 
     entries.push({
