@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 0 not started (Phase -1 scaffold bootstrap complete)
+**Status:** Phase 1 in progress
 **Last Updated:** 2026-02-11
 
 ---
@@ -17,32 +17,32 @@ Initialize repository and establish docs/workflow baseline.
 ### -1.2 Bootstrap Commit Gate
 
 - [x] Tests green (not applicable for doc-only scaffold bootstrap)
-- [ ] Phase commit pushed (`chore: scaffold project docs/workflows`)
+- [x] Phase commit pushed (`chore: scaffold project docs/workflows`)
 
 ---
 
-## Phase 0: C->WASM Bridge and Parity Harness - Not Started
+## Phase 0: C->WASM Bridge and Parity Harness - Complete
 
 Build the oracle bridge and reusable parity testing infrastructure.
 
 ### 0.1 Oracle Build Pipeline
 
-- [ ] Set up Emscripten-based build scripts for oracle artifacts.
-- [ ] Define stable export list for initial phase functions.
-- [ ] Implement `OracleBridge` adapter initialization and teardown.
+- [x] Set up Emscripten-based build scripts for oracle artifacts.
+- [x] Define stable export list for initial phase functions.
+- [x] Implement `OracleBridge` adapter initialization and teardown.
 
 ### 0.2 Property Harness
 
-- [ ] Configure Vitest + fast-check for parity testing.
-- [ ] Add shared parity assertion helpers and seed replay support.
-- [ ] Add one end-to-end sample parity test using oracle and TS placeholder.
+- [x] Configure Vitest + fast-check for parity testing.
+- [x] Add shared parity assertion helpers and seed replay support.
+- [x] Add one end-to-end sample parity test using oracle and TS placeholder.
 
 ### 0.3 Gate Checklist
 
-- [ ] All Phase 0 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-0: c-wasm bridge + parity harness`)
+- [x] All Phase 0 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-0: c-wasm bridge + parity harness`)
 
 ---
 

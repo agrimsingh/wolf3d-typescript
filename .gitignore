@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+.tools/
+.DS_Store
+src/oracle/generated/wolf_oracle.js
+src/oracle/generated/wolf_oracle.wasm
+src/oracle/generated/*.map
