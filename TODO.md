@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 1 in progress
+**Status:** Phase 2 in progress
 **Last Updated:** 2026-02-11
 
 ---
@@ -46,28 +46,28 @@ Build the oracle bridge and reusable parity testing infrastructure.
 
 ---
 
-## Phase 1: Math and Fixed-Point Utilities - Not Started
+## Phase 1: Math and Fixed-Point Utilities - Complete
 
 Port foundational arithmetic and table generation logic.
 
 ### 1.1 Function Porting
 
-- [ ] Port fixed-point arithmetic functions.
-- [ ] Port trig and projection table builders.
-- [ ] Port projection helper calculations.
+- [x] Port fixed-point arithmetic functions.
+- [x] Port trig and projection table builders.
+- [x] Port projection helper calculations.
 
 ### 1.2 Property Parity
 
-- [ ] Add parity tests for each ported function.
-- [ ] Add boundary and overflow-focused generators.
-- [ ] Add deterministic seed replay tests for any discovered mismatch.
+- [x] Add parity tests for each ported function.
+- [x] Add boundary and overflow-focused generators.
+- [x] Add deterministic seed replay tests for any discovered mismatch.
 
 ### 1.3 Gate Checklist
 
-- [ ] All Phase 1 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-1: math fixed-point parity complete`)
+- [x] All Phase 1 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-1: math fixed-point parity complete`)
 
 ---
 
