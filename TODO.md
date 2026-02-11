@@ -79,17 +79,17 @@ Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ---
 
-## Phase 2: Map/Cache Loading and Parsing - In Progress
+## Phase 2: Map/Cache Loading and Parsing - Complete
 
-- [ ] Oracle wrappers from `ID_CA.C` / `WL_GAME.C`
-- [ ] TS Carmack + RLEW decode and map reconstruction
-- [ ] Arbitrary input + real asset parity tests
-- [ ] Local/CI gates green
-- [ ] Phase commit pushed (`phase-2: map loading parity complete`)
+- [x] Oracle wrappers from `ID_CA.C` / `WL_GAME.C`
+- [x] TS Carmack + RLEW decode and map reconstruction
+- [x] Arbitrary input + real asset parity tests
+- [x] Local/CI gates green
+- [x] Phase commit pushed (`phase-2: map loading parity complete`)
 
 ---
 
-## Phase 3: Raycasting Core - Not Started
+## Phase 3: Raycasting Core - In Progress
 
 - [ ] Oracle wrappers from `WL_DRAW.C`, `WL_MAIN.C`, `WL_SCALE.C`
 - [ ] TS software raycasting parity implementation

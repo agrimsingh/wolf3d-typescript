@@ -17,10 +17,10 @@ fi
 OUT_DIR="$ROOT_DIR/src/oracle/generated"
 mkdir -p "$OUT_DIR"
 
-EXPORTED_FUNCTIONS='["_malloc","_free","_oracle_fixed_mul","_oracle_fixed_by_frac","_oracle_rlew_expand_checksum","_oracle_raycast_distance_q16","_oracle_actor_step_packed","_oracle_player_move_packed","_oracle_game_event_hash","_oracle_menu_reduce_packed","_oracle_measure_text_packed","_oracle_audio_reduce_packed","_oracle_wl_draw_fixed_by_frac","_oracle_wl_main_build_tables_hash","_oracle_wl_main_calc_projection_hash"]'
+EXPORTED_FUNCTIONS='["_malloc","_free","_oracle_fixed_mul","_oracle_fixed_by_frac","_oracle_rlew_expand_checksum","_oracle_raycast_distance_q16","_oracle_actor_step_packed","_oracle_player_move_packed","_oracle_game_event_hash","_oracle_menu_reduce_packed","_oracle_measure_text_packed","_oracle_audio_reduce_packed","_oracle_wl_draw_fixed_by_frac","_oracle_wl_main_build_tables_hash","_oracle_wl_main_calc_projection_hash","_oracle_id_ca_carmack_expand_hash","_oracle_id_ca_rlew_expand_hash","_oracle_id_ca_setup_map_file_hash","_oracle_id_ca_cache_map_hash","_oracle_wl_game_setup_game_level_hash","_oracle_wl_game_draw_play_screen_hash"]'
 EXPORTED_RUNTIME='["cwrap"]'
 
-emcc "$ROOT_DIR/c-oracle/wolf_oracle.c" "$ROOT_DIR/c-oracle/wolfsrc_phase1_math.c" \
+emcc "$ROOT_DIR/c-oracle/wolf_oracle.c" "$ROOT_DIR/c-oracle/wolfsrc_phase1_math.c" "$ROOT_DIR/c-oracle/wolfsrc_phase2_map.c" \
   -O2 \
   -s MODULARIZE=1 \
   -s EXPORT_ES6=1 \

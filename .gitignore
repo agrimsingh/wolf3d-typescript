@@ -8,3 +8,4 @@ src/oracle/generated/wolf_oracle.wasm
 src/oracle/generated/*.map
 assets/wl1/
 assets/wolf3dsw.zip
+test/repro/*.json

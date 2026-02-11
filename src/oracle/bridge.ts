@@ -23,6 +23,26 @@ type OracleFns = {
   wlDrawFixedByFrac: (a: number, b: number) => number;
   wlMainBuildTablesHash: () => number;
   wlMainCalcProjectionHash: (viewWidth: number, focal: number) => number;
+  idCaCarmackExpandHash: (srcBytes: Uint8Array, srcLenBytes: number, expandedLengthBytes: number) => number;
+  idCaRlewExpandHash: (srcBytes: Uint8Array, srcLenBytes: number, expandedLengthBytes: number, rlewTag: number) => number;
+  idCaSetupMapFileHash: (mapheadBytes: Uint8Array, mapheadLenBytes: number) => number;
+  idCaCacheMapHash: (
+    gamemapsBytes: Uint8Array,
+    gamemapsLenBytes: number,
+    mapheadBytes: Uint8Array,
+    mapheadLenBytes: number,
+    mapnum: number,
+  ) => number;
+  wlGameSetupGameLevelHash: (plane0Bytes: Uint8Array, wordCount: number, mapWidth: number, mapHeight: number) => number;
+  wlGameDrawPlayScreenHash: (
+    viewWidth: number,
+    viewHeight: number,
+    bufferOfs: number,
+    screenLoc0: number,
+    screenLoc1: number,
+    screenLoc2: number,
+    statusBarPic: number,
+  ) => number;
 };
 
 export class OracleBridge implements OracleBridgeContract {
@@ -59,6 +79,20 @@ export class OracleBridge implements OracleBridgeContract {
       wlDrawFixedByFrac: cwrap('oracle_wl_draw_fixed_by_frac', 'number', ['number', 'number']),
       wlMainBuildTablesHash: cwrap('oracle_wl_main_build_tables_hash', 'number', []),
       wlMainCalcProjectionHash: cwrap('oracle_wl_main_calc_projection_hash', 'number', ['number', 'number']),
+      idCaCarmackExpandHash: cwrap('oracle_id_ca_carmack_expand_hash', 'number', ['array', 'number', 'number']),
+      idCaRlewExpandHash: cwrap('oracle_id_ca_rlew_expand_hash', 'number', ['array', 'number', 'number', 'number']),
+      idCaSetupMapFileHash: cwrap('oracle_id_ca_setup_map_file_hash', 'number', ['array', 'number']),
+      idCaCacheMapHash: cwrap('oracle_id_ca_cache_map_hash', 'number', ['array', 'number', 'array', 'number', 'number']),
+      wlGameSetupGameLevelHash: cwrap('oracle_wl_game_setup_game_level_hash', 'number', ['array', 'number', 'number', 'number']),
+      wlGameDrawPlayScreenHash: cwrap('oracle_wl_game_draw_play_screen_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
     };
   }
 
@@ -142,6 +176,52 @@ export class OracleBridge implements OracleBridgeContract {
     return this.assertReady().wlMainCalcProjectionHash(viewWidth | 0, focal | 0) >>> 0;
   }
 
+  idCaCarmackExpandHash(sourceBytes: Uint8Array, expandedLengthBytes: number): number {
+    const bytes = new Uint8Array(sourceBytes.buffer, sourceBytes.byteOffset, sourceBytes.byteLength);
+    return this.assertReady().idCaCarmackExpandHash(bytes, bytes.byteLength, expandedLengthBytes | 0) >>> 0;
+  }
+
+  idCaRlewExpandHash(sourceWords: Uint16Array, expandedLengthBytes: number, rlewTag: number): number {
+    const bytes = new Uint8Array(sourceWords.buffer, sourceWords.byteOffset, sourceWords.byteLength);
+    return this.assertReady().idCaRlewExpandHash(bytes, bytes.byteLength, expandedLengthBytes | 0, rlewTag & 0xffff) >>> 0;
+  }
+
+  idCaSetupMapFileHash(mapheadBytes: Uint8Array): number {
+    const bytes = new Uint8Array(mapheadBytes.buffer, mapheadBytes.byteOffset, mapheadBytes.byteLength);
+    return this.assertReady().idCaSetupMapFileHash(bytes, bytes.byteLength) >>> 0;
+  }
+
+  idCaCacheMapHash(gamemapsBytes: Uint8Array, mapheadBytes: Uint8Array, mapnum: number): number {
+    const gm = new Uint8Array(gamemapsBytes.buffer, gamemapsBytes.byteOffset, gamemapsBytes.byteLength);
+    const mh = new Uint8Array(mapheadBytes.buffer, mapheadBytes.byteOffset, mapheadBytes.byteLength);
+    return this.assertReady().idCaCacheMapHash(gm, gm.byteLength, mh, mh.byteLength, mapnum | 0) >>> 0;
+  }
+
+  wlGameSetupGameLevelHash(plane0Words: Uint16Array, mapWidth: number, mapHeight: number): number {
+    const bytes = new Uint8Array(plane0Words.buffer, plane0Words.byteOffset, plane0Words.byteLength);
+    return this.assertReady().wlGameSetupGameLevelHash(bytes, plane0Words.length | 0, mapWidth | 0, mapHeight | 0) >>> 0;
+  }
+
+  wlGameDrawPlayScreenHash(
+    viewWidth: number,
+    viewHeight: number,
+    bufferOfs: number,
+    screenLoc0: number,
+    screenLoc1: number,
+    screenLoc2: number,
+    statusBarPic: number,
+  ): number {
+    return this.assertReady().wlGameDrawPlayScreenHash(
+      viewWidth | 0,
+      viewHeight | 0,
+      bufferOfs | 0,
+      screenLoc0 | 0,
+      screenLoc1 | 0,
+      screenLoc2 | 0,
+      statusBarPic | 0,
+    ) >>> 0;
+  }
+
   call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
     switch (fn) {
       case 'wl_draw.FixedByFrac': {
@@ -154,6 +234,66 @@ export class OracleBridge implements OracleBridgeContract {
       case 'wl_main.CalcProjectionHash': {
         const { viewWidth, focal } = input as { viewWidth: number; focal: number };
         return this.wlMainCalcProjectionHash(viewWidth, focal) as TOutput;
+      }
+      case 'id_ca.RLEWExpandChecksum': {
+        const { sourceWords, expandedLengthBytes, rlewTag } = input as {
+          sourceWords: Uint16Array;
+          expandedLengthBytes: number;
+          rlewTag: number;
+        };
+        return this.idCaRlewExpandHash(sourceWords, expandedLengthBytes, rlewTag) as TOutput;
+      }
+      case 'id_ca.CarmackExpandHash': {
+        const { sourceBytes, expandedLengthBytes } = input as { sourceBytes: Uint8Array; expandedLengthBytes: number };
+        return this.idCaCarmackExpandHash(sourceBytes, expandedLengthBytes) as TOutput;
+      }
+      case 'id_ca.RLEWExpandHash': {
+        const { sourceWords, expandedLengthBytes, rlewTag } = input as {
+          sourceWords: Uint16Array;
+          expandedLengthBytes: number;
+          rlewTag: number;
+        };
+        return this.idCaRlewExpandHash(sourceWords, expandedLengthBytes, rlewTag) as TOutput;
+      }
+      case 'id_ca.SetupMapFileHash': {
+        const { mapheadBytes } = input as { mapheadBytes: Uint8Array };
+        return this.idCaSetupMapFileHash(mapheadBytes) as TOutput;
+      }
+      case 'id_ca.CacheMapHash': {
+        const { gamemapsBytes, mapheadBytes, mapnum } = input as {
+          gamemapsBytes: Uint8Array;
+          mapheadBytes: Uint8Array;
+          mapnum: number;
+        };
+        return this.idCaCacheMapHash(gamemapsBytes, mapheadBytes, mapnum) as TOutput;
+      }
+      case 'wl_game.SetupGameLevelHash': {
+        const { plane0Words, mapWidth, mapHeight } = input as {
+          plane0Words: Uint16Array;
+          mapWidth: number;
+          mapHeight: number;
+        };
+        return this.wlGameSetupGameLevelHash(plane0Words, mapWidth, mapHeight) as TOutput;
+      }
+      case 'wl_game.DrawPlayScreenHash': {
+        const { viewWidth, viewHeight, bufferOfs, screenLoc0, screenLoc1, screenLoc2, statusBarPic } = input as {
+          viewWidth: number;
+          viewHeight: number;
+          bufferOfs: number;
+          screenLoc0: number;
+          screenLoc1: number;
+          screenLoc2: number;
+          statusBarPic: number;
+        };
+        return this.wlGameDrawPlayScreenHash(
+          viewWidth,
+          viewHeight,
+          bufferOfs,
+          screenLoc0,
+          screenLoc1,
+          screenLoc2,
+          statusBarPic,
+        ) as TOutput;
       }
       default:
         throw new Error(`call() not mapped for oracle function: ${fn}`);
