@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 7 in progress
+**Status:** Phase 8 in progress (optional)
 **Last Updated:** 2026-02-11
 
 ---
@@ -196,28 +196,28 @@ Port doors, items, score/lives, and level transition state handling.
 
 ---
 
-## Phase 7: Menu System and Text Rendering - Not Started
+## Phase 7: Menu System and Text Rendering - Complete
 
 Port menu flow logic and text rendering/layout behavior.
 
 ### 7.1 Function Porting
 
-- [ ] Port menu state machine and control panel flow.
-- [ ] Port text measure and layout logic.
-- [ ] Port UI draw model generation.
+- [x] Port menu state machine and control panel flow.
+- [x] Port text measure and layout logic.
+- [x] Port UI draw model generation.
 
 ### 7.2 Property Parity
 
-- [ ] Add parity tests for each menu/text routine.
-- [ ] Add randomized menu input sequence generators.
-- [ ] Add deterministic seed replay tests for failures.
+- [x] Add parity tests for each menu/text routine.
+- [x] Add randomized menu input sequence generators.
+- [x] Add deterministic seed replay tests for failures.
 
 ### 7.3 Gate Checklist
 
-- [ ] All Phase 7 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-7: menu text parity complete`)
+- [x] All Phase 7 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-7: menu text parity complete`)
 
 ---
 
