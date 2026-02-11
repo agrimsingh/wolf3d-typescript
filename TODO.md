@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 6 in progress
+**Status:** Phase 7 in progress
 **Last Updated:** 2026-02-11
 
 ---
@@ -171,28 +171,28 @@ Port player-centric control, movement, and interaction behavior.
 
 ---
 
-## Phase 6: Game State Management - Not Started
+## Phase 6: Game State Management - Complete
 
 Port doors, items, score/lives, and level transition state handling.
 
 ### 6.1 Function Porting
 
-- [ ] Port door operation/movement state transitions.
-- [ ] Port score/lives/items/keys mutation routines.
-- [ ] Port level-end and playstate transition routines.
+- [x] Port door operation/movement state transitions.
+- [x] Port score/lives/items/keys mutation routines.
+- [x] Port level-end and playstate transition routines.
 
 ### 6.2 Property Parity
 
-- [ ] Add parity tests for each game-state routine.
-- [ ] Add randomized event and state generators.
-- [ ] Add deterministic seed replay tests for failures.
+- [x] Add parity tests for each game-state routine.
+- [x] Add randomized event and state generators.
+- [x] Add deterministic seed replay tests for failures.
 
 ### 6.3 Gate Checklist
 
-- [ ] All Phase 6 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-6: game state parity complete`)
+- [x] All Phase 6 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-6: game state parity complete`)
 
 ---
 
