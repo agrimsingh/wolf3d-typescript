@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Full Port Implementation Plan
 
-**Status:** Phase 8 in progress (real WOLFSRC audio parity)
+**Status:** All planned phases complete (0 through 8)
 **Last Updated:** 2026-02-11
 
 ---
@@ -139,13 +139,13 @@ Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ---
 
-## Phase 8: Audio (Optional) - In Progress
+## Phase 8: Audio (Optional) - Complete
 
-- [ ] Oracle wrappers from `ID_SD.C`, `ID_CA.C`, `WL_GAME.C`
-- [ ] TS audio state parity + WebAudio adapter
-- [ ] Property/event sequence parity suite
-- [ ] Local/CI gates green
-- [ ] Phase commit pushed (`phase-8: audio parity complete`)
+- [x] Oracle wrappers from `ID_SD.C`, `ID_CA.C`, `WL_GAME.C`
+- [x] TS audio state parity + WebAudio adapter
+- [x] Property/event sequence parity suite
+- [x] Local/CI gates green
+- [x] Phase commit pushed (`phase-8: audio parity complete`)
 
 ---
 

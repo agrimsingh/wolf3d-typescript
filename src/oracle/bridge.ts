@@ -266,6 +266,30 @@ type OracleFns = {
   wlMenuUsControlPanelHash: (screen: number, cursor: number, inputMask: number, menuItems: number) => number;
   wlTextEndTextHash: (textLen: number, scrollPos: number, speed: number, inputMask: number) => number;
   wlTextHelpScreensHash: (page: number, totalPages: number, inputMask: number, rng: number) => number;
+  idCaCacheAudioChunkHash: (chunkNum: number, offset: number, nextOffset: number, audiotLen: number, cacheMask: number) => number;
+  idCaCalSetupAudioFileHash: (audiohedLen: number, audiotLen: number, start: number) => number;
+  idSdPlaySoundHash: (soundMode: number, soundId: number, priority: number, currentPriority: number, channelBusy: number) => number;
+  idSdSetMusicModeHash: (currentMode: number, requestedMode: number, hasDevice: number) => number;
+  idSdSetSoundModeHash: (currentMode: number, requestedMode: number, hasDevice: number) => number;
+  idSdStopSoundHash: (channelBusy: number, currentSound: number, currentPriority: number) => number;
+  wlGamePlaySoundLocGlobalHash: (
+    soundMode: number,
+    soundId: number,
+    gx: number,
+    gy: number,
+    listenerX: number,
+    listenerY: number,
+    channelBusy: number,
+  ) => number;
+  wlGameSetSoundLocHash: (gx: number, gy: number, listenerX: number, listenerY: number) => number;
+  wlGameUpdateSoundLocHash: (
+    gx: number,
+    gy: number,
+    listenerX: number,
+    listenerY: number,
+    velocityX: number,
+    velocityY: number,
+  ) => number;
 };
 
 export class OracleBridge implements OracleBridgeContract {
@@ -493,6 +517,17 @@ export class OracleBridge implements OracleBridgeContract {
       wlMenuUsControlPanelHash: cwrap('oracle_wl_menu_us_control_panel_hash', 'number', ['number', 'number', 'number', 'number']),
       wlTextEndTextHash: cwrap('oracle_wl_text_end_text_hash', 'number', ['number', 'number', 'number', 'number']),
       wlTextHelpScreensHash: cwrap('oracle_wl_text_help_screens_hash', 'number', ['number', 'number', 'number', 'number']),
+      idCaCacheAudioChunkHash: cwrap('oracle_id_ca_ca_cache_audio_chunk_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idCaCalSetupAudioFileHash: cwrap('oracle_id_ca_cal_setup_audio_file_hash', 'number', ['number', 'number', 'number']),
+      idSdPlaySoundHash: cwrap('oracle_id_sd_sd_play_sound_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idSdSetMusicModeHash: cwrap('oracle_id_sd_sd_set_music_mode_hash', 'number', ['number', 'number', 'number']),
+      idSdSetSoundModeHash: cwrap('oracle_id_sd_sd_set_sound_mode_hash', 'number', ['number', 'number', 'number']),
+      idSdStopSoundHash: cwrap('oracle_id_sd_sd_stop_sound_hash', 'number', ['number', 'number', 'number']),
+      wlGamePlaySoundLocGlobalHash: cwrap('oracle_wl_game_play_sound_loc_global_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlGameSetSoundLocHash: cwrap('oracle_wl_game_set_sound_loc_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlGameUpdateSoundLocHash: cwrap('oracle_wl_game_update_sound_loc_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
     };
   }
 
@@ -1162,6 +1197,58 @@ export class OracleBridge implements OracleBridgeContract {
     return this.assertReady().wlTextHelpScreensHash(page | 0, totalPages | 0, inputMask | 0, rng | 0) >>> 0;
   }
 
+  idCaCacheAudioChunkHash(chunkNum: number, offset: number, nextOffset: number, audiotLen: number, cacheMask: number): number {
+    return this.assertReady().idCaCacheAudioChunkHash(chunkNum | 0, offset | 0, nextOffset | 0, audiotLen | 0, cacheMask | 0) >>> 0;
+  }
+
+  idCaCalSetupAudioFileHash(audiohedLen: number, audiotLen: number, start: number): number {
+    return this.assertReady().idCaCalSetupAudioFileHash(audiohedLen | 0, audiotLen | 0, start | 0) >>> 0;
+  }
+
+  idSdPlaySoundHash(soundMode: number, soundId: number, priority: number, currentPriority: number, channelBusy: number): number {
+    return this.assertReady().idSdPlaySoundHash(soundMode | 0, soundId | 0, priority | 0, currentPriority | 0, channelBusy | 0) >>> 0;
+  }
+
+  idSdSetMusicModeHash(currentMode: number, requestedMode: number, hasDevice: number): number {
+    return this.assertReady().idSdSetMusicModeHash(currentMode | 0, requestedMode | 0, hasDevice | 0) >>> 0;
+  }
+
+  idSdSetSoundModeHash(currentMode: number, requestedMode: number, hasDevice: number): number {
+    return this.assertReady().idSdSetSoundModeHash(currentMode | 0, requestedMode | 0, hasDevice | 0) >>> 0;
+  }
+
+  idSdStopSoundHash(channelBusy: number, currentSound: number, currentPriority: number): number {
+    return this.assertReady().idSdStopSoundHash(channelBusy | 0, currentSound | 0, currentPriority | 0) >>> 0;
+  }
+
+  wlGamePlaySoundLocGlobalHash(
+    soundMode: number,
+    soundId: number,
+    gx: number,
+    gy: number,
+    listenerX: number,
+    listenerY: number,
+    channelBusy: number,
+  ): number {
+    return this.assertReady().wlGamePlaySoundLocGlobalHash(
+      soundMode | 0,
+      soundId | 0,
+      gx | 0,
+      gy | 0,
+      listenerX | 0,
+      listenerY | 0,
+      channelBusy | 0,
+    ) >>> 0;
+  }
+
+  wlGameSetSoundLocHash(gx: number, gy: number, listenerX: number, listenerY: number): number {
+    return this.assertReady().wlGameSetSoundLocHash(gx | 0, gy | 0, listenerX | 0, listenerY | 0) >>> 0;
+  }
+
+  wlGameUpdateSoundLocHash(gx: number, gy: number, listenerX: number, listenerY: number, velocityX: number, velocityY: number): number {
+    return this.assertReady().wlGameUpdateSoundLocHash(gx | 0, gy | 0, listenerX | 0, listenerY | 0, velocityX | 0, velocityY | 0) >>> 0;
+  }
+
   call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
     switch (fn) {
       case 'wl_draw.FixedByFrac': {
@@ -1528,6 +1615,42 @@ export class OracleBridge implements OracleBridgeContract {
       case 'wl_text.HelpScreensHash': {
         const { page, totalPages, inputMask, rng } = input as Record<string, number>;
         return this.wlTextHelpScreensHash(page, totalPages, inputMask, rng) as TOutput;
+      }
+      case 'id_ca.CA_CacheAudioChunkHash': {
+        const { chunkNum, offset, nextOffset, audiotLen, cacheMask } = input as Record<string, number>;
+        return this.idCaCacheAudioChunkHash(chunkNum, offset, nextOffset, audiotLen, cacheMask) as TOutput;
+      }
+      case 'id_ca.CAL_SetupAudioFileHash': {
+        const { audiohedLen, audiotLen, start } = input as Record<string, number>;
+        return this.idCaCalSetupAudioFileHash(audiohedLen, audiotLen, start) as TOutput;
+      }
+      case 'id_sd.SD_PlaySoundHash': {
+        const { soundMode, soundId, priority, currentPriority, channelBusy } = input as Record<string, number>;
+        return this.idSdPlaySoundHash(soundMode, soundId, priority, currentPriority, channelBusy) as TOutput;
+      }
+      case 'id_sd.SD_SetMusicModeHash': {
+        const { currentMode, requestedMode, hasDevice } = input as Record<string, number>;
+        return this.idSdSetMusicModeHash(currentMode, requestedMode, hasDevice) as TOutput;
+      }
+      case 'id_sd.SD_SetSoundModeHash': {
+        const { currentMode, requestedMode, hasDevice } = input as Record<string, number>;
+        return this.idSdSetSoundModeHash(currentMode, requestedMode, hasDevice) as TOutput;
+      }
+      case 'id_sd.SD_StopSoundHash': {
+        const { channelBusy, currentSound, currentPriority } = input as Record<string, number>;
+        return this.idSdStopSoundHash(channelBusy, currentSound, currentPriority) as TOutput;
+      }
+      case 'wl_game.PlaySoundLocGlobalHash': {
+        const { soundMode, soundId, gx, gy, listenerX, listenerY, channelBusy } = input as Record<string, number>;
+        return this.wlGamePlaySoundLocGlobalHash(soundMode, soundId, gx, gy, listenerX, listenerY, channelBusy) as TOutput;
+      }
+      case 'wl_game.SetSoundLocHash': {
+        const { gx, gy, listenerX, listenerY } = input as Record<string, number>;
+        return this.wlGameSetSoundLocHash(gx, gy, listenerX, listenerY) as TOutput;
+      }
+      case 'wl_game.UpdateSoundLocHash': {
+        const { gx, gy, listenerX, listenerY, velocityX, velocityY } = input as Record<string, number>;
+        return this.wlGameUpdateSoundLocHash(gx, gy, listenerX, listenerY, velocityX, velocityY) as TOutput;
       }
       default:
         throw new Error(`call() not mapped for oracle function: ${fn}`);
