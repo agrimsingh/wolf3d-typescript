@@ -1,261 +1,157 @@
-# Wolf3D TypeScript Port Implementation Plan
+# Wolf3D TypeScript Full Port Implementation Plan
 
-**Status:** All phases complete
+**Status:** Phase -0.5 in progress
 **Last Updated:** 2026-02-11
 
 ---
 
-## Phase -1: Git Bootstrap and Scaffold Baseline - Complete
+## Phase -1: Git Bootstrap and Initial Scaffold - Complete
 
-Initialize repository and establish docs/workflow baseline.
-
-### -1.1 Repository Setup
-
-- [x] Initialize Git repository in project root.
-- [x] Create baseline scaffold docs (`AGENTS.md`, `specs/`, `TODO.md`, workflow).
-
-### -1.2 Bootstrap Commit Gate
-
-- [x] Tests green (not applicable for doc-only scaffold bootstrap)
-- [x] Phase commit pushed (`chore: scaffold project docs/workflows`)
+- [x] Repository initialized.
+- [x] Base docs and workflow files created.
 
 ---
 
-## Phase 0: C->WASM Bridge and Parity Harness - Complete
+## Phase 0: Recovery to Truthful Baseline - Complete
 
-Build the oracle bridge and reusable parity testing infrastructure.
+Convert prototype-complete claims into truthful full-port baseline.
 
-### 0.1 Oracle Build Pipeline
+### 0.1 Recovery Tasks
 
-- [x] Set up Emscripten-based build scripts for oracle artifacts.
-- [x] Define stable export list for initial phase functions.
-- [x] Implement `OracleBridge` adapter initialization and teardown.
+- [x] Reopen plan status to reflect that full WOLFSRC port is not yet complete.
+- [x] Add canonical symbol manifest pipeline and generated outputs.
+- [x] Add stable type contracts for oracle/parity/state/io layers.
+- [x] Mark previous prototype code as spike history (kept in git history only).
 
-### 0.2 Property Harness
+### 0.2 Recovery Gate
 
-- [x] Configure Vitest + fast-check for parity testing.
-- [x] Add shared parity assertion helpers and seed replay support.
-- [x] Add one end-to-end sample parity test using oracle and TS placeholder.
-
-### 0.3 Gate Checklist
-
-- [x] All Phase 0 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-0: c-wasm bridge + parity harness`)
+- [x] Manifest generated from WOLFSRC and committed
+- [x] `specs/port-manifest.md` present and authoritative
+- [x] Phase commit pushed (`phase-0: recovery + true manifest baseline`)
 
 ---
 
-## Phase 1: Math and Fixed-Point Utilities - Complete
+## Phase -0.5: WL1 Data Bootstrap - In Progress
 
-Port foundational arithmetic and table generation logic.
+Acquire and validate WL1 shareware data for playable verification.
 
-### 1.1 Function Porting
+### -0.5.1 Data Tasks
 
-- [x] Port fixed-point arithmetic functions.
-- [x] Port trig and projection table builders.
-- [x] Port projection helper calculations.
+- [x] Add script to download and unpack WL1 archive into `assets/wl1/`.
+- [x] Add script to validate required WL1 files.
+- [x] Wire validation into `pnpm verify:assets`.
 
-### 1.2 Property Parity
+### -0.5.2 Gate
 
-- [x] Add parity tests for each ported function.
-- [x] Add boundary and overflow-focused generators.
-- [x] Add deterministic seed replay tests for any discovered mismatch.
-
-### 1.3 Gate Checklist
-
-- [x] All Phase 1 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-1: math fixed-point parity complete`)
+- [x] WL1 data files downloaded into `assets/wl1/`
+- [x] `pnpm verify:assets` passes
+- [ ] Phase commit pushed (`phase-0.5: wl1 asset bootstrap complete`)
 
 ---
 
-## Phase 2: Map Loading and Parsing - Complete
+## Phase 1: Math and Fixed-Point from Real WOLFSRC - Not Started
 
-Port map decode and level parse behavior.
+Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
-### 2.1 Function Porting
+### 1.1 Oracle C Tasks
 
-- [x] Port RLEW/map decode routines.
-- [x] Port map header and plane parse logic.
-- [x] Port level geometry extraction logic.
+- [ ] Add phase-1 WOLFSRC-style oracle wrappers (`FixedByFrac`, `BuildTables`, `CalcProjection`).
+- [ ] Verify wrappers match source behavior with deterministic fixture vectors.
 
-### 2.2 Property Parity
+### 1.2 TypeScript Tasks
 
-- [x] Add parity tests for each decode/parse function.
-- [x] Add randomized compressed stream generators.
-- [x] Add deterministic seed replay tests for failures.
+- [ ] Port fixed-point and projection-table logic with matching integer semantics.
+- [ ] Integrate Phase 1 ported math into rendering path behind feature flag.
 
-### 2.3 Gate Checklist
+### 1.3 Test Tasks
 
-- [x] All Phase 2 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-2: map loading parity complete`)
+- [ ] Add property tests for `FixedByFrac` parity.
+- [ ] Add property tests for `BuildTables` hash parity.
+- [ ] Add property tests for `CalcProjection` hash parity.
+- [ ] Add deterministic regression replay outputs under `test/repro/` on failures.
 
----
+### 1.4 Gate
 
-## Phase 3: Raycasting Engine - Complete
-
-Port core renderer math and ray hit/projection behavior.
-
-### 3.1 Function Porting
-
-- [x] Port transform and projection helpers.
-- [x] Port wall hit and height calculations.
-- [x] Port per-frame raycast refresh core.
-
-### 3.2 Property Parity
-
-- [x] Add parity tests for each helper and core routine.
-- [x] Add randomized deterministic camera/map input generators.
-- [x] Add deterministic seed replay tests for failures.
-
-### 3.3 Gate Checklist
-
-- [x] All Phase 3 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-3: raycasting parity complete`)
+- [ ] All Phase 1 manifest entries complete
+- [ ] Local gate green (>=1k random cases per covered function)
+- [ ] CI gate green (>=10k random cases per covered function)
+- [ ] Phase commit pushed (`phase-1: math fixed-point parity complete`)
 
 ---
 
-## Phase 4: Actor and Enemy AI - Complete
+## Phase 2: Map/Cache Loading and Parsing - Not Started
 
-Port actor state transitions and enemy behavior logic.
-
-### 4.1 Function Porting
-
-- [x] Port actor movement/state transition routines.
-- [x] Port chase/dodge/path decision routines.
-- [x] Port combat-related actor routines.
-
-### 4.2 Property Parity
-
-- [x] Add parity tests for each transition routine.
-- [x] Add randomized world/actor snapshot generators.
-- [x] Add deterministic seed replay tests for failures.
-
-### 4.3 Gate Checklist
-
-- [x] All Phase 4 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-4: actors ai parity complete`)
+- [ ] Oracle wrappers from `ID_CA.C` / `WL_GAME.C`
+- [ ] TS Carmack + RLEW decode and map reconstruction
+- [ ] Arbitrary input + real asset parity tests
+- [ ] Local/CI gates green
+- [ ] Phase commit pushed (`phase-2: map loading parity complete`)
 
 ---
 
-## Phase 5: Player Movement, Input, and Collision - Complete
+## Phase 3: Raycasting Core - Not Started
 
-Port player-centric control, movement, and interaction behavior.
-
-### 5.1 Function Porting
-
-- [x] Port movement integration and clipping logic.
-- [x] Port interaction and weapon command logic.
-- [x] Port per-tick player update routine.
-
-### 5.2 Property Parity
-
-- [x] Add parity tests for each player routine.
-- [x] Add randomized control stream generators.
-- [x] Add deterministic seed replay tests for failures.
-
-### 5.3 Gate Checklist
-
-- [x] All Phase 5 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-5: player movement parity complete`)
+- [ ] Oracle wrappers from `WL_DRAW.C`, `WL_MAIN.C`, `WL_SCALE.C`
+- [ ] TS software raycasting parity implementation
+- [ ] Column/frame hash parity tests
+- [ ] Local/CI gates green
+- [ ] Phase commit pushed (`phase-3: raycasting parity complete`)
 
 ---
 
-## Phase 6: Game State Management - Complete
+## Phase 4: Actors/AI State Machines - Not Started
 
-Port doors, items, score/lives, and level transition state handling.
-
-### 6.1 Function Porting
-
-- [x] Port door operation/movement state transitions.
-- [x] Port score/lives/items/keys mutation routines.
-- [x] Port level-end and playstate transition routines.
-
-### 6.2 Property Parity
-
-- [x] Add parity tests for each game-state routine.
-- [x] Add randomized event and state generators.
-- [x] Add deterministic seed replay tests for failures.
-
-### 6.3 Gate Checklist
-
-- [x] All Phase 6 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-6: game state parity complete`)
+- [ ] Oracle wrappers from `WL_STATE.C`, `WL_ACT1.C`, `WL_ACT2.C`
+- [ ] TS actor tick/state transition parity
+- [ ] Stateful property parity suite
+- [ ] Local/CI gates green
+- [ ] Phase commit pushed (`phase-4: actors ai parity complete`)
 
 ---
 
-## Phase 7: Menu System and Text Rendering - Complete
+## Phase 5: Player Movement/Input/Collision - Not Started
 
-Port menu flow logic and text rendering/layout behavior.
-
-### 7.1 Function Porting
-
-- [x] Port menu state machine and control panel flow.
-- [x] Port text measure and layout logic.
-- [x] Port UI draw model generation.
-
-### 7.2 Property Parity
-
-- [x] Add parity tests for each menu/text routine.
-- [x] Add randomized menu input sequence generators.
-- [x] Add deterministic seed replay tests for failures.
-
-### 7.3 Gate Checklist
-
-- [x] All Phase 7 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-7: menu text parity complete`)
+- [ ] Oracle wrappers from `WL_AGENT.C`, `WL_PLAY.C`
+- [ ] TS keyboard+mouse movement/collision parity
+- [ ] Trace and property parity suite
+- [ ] Local/CI gates green
+- [ ] Phase commit pushed (`phase-5: player movement parity complete`)
 
 ---
 
-## Phase 8: Audio (Optional) - Complete
+## Phase 6: Game State Management - Not Started
 
-Optional final phase for audio parity behavior.
-
-### 8.1 Function Porting
-
-- [x] Port selected audio mode and playback state routines.
-- [x] Port positioned sound state behavior.
-
-### 8.2 Property Parity
-
-- [x] Add parity tests for each chosen audio routine.
-- [x] Add randomized audio event generators.
-- [x] Add deterministic seed replay tests for failures.
-
-### 8.3 Gate Checklist
-
-- [x] All Phase 8 tasks checked
-- [x] Local gate green (>=1k random cases per covered function)
-- [x] CI gate green (>=10k random cases per covered function)
-- [x] Phase commit pushed (`phase-8: audio parity complete`)
+- [ ] Oracle wrappers from `WL_GAME.C`, `WL_INTER.C`, `WL_ACT1.C`
+- [ ] TS score/lives/doors/intermission parity
+- [ ] Event sequence property suite
+- [ ] Local/CI gates green
+- [ ] Phase commit pushed (`phase-6: game state parity complete`)
 
 ---
 
-## Global Verification Checklist
+## Phase 7: Menu/Text/UI Flow - Not Started
 
-Before marking any phase complete:
+- [ ] Oracle wrappers from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`
+- [ ] TS menu state and text layout parity
+- [ ] Scripted input and property suite
+- [ ] Local/CI gates green
+- [ ] Phase commit pushed (`phase-7: menu text parity complete`)
 
-- [x] All tasks in that phase are checked off.
-- [x] Property parity tests are green at required thresholds.
-- [x] Specs and code remain aligned.
-- [x] Phase completion commit is created.
+---
 
-## Notes
+## Phase 8: Audio (Optional) - Not Started
 
-- Canonical target is WL1 shareware behavior.
-- Emscripten tools are currently missing on PATH and must be installed before Phase 0 execution.
-- Audio is optional and does not block core completion through Phase 7.
+- [ ] Oracle wrappers from `ID_SD.C`, `ID_CA.C`, `WL_GAME.C`
+- [ ] TS audio state parity + WebAudio adapter
+- [ ] Property/event sequence parity suite
+- [ ] Local/CI gates green
+- [ ] Phase commit pushed (`phase-8: audio parity complete`)
+
+---
+
+## Global Rules
+
+- No phase advancement unless current phase gates are all green.
+- One commit per completed phase gate.
+- Porting is function-by-function and manifest-driven.
+- No approximate parity assertions in core phases.

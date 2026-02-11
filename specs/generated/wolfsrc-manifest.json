@@ -1,0 +1,6413 @@
+{
+  "generatedAt": "2026-02-11T18:33:37.342Z",
+  "total": 568,
+  "entries": [
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "CalcHeight",
+      "returnType": "int",
+      "signature": "int CalcHeight(void)",
+      "line": 357,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "CalcRotate",
+      "returnType": "int",
+      "signature": "int CalcRotate(objtype *ob)",
+      "line": 1022,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "CalcTics",
+      "returnType": "void",
+      "signature": "void CalcTics(void)",
+      "line": 1234,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "ClearScreen",
+      "returnType": "void",
+      "signature": "void ClearScreen(void)",
+      "line": 887,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "DrawPlayerWeapon",
+      "returnType": "void",
+      "signature": "void DrawPlayerWeapon(void)",
+      "line": 1199,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "DrawScaleds",
+      "returnType": "void",
+      "signature": "void DrawScaleds(void)",
+      "line": 1070,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "FixedByFrac",
+      "returnType": "fixed",
+      "signature": "fixed FixedByFrac(fixed a, fixed b)",
+      "line": 139,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "FixOfs",
+      "returnType": "void",
+      "signature": "void FixOfs(void)",
+      "line": 1279,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "HitHorizDoor",
+      "returnType": "void",
+      "signature": "void HitHorizDoor(void)",
+      "line": 618,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "HitHorizPWall",
+      "returnType": "void",
+      "signature": "void HitHorizPWall(void)",
+      "line": 757,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "HitHorizWall",
+      "returnType": "void",
+      "signature": "void HitHorizWall(void)",
+      "line": 548,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "HitVertDoor",
+      "returnType": "void",
+      "signature": "void HitVertDoor(void)",
+      "line": 686,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "HitVertPWall",
+      "returnType": "void",
+      "signature": "void HitVertPWall(void)",
+      "line": 821,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "HitVertWall",
+      "returnType": "void",
+      "signature": "void HitVertWall(void)",
+      "line": 475,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "ThreeDRefresh",
+      "returnType": "void",
+      "signature": "void ThreeDRefresh(void)",
+      "line": 1334,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "TransformActor",
+      "returnType": "void",
+      "signature": "void TransformActor(objtype *ob)",
+      "line": 209,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "TransformTile",
+      "returnType": "boolean",
+      "signature": "boolean TransformTile(int tx, int ty, int *dispx, int *dispheight)",
+      "line": 285,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "VGAClearScreen",
+      "returnType": "void",
+      "signature": "void VGAClearScreen(void)",
+      "line": 968,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_DRAW.C",
+      "functionName": "WallRefresh",
+      "returnType": "void",
+      "signature": "void WallRefresh(void)",
+      "line": 1296,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "BuildTables",
+      "returnType": "void",
+      "signature": "void BuildTables(void)",
+      "line": 584,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "CalcProjection",
+      "returnType": "void",
+      "signature": "void CalcProjection(long focal)",
+      "line": 639,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "DemoLoop",
+      "returnType": "void",
+      "signature": "void DemoLoop(void)",
+      "line": 1409,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "DiskFlopAnim",
+      "returnType": "void",
+      "signature": "void DiskFlopAnim(int x,int y)",
+      "line": 291,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "DoChecksum",
+      "returnType": "long",
+      "signature": "long DoChecksum(byte far *source,unsigned size,long checksum)",
+      "line": 301,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "DoJukebox",
+      "returnType": "void",
+      "signature": "void DoJukebox(void)",
+      "line": 1014,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "FinishSignon",
+      "returnType": "void",
+      "signature": "void FinishSignon(void)",
+      "line": 763,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "InitDigiMap",
+      "returnType": "void",
+      "signature": "void InitDigiMap(void)",
+      "line": 959,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "InitGame",
+      "returnType": "void",
+      "signature": "void InitGame(void)",
+      "line": 1143,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "LoadTheGame",
+      "returnType": "boolean",
+      "signature": "boolean LoadTheGame(int file,int x,int y)",
+      "line": 441,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "main",
+      "returnType": "void",
+      "signature": "void main(void)",
+      "line": 1584,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "MS_CheckParm",
+      "returnType": "boolean",
+      "signature": "boolean MS_CheckParm(char far *check)",
+      "line": 817,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "NewGame",
+      "returnType": "void",
+      "signature": "void NewGame(int difficulty,int episode)",
+      "line": 274,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "NewViewSize",
+      "returnType": "void",
+      "signature": "void NewViewSize(int width)",
+      "line": 1322,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "Patch386",
+      "returnType": "void",
+      "signature": "void Patch386(void)",
+      "line": 240,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "Quit",
+      "returnType": "void",
+      "signature": "void Quit(char *error)",
+      "line": 1344,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "ReadConfig",
+      "returnType": "void",
+      "signature": "void ReadConfig(void)",
+      "line": 88,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "SaveTheGame",
+      "returnType": "boolean",
+      "signature": "boolean SaveTheGame(int file,int x,int y)",
+      "line": 321,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "SetupWalls",
+      "returnType": "void",
+      "signature": "void SetupWalls(void)",
+      "line": 704,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "SetViewSize",
+      "returnType": "boolean",
+      "signature": "boolean SetViewSize(unsigned width, unsigned height)",
+      "line": 1276,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "ShowViewSize",
+      "returnType": "void",
+      "signature": "void ShowViewSize(int width)",
+      "line": 1306,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "ShutdownId",
+      "returnType": "void",
+      "signature": "void ShutdownId(void)",
+      "line": 555,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "WL_MAIN.C",
+      "functionName": "WriteConfig",
+      "returnType": "void",
+      "signature": "void WriteConfig(void)",
+      "line": 191,
+      "phases": [
+        "phase-1-math",
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-1-math"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_CacheAudioChunk",
+      "returnType": "void",
+      "signature": "void CA_CacheAudioChunk(int chunk)",
+      "line": 1132,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_CacheGrChunk",
+      "returnType": "void",
+      "signature": "void CA_CacheGrChunk(int chunk)",
+      "line": 1316,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_CacheMap",
+      "returnType": "void",
+      "signature": "void CA_CacheMap(int mapnum)",
+      "line": 1426,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_CacheMarks",
+      "returnType": "void",
+      "signature": "void CA_CacheMarks(void)",
+      "line": 1649,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_CacheScreen",
+      "returnType": "void",
+      "signature": "void CA_CacheScreen(int chunk)",
+      "line": 1379,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_CannotOpen",
+      "returnType": "void",
+      "signature": "void CA_CannotOpen(char *string)",
+      "line": 1758,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_ClearAllMarks",
+      "returnType": "void",
+      "signature": "void CA_ClearAllMarks(void)",
+      "line": 1573,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_ClearMarks",
+      "returnType": "void",
+      "signature": "void CA_ClearMarks(void)",
+      "line": 1552,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_CloseDebug",
+      "returnType": "void",
+      "signature": "void CA_CloseDebug(void)",
+      "line": 175,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_DownLevel",
+      "returnType": "void",
+      "signature": "void CA_DownLevel(void)",
+      "line": 1531,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_FarRead",
+      "returnType": "boolean",
+      "signature": "boolean CA_FarRead(int handle, byte far *dest, long length)",
+      "line": 211,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_FarWrite",
+      "returnType": "boolean",
+      "signature": "boolean CA_FarWrite(int handle, byte far *source, long length)",
+      "line": 247,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_LoadAllSounds",
+      "returnType": "void",
+      "signature": "void CA_LoadAllSounds(void)",
+      "line": 1206,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_LoadFile",
+      "returnType": "boolean",
+      "signature": "boolean CA_LoadFile(char *filename, memptr *ptr)",
+      "line": 345,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_OpenDebug",
+      "returnType": "void",
+      "signature": "void CA_OpenDebug(void)",
+      "line": 169,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_ReadFile",
+      "returnType": "boolean",
+      "signature": "boolean CA_ReadFile(char *filename, memptr *ptr)",
+      "line": 284,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_RLEWCompress",
+      "returnType": "long",
+      "signature": "long CA_RLEWCompress(unsigned huge *source, long length, unsigned huge *dest,\n  unsigned rlewtag)",
+      "line": 675,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_RLEWexpand",
+      "returnType": "void",
+      "signature": "void CA_RLEWexpand(unsigned huge *source, unsigned huge *dest,long length,\n  unsigned rlewtag)",
+      "line": 732,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_SetAllPurge",
+      "returnType": "void",
+      "signature": "void CA_SetAllPurge(void)",
+      "line": 1619,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_SetGrPurge",
+      "returnType": "void",
+      "signature": "void CA_SetGrPurge(void)",
+      "line": 1592,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_Shutdown",
+      "returnType": "void",
+      "signature": "void CA_Shutdown(void)",
+      "line": 1111,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_Startup",
+      "returnType": "void",
+      "signature": "void CA_Startup(void)",
+      "line": 1081,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_UpLevel",
+      "returnType": "void",
+      "signature": "void CA_UpLevel(void)",
+      "line": 1504,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CA_WriteFile",
+      "returnType": "boolean",
+      "signature": "boolean CA_WriteFile(char *filename, void far *ptr, long length)",
+      "line": 313,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_CarmackExpand",
+      "returnType": "void",
+      "signature": "void CAL_CarmackExpand(unsigned far *source, unsigned far *dest, unsigned length)",
+      "line": 607,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_ExpandGrChunk",
+      "returnType": "void",
+      "signature": "void CAL_ExpandGrChunk(int chunk, byte far *source)",
+      "line": 1259,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_GetGrChunkLength",
+      "returnType": "void",
+      "signature": "void CAL_GetGrChunkLength(int chunk)",
+      "line": 193,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_HuffExpand",
+      "returnType": "void",
+      "signature": "void CAL_HuffExpand(byte huge *source, byte huge *dest,\n  long length,huffnode *hufftable, boolean screenhack)",
+      "line": 416,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_OptimizeNodes",
+      "returnType": "void",
+      "signature": "void CAL_OptimizeNodes(huffnode *table)",
+      "line": 385,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_SetupAudioFile",
+      "returnType": "void",
+      "signature": "void CAL_SetupAudioFile(void)",
+      "line": 1024,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_SetupGrFile",
+      "returnType": "void",
+      "signature": "void CAL_SetupGrFile(void)",
+      "line": 859,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "CAL_SetupMapFile",
+      "returnType": "void",
+      "signature": "void CAL_SetupMapFile(void)",
+      "line": 940,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "ID_CA.C",
+      "functionName": "GRFILEPOS",
+      "returnType": "long",
+      "signature": "long GRFILEPOS(int c)",
+      "line": 131,
+      "phases": [
+        "phase-2-map",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "ClearMemory",
+      "returnType": "void",
+      "signature": "void ClearMemory(void)",
+      "line": 201,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "Died",
+      "returnType": "void",
+      "signature": "void Died(void)",
+      "line": 1112,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "DrawAllPlayBorder",
+      "returnType": "void",
+      "signature": "void DrawAllPlayBorder(void)",
+      "line": 819,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "DrawAllPlayBorderSides",
+      "returnType": "void",
+      "signature": "void DrawAllPlayBorderSides(void)",
+      "line": 798,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "DrawPlayBorder",
+      "returnType": "void",
+      "signature": "void DrawPlayBorder(void)",
+      "line": 839,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "DrawPlayBorderSides",
+      "returnType": "void",
+      "signature": "void DrawPlayBorderSides(void)",
+      "line": 775,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "DrawPlayScreen",
+      "returnType": "void",
+      "signature": "void DrawPlayScreen(void)",
+      "line": 866,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "FinishDemoRecord",
+      "returnType": "void",
+      "signature": "void FinishDemoRecord(void)",
+      "line": 935,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "GameLoop",
+      "returnType": "void",
+      "signature": "void GameLoop(void)",
+      "line": 1236,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "PlayDemo",
+      "returnType": "void",
+      "signature": "void PlayDemo(int demonumber)",
+      "line": 1042,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "PlaySoundLocGlobal",
+      "returnType": "void",
+      "signature": "void PlaySoundLocGlobal(word s,fixed gx,fixed gy)",
+      "line": 169,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "RecordDemo",
+      "returnType": "void",
+      "signature": "void RecordDemo(void)",
+      "line": 977,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "ScanInfoPlane",
+      "returnType": "void",
+      "signature": "void ScanInfoPlane(void)",
+      "line": 219,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "SetSoundLoc",
+      "returnType": "void",
+      "signature": "void SetSoundLoc(fixed gx,fixed gy)",
+      "line": 110,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "SetupGameLevel",
+      "returnType": "void",
+      "signature": "void SetupGameLevel(void)",
+      "line": 623,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "StartDemoRecord",
+      "returnType": "void",
+      "signature": "void StartDemoRecord(int levelnumber)",
+      "line": 912,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_GAME.C",
+      "functionName": "UpdateSoundLoc",
+      "returnType": "void",
+      "signature": "void UpdateSoundLoc(void)",
+      "line": 179,
+      "phases": [
+        "phase-2-map",
+        "phase-6-gamestate",
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-2-map"
+    },
+    {
+      "file": "WL_SCALE.C",
+      "functionName": "BadScale",
+      "returnType": "void",
+      "signature": "void BadScale(void)",
+      "line": 44,
+      "phases": [
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-3-raycast"
+    },
+    {
+      "file": "WL_SCALE.C",
+      "functionName": "BuildCompScale",
+      "returnType": "unsigned",
+      "signature": "unsigned BuildCompScale(int height, memptr *finalspot)",
+      "line": 151,
+      "phases": [
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-3-raycast"
+    },
+    {
+      "file": "WL_SCALE.C",
+      "functionName": "ScaleLine",
+      "returnType": "void",
+      "signature": "void ScaleLine(void)",
+      "line": 246,
+      "phases": [
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-3-raycast"
+    },
+    {
+      "file": "WL_SCALE.C",
+      "functionName": "ScaleShape",
+      "returnType": "void",
+      "signature": "void ScaleShape(int xcenter, int shapenum, unsigned height)",
+      "line": 419,
+      "phases": [
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-3-raycast"
+    },
+    {
+      "file": "WL_SCALE.C",
+      "functionName": "SetupScaling",
+      "returnType": "void",
+      "signature": "void SetupScaling(int maxscaleheight)",
+      "line": 58,
+      "phases": [
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-3-raycast"
+    },
+    {
+      "file": "WL_SCALE.C",
+      "functionName": "SimpleScaleShape",
+      "returnType": "void",
+      "signature": "void SimpleScaleShape(int xcenter, int shapenum, unsigned height)",
+      "line": 623,
+      "phases": [
+        "phase-3-raycast"
+      ],
+      "primaryPhase": "phase-3-raycast"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "CloseDoor",
+      "returnType": "void",
+      "signature": "void CloseDoor(int door)",
+      "line": 415,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "ConnectAreas",
+      "returnType": "void",
+      "signature": "void ConnectAreas(void)",
+      "line": 305,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "DoorClosing",
+      "returnType": "void",
+      "signature": "void DoorClosing(int door)",
+      "line": 615,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "DoorOpen",
+      "returnType": "void",
+      "signature": "void DoorOpen(int door)",
+      "line": 536,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "DoorOpening",
+      "returnType": "void",
+      "signature": "void DoorOpening(int door)",
+      "line": 552,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "InitAreas",
+      "returnType": "void",
+      "signature": "void InitAreas(void)",
+      "line": 313,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "InitDoorList",
+      "returnType": "void",
+      "signature": "void InitDoorList(void)",
+      "line": 330,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "InitStaticList",
+      "returnType": "void",
+      "signature": "void InitStaticList(void)",
+      "line": 122,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "MoveDoors",
+      "returnType": "void",
+      "signature": "void MoveDoors(void)",
+      "line": 684,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "MovePWalls",
+      "returnType": "void",
+      "signature": "void MovePWalls(void)",
+      "line": 807,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "OpenDoor",
+      "returnType": "void",
+      "signature": "void OpenDoor(int door)",
+      "line": 398,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "OperateDoor",
+      "returnType": "void",
+      "signature": "void OperateDoor(int door)",
+      "line": 496,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "PlaceItemType",
+      "returnType": "void",
+      "signature": "void PlaceItemType(int itemtype, int tilex, int tiley)",
+      "line": 197,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "PushWall",
+      "returnType": "void",
+      "signature": "void PushWall(int checkx, int checky, int dir)",
+      "line": 730,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "RecursiveConnect",
+      "returnType": "void",
+      "signature": "void RecursiveConnect(int areanumber)",
+      "line": 291,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "SpawnDoor",
+      "returnType": "void",
+      "signature": "void SpawnDoor(int tilex, int tiley, boolean vertical, int lock)",
+      "line": 348,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT1.C",
+      "functionName": "SpawnStatic",
+      "returnType": "void",
+      "signature": "void SpawnStatic(int tilex, int tiley, int type)",
+      "line": 137,
+      "phases": [
+        "phase-4-ai",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_Breathing",
+      "returnType": "void",
+      "signature": "void A_Breathing(objtype *ob)",
+      "line": 1780,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_DeathScream",
+      "returnType": "void",
+      "signature": "void A_DeathScream(objtype *ob)",
+      "line": 1059,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_Dormant",
+      "returnType": "void",
+      "signature": "void A_Dormant(objtype *ob)",
+      "line": 1932,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_HitlerMorph",
+      "returnType": "void",
+      "signature": "void A_HitlerMorph(objtype *ob)",
+      "line": 2884,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_MechaSound",
+      "returnType": "void",
+      "signature": "void A_MechaSound(objtype *ob)",
+      "line": 2911,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_Relaunch",
+      "returnType": "void",
+      "signature": "void A_Relaunch(objtype *ob)",
+      "line": 1846,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_Slurpie",
+      "returnType": "void",
+      "signature": "void A_Slurpie(objtype *ob)",
+      "line": 1774,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_Slurpie",
+      "returnType": "void",
+      "signature": "void A_Slurpie(objtype *ob)",
+      "line": 2919,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_Smoke",
+      "returnType": "void",
+      "signature": "void A_Smoke(objtype *ob)",
+      "line": 231,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_StartAttack",
+      "returnType": "void",
+      "signature": "void A_StartAttack(objtype *ob)",
+      "line": 1832,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_StartDeathCam",
+      "returnType": "void",
+      "signature": "void A_StartDeathCam(objtype *ob)",
+      "line": 3763,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "A_Victory",
+      "returnType": "void",
+      "signature": "void A_Victory(objtype *ob)",
+      "line": 1819,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "CheckPosition",
+      "returnType": "boolean",
+      "signature": "boolean CheckPosition(objtype *ob)",
+      "line": 3729,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "ProjectileTryMove",
+      "returnType": "boolean",
+      "signature": "boolean ProjectileTryMove(objtype *ob)",
+      "line": 264,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SelectPathDir",
+      "returnType": "void",
+      "signature": "void SelectPathDir(objtype *ob)",
+      "line": 3338,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnAngel",
+      "returnType": "void",
+      "signature": "void SpawnAngel(int tilex, int tiley)",
+      "line": 1792,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnBJVictory",
+      "returnType": "void",
+      "signature": "void SpawnBJVictory(void)",
+      "line": 3619,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnBoss",
+      "returnType": "void",
+      "signature": "void SpawnBoss(int tilex, int tiley)",
+      "line": 934,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnDeadGuard",
+      "returnType": "void",
+      "signature": "void SpawnDeadGuard(int tilex, int tiley)",
+      "line": 917,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnDeath",
+      "returnType": "void",
+      "signature": "void SpawnDeath(int tilex, int tiley)",
+      "line": 1599,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnFakeHitler",
+      "returnType": "void",
+      "signature": "void SpawnFakeHitler(int tilex, int tiley)",
+      "line": 2824,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnFat",
+      "returnType": "void",
+      "signature": "void SpawnFat(int tilex, int tiley)",
+      "line": 2268,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnGhosts",
+      "returnType": "void",
+      "signature": "void SpawnGhosts(int which, int tilex, int tiley)",
+      "line": 1992,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnGift",
+      "returnType": "void",
+      "signature": "void SpawnGift(int tilex, int tiley)",
+      "line": 2239,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnGretel",
+      "returnType": "void",
+      "signature": "void SpawnGretel(int tilex, int tiley)",
+      "line": 957,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnHitler",
+      "returnType": "void",
+      "signature": "void SpawnHitler(int tilex, int tiley)",
+      "line": 2854,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnPatrol",
+      "returnType": "void",
+      "signature": "void SpawnPatrol(enemy_t which, int tilex, int tiley, int dir)",
+      "line": 981,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnSchabbs",
+      "returnType": "void",
+      "signature": "void SpawnSchabbs(int tilex, int tiley)",
+      "line": 2210,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnSpectre",
+      "returnType": "void",
+      "signature": "void SpawnSpectre(int tilex, int tiley)",
+      "line": 1911,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnStand",
+      "returnType": "void",
+      "signature": "void SpawnStand(enemy_t which, int tilex, int tiley, int dir)",
+      "line": 845,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnTrans",
+      "returnType": "void",
+      "signature": "void SpawnTrans(int tilex, int tiley)",
+      "line": 1244,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnUber",
+      "returnType": "void",
+      "signature": "void SpawnUber(int tilex, int tiley)",
+      "line": 1325,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "SpawnWill",
+      "returnType": "void",
+      "signature": "void SpawnWill(int tilex, int tiley)",
+      "line": 1424,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Bite",
+      "returnType": "void",
+      "signature": "void T_Bite(objtype *ob)",
+      "line": 3528,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_BJDone",
+      "returnType": "void",
+      "signature": "void T_BJDone(objtype *ob)",
+      "line": 3712,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_BJJump",
+      "returnType": "void",
+      "signature": "void T_BJJump(objtype *ob)",
+      "line": 3679,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_BJRun",
+      "returnType": "void",
+      "signature": "void T_BJRun(objtype *ob)",
+      "line": 3641,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_BJYell",
+      "returnType": "void",
+      "signature": "void T_BJYell(objtype *ob)",
+      "line": 3696,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Chase",
+      "returnType": "void",
+      "signature": "void T_Chase(objtype *ob)",
+      "line": 3067,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_DogChase",
+      "returnType": "void",
+      "signature": "void T_DogChase(objtype *ob)",
+      "line": 3255,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Fake",
+      "returnType": "void",
+      "signature": "void T_Fake(objtype *ob)",
+      "line": 2972,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_FakeFire",
+      "returnType": "void",
+      "signature": "void T_FakeFire(objtype *ob)",
+      "line": 2931,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Fat",
+      "returnType": "void",
+      "signature": "void T_Fat(objtype *ob)",
+      "line": 2562,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Ghosts",
+      "returnType": "void",
+      "signature": "void T_Ghosts(objtype *ob)",
+      "line": 3205,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Gift",
+      "returnType": "void",
+      "signature": "void T_Gift(objtype *ob)",
+      "line": 2470,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_GiftThrow",
+      "returnType": "void",
+      "signature": "void T_GiftThrow(objtype *ob)",
+      "line": 2337,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Launch",
+      "returnType": "void",
+      "signature": "void T_Launch(objtype *ob)",
+      "line": 1622,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Path",
+      "returnType": "void",
+      "signature": "void T_Path(objtype *ob)",
+      "line": 3365,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Projectile",
+      "returnType": "void",
+      "signature": "void T_Projectile(objtype *ob)",
+      "line": 300,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Schabb",
+      "returnType": "void",
+      "signature": "void T_Schabb(objtype *ob)",
+      "line": 2378,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_SchabbThrow",
+      "returnType": "void",
+      "signature": "void T_SchabbThrow(objtype *ob)",
+      "line": 2297,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Shoot",
+      "returnType": "void",
+      "signature": "void T_Shoot(objtype *ob)",
+      "line": 3442,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Stand",
+      "returnType": "void",
+      "signature": "void T_Stand(objtype *ob)",
+      "line": 3045,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_UShoot",
+      "returnType": "void",
+      "signature": "void T_UShoot(objtype *ob)",
+      "line": 1349,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_ACT2.C",
+      "functionName": "T_Will",
+      "returnType": "void",
+      "signature": "void T_Will(objtype *ob)",
+      "line": 1448,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "CheckLine",
+      "returnType": "boolean",
+      "signature": "boolean CheckLine(objtype *ob)",
+      "line": 1035,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "CheckSight",
+      "returnType": "boolean",
+      "signature": "boolean CheckSight(objtype *ob)",
+      "line": 1185,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "DamageActor",
+      "returnType": "void",
+      "signature": "void DamageActor(objtype *ob, unsigned damage)",
+      "line": 962,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "DropItem",
+      "returnType": "void",
+      "signature": "void DropItem(stat_t itemtype, int tilex, int tiley)",
+      "line": 776,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "FirstSighting",
+      "returnType": "void",
+      "signature": "void FirstSighting(objtype *ob)",
+      "line": 1251,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "KillActor",
+      "returnType": "void",
+      "signature": "void KillActor(objtype *ob)",
+      "line": 813,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "MoveObj",
+      "returnType": "void",
+      "signature": "void MoveObj(objtype *ob, long move)",
+      "line": 657,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "NewState",
+      "returnType": "void",
+      "signature": "void NewState(objtype *ob, statetype *state)",
+      "line": 111,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "SelectChaseDir",
+      "returnType": "void",
+      "signature": "void SelectChaseDir(objtype *ob)",
+      "line": 473,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "SelectDodgeDir",
+      "returnType": "void",
+      "signature": "void SelectDodgeDir(objtype *ob)",
+      "line": 357,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "SelectRunDir",
+      "returnType": "void",
+      "signature": "void SelectRunDir(objtype *ob)",
+      "line": 583,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "SightPlayer",
+      "returnType": "boolean",
+      "signature": "boolean SightPlayer(objtype *ob)",
+      "line": 1402,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "SpawnNewObj",
+      "returnType": "void",
+      "signature": "void SpawnNewObj(unsigned tilex, unsigned tiley, statetype *state)",
+      "line": 79,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "WL_STATE.C",
+      "functionName": "TryWalk",
+      "returnType": "boolean",
+      "signature": "boolean TryWalk(objtype *ob)",
+      "line": 178,
+      "phases": [
+        "phase-4-ai"
+      ],
+      "primaryPhase": "phase-4-ai"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_Ack",
+      "returnType": "void",
+      "signature": "void IN_Ack(void)",
+      "line": 915,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_CheckAck",
+      "returnType": "boolean",
+      "signature": "boolean IN_CheckAck(void)",
+      "line": 888,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_ClearKeysDown",
+      "returnType": "void",
+      "signature": "void IN_ClearKeysDown(void)",
+      "line": 672,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_Default",
+      "returnType": "void",
+      "signature": "void IN_Default(boolean gotit,ControlType in)",
+      "line": 620,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_GetJoyAbs",
+      "returnType": "void",
+      "signature": "void IN_GetJoyAbs(word joy,word *xp,word *yp)",
+      "line": 245,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_GetJoyButtonsDB",
+      "returnType": "word",
+      "signature": "word IN_GetJoyButtonsDB(word joy)",
+      "line": 406,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_JoyButtons",
+      "returnType": "byte",
+      "signature": "byte IN_JoyButtons(void)",
+      "line": 977,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_MouseButtons",
+      "returnType": "byte",
+      "signature": "byte IN_MouseButtons(void)",
+      "line": 957,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_ReadControl",
+      "returnType": "void",
+      "signature": "void IN_ReadControl(int player,ControlInfo *info)",
+      "line": 689,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_SetControlType",
+      "returnType": "void",
+      "signature": "void IN_SetControlType(int player,ControlType type)",
+      "line": 820,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_SetKeyHook",
+      "returnType": "void",
+      "signature": "void IN_SetKeyHook(void (*hook)())",
+      "line": 661,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_SetupJoy",
+      "returnType": "void",
+      "signature": "void IN_SetupJoy(word joy,word minx,word maxx,word miny,word maxy)",
+      "line": 514,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_Shutdown",
+      "returnType": "void",
+      "signature": "void IN_Shutdown(void)",
+      "line": 639,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_StartAck",
+      "returnType": "void",
+      "signature": "void IN_StartAck(void)",
+      "line": 869,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_Startup",
+      "returnType": "void",
+      "signature": "void IN_Startup(void)",
+      "line": 582,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_UserInput",
+      "returnType": "boolean",
+      "signature": "boolean IN_UserInput(longword delay)",
+      "line": 934,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_WaitForASCII",
+      "returnType": "char",
+      "signature": "char IN_WaitForASCII(void)",
+      "line": 850,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "IN_WaitForKey",
+      "returnType": "ScanCode",
+      "signature": "ScanCode IN_WaitForKey(void)",
+      "line": 833,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_GetJoyButtons",
+      "returnType": "static word",
+      "signature": "static word INL_GetJoyButtons(word joy)",
+      "line": 388,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_GetJoyDelta",
+      "returnType": "void",
+      "signature": "void INL_GetJoyDelta(word joy,int *dx,int *dy)",
+      "line": 323,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_GetMouseButtons",
+      "returnType": "static word",
+      "signature": "static word INL_GetMouseButtons(void)",
+      "line": 230,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_GetMouseDelta",
+      "returnType": "static void",
+      "signature": "static void INL_GetMouseDelta(int *x,int *y)",
+      "line": 216,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_KeyService",
+      "returnType": "static void",
+      "signature": "static void INL_KeyService(void)",
+      "line": 141,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_SetJoyScale",
+      "returnType": "static void",
+      "signature": "static void INL_SetJoyScale(word joy)",
+      "line": 496,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_ShutJoy",
+      "returnType": "static void",
+      "signature": "static void INL_ShutJoy(word joy)",
+      "line": 570,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_ShutKbd",
+      "returnType": "static void",
+      "signature": "static void INL_ShutKbd(void)",
+      "line": 444,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_ShutMouse",
+      "returnType": "static void",
+      "signature": "static void INL_ShutMouse(void)",
+      "line": 488,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_StartJoy",
+      "returnType": "static boolean",
+      "signature": "static boolean INL_StartJoy(word joy)",
+      "line": 545,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_StartKbd",
+      "returnType": "static void",
+      "signature": "static void INL_StartKbd(void)",
+      "line": 428,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "ID_IN.C",
+      "functionName": "INL_StartMouse",
+      "returnType": "static boolean",
+      "signature": "static boolean INL_StartMouse(void)",
+      "line": 457,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "CheckWeaponChange",
+      "returnType": "void",
+      "signature": "void CheckWeaponChange(void)",
+      "line": 115,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "ClipMove",
+      "returnType": "void",
+      "signature": "void ClipMove(objtype *ob, long xmove, long ymove)",
+      "line": 864,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "Cmd_Fire",
+      "returnType": "void",
+      "signature": "void Cmd_Fire(void)",
+      "line": 981,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "Cmd_Use",
+      "returnType": "void",
+      "signature": "void Cmd_Use(void)",
+      "line": 1006,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "ControlMovement",
+      "returnType": "void",
+      "signature": "void ControlMovement(objtype *ob)",
+      "line": 147,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawAmmo",
+      "returnType": "void",
+      "signature": "void DrawAmmo(void)",
+      "line": 601,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawFace",
+      "returnType": "void",
+      "signature": "void DrawFace(void)",
+      "line": 268,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawHealth",
+      "returnType": "void",
+      "signature": "void DrawHealth(void)",
+      "line": 370,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawKeys",
+      "returnType": "void",
+      "signature": "void DrawKeys(void)",
+      "line": 556,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawLevel",
+      "returnType": "void",
+      "signature": "void DrawLevel(void)",
+      "line": 455,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawLives",
+      "returnType": "void",
+      "signature": "void DrawLives(void)",
+      "line": 476,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawScore",
+      "returnType": "void",
+      "signature": "void DrawScore(void)",
+      "line": 508,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "DrawWeapon",
+      "returnType": "void",
+      "signature": "void DrawWeapon(void)",
+      "line": 542,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "GetBonus",
+      "returnType": "void",
+      "signature": "void GetBonus(statobj_t *check)",
+      "line": 666,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "GiveAmmo",
+      "returnType": "void",
+      "signature": "void GiveAmmo(int ammo)",
+      "line": 615,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "GiveExtraMan",
+      "returnType": "void",
+      "signature": "void GiveExtraMan(void)",
+      "line": 490,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "GiveKey",
+      "returnType": "void",
+      "signature": "void GiveKey(int key)",
+      "line": 641,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "GivePoints",
+      "returnType": "void",
+      "signature": "void GivePoints(long points)",
+      "line": 521,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "GiveWeapon",
+      "returnType": "void",
+      "signature": "void GiveWeapon(int weapon)",
+      "line": 579,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "GunAttack",
+      "returnType": "void",
+      "signature": "void GunAttack(objtype *ob)",
+      "line": 1164,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "HealSelf",
+      "returnType": "void",
+      "signature": "void HealSelf(int points)",
+      "line": 432,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "KnifeAttack",
+      "returnType": "void",
+      "signature": "void KnifeAttack(objtype *ob)",
+      "line": 1131,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "LatchNumber",
+      "returnType": "void",
+      "signature": "void LatchNumber(int x, int y, int width, long number)",
+      "line": 335,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "SpawnPlayer",
+      "returnType": "void",
+      "signature": "void SpawnPlayer(int tilex, int tiley, int dir)",
+      "line": 1098,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "StatusDrawPic",
+      "returnType": "void",
+      "signature": "void StatusDrawPic(unsigned x, unsigned y, unsigned picnum)",
+      "line": 242,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "T_Attack",
+      "returnType": "void",
+      "signature": "void T_Attack(objtype *ob)",
+      "line": 1291,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "T_Player",
+      "returnType": "void",
+      "signature": "void T_Player(objtype *ob)",
+      "line": 1391,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "TakeDamage",
+      "returnType": "void",
+      "signature": "void TakeDamage(int points,objtype *attacker)",
+      "line": 384,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "Thrust",
+      "returnType": "void",
+      "signature": "void Thrust(int angle, long speed)",
+      "line": 926,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "TryMove",
+      "returnType": "boolean",
+      "signature": "boolean TryMove(objtype *ob)",
+      "line": 799,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "UpdateFace",
+      "returnType": "void",
+      "signature": "void UpdateFace(void)",
+      "line": 305,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "VictorySpin",
+      "returnType": "void",
+      "signature": "void VictorySpin(void)",
+      "line": 1253,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_AGENT.C",
+      "functionName": "VictoryTile",
+      "returnType": "void",
+      "signature": "void VictoryTile(void)",
+      "line": 908,
+      "phases": [
+        "phase-5-player",
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "CenterWindow",
+      "returnType": "void",
+      "signature": "void CenterWindow(word w,word h)",
+      "line": 595,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "CheckKeys",
+      "returnType": "void",
+      "signature": "void CheckKeys(void)",
+      "line": 612,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "ClearPaletteShifts",
+      "returnType": "void",
+      "signature": "void ClearPaletteShifts(void)",
+      "line": 1127,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "DoActor",
+      "returnType": "void",
+      "signature": "void DoActor(objtype *ob)",
+      "line": 1258,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "FinishPaletteShifts",
+      "returnType": "void",
+      "signature": "void FinishPaletteShifts(void)",
+      "line": 1230,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "GetNewActor",
+      "returnType": "void",
+      "signature": "void GetNewActor(void)",
+      "line": 917,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "InitActorList",
+      "returnType": "void",
+      "signature": "void InitActorList(void)",
+      "line": 873,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "InitRedShifts",
+      "returnType": "void",
+      "signature": "void InitRedShifts(void)",
+      "line": 1076,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PlayLoop",
+      "returnType": "void",
+      "signature": "void PlayLoop(void)",
+      "line": 1365,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PollControls",
+      "returnType": "void",
+      "signature": "void PollControls(void)",
+      "line": 453,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PollJoystickButtons",
+      "returnType": "void",
+      "signature": "void PollJoystickButtons(void)",
+      "line": 301,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PollJoystickMove",
+      "returnType": "void",
+      "signature": "void PollJoystickMove(void)",
+      "line": 396,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PollKeyboardButtons",
+      "returnType": "void",
+      "signature": "void PollKeyboardButtons(void)",
+      "line": 259,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PollKeyboardMove",
+      "returnType": "void",
+      "signature": "void PollKeyboardMove(void)",
+      "line": 339,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PollMouseButtons",
+      "returnType": "void",
+      "signature": "void PollMouseButtons(void)",
+      "line": 277,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "PollMouseMove",
+      "returnType": "void",
+      "signature": "void PollMouseMove(void)",
+      "line": 374,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "RemoveObj",
+      "returnType": "void",
+      "signature": "void RemoveObj(objtype *gone)",
+      "line": 949,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "StartBonusFlash",
+      "returnType": "void",
+      "signature": "void StartBonusFlash(void)",
+      "line": 1141,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "StartDamageFlash",
+      "returnType": "void",
+      "signature": "void StartDamageFlash(int damage)",
+      "line": 1155,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "StartMusic",
+      "returnType": "void",
+      "signature": "void StartMusic(void)",
+      "line": 1021,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "StopMusic",
+      "returnType": "void",
+      "signature": "void StopMusic(void)",
+      "line": 997,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_PLAY.C",
+      "functionName": "UpdatePaletteShifts",
+      "returnType": "void",
+      "signature": "void UpdatePaletteShifts(void)",
+      "line": 1169,
+      "phases": [
+        "phase-5-player"
+      ],
+      "primaryPhase": "phase-5-player"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "BackDoor",
+      "returnType": "int",
+      "signature": "int BackDoor(char *s)",
+      "line": 1458,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "BJ_Breathe",
+      "returnType": "void",
+      "signature": "void BJ_Breathe(void)",
+      "line": 391,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "CheckHighScore",
+      "returnType": "void",
+      "signature": "void CheckHighScore(long score,word other)",
+      "line": 1193,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "ClearSplitVWB",
+      "returnType": "void",
+      "signature": "void ClearSplitVWB(void)",
+      "line": 15,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "CopyProtection",
+      "returnType": "void",
+      "signature": "void CopyProtection(void)",
+      "line": 1482,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "DrawHighScores",
+      "returnType": "void",
+      "signature": "void DrawHighScores(void)",
+      "line": 1028,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "EndScreen",
+      "returnType": "void",
+      "signature": "void EndScreen(int palette, int screen)",
+      "line": 35,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "EndSpear",
+      "returnType": "void",
+      "signature": "void EndSpear(void)",
+      "line": 47,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "LevelCompleted",
+      "returnType": "void",
+      "signature": "void LevelCompleted(void)",
+      "line": 427,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "NonShareware",
+      "returnType": "void",
+      "signature": "void NonShareware(void)",
+      "line": 1271,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "PG13",
+      "returnType": "void",
+      "signature": "void PG13(void)",
+      "line": 308,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "PreloadGraphics",
+      "returnType": "void",
+      "signature": "void PreloadGraphics(void)",
+      "line": 993,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "PreloadUpdate",
+      "returnType": "boolean",
+      "signature": "boolean PreloadUpdate(unsigned current, unsigned total)",
+      "line": 970,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "Victory",
+      "returnType": "void",
+      "signature": "void Victory(void)",
+      "line": 106,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "WL_INTER.C",
+      "functionName": "Write",
+      "returnType": "void",
+      "signature": "void Write(int x,int y,char *string)",
+      "line": 329,
+      "phases": [
+        "phase-6-gamestate"
+      ],
+      "primaryPhase": "phase-6-gamestate"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_CenterWindow",
+      "returnType": "void",
+      "signature": "void US_CenterWindow(word w,word h)",
+      "line": 487,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_CheckParm",
+      "returnType": "int",
+      "signature": "int US_CheckParm(char *parm,char **strings)",
+      "line": 235,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_ClearWindow",
+      "returnType": "void",
+      "signature": "void US_ClearWindow(void)",
+      "line": 438,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_CPrint",
+      "returnType": "void",
+      "signature": "void US_CPrint(char far *s)",
+      "line": 409,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_CPrintLine",
+      "returnType": "void",
+      "signature": "void US_CPrintLine(char far *s)",
+      "line": 388,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_DrawWindow",
+      "returnType": "void",
+      "signature": "void US_DrawWindow(word x,word y,word w,word h)",
+      "line": 451,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_LineInput",
+      "returnType": "boolean",
+      "signature": "boolean US_LineInput(int x,int y,char *buf,char *def,boolean escok,\n\t\t\t\tint maxchars,int maxwidth)",
+      "line": 572,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_Print",
+      "returnType": "void",
+      "signature": "void US_Print(char far *s)",
+      "line": 286,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_PrintCentered",
+      "returnType": "void",
+      "signature": "void US_PrintCentered(char far *s)",
+      "line": 369,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_PrintSigned",
+      "returnType": "void",
+      "signature": "void US_PrintSigned(long n)",
+      "line": 336,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_PrintUnsigned",
+      "returnType": "void",
+      "signature": "void US_PrintUnsigned(longword n)",
+      "line": 323,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_RestoreWindow",
+      "returnType": "void",
+      "signature": "void US_RestoreWindow(WindowRec *win)",
+      "line": 517,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_SaveWindow",
+      "returnType": "void",
+      "signature": "void US_SaveWindow(WindowRec *win)",
+      "line": 499,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_SetPrintRoutines",
+      "returnType": "void",
+      "signature": "void US_SetPrintRoutines(void (*measure)(char far *,word *,word *),void (*print)(char far *))",
+      "line": 273,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_Shutdown",
+      "returnType": "void",
+      "signature": "void US_Shutdown(void)",
+      "line": 219,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "US_Startup",
+      "returnType": "void",
+      "signature": "void US_Startup(void)",
+      "line": 167,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "USL_HardError",
+      "returnType": "int",
+      "signature": "int USL_HardError(word errval,int ax,int bp,int si)",
+      "line": 79,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "USL_PrintInCenter",
+      "returnType": "void",
+      "signature": "void USL_PrintInCenter(char far *s,Rect r)",
+      "line": 349,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_US_1.C",
+      "functionName": "USL_XORICursor",
+      "returnType": "static void",
+      "signature": "static void USL_XORICursor(int x,int y,char *s,word cursor)",
+      "line": 536,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "BossKey",
+      "returnType": "void",
+      "signature": "void BossKey(void)",
+      "line": 626,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CacheLump",
+      "returnType": "void",
+      "signature": "void CacheLump(int lumpstart,int lumpend)",
+      "line": 2983,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CalibrateJoystick",
+      "returnType": "int",
+      "signature": "int CalibrateJoystick(void)",
+      "line": 1662,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CheckForEpisodes",
+      "returnType": "void",
+      "signature": "void CheckForEpisodes(void)",
+      "line": 3881,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CheckPause",
+      "returnType": "void",
+      "signature": "void CheckPause(void)",
+      "line": 3820,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CleanupControlPanel",
+      "returnType": "void",
+      "signature": "void CleanupControlPanel(void)",
+      "line": 3088,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "ClearMScreen",
+      "returnType": "void",
+      "signature": "void ClearMScreen(void)",
+      "line": 2968,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "Confirm",
+      "returnType": "int",
+      "signature": "int Confirm(char far *string)",
+      "line": 3591,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_ChangeView",
+      "returnType": "void",
+      "signature": "void CP_ChangeView(void)",
+      "line": 2735,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_CheckQuick",
+      "returnType": "int",
+      "signature": "int CP_CheckQuick(unsigned scancode)",
+      "line": 649,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_Control",
+      "returnType": "void",
+      "signature": "void CP_Control(void)",
+      "line": 1760,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_EndGame",
+      "returnType": "int",
+      "signature": "int CP_EndGame(void)",
+      "line": 863,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_LoadGame",
+      "returnType": "int",
+      "signature": "int CP_LoadGame(int quick)",
+      "line": 1372,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_NewGame",
+      "returnType": "void",
+      "signature": "void CP_NewGame(void)",
+      "line": 925,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_Quit",
+      "returnType": "void",
+      "signature": "void CP_Quit(void)",
+      "line": 2843,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_ReadThis",
+      "returnType": "void",
+      "signature": "void CP_ReadThis(void)",
+      "line": 609,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_SaveGame",
+      "returnType": "int",
+      "signature": "int CP_SaveGame(int quick)",
+      "line": 1537,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_Sound",
+      "returnType": "void",
+      "signature": "void CP_Sound(void)",
+      "line": 1134,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CP_ViewScores",
+      "returnType": "void",
+      "signature": "void CP_ViewScores(void)",
+      "line": 892,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "CustomControls",
+      "returnType": "void",
+      "signature": "void CustomControls(void)",
+      "line": 2047,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DefineJoyBtns",
+      "returnType": "void",
+      "signature": "void DefineJoyBtns(void)",
+      "line": 2099,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DefineKeyBtns",
+      "returnType": "void",
+      "signature": "void DefineKeyBtns(void)",
+      "line": 2110,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DefineKeyMove",
+      "returnType": "void",
+      "signature": "void DefineKeyMove(void)",
+      "line": 2121,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DefineMouseBtns",
+      "returnType": "void",
+      "signature": "void DefineMouseBtns(void)",
+      "line": 2088,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawChangeView",
+      "returnType": "void",
+      "signature": "void DrawChangeView(int view)",
+      "line": 2813,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawCtlScreen",
+      "returnType": "void",
+      "signature": "void DrawCtlScreen(void)",
+      "line": 1961,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawCustJoy",
+      "returnType": "void",
+      "signature": "void DrawCustJoy(int hilight)",
+      "line": 2662,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawCustKeybd",
+      "returnType": "void",
+      "signature": "void DrawCustKeybd(int hilight)",
+      "line": 2692,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawCustKeys",
+      "returnType": "void",
+      "signature": "void DrawCustKeys(int hilight)",
+      "line": 2713,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawCustMouse",
+      "returnType": "void",
+      "signature": "void DrawCustMouse(int hilight)",
+      "line": 2626,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawCustomScreen",
+      "returnType": "void",
+      "signature": "void DrawCustomScreen(void)",
+      "line": 2424,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawGun",
+      "returnType": "void",
+      "signature": "void DrawGun(CP_iteminfo *item_i,CP_itemtype far *items,int x,int *y,int which,int basey,void (*routine)(int w))",
+      "line": 3379,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawHalfStep",
+      "returnType": "void",
+      "signature": "void DrawHalfStep(int x,int y)",
+      "line": 3366,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawLoadSaveScreen",
+      "returnType": "void",
+      "signature": "void DrawLoadSaveScreen(int loadsave)",
+      "line": 1482,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawLSAction",
+      "returnType": "void",
+      "signature": "void DrawLSAction(int which)",
+      "line": 1342,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawMainMenu",
+      "returnType": "void",
+      "signature": "void DrawMainMenu(void)",
+      "line": 538,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawMenu",
+      "returnType": "void",
+      "signature": "void DrawMenu(CP_iteminfo *item_i,CP_itemtype far *items)",
+      "line": 3422,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawMenuGun",
+      "returnType": "void",
+      "signature": "void DrawMenuGun(CP_iteminfo *iteminfo)",
+      "line": 3843,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawMouseSens",
+      "returnType": "void",
+      "signature": "void DrawMouseSens(void)",
+      "line": 1834,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawNewEpisode",
+      "returnType": "void",
+      "signature": "void DrawNewEpisode(void)",
+      "line": 1049,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawNewGame",
+      "returnType": "void",
+      "signature": "void DrawNewGame(void)",
+      "line": 1086,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawNewGameDiff",
+      "returnType": "void",
+      "signature": "void DrawNewGameDiff(int w)",
+      "line": 1123,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawOutline",
+      "returnType": "void",
+      "signature": "void DrawOutline(int x,int y,int w,int h,int color1,int color2)",
+      "line": 3012,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawSoundMenu",
+      "returnType": "void",
+      "signature": "void DrawSoundMenu(void)",
+      "line": 1251,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawStripes",
+      "returnType": "void",
+      "signature": "void DrawStripes(int y)",
+      "line": 3859,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "DrawWindow",
+      "returnType": "void",
+      "signature": "void DrawWindow(int x,int y,int w,int h,int wcolor)",
+      "line": 3007,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "EnterCtrlData",
+      "returnType": "void",
+      "signature": "void EnterCtrlData(int index,CustomCtrls *cust,void (*DrawRtn)(int),void (*PrintRtn)(int),int type)",
+      "line": 2134,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "EraseGun",
+      "returnType": "void",
+      "signature": "void EraseGun(CP_iteminfo *item_i,CP_itemtype far *items,int x,int y,int which)",
+      "line": 3351,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "FixupCustom",
+      "returnType": "void",
+      "signature": "void FixupCustom(int w)",
+      "line": 2368,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "FreeMusic",
+      "returnType": "void",
+      "signature": "void FreeMusic(void)",
+      "line": 3787,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "GetYorN",
+      "returnType": "int",
+      "signature": "int GetYorN(int x,int y,int pic)",
+      "line": 3667,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "HandleMenu",
+      "returnType": "int",
+      "signature": "int HandleMenu(CP_iteminfo *item_i,CP_itemtype far *items,void (*routine)(int w))",
+      "line": 3105,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "IN_GetScanName",
+      "returnType": "byte *",
+      "signature": "byte * IN_GetScanName(ScanCode scan)",
+      "line": 3801,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "IntroScreen",
+      "returnType": "void",
+      "signature": "void IntroScreen(void)",
+      "line": 2881,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "Message",
+      "returnType": "void",
+      "signature": "void Message(char far *string)",
+      "line": 3723,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "MouseSensitivity",
+      "returnType": "void",
+      "signature": "void MouseSensitivity(void)",
+      "line": 1883,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "PrintCustJoy",
+      "returnType": "void",
+      "signature": "void PrintCustJoy(int i)",
+      "line": 2649,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "PrintCustKeybd",
+      "returnType": "void",
+      "signature": "void PrintCustKeybd(int i)",
+      "line": 2685,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "PrintCustKeys",
+      "returnType": "void",
+      "signature": "void PrintCustKeys(int i)",
+      "line": 2707,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "PrintCustMouse",
+      "returnType": "void",
+      "signature": "void PrintCustMouse(int i)",
+      "line": 2612,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "PrintLSEntry",
+      "returnType": "void",
+      "signature": "void PrintLSEntry(int w,int color)",
+      "line": 1515,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "ReadAnyControl",
+      "returnType": "void",
+      "signature": "void ReadAnyControl(ControlInfo *ci)",
+      "line": 3488,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "SetTextColor",
+      "returnType": "void",
+      "signature": "void SetTextColor(CP_itemtype far *items,int hlight)",
+      "line": 3456,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "SetupControlPanel",
+      "returnType": "void",
+      "signature": "void SetupControlPanel(void)",
+      "line": 3028,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "ShootSnd",
+      "returnType": "void",
+      "signature": "void ShootSnd(void)",
+      "line": 3869,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "StartCPMusic",
+      "returnType": "void",
+      "signature": "void StartCPMusic(int song)",
+      "line": 3764,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "TicDelay",
+      "returnType": "void",
+      "signature": "void TicDelay(int count)",
+      "line": 3404,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "TrackWhichGame",
+      "returnType": "void",
+      "signature": "void TrackWhichGame(int w)",
+      "line": 1467,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "UnCacheLump",
+      "returnType": "void",
+      "signature": "void UnCacheLump(int lumpstart,int lumpend)",
+      "line": 2990,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "US_ControlPanel",
+      "returnType": "void",
+      "signature": "void US_ControlPanel(byte scancode)",
+      "line": 331,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_MENU.C",
+      "functionName": "WaitKeyUp",
+      "returnType": "void",
+      "signature": "void WaitKeyUp(void)",
+      "line": 3470,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "BackPage",
+      "returnType": "void",
+      "signature": "void BackPage(void)",
+      "line": 516,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "CacheLayoutGraphics",
+      "returnType": "void",
+      "signature": "void CacheLayoutGraphics(void)",
+      "line": 542,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "EndText",
+      "returnType": "void",
+      "signature": "void EndText(void)",
+      "line": 799,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "HandleCommand",
+      "returnType": "void",
+      "signature": "void HandleCommand(void)",
+      "line": 184,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "HandleCtrls",
+      "returnType": "void",
+      "signature": "void HandleCtrls(void)",
+      "line": 327,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "HandleWord",
+      "returnType": "void",
+      "signature": "void HandleWord(void)",
+      "line": 350,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "HelpScreens",
+      "returnType": "void",
+      "signature": "void HelpScreens(void)",
+      "line": 746,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "NewLine",
+      "returnType": "void",
+      "signature": "void NewLine(void)",
+      "line": 287,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "PageLayout",
+      "returnType": "void",
+      "signature": "void PageLayout(boolean shownumber)",
+      "line": 410,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "ParseNumber",
+      "returnType": "int",
+      "signature": "int ParseNumber(void)",
+      "line": 84,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "ParsePicCommand",
+      "returnType": "void",
+      "signature": "void ParsePicCommand(void)",
+      "line": 123,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "ParseTimedCommand",
+      "returnType": "void",
+      "signature": "void ParseTimedCommand(void)",
+      "line": 131,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "RipToEOL",
+      "returnType": "void",
+      "signature": "void RipToEOL(void)",
+      "line": 69,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "WL_TEXT.C",
+      "functionName": "TimedPicCommand",
+      "returnType": "void",
+      "signature": "void TimedPicCommand(void)",
+      "line": 153,
+      "phases": [
+        "phase-7-menu-text"
+      ],
+      "primaryPhase": "phase-7-menu-text"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "alOut",
+      "returnType": "void",
+      "signature": "void alOut(byte n,byte b)",
+      "line": 1270,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_Default",
+      "returnType": "void",
+      "signature": "void SD_Default(boolean gotit,SDMode sd,SMMode sm)",
+      "line": 2010,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_FadeOutMusic",
+      "returnType": "void",
+      "signature": "void SD_FadeOutMusic(void)",
+      "line": 2332,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_MusicOff",
+      "returnType": "void",
+      "signature": "void SD_MusicOff(void)",
+      "line": 2284,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_MusicOn",
+      "returnType": "void",
+      "signature": "void SD_MusicOn(void)",
+      "line": 2273,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_MusicPlaying",
+      "returnType": "boolean",
+      "signature": "boolean SD_MusicPlaying(void)",
+      "line": 2350,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_PlayDigitized",
+      "returnType": "void",
+      "signature": "void SD_PlayDigitized(word which,int leftpos,int rightpos)",
+      "line": 1127,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_PlaySound",
+      "returnType": "boolean",
+      "signature": "boolean SD_PlaySound(soundnames sound)",
+      "line": 2121,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_Poll",
+      "returnType": "void",
+      "signature": "void SD_Poll(void)",
+      "line": 1081,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_PositionSound",
+      "returnType": "void",
+      "signature": "void SD_PositionSound(int leftvol,int rightvol)",
+      "line": 2108,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_SetDigiDevice",
+      "returnType": "void",
+      "signature": "void SD_SetDigiDevice(SDSMode mode)",
+      "line": 1190,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_SetMusicMode",
+      "returnType": "boolean",
+      "signature": "boolean SD_SetMusicMode(SMMode mode)",
+      "line": 1828,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_SetPosition",
+      "returnType": "void",
+      "signature": "void SD_SetPosition(int leftpos,int rightpos)",
+      "line": 1106,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_SetSoundMode",
+      "returnType": "boolean",
+      "signature": "boolean SD_SetSoundMode(SDMode mode)",
+      "line": 1772,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_SetUserHook",
+      "returnType": "void",
+      "signature": "void SD_SetUserHook(void (* hook)(void))",
+      "line": 2096,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_Shutdown",
+      "returnType": "void",
+      "signature": "void SD_Shutdown(void)",
+      "line": 2061,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_SoundPlaying",
+      "returnType": "word",
+      "signature": "word SD_SoundPlaying(void)",
+      "line": 2209,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_StartMusic",
+      "returnType": "void",
+      "signature": "void SD_StartMusic(MusicGroup far *music)",
+      "line": 2307,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_Startup",
+      "returnType": "void",
+      "signature": "void SD_Startup(void)",
+      "line": 1866,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_StopDigitized",
+      "returnType": "void",
+      "signature": "void SD_StopDigitized(void)",
+      "line": 1042,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_StopSound",
+      "returnType": "void",
+      "signature": "void SD_StopSound(void)",
+      "line": 2235,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SD_WaitSoundDone",
+      "returnType": "void",
+      "signature": "void SD_WaitSoundDone(void)",
+      "line": 2261,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_ALService",
+      "returnType": "void",
+      "signature": "void SDL_ALService(void)",
+      "line": 1496,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_AlSetFXInst",
+      "returnType": "static void",
+      "signature": "static void SDL_AlSetFXInst(Instrument far *inst)",
+      "line": 1398,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_ALSoundService",
+      "returnType": "void",
+      "signature": "void SDL_ALSoundService(void)",
+      "line": 1469,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_CheckSB",
+      "returnType": "static boolean",
+      "signature": "static boolean SDL_CheckSB(int port)",
+      "line": 446,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_CheckSS",
+      "returnType": "static boolean",
+      "signature": "static boolean SDL_CheckSS(void)",
+      "line": 755,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_CleanAL",
+      "returnType": "static void",
+      "signature": "static void SDL_CleanAL(void)",
+      "line": 1549,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_CleanDevice",
+      "returnType": "static void",
+      "signature": "static void SDL_CleanDevice(void)",
+      "line": 1741,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_DetectAdLib",
+      "returnType": "static boolean",
+      "signature": "static boolean SDL_DetectAdLib(void)",
+      "line": 1583,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_DetectSoundBlaster",
+      "returnType": "static boolean",
+      "signature": "static boolean SDL_DetectSoundBlaster(int port)",
+      "line": 497,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_DetectSoundSource",
+      "returnType": "static boolean",
+      "signature": "static boolean SDL_DetectSoundSource(void)",
+      "line": 805,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_DigitizedDone",
+      "returnType": "void",
+      "signature": "void SDL_DigitizedDone(void)",
+      "line": 1162,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_LoadDigiSegment",
+      "returnType": "memptr",
+      "signature": "memptr SDL_LoadDigiSegment(word page)",
+      "line": 993,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_PCService",
+      "returnType": "static void",
+      "signature": "static void SDL_PCService(void)",
+      "line": 920,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_PlayDigiSegment",
+      "returnType": "void",
+      "signature": "void SDL_PlayDigiSegment(memptr addr,word len)",
+      "line": 1025,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_PositionSBP",
+      "returnType": "static void",
+      "signature": "static void SDL_PositionSBP(int leftpos,int rightpos)",
+      "line": 419,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SBPlaySeg",
+      "returnType": "static longword",
+      "signature": "static longword SDL_SBPlaySeg(volatile byte huge *data,longword length)",
+      "line": 294,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SBService",
+      "returnType": "static void",
+      "signature": "static void SDL_SBService(void)",
+      "line": 344,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SBSetDMA",
+      "returnType": "void",
+      "signature": "void SDL_SBSetDMA(byte channel)",
+      "line": 532,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SetInstrument",
+      "returnType": "static void",
+      "signature": "static void SDL_SetInstrument(int track,int which,Instrument far *inst,boolean percussive)",
+      "line": 1338,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SetIntsPerSec",
+      "returnType": "static void",
+      "signature": "static void SDL_SetIntsPerSec(word ints)",
+      "line": 206,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SetTimer0",
+      "returnType": "static void",
+      "signature": "static void SDL_SetTimer0(word speed)",
+      "line": 178,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SetTimerSpeed",
+      "returnType": "static void",
+      "signature": "static void SDL_SetTimerSpeed(void)",
+      "line": 212,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SetupDigi",
+      "returnType": "void",
+      "signature": "void SDL_SetupDigi(void)",
+      "line": 1232,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_ShutAL",
+      "returnType": "static void",
+      "signature": "static void SDL_ShutAL(void)",
+      "line": 1530,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_ShutDevice",
+      "returnType": "static void",
+      "signature": "static void SDL_ShutDevice(void)",
+      "line": 1721,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_ShutPC",
+      "returnType": "static void",
+      "signature": "static void SDL_ShutPC(void)",
+      "line": 975,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_ShutSB",
+      "returnType": "static void",
+      "signature": "static void SDL_ShutSB(void)",
+      "line": 605,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_ShutSS",
+      "returnType": "static void",
+      "signature": "static void SDL_ShutSS(void)",
+      "line": 743,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_SSService",
+      "returnType": "static void",
+      "signature": "static void SDL_SSService(void)",
+      "line": 651,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_StartAL",
+      "returnType": "static void",
+      "signature": "static void SDL_StartAL(void)",
+      "line": 1569,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_StartDevice",
+      "returnType": "static void",
+      "signature": "static void SDL_StartDevice(void)",
+      "line": 1753,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_StartSB",
+      "returnType": "static void",
+      "signature": "static void SDL_StartSB(void)",
+      "line": 549,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_StartSS",
+      "returnType": "static void",
+      "signature": "static void SDL_StartSS(void)",
+      "line": 717,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "ID_SD.C",
+      "functionName": "SDL_t0Service",
+      "returnType": "static void",
+      "signature": "static void SDL_t0Service(void)",
+      "line": 1629,
+      "phases": [
+        "phase-8-audio"
+      ],
+      "primaryPhase": "phase-8-audio"
+    },
+    {
+      "file": "CONTIGSC.C",
+      "functionName": "BadScale",
+      "returnType": "void",
+      "signature": "void BadScale(void)",
+      "line": 46,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "CONTIGSC.C",
+      "functionName": "BuildCompScale",
+      "returnType": "unsigned",
+      "signature": "unsigned BuildCompScale(int height, byte far *code)",
+      "line": 152,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "CONTIGSC.C",
+      "functionName": "ScaleLine",
+      "returnType": "void",
+      "signature": "void ScaleLine(void)",
+      "line": 246,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "CONTIGSC.C",
+      "functionName": "ScaleShape",
+      "returnType": "void",
+      "signature": "void ScaleShape(int xcenter, int shapenum, unsigned height)",
+      "line": 419,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "CONTIGSC.C",
+      "functionName": "SetupScaling",
+      "returnType": "long",
+      "signature": "long SetupScaling(int maxscaleheight)",
+      "line": 60,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "CONTIGSC.C",
+      "functionName": "SimpleScaleShape",
+      "returnType": "void",
+      "signature": "void SimpleScaleShape(int xcenter, int shapenum, unsigned height)",
+      "line": 623,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "DETECT.C",
+      "functionName": "SDL_CheckSB",
+      "returnType": "static boolean",
+      "signature": "static boolean SDL_CheckSB(int port)",
+      "line": 6,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "DETECT.C",
+      "functionName": "SDL_DetectSoundBlaster",
+      "returnType": "static boolean",
+      "signature": "static boolean SDL_DetectSoundBlaster(int port)",
+      "line": 57,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_BombOnError",
+      "returnType": "void",
+      "signature": "void MM_BombOnError(boolean bomb)",
+      "line": 946,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_DumpData",
+      "returnType": "void",
+      "signature": "void MM_DumpData(void)",
+      "line": 820,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_FreePtr",
+      "returnType": "void",
+      "signature": "void MM_FreePtr(memptr *baseptr)",
+      "line": 557,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_GetPtr",
+      "returnType": "void",
+      "signature": "void MM_GetPtr(memptr *baseptr,unsigned long size)",
+      "line": 433,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_SetLock",
+      "returnType": "void",
+      "signature": "void MM_SetLock(memptr *baseptr, boolean locked)",
+      "line": 628,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_SetPurge",
+      "returnType": "void",
+      "signature": "void MM_SetPurge(memptr *baseptr, int purge)",
+      "line": 592,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_ShowMemory",
+      "returnType": "void",
+      "signature": "void MM_ShowMemory(void)",
+      "line": 770,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_Shutdown",
+      "returnType": "void",
+      "signature": "void MM_Shutdown(void)",
+      "line": 411,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_SortMem",
+      "returnType": "void",
+      "signature": "void MM_SortMem(void)",
+      "line": 664,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_Startup",
+      "returnType": "void",
+      "signature": "void MM_Startup(void)",
+      "line": 331,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_TotalFree",
+      "returnType": "long",
+      "signature": "long MM_TotalFree(void)",
+      "line": 917,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MM_UnusedMemory",
+      "returnType": "long",
+      "signature": "long MM_UnusedMemory(void)",
+      "line": 887,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MML_CheckForXMS",
+      "returnType": "boolean",
+      "signature": "boolean MML_CheckForXMS(void)",
+      "line": 127,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MML_ClearBlock",
+      "returnType": "void",
+      "signature": "void MML_ClearBlock(void)",
+      "line": 296,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MML_SetupXMS",
+      "returnType": "void",
+      "signature": "void MML_SetupXMS(void)",
+      "line": 154,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MML_ShutdownXMS",
+      "returnType": "void",
+      "signature": "void MML_ShutdownXMS(void)",
+      "line": 206,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_MM.C",
+      "functionName": "MML_UseSpace",
+      "returnType": "void",
+      "signature": "void MML_UseSpace(unsigned segstart, unsigned seglength)",
+      "line": 235,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_CheckMainMem",
+      "returnType": "void",
+      "signature": "void PM_CheckMainMem(void)",
+      "line": 348,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_GetPage",
+      "returnType": "memptr",
+      "signature": "memptr PM_GetPage(int pagenum)",
+      "line": 875,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_GetPageAddress",
+      "returnType": "memptr",
+      "signature": "memptr PM_GetPageAddress(int pagenum)",
+      "line": 626,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_NextFrame",
+      "returnType": "void",
+      "signature": "void PM_NextFrame(void)",
+      "line": 1071,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_Preload",
+      "returnType": "void",
+      "signature": "void PM_Preload(boolean (*update)(word current,word total))",
+      "line": 946,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_Reset",
+      "returnType": "void",
+      "signature": "void PM_Reset(void)",
+      "line": 1112,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_SetMainMemPurge",
+      "returnType": "void",
+      "signature": "void PM_SetMainMemPurge(int level)",
+      "line": 325,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_SetPageLock",
+      "returnType": "void",
+      "signature": "void PM_SetPageLock(int pagenum,PMLockType lock)",
+      "line": 932,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_Shutdown",
+      "returnType": "void",
+      "signature": "void PM_Shutdown(void)",
+      "line": 1186,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PM_Startup",
+      "returnType": "void",
+      "signature": "void PM_Startup(void)",
+      "line": 1140,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_ClosePageFile",
+      "returnType": "void",
+      "signature": "void PML_ClosePageFile(void)",
+      "line": 533,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_CopyFromXMS",
+      "returnType": "void",
+      "signature": "void PML_CopyFromXMS(byte far *target,int sourcepage,word length)",
+      "line": 292,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_CopyToXMS",
+      "returnType": "void",
+      "signature": "void PML_CopyToXMS(byte far *source,int targetpage,word length)",
+      "line": 282,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_GetAPageBuffer",
+      "returnType": "byte *",
+      "signature": "byte * PML_GetAPageBuffer(int pagenum,boolean mainonly)",
+      "line": 778,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_GetEMSAddress",
+      "returnType": "memptr",
+      "signature": "memptr PML_GetEMSAddress(int page,PMLockType lock)",
+      "line": 560,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_GetEMSAddress",
+      "returnType": "memptr",
+      "signature": "memptr PML_GetEMSAddress(int page,PMLockType lock)",
+      "line": 606,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_GetPageFromXMS",
+      "returnType": "memptr",
+      "signature": "memptr PML_GetPageFromXMS(int pagenum,boolean mainonly)",
+      "line": 830,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_GiveLRUPage",
+      "returnType": "int",
+      "signature": "int PML_GiveLRUPage(boolean mainonly)",
+      "line": 644,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_GiveLRUXMSPage",
+      "returnType": "int",
+      "signature": "int PML_GiveLRUXMSPage(void)",
+      "line": 676,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_LoadPage",
+      "returnType": "void",
+      "signature": "void PML_LoadPage(int pagenum,boolean mainonly)",
+      "line": 857,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_MapEMS",
+      "returnType": "void",
+      "signature": "void PML_MapEMS(word logical,word physical)",
+      "line": 56,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_OpenPageFile",
+      "returnType": "void",
+      "signature": "void PML_OpenPageFile(void)",
+      "line": 483,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_PutPageInXMS",
+      "returnType": "void",
+      "signature": "void PML_PutPageInXMS(int pagenum)",
+      "line": 703,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_ReadFromFile",
+      "returnType": "void",
+      "signature": "void PML_ReadFromFile(byte far *buf,long offset,word length)",
+      "line": 467,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_ShutdownEMS",
+      "returnType": "void",
+      "signature": "void PML_ShutdownEMS(void)",
+      "line": 170,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_ShutdownMainMem",
+      "returnType": "void",
+      "signature": "void PML_ShutdownMainMem(void)",
+      "line": 446,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_ShutdownXMS",
+      "returnType": "void",
+      "signature": "void PML_ShutdownXMS(void)",
+      "line": 302,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_StartupEMS",
+      "returnType": "boolean",
+      "signature": "boolean PML_StartupEMS(void)",
+      "line": 79,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_StartupMainMem",
+      "returnType": "void",
+      "signature": "void PML_StartupMainMem(void)",
+      "line": 417,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_StartupXMS",
+      "returnType": "boolean",
+      "signature": "boolean PML_StartupXMS(void)",
+      "line": 195,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_TransferPageSpace",
+      "returnType": "memptr",
+      "signature": "memptr PML_TransferPageSpace(int orig,int new)",
+      "line": 733,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_PM.C",
+      "functionName": "PML_XMSCopy",
+      "returnType": "void",
+      "signature": "void PML_XMSCopy(boolean toxms,byte far *addr,word xmspage,word length)",
+      "line": 242,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "FizzleFade",
+      "returnType": "boolean",
+      "signature": "boolean FizzleFade(unsigned source, unsigned dest,\n\tunsigned width,unsigned height, unsigned frames, boolean abortable)",
+      "line": 469,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "LatchDrawPic",
+      "returnType": "void",
+      "signature": "void LatchDrawPic(unsigned x, unsigned y, unsigned picnum)",
+      "line": 373,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "LoadLatchMem",
+      "returnType": "void",
+      "signature": "void LoadLatchMem(void)",
+      "line": 395,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VL_MungePic",
+      "returnType": "void",
+      "signature": "void VL_MungePic(byte far *source, unsigned width, unsigned height)",
+      "line": 168,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VW_DrawColorPropString",
+      "returnType": "void",
+      "signature": "void VW_DrawColorPropString(char far *string)",
+      "line": 93,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VW_DrawPropString",
+      "returnType": "void",
+      "signature": "void VW_DrawPropString(char far *string)",
+      "line": 38,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VW_MarkUpdateBlock",
+      "returnType": "int",
+      "signature": "int VW_MarkUpdateBlock(int x1, int y1, int x2, int y2)",
+      "line": 244,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VW_MeasureMPropString",
+      "returnType": "void",
+      "signature": "void VW_MeasureMPropString(char far *string, word *width, word *height)",
+      "line": 217,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VW_MeasurePropString",
+      "returnType": "void",
+      "signature": "void VW_MeasurePropString(char far *string, word *width, word *height)",
+      "line": 212,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VW_UpdateScreen",
+      "returnType": "void",
+      "signature": "void VW_UpdateScreen(void)",
+      "line": 351,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_Bar",
+      "returnType": "void",
+      "signature": "void VWB_Bar(int x, int y, int width, int height, int color)",
+      "line": 326,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_DrawPic",
+      "returnType": "void",
+      "signature": "void VWB_DrawPic(int x, int y, int chunknum)",
+      "line": 301,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_DrawPropString",
+      "returnType": "void",
+      "signature": "void VWB_DrawPropString(char far *string)",
+      "line": 316,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_DrawTile8",
+      "returnType": "void",
+      "signature": "void VWB_DrawTile8(int x, int y, int tile)",
+      "line": 289,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_DrawTile8M",
+      "returnType": "void",
+      "signature": "void VWB_DrawTile8M(int x, int y, int tile)",
+      "line": 295,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_Hlin",
+      "returnType": "void",
+      "signature": "void VWB_Hlin(int x1, int x2, int y, int color)",
+      "line": 339,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_Plot",
+      "returnType": "void",
+      "signature": "void VWB_Plot(int x, int y, int color)",
+      "line": 333,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWB_Vlin",
+      "returnType": "void",
+      "signature": "void VWB_Vlin(int y1, int y2, int x, int color)",
+      "line": 345,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VH.C",
+      "functionName": "VWL_MeasureString",
+      "returnType": "void",
+      "signature": "void VWL_MeasureString(char far *string, word *width, word *height\n\t, fontstruct _seg *font)",
+      "line": 204,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_Bar",
+      "returnType": "void",
+      "signature": "void VL_Bar(int x, int y, int width, int height, int color)",
+      "line": 690,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_ClearVideo",
+      "returnType": "void",
+      "signature": "void VL_ClearVideo(byte color)",
+      "line": 149,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_ColorBorder",
+      "returnType": "void",
+      "signature": "void VL_ColorBorder(int color)",
+      "line": 567,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_DePlaneVGA",
+      "returnType": "void",
+      "signature": "void VL_DePlaneVGA(void)",
+      "line": 190,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_DrawLatch8String",
+      "returnType": "void",
+      "signature": "void VL_DrawLatch8String(char *str, unsigned tile8ptr, int printx, int printy)",
+      "line": 1003,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_DrawTile8String",
+      "returnType": "void",
+      "signature": "void VL_DrawTile8String(char *str, char far *tile8ptr, int printx, int printy)",
+      "line": 958,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_FadeIn",
+      "returnType": "void",
+      "signature": "void VL_FadeIn(int start, int end, byte far *palette, int steps)",
+      "line": 498,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_FadeOut",
+      "returnType": "void",
+      "signature": "void VL_FadeOut(int start, int end, int red, int green, int blue, int steps)",
+      "line": 448,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_FillPalette",
+      "returnType": "void",
+      "signature": "void VL_FillPalette(int red, int green, int blue)",
+      "line": 307,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_GetColor",
+      "returnType": "void",
+      "signature": "void VL_GetColor(int color, int *red, int *green, int *blue)",
+      "line": 348,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_GetPalette",
+      "returnType": "void",
+      "signature": "void VL_GetPalette(byte far *palette)",
+      "line": 426,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_Hlin",
+      "returnType": "void",
+      "signature": "void VL_Hlin(unsigned x, unsigned y, unsigned width, unsigned color)",
+      "line": 618,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_LatchToScreen",
+      "returnType": "void",
+      "signature": "void VL_LatchToScreen(unsigned source, int width, int height, int x, int y)",
+      "line": 859,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_MaskedToScreen",
+      "returnType": "void",
+      "signature": "void VL_MaskedToScreen(byte far *source, int width, int height, int x, int y)",
+      "line": 824,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_MemToLatch",
+      "returnType": "void",
+      "signature": "void VL_MemToLatch(byte far *source, int width, int height, unsigned dest)",
+      "line": 750,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_MemToScreen",
+      "returnType": "void",
+      "signature": "void VL_MemToScreen(byte far *source, int width, int height, int x, int y)",
+      "line": 789,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_Plot",
+      "returnType": "void",
+      "signature": "void VL_Plot(int x, int y, int color)",
+      "line": 599,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_ScreenToScreen",
+      "returnType": "void",
+      "signature": "void VL_ScreenToScreen(unsigned source, unsigned dest,int width, int height)",
+      "line": 907,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_SetColor",
+      "returnType": "void",
+      "signature": "void VL_SetColor(int color, int red, int green, int blue)",
+      "line": 330,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_SetLineWidth",
+      "returnType": "void",
+      "signature": "void VL_SetLineWidth(unsigned width)",
+      "line": 244,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_SetPalette",
+      "returnType": "void",
+      "signature": "void VL_SetPalette(byte far *palette)",
+      "line": 369,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_SetSplitScreen",
+      "returnType": "void",
+      "signature": "void VL_SetSplitScreen(int linenum)",
+      "line": 275,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_SetTextMode",
+      "returnType": "void",
+      "signature": "void VL_SetTextMode(void)",
+      "line": 131,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_SetVGAPlaneMode",
+      "returnType": "void",
+      "signature": "void VL_SetVGAPlaneMode(void)",
+      "line": 113,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_Shutdown",
+      "returnType": "void",
+      "signature": "void VL_Shutdown(void)",
+      "line": 99,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_SizeTile8String",
+      "returnType": "void",
+      "signature": "void VL_SizeTile8String(char *str, int *width, int *height)",
+      "line": 1069,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_Startup",
+      "returnType": "void",
+      "signature": "void VL_Startup(void)",
+      "line": 50,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_Startup",
+      "returnType": "void",
+      "signature": "void VL_Startup(void)",
+      "line": 69,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_TestPaletteSet",
+      "returnType": "void",
+      "signature": "void VL_TestPaletteSet(void)",
+      "line": 544,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "ID_VL.C",
+      "functionName": "VL_Vlin",
+      "returnType": "void",
+      "signature": "void VL_Vlin(int x, int y, int height, int color)",
+      "line": 663,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "MUNGE.C",
+      "functionName": "VL_MungePic",
+      "returnType": "void",
+      "signature": "void VL_MungePic(unsigned char far *source, unsigned width, unsigned height)",
+      "line": 8,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "OLDSCALE.C",
+      "functionName": "BadScale",
+      "returnType": "void",
+      "signature": "void BadScale(void)",
+      "line": 42,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "OLDSCALE.C",
+      "functionName": "BuildCompScale",
+      "returnType": "unsigned",
+      "signature": "unsigned BuildCompScale(int height, memptr *finalspot)",
+      "line": 153,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "OLDSCALE.C",
+      "functionName": "ScaleLine",
+      "returnType": "void",
+      "signature": "void ScaleLine(void)",
+      "line": 250,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "OLDSCALE.C",
+      "functionName": "ScaleShape",
+      "returnType": "void",
+      "signature": "void ScaleShape(int xcenter, int shapenum, unsigned height)",
+      "line": 423,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "OLDSCALE.C",
+      "functionName": "SetupScaling",
+      "returnType": "void",
+      "signature": "void SetupScaling(int maxscaleheight)",
+      "line": 56,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "OLDSCALE.C",
+      "functionName": "SimpleScaleShape",
+      "returnType": "void",
+      "signature": "void SimpleScaleShape(int xcenter, int shapenum, unsigned height)",
+      "line": 627,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WL_DEBUG.C",
+      "functionName": "CountObjects",
+      "returnType": "void",
+      "signature": "void CountObjects(void)",
+      "line": 84,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WL_DEBUG.C",
+      "functionName": "DebugKeys",
+      "returnType": "int",
+      "signature": "int DebugKeys(void)",
+      "line": 413,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WL_DEBUG.C",
+      "functionName": "DebugMemory",
+      "returnType": "void",
+      "signature": "void DebugMemory(void)",
+      "line": 52,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WL_DEBUG.C",
+      "functionName": "OverheadRefresh",
+      "returnType": "void",
+      "signature": "void OverheadRefresh(void)",
+      "line": 609,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WL_DEBUG.C",
+      "functionName": "PicturePause",
+      "returnType": "void",
+      "signature": "void PicturePause(void)",
+      "line": 135,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WL_DEBUG.C",
+      "functionName": "ShapeTest",
+      "returnType": "void",
+      "signature": "void ShapeTest(void)",
+      "line": 216,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WL_DEBUG.C",
+      "functionName": "ViewMap",
+      "returnType": "void",
+      "signature": "void ViewMap(void)",
+      "line": 667,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WOLFHACK.C",
+      "functionName": "DrawPlanes",
+      "returnType": "void",
+      "signature": "void DrawPlanes(void)",
+      "line": 140,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WOLFHACK.C",
+      "functionName": "DrawSpans",
+      "returnType": "void",
+      "signature": "void DrawSpans(int x1, int x2, int height)",
+      "line": 43,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WOLFHACK.C",
+      "functionName": "FixedMul",
+      "returnType": "fixed",
+      "signature": "fixed FixedMul(fixed a, fixed b)",
+      "line": 19,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    },
+    {
+      "file": "WOLFHACK.C",
+      "functionName": "SetPlaneViewSize",
+      "returnType": "void",
+      "signature": "void SetPlaneViewSize(void)",
+      "line": 96,
+      "phases": [
+        "shared"
+      ],
+      "primaryPhase": "shared"
+    }
+  ]
+}
