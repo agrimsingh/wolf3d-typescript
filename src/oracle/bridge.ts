@@ -43,6 +43,114 @@ type OracleFns = {
     screenLoc2: number,
     statusBarPic: number,
   ) => number;
+  wlDrawTransformActorHash: (
+    obx: number,
+    oby: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    scale: number,
+    centerx: number,
+    heightnumerator: number,
+    mindist: number,
+  ) => number;
+  wlDrawTransformTileHash: (
+    tx: number,
+    ty: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    scale: number,
+    centerx: number,
+    heightnumerator: number,
+    mindist: number,
+  ) => number;
+  wlDrawCalcHeight: (
+    xintercept: number,
+    yintercept: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    heightnumerator: number,
+    mindist: number,
+  ) => number;
+  wlDrawHitVertWallHash: (
+    xintercept: number,
+    yintercept: number,
+    xtilestep: number,
+    pixx: number,
+    xtile: number,
+    ytile: number,
+    lastside: number,
+    lastintercept: number,
+    lasttilehit: number,
+    tilehit: number,
+    postsourceLow: number,
+    postwidth: number,
+    prevheight: number,
+    adjacentDoor: number,
+    wallpicNormal: number,
+    wallpicDoor: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    heightnumerator: number,
+    mindist: number,
+  ) => number;
+  wlDrawHitHorizWallHash: (
+    xintercept: number,
+    yintercept: number,
+    ytilestep: number,
+    pixx: number,
+    xtile: number,
+    ytile: number,
+    lastside: number,
+    lastintercept: number,
+    lasttilehit: number,
+    tilehit: number,
+    postsourceLow: number,
+    postwidth: number,
+    prevheight: number,
+    adjacentDoor: number,
+    wallpicNormal: number,
+    wallpicDoor: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    heightnumerator: number,
+    mindist: number,
+  ) => number;
+  wlDrawWallRefreshHash: (
+    playerAngle: number,
+    playerX: number,
+    playerY: number,
+    focallength: number,
+    viewsin: number,
+    viewcos: number,
+  ) => number;
+  wlDrawThreeDRefreshHash: (
+    bufferofs: number,
+    screenofs: number,
+    frameon: number,
+    fizzlein: number,
+    wallRefreshHash: number,
+  ) => number;
+  wlScaleSetupScalingHash: (maxscaleheightIn: number, viewheight: number) => number;
+  wlScaleScaleShapeHash: (
+    xcenter: number,
+    leftpix: number,
+    rightpix: number,
+    height: number,
+    maxscale: number,
+    viewwidth: number,
+    wallheightSeed: number,
+  ) => number;
+  wlScaleSimpleScaleShapeHash: (xcenter: number, leftpix: number, rightpix: number, height: number) => number;
 };
 
 export class OracleBridge implements OracleBridgeContract {
@@ -93,6 +201,101 @@ export class OracleBridge implements OracleBridgeContract {
         'number',
         'number',
       ]),
+      wlDrawTransformActorHash: cwrap('oracle_wl_draw_transform_actor_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlDrawTransformTileHash: cwrap('oracle_wl_draw_transform_tile_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlDrawCalcHeight: cwrap('oracle_wl_draw_calc_height', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlDrawHitVertWallHash: cwrap('oracle_wl_draw_hit_vert_wall_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlDrawHitHorizWallHash: cwrap('oracle_wl_draw_hit_horiz_wall_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlDrawWallRefreshHash: cwrap('oracle_wl_draw_wall_refresh_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlDrawThreeDRefreshHash: cwrap('oracle_wl_draw_three_d_refresh_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      wlScaleSetupScalingHash: cwrap('oracle_wl_scale_setup_scaling_hash', 'number', ['number', 'number']),
+      wlScaleScaleShapeHash: cwrap('oracle_wl_scale_scale_shape_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlScaleSimpleScaleShapeHash: cwrap('oracle_wl_scale_simple_scale_shape_hash', 'number', ['number', 'number', 'number', 'number']),
     };
   }
 
@@ -222,6 +425,242 @@ export class OracleBridge implements OracleBridgeContract {
     ) >>> 0;
   }
 
+  wlDrawTransformActorHash(
+    obx: number,
+    oby: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    scale: number,
+    centerx: number,
+    heightnumerator: number,
+    mindist: number,
+  ): number {
+    return this.assertReady().wlDrawTransformActorHash(
+      obx | 0,
+      oby | 0,
+      viewx | 0,
+      viewy | 0,
+      viewcos | 0,
+      viewsin | 0,
+      scale | 0,
+      centerx | 0,
+      heightnumerator | 0,
+      mindist | 0,
+    ) >>> 0;
+  }
+
+  wlDrawTransformTileHash(
+    tx: number,
+    ty: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    scale: number,
+    centerx: number,
+    heightnumerator: number,
+    mindist: number,
+  ): number {
+    return this.assertReady().wlDrawTransformTileHash(
+      tx | 0,
+      ty | 0,
+      viewx | 0,
+      viewy | 0,
+      viewcos | 0,
+      viewsin | 0,
+      scale | 0,
+      centerx | 0,
+      heightnumerator | 0,
+      mindist | 0,
+    ) >>> 0;
+  }
+
+  wlDrawCalcHeight(
+    xintercept: number,
+    yintercept: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    heightnumerator: number,
+    mindist: number,
+  ): number {
+    return this.assertReady().wlDrawCalcHeight(
+      xintercept | 0,
+      yintercept | 0,
+      viewx | 0,
+      viewy | 0,
+      viewcos | 0,
+      viewsin | 0,
+      heightnumerator | 0,
+      mindist | 0,
+    ) | 0;
+  }
+
+  wlDrawHitVertWallHash(
+    xintercept: number,
+    yintercept: number,
+    xtilestep: number,
+    pixx: number,
+    xtile: number,
+    ytile: number,
+    lastside: number,
+    lastintercept: number,
+    lasttilehit: number,
+    tilehit: number,
+    postsourceLow: number,
+    postwidth: number,
+    prevheight: number,
+    adjacentDoor: number,
+    wallpicNormal: number,
+    wallpicDoor: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    heightnumerator: number,
+    mindist: number,
+  ): number {
+    return this.assertReady().wlDrawHitVertWallHash(
+      xintercept | 0,
+      yintercept | 0,
+      xtilestep | 0,
+      pixx | 0,
+      xtile | 0,
+      ytile | 0,
+      lastside | 0,
+      lastintercept | 0,
+      lasttilehit | 0,
+      tilehit | 0,
+      postsourceLow | 0,
+      postwidth | 0,
+      prevheight | 0,
+      adjacentDoor | 0,
+      wallpicNormal | 0,
+      wallpicDoor | 0,
+      viewx | 0,
+      viewy | 0,
+      viewcos | 0,
+      viewsin | 0,
+      heightnumerator | 0,
+      mindist | 0,
+    ) >>> 0;
+  }
+
+  wlDrawHitHorizWallHash(
+    xintercept: number,
+    yintercept: number,
+    ytilestep: number,
+    pixx: number,
+    xtile: number,
+    ytile: number,
+    lastside: number,
+    lastintercept: number,
+    lasttilehit: number,
+    tilehit: number,
+    postsourceLow: number,
+    postwidth: number,
+    prevheight: number,
+    adjacentDoor: number,
+    wallpicNormal: number,
+    wallpicDoor: number,
+    viewx: number,
+    viewy: number,
+    viewcos: number,
+    viewsin: number,
+    heightnumerator: number,
+    mindist: number,
+  ): number {
+    return this.assertReady().wlDrawHitHorizWallHash(
+      xintercept | 0,
+      yintercept | 0,
+      ytilestep | 0,
+      pixx | 0,
+      xtile | 0,
+      ytile | 0,
+      lastside | 0,
+      lastintercept | 0,
+      lasttilehit | 0,
+      tilehit | 0,
+      postsourceLow | 0,
+      postwidth | 0,
+      prevheight | 0,
+      adjacentDoor | 0,
+      wallpicNormal | 0,
+      wallpicDoor | 0,
+      viewx | 0,
+      viewy | 0,
+      viewcos | 0,
+      viewsin | 0,
+      heightnumerator | 0,
+      mindist | 0,
+    ) >>> 0;
+  }
+
+  wlDrawWallRefreshHash(
+    playerAngle: number,
+    playerX: number,
+    playerY: number,
+    focallength: number,
+    viewsin: number,
+    viewcos: number,
+  ): number {
+    return this.assertReady().wlDrawWallRefreshHash(
+      playerAngle | 0,
+      playerX | 0,
+      playerY | 0,
+      focallength | 0,
+      viewsin | 0,
+      viewcos | 0,
+    ) >>> 0;
+  }
+
+  wlDrawThreeDRefreshHash(
+    bufferofs: number,
+    screenofs: number,
+    frameon: number,
+    fizzlein: number,
+    wallRefreshHash: number,
+  ): number {
+    return this.assertReady().wlDrawThreeDRefreshHash(
+      bufferofs | 0,
+      screenofs | 0,
+      frameon | 0,
+      fizzlein | 0,
+      wallRefreshHash | 0,
+    ) >>> 0;
+  }
+
+  wlScaleSetupScalingHash(maxscaleheightIn: number, viewheight: number): number {
+    return this.assertReady().wlScaleSetupScalingHash(maxscaleheightIn | 0, viewheight | 0) >>> 0;
+  }
+
+  wlScaleScaleShapeHash(
+    xcenter: number,
+    leftpix: number,
+    rightpix: number,
+    height: number,
+    maxscale: number,
+    viewwidth: number,
+    wallheightSeed: number,
+  ): number {
+    return this.assertReady().wlScaleScaleShapeHash(
+      xcenter | 0,
+      leftpix | 0,
+      rightpix | 0,
+      height | 0,
+      maxscale | 0,
+      viewwidth | 0,
+      wallheightSeed | 0,
+    ) >>> 0;
+  }
+
+  wlScaleSimpleScaleShapeHash(xcenter: number, leftpix: number, rightpix: number, height: number): number {
+    return this.assertReady().wlScaleSimpleScaleShapeHash(xcenter | 0, leftpix | 0, rightpix | 0, height | 0) >>> 0;
+  }
+
   call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
     switch (fn) {
       case 'wl_draw.FixedByFrac': {
@@ -294,6 +733,92 @@ export class OracleBridge implements OracleBridgeContract {
           screenLoc2,
           statusBarPic,
         ) as TOutput;
+      }
+      case 'wl_draw.TransformActorHash': {
+        const { obx, oby, viewx, viewy, viewcos, viewsin, scale, centerx, heightnumerator, mindist } = input as Record<string, number>;
+        return this.wlDrawTransformActorHash(obx, oby, viewx, viewy, viewcos, viewsin, scale, centerx, heightnumerator, mindist) as TOutput;
+      }
+      case 'wl_draw.TransformTileHash': {
+        const { tx, ty, viewx, viewy, viewcos, viewsin, scale, centerx, heightnumerator, mindist } = input as Record<string, number>;
+        return this.wlDrawTransformTileHash(tx, ty, viewx, viewy, viewcos, viewsin, scale, centerx, heightnumerator, mindist) as TOutput;
+      }
+      case 'wl_draw.CalcHeight': {
+        const { xintercept, yintercept, viewx, viewy, viewcos, viewsin, heightnumerator, mindist } = input as Record<string, number>;
+        return this.wlDrawCalcHeight(xintercept, yintercept, viewx, viewy, viewcos, viewsin, heightnumerator, mindist) as TOutput;
+      }
+      case 'wl_draw.HitVertWallHash': {
+        const args = (input as { args: number[] }).args;
+        return this.wlDrawHitVertWallHash(
+          args[0] ?? 0,
+          args[1] ?? 0,
+          args[2] ?? 0,
+          args[3] ?? 0,
+          args[4] ?? 0,
+          args[5] ?? 0,
+          args[6] ?? 0,
+          args[7] ?? 0,
+          args[8] ?? 0,
+          args[9] ?? 0,
+          args[10] ?? 0,
+          args[11] ?? 0,
+          args[12] ?? 0,
+          args[13] ?? 0,
+          args[14] ?? 0,
+          args[15] ?? 0,
+          args[16] ?? 0,
+          args[17] ?? 0,
+          args[18] ?? 0,
+          args[19] ?? 0,
+          args[20] ?? 0,
+          args[21] ?? 0,
+        ) as TOutput;
+      }
+      case 'wl_draw.HitHorizWallHash': {
+        const args = (input as { args: number[] }).args;
+        return this.wlDrawHitHorizWallHash(
+          args[0] ?? 0,
+          args[1] ?? 0,
+          args[2] ?? 0,
+          args[3] ?? 0,
+          args[4] ?? 0,
+          args[5] ?? 0,
+          args[6] ?? 0,
+          args[7] ?? 0,
+          args[8] ?? 0,
+          args[9] ?? 0,
+          args[10] ?? 0,
+          args[11] ?? 0,
+          args[12] ?? 0,
+          args[13] ?? 0,
+          args[14] ?? 0,
+          args[15] ?? 0,
+          args[16] ?? 0,
+          args[17] ?? 0,
+          args[18] ?? 0,
+          args[19] ?? 0,
+          args[20] ?? 0,
+          args[21] ?? 0,
+        ) as TOutput;
+      }
+      case 'wl_draw.WallRefreshHash': {
+        const { playerAngle, playerX, playerY, focallength, viewsin, viewcos } = input as Record<string, number>;
+        return this.wlDrawWallRefreshHash(playerAngle, playerX, playerY, focallength, viewsin, viewcos) as TOutput;
+      }
+      case 'wl_draw.ThreeDRefreshHash': {
+        const { bufferofs, screenofs, frameon, fizzlein, wallRefreshHash } = input as Record<string, number>;
+        return this.wlDrawThreeDRefreshHash(bufferofs, screenofs, frameon, fizzlein, wallRefreshHash) as TOutput;
+      }
+      case 'wl_scale.SetupScalingHash': {
+        const { maxscaleheightIn, viewheight } = input as Record<string, number>;
+        return this.wlScaleSetupScalingHash(maxscaleheightIn, viewheight) as TOutput;
+      }
+      case 'wl_scale.ScaleShapeHash': {
+        const { xcenter, leftpix, rightpix, height, maxscale, viewwidth, wallheightSeed } = input as Record<string, number>;
+        return this.wlScaleScaleShapeHash(xcenter, leftpix, rightpix, height, maxscale, viewwidth, wallheightSeed) as TOutput;
+      }
+      case 'wl_scale.SimpleScaleShapeHash': {
+        const { xcenter, leftpix, rightpix, height } = input as Record<string, number>;
+        return this.wlScaleSimpleScaleShapeHash(xcenter, leftpix, rightpix, height) as TOutput;
       }
       default:
         throw new Error(`call() not mapped for oracle function: ${fn}`);

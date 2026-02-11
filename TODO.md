@@ -89,17 +89,17 @@ Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ---
 
-## Phase 3: Raycasting Core - In Progress
+## Phase 3: Raycasting Core - Complete
 
-- [ ] Oracle wrappers from `WL_DRAW.C`, `WL_MAIN.C`, `WL_SCALE.C`
-- [ ] TS software raycasting parity implementation
-- [ ] Column/frame hash parity tests
-- [ ] Local/CI gates green
-- [ ] Phase commit pushed (`phase-3: raycasting parity complete`)
+- [x] Oracle wrappers from `WL_DRAW.C`, `WL_MAIN.C`, `WL_SCALE.C`
+- [x] TS software raycasting parity implementation
+- [x] Column/frame hash parity tests
+- [x] Local/CI gates green
+- [x] Phase commit pushed (`phase-3: raycasting parity complete`)
 
 ---
 
-## Phase 4: Actors/AI State Machines - Not Started
+## Phase 4: Actors/AI State Machines - In Progress
 
 - [ ] Oracle wrappers from `WL_STATE.C`, `WL_ACT1.C`, `WL_ACT2.C`
 - [ ] TS actor tick/state transition parity
