@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 3 in progress
+**Status:** Phase 4 in progress
 **Last Updated:** 2026-02-11
 
 ---
@@ -96,28 +96,28 @@ Port map decode and level parse behavior.
 
 ---
 
-## Phase 3: Raycasting Engine - Not Started
+## Phase 3: Raycasting Engine - Complete
 
 Port core renderer math and ray hit/projection behavior.
 
 ### 3.1 Function Porting
 
-- [ ] Port transform and projection helpers.
-- [ ] Port wall hit and height calculations.
-- [ ] Port per-frame raycast refresh core.
+- [x] Port transform and projection helpers.
+- [x] Port wall hit and height calculations.
+- [x] Port per-frame raycast refresh core.
 
 ### 3.2 Property Parity
 
-- [ ] Add parity tests for each helper and core routine.
-- [ ] Add randomized deterministic camera/map input generators.
-- [ ] Add deterministic seed replay tests for failures.
+- [x] Add parity tests for each helper and core routine.
+- [x] Add randomized deterministic camera/map input generators.
+- [x] Add deterministic seed replay tests for failures.
 
 ### 3.3 Gate Checklist
 
-- [ ] All Phase 3 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-3: raycasting parity complete`)
+- [x] All Phase 3 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-3: raycasting parity complete`)
 
 ---
 
