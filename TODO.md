@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 2 in progress
+**Status:** Phase 3 in progress
 **Last Updated:** 2026-02-11
 
 ---
@@ -71,28 +71,28 @@ Port foundational arithmetic and table generation logic.
 
 ---
 
-## Phase 2: Map Loading and Parsing - Not Started
+## Phase 2: Map Loading and Parsing - Complete
 
 Port map decode and level parse behavior.
 
 ### 2.1 Function Porting
 
-- [ ] Port RLEW/map decode routines.
-- [ ] Port map header and plane parse logic.
-- [ ] Port level geometry extraction logic.
+- [x] Port RLEW/map decode routines.
+- [x] Port map header and plane parse logic.
+- [x] Port level geometry extraction logic.
 
 ### 2.2 Property Parity
 
-- [ ] Add parity tests for each decode/parse function.
-- [ ] Add randomized compressed stream generators.
-- [ ] Add deterministic seed replay tests for failures.
+- [x] Add parity tests for each decode/parse function.
+- [x] Add randomized compressed stream generators.
+- [x] Add deterministic seed replay tests for failures.
 
 ### 2.3 Gate Checklist
 
-- [ ] All Phase 2 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-2: map loading parity complete`)
+- [x] All Phase 2 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-2: map loading parity complete`)
 
 ---
 
