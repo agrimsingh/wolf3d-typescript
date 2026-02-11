@@ -151,6 +151,20 @@ type OracleFns = {
     wallheightSeed: number,
   ) => number;
   wlScaleSimpleScaleShapeHash: (xcenter: number, leftpix: number, rightpix: number, height: number) => number;
+  wlStateSelectDodgeDirHash: (...args: number[]) => number;
+  wlStateSelectChaseDirHash: (...args: number[]) => number;
+  wlStateMoveObjHash: (...args: number[]) => number;
+  wlStateDamageActorHash: (...args: number[]) => number;
+  wlStateCheckLine: (ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number) => number;
+  wlStateCheckSight: (ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number) => number;
+  wlStateFirstSightingHash: (...args: number[]) => number;
+  wlStateSightPlayerHash: (...args: number[]) => number;
+  wlAct2TBiteHash: (...args: number[]) => number;
+  wlAct2TChaseHash: (...args: number[]) => number;
+  wlAct2TDogChaseHash: (...args: number[]) => number;
+  wlAct2TPathHash: (...args: number[]) => number;
+  wlAct2TProjectileHash: (...args: number[]) => number;
+  wlAct2TShootHash: (...args: number[]) => number;
 };
 
 export class OracleBridge implements OracleBridgeContract {
@@ -296,6 +310,44 @@ export class OracleBridge implements OracleBridgeContract {
         'number',
       ]),
       wlScaleSimpleScaleShapeHash: cwrap('oracle_wl_scale_simple_scale_shape_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlStateSelectDodgeDirHash: cwrap('oracle_wl_state_select_dodge_dir_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlStateSelectChaseDirHash: cwrap('oracle_wl_state_select_chase_dir_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlStateMoveObjHash: cwrap('oracle_wl_state_move_obj_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlStateDamageActorHash: cwrap('oracle_wl_state_damage_actor_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlStateCheckLine: cwrap('oracle_wl_state_check_line', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlStateCheckSight: cwrap('oracle_wl_state_check_sight', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlStateFirstSightingHash: cwrap('oracle_wl_state_first_sighting_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlStateSightPlayerHash: cwrap('oracle_wl_state_sight_player_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlAct2TBiteHash: cwrap('oracle_wl_act2_t_bite_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlAct2TChaseHash: cwrap('oracle_wl_act2_t_chase_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlAct2TDogChaseHash: cwrap('oracle_wl_act2_t_dogchase_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlAct2TPathHash: cwrap('oracle_wl_act2_t_path_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlAct2TProjectileHash: cwrap('oracle_wl_act2_t_projectile_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlAct2TShootHash: cwrap('oracle_wl_act2_t_shoot_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
     };
   }
 
@@ -661,6 +713,62 @@ export class OracleBridge implements OracleBridgeContract {
     return this.assertReady().wlScaleSimpleScaleShapeHash(xcenter | 0, leftpix | 0, rightpix | 0, height | 0) >>> 0;
   }
 
+  wlStateSelectDodgeDirHash(...args: number[]): number {
+    return this.assertReady().wlStateSelectDodgeDirHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlStateSelectChaseDirHash(...args: number[]): number {
+    return this.assertReady().wlStateSelectChaseDirHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlStateMoveObjHash(...args: number[]): number {
+    return this.assertReady().wlStateMoveObjHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlStateDamageActorHash(...args: number[]): number {
+    return this.assertReady().wlStateDamageActorHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlStateCheckLine(ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number): number {
+    return this.assertReady().wlStateCheckLine(ax | 0, ay | 0, px | 0, py | 0, mapLo >>> 0, mapHi >>> 0) | 0;
+  }
+
+  wlStateCheckSight(ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number): number {
+    return this.assertReady().wlStateCheckSight(ax | 0, ay | 0, px | 0, py | 0, mapLo >>> 0, mapHi >>> 0) | 0;
+  }
+
+  wlStateFirstSightingHash(...args: number[]): number {
+    return this.assertReady().wlStateFirstSightingHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlStateSightPlayerHash(...args: number[]): number {
+    return this.assertReady().wlStateSightPlayerHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlAct2TBiteHash(...args: number[]): number {
+    return this.assertReady().wlAct2TBiteHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlAct2TChaseHash(...args: number[]): number {
+    return this.assertReady().wlAct2TChaseHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlAct2TDogChaseHash(...args: number[]): number {
+    return this.assertReady().wlAct2TDogChaseHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlAct2TPathHash(...args: number[]): number {
+    return this.assertReady().wlAct2TPathHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlAct2TProjectileHash(...args: number[]): number {
+    return this.assertReady().wlAct2TProjectileHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
+  wlAct2TShootHash(...args: number[]): number {
+    return this.assertReady().wlAct2TShootHash(...args.map((n) => n | 0)) >>> 0;
+  }
+
   call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
     switch (fn) {
       case 'wl_draw.FixedByFrac': {
@@ -819,6 +927,50 @@ export class OracleBridge implements OracleBridgeContract {
       case 'wl_scale.SimpleScaleShapeHash': {
         const { xcenter, leftpix, rightpix, height } = input as Record<string, number>;
         return this.wlScaleSimpleScaleShapeHash(xcenter, leftpix, rightpix, height) as TOutput;
+      }
+      case 'wl_state.SelectDodgeDirHash': {
+        return this.wlStateSelectDodgeDirHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_state.SelectChaseDirHash': {
+        return this.wlStateSelectChaseDirHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_state.MoveObjHash': {
+        return this.wlStateMoveObjHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_state.DamageActorHash': {
+        return this.wlStateDamageActorHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_state.CheckLine': {
+        const { ax, ay, px, py, mapLo, mapHi } = input as Record<string, number>;
+        return this.wlStateCheckLine(ax, ay, px, py, mapLo, mapHi) as TOutput;
+      }
+      case 'wl_state.CheckSight': {
+        const { ax, ay, px, py, mapLo, mapHi } = input as Record<string, number>;
+        return this.wlStateCheckSight(ax, ay, px, py, mapLo, mapHi) as TOutput;
+      }
+      case 'wl_state.FirstSightingHash': {
+        return this.wlStateFirstSightingHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_state.SightPlayerHash': {
+        return this.wlStateSightPlayerHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_act2.TBiteHash': {
+        return this.wlAct2TBiteHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_act2.TChaseHash': {
+        return this.wlAct2TChaseHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_act2.TDogChaseHash': {
+        return this.wlAct2TDogChaseHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_act2.TPathHash': {
+        return this.wlAct2TPathHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_act2.TProjectileHash': {
+        return this.wlAct2TProjectileHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'wl_act2.TShootHash': {
+        return this.wlAct2TShootHash(...(input as { args: number[] }).args) as TOutput;
       }
       default:
         throw new Error(`call() not mapped for oracle function: ${fn}`);

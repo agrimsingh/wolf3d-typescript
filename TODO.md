@@ -99,17 +99,17 @@ Port actual WOLFSRC math semantics and test against C oracle wrappers.
 
 ---
 
-## Phase 4: Actors/AI State Machines - In Progress
+## Phase 4: Actors/AI State Machines - Complete
 
-- [ ] Oracle wrappers from `WL_STATE.C`, `WL_ACT1.C`, `WL_ACT2.C`
-- [ ] TS actor tick/state transition parity
-- [ ] Stateful property parity suite
-- [ ] Local/CI gates green
-- [ ] Phase commit pushed (`phase-4: actors ai parity complete`)
+- [x] Oracle wrappers from `WL_STATE.C`, `WL_ACT1.C`, `WL_ACT2.C`
+- [x] TS actor tick/state transition parity
+- [x] Stateful property parity suite
+- [x] Local/CI gates green
+- [x] Phase commit pushed (`phase-4: actors ai parity complete`)
 
 ---
 
-## Phase 5: Player Movement/Input/Collision - Not Started
+## Phase 5: Player Movement/Input/Collision - In Progress
 
 - [ ] Oracle wrappers from `WL_AGENT.C`, `WL_PLAY.C`
 - [ ] TS keyboard+mouse movement/collision parity
