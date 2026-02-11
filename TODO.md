@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 4 in progress
+**Status:** Phase 5 in progress
 **Last Updated:** 2026-02-11
 
 ---
@@ -121,28 +121,28 @@ Port core renderer math and ray hit/projection behavior.
 
 ---
 
-## Phase 4: Actor and Enemy AI - Not Started
+## Phase 4: Actor and Enemy AI - Complete
 
 Port actor state transitions and enemy behavior logic.
 
 ### 4.1 Function Porting
 
-- [ ] Port actor movement/state transition routines.
-- [ ] Port chase/dodge/path decision routines.
-- [ ] Port combat-related actor routines.
+- [x] Port actor movement/state transition routines.
+- [x] Port chase/dodge/path decision routines.
+- [x] Port combat-related actor routines.
 
 ### 4.2 Property Parity
 
-- [ ] Add parity tests for each transition routine.
-- [ ] Add randomized world/actor snapshot generators.
-- [ ] Add deterministic seed replay tests for failures.
+- [x] Add parity tests for each transition routine.
+- [x] Add randomized world/actor snapshot generators.
+- [x] Add deterministic seed replay tests for failures.
 
 ### 4.3 Gate Checklist
 
-- [ ] All Phase 4 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-4: actors ai parity complete`)
+- [x] All Phase 4 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-4: actors ai parity complete`)
 
 ---
 
