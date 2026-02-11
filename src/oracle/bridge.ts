@@ -165,6 +165,37 @@ type OracleFns = {
   wlAct2TPathHash: (...args: number[]) => number;
   wlAct2TProjectileHash: (...args: number[]) => number;
   wlAct2TShootHash: (...args: number[]) => number;
+  idInReadControlHash: (keyMask: number, mouseDx: number, mouseDy: number, buttonMask: number) => number;
+  idInUserInput: (delayTics: number, inputMask: number, rng: number) => number;
+  wlAgentTryMoveHash: (mapLo: number, mapHi: number, xq8: number, yq8: number, dxq8: number, dyq8: number) => number;
+  wlAgentClipMoveHash: (mapLo: number, mapHi: number, xq8: number, yq8: number, dxq8: number, dyq8: number) => number;
+  wlAgentThrustHash: (mapLo: number, mapHi: number, xq8: number, yq8: number, angleDeg: number, speedQ8: number) => number;
+  wlAgentControlMovementHash: (
+    mapLo: number,
+    mapHi: number,
+    xq8: number,
+    yq8: number,
+    angleDeg: number,
+    forwardQ8: number,
+    strafeQ8: number,
+    turnDeg: number,
+  ) => number;
+  wlAgentCmdFireHash: (ammo: number, weaponState: number, cooldown: number, buttonFire: number) => number;
+  wlAgentCmdUseHash: (mapLo: number, mapHi: number, xq8: number, yq8: number, angleDeg: number, usePressed: number) => number;
+  wlAgentTPlayerHash: (
+    mapLo: number,
+    mapHi: number,
+    xq8: number,
+    yq8: number,
+    angleDeg: number,
+    health: number,
+    ammo: number,
+    cooldown: number,
+    flags: number,
+    inputMask: number,
+    rng: number,
+  ) => number;
+  wlPlayPlayLoopHash: (stateHash: number, tics: number, inputMask: number, rng: number) => number;
 };
 
 export class OracleBridge implements OracleBridgeContract {
@@ -348,6 +379,20 @@ export class OracleBridge implements OracleBridgeContract {
       wlAct2TShootHash: cwrap('oracle_wl_act2_t_shoot_hash', 'number', [
         'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
       ]),
+      idInReadControlHash: cwrap('oracle_id_in_read_control_hash', 'number', ['number', 'number', 'number', 'number']),
+      idInUserInput: cwrap('oracle_id_in_user_input', 'number', ['number', 'number', 'number']),
+      wlAgentTryMoveHash: cwrap('oracle_wl_agent_try_move_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlAgentClipMoveHash: cwrap('oracle_wl_agent_clip_move_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlAgentThrustHash: cwrap('oracle_wl_agent_thrust_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlAgentControlMovementHash: cwrap('oracle_wl_agent_control_movement_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlAgentCmdFireHash: cwrap('oracle_wl_agent_cmd_fire_hash', 'number', ['number', 'number', 'number', 'number']),
+      wlAgentCmdUseHash: cwrap('oracle_wl_agent_cmd_use_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlAgentTPlayerHash: cwrap('oracle_wl_agent_t_player_hash', 'number', [
+        'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
+      ]),
+      wlPlayPlayLoopHash: cwrap('oracle_wl_play_play_loop_hash', 'number', ['number', 'number', 'number', 'number']),
     };
   }
 
@@ -769,6 +814,88 @@ export class OracleBridge implements OracleBridgeContract {
     return this.assertReady().wlAct2TShootHash(...args.map((n) => n | 0)) >>> 0;
   }
 
+  idInReadControlHash(keyMask: number, mouseDx: number, mouseDy: number, buttonMask: number): number {
+    return this.assertReady().idInReadControlHash(keyMask | 0, mouseDx | 0, mouseDy | 0, buttonMask | 0) >>> 0;
+  }
+
+  idInUserInput(delayTics: number, inputMask: number, rng: number): number {
+    return this.assertReady().idInUserInput(delayTics | 0, inputMask | 0, rng | 0) | 0;
+  }
+
+  wlAgentTryMoveHash(mapLo: number, mapHi: number, xq8: number, yq8: number, dxq8: number, dyq8: number): number {
+    return this.assertReady().wlAgentTryMoveHash(mapLo >>> 0, mapHi >>> 0, xq8 | 0, yq8 | 0, dxq8 | 0, dyq8 | 0) >>> 0;
+  }
+
+  wlAgentClipMoveHash(mapLo: number, mapHi: number, xq8: number, yq8: number, dxq8: number, dyq8: number): number {
+    return this.assertReady().wlAgentClipMoveHash(mapLo >>> 0, mapHi >>> 0, xq8 | 0, yq8 | 0, dxq8 | 0, dyq8 | 0) >>> 0;
+  }
+
+  wlAgentThrustHash(mapLo: number, mapHi: number, xq8: number, yq8: number, angleDeg: number, speedQ8: number): number {
+    return this.assertReady().wlAgentThrustHash(mapLo >>> 0, mapHi >>> 0, xq8 | 0, yq8 | 0, angleDeg | 0, speedQ8 | 0) >>> 0;
+  }
+
+  wlAgentControlMovementHash(
+    mapLo: number,
+    mapHi: number,
+    xq8: number,
+    yq8: number,
+    angleDeg: number,
+    forwardQ8: number,
+    strafeQ8: number,
+    turnDeg: number,
+  ): number {
+    return this.assertReady().wlAgentControlMovementHash(
+      mapLo >>> 0,
+      mapHi >>> 0,
+      xq8 | 0,
+      yq8 | 0,
+      angleDeg | 0,
+      forwardQ8 | 0,
+      strafeQ8 | 0,
+      turnDeg | 0,
+    ) >>> 0;
+  }
+
+  wlAgentCmdFireHash(ammo: number, weaponState: number, cooldown: number, buttonFire: number): number {
+    return this.assertReady().wlAgentCmdFireHash(ammo | 0, weaponState | 0, cooldown | 0, buttonFire | 0) >>> 0;
+  }
+
+  wlAgentCmdUseHash(mapLo: number, mapHi: number, xq8: number, yq8: number, angleDeg: number, usePressed: number): number {
+    return this.assertReady().wlAgentCmdUseHash(mapLo >>> 0, mapHi >>> 0, xq8 | 0, yq8 | 0, angleDeg | 0, usePressed | 0) >>> 0;
+  }
+
+  wlAgentTPlayerHash(
+    mapLo: number,
+    mapHi: number,
+    xq8: number,
+    yq8: number,
+    angleDeg: number,
+    health: number,
+    ammo: number,
+    cooldown: number,
+    flags: number,
+    inputMask: number,
+    rng: number,
+  ): number {
+    return this.assertReady().wlAgentTPlayerHash(
+      mapLo >>> 0,
+      mapHi >>> 0,
+      xq8 | 0,
+      yq8 | 0,
+      angleDeg | 0,
+      health | 0,
+      ammo | 0,
+      cooldown | 0,
+      flags | 0,
+      inputMask | 0,
+      rng | 0,
+    ) >>> 0;
+  }
+
+  wlPlayPlayLoopHash(stateHash: number, tics: number, inputMask: number, rng: number): number {
+    return this.assertReady().wlPlayPlayLoopHash(stateHash >>> 0, tics | 0, inputMask | 0, rng | 0) >>> 0;
+  }
+
   call<TInput, TOutput>(fn: OracleFunctionId, input: TInput): TOutput {
     switch (fn) {
       case 'wl_draw.FixedByFrac': {
@@ -971,6 +1098,46 @@ export class OracleBridge implements OracleBridgeContract {
       }
       case 'wl_act2.TShootHash': {
         return this.wlAct2TShootHash(...(input as { args: number[] }).args) as TOutput;
+      }
+      case 'id_in.IN_ReadControlHash': {
+        const { keyMask, mouseDx, mouseDy, buttonMask } = input as Record<string, number>;
+        return this.idInReadControlHash(keyMask, mouseDx, mouseDy, buttonMask) as TOutput;
+      }
+      case 'id_in.IN_UserInput': {
+        const { delayTics, inputMask, rng } = input as Record<string, number>;
+        return this.idInUserInput(delayTics, inputMask, rng) as TOutput;
+      }
+      case 'wl_agent.TryMoveHash': {
+        const { mapLo, mapHi, xq8, yq8, dxq8, dyq8 } = input as Record<string, number>;
+        return this.wlAgentTryMoveHash(mapLo, mapHi, xq8, yq8, dxq8, dyq8) as TOutput;
+      }
+      case 'wl_agent.ClipMoveHash': {
+        const { mapLo, mapHi, xq8, yq8, dxq8, dyq8 } = input as Record<string, number>;
+        return this.wlAgentClipMoveHash(mapLo, mapHi, xq8, yq8, dxq8, dyq8) as TOutput;
+      }
+      case 'wl_agent.ThrustHash': {
+        const { mapLo, mapHi, xq8, yq8, angleDeg, speedQ8 } = input as Record<string, number>;
+        return this.wlAgentThrustHash(mapLo, mapHi, xq8, yq8, angleDeg, speedQ8) as TOutput;
+      }
+      case 'wl_agent.ControlMovementHash': {
+        const { mapLo, mapHi, xq8, yq8, angleDeg, forwardQ8, strafeQ8, turnDeg } = input as Record<string, number>;
+        return this.wlAgentControlMovementHash(mapLo, mapHi, xq8, yq8, angleDeg, forwardQ8, strafeQ8, turnDeg) as TOutput;
+      }
+      case 'wl_agent.Cmd_FireHash': {
+        const { ammo, weaponState, cooldown, buttonFire } = input as Record<string, number>;
+        return this.wlAgentCmdFireHash(ammo, weaponState, cooldown, buttonFire) as TOutput;
+      }
+      case 'wl_agent.Cmd_UseHash': {
+        const { mapLo, mapHi, xq8, yq8, angleDeg, usePressed } = input as Record<string, number>;
+        return this.wlAgentCmdUseHash(mapLo, mapHi, xq8, yq8, angleDeg, usePressed) as TOutput;
+      }
+      case 'wl_agent.T_PlayerHash': {
+        const { mapLo, mapHi, xq8, yq8, angleDeg, health, ammo, cooldown, flags, inputMask, rng } = input as Record<string, number>;
+        return this.wlAgentTPlayerHash(mapLo, mapHi, xq8, yq8, angleDeg, health, ammo, cooldown, flags, inputMask, rng) as TOutput;
+      }
+      case 'wl_play.PlayLoopHash': {
+        const { stateHash, tics, inputMask, rng } = input as Record<string, number>;
+        return this.wlPlayPlayLoopHash(stateHash, tics, inputMask, rng) as TOutput;
       }
       default:
         throw new Error(`call() not mapped for oracle function: ${fn}`);
