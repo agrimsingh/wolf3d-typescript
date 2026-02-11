@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port Implementation Plan
 
-**Status:** Phase 5 in progress
+**Status:** Phase 6 in progress
 **Last Updated:** 2026-02-11
 
 ---
@@ -146,28 +146,28 @@ Port actor state transitions and enemy behavior logic.
 
 ---
 
-## Phase 5: Player Movement, Input, and Collision - Not Started
+## Phase 5: Player Movement, Input, and Collision - Complete
 
 Port player-centric control, movement, and interaction behavior.
 
 ### 5.1 Function Porting
 
-- [ ] Port movement integration and clipping logic.
-- [ ] Port interaction and weapon command logic.
-- [ ] Port per-tick player update routine.
+- [x] Port movement integration and clipping logic.
+- [x] Port interaction and weapon command logic.
+- [x] Port per-tick player update routine.
 
 ### 5.2 Property Parity
 
-- [ ] Add parity tests for each player routine.
-- [ ] Add randomized control stream generators.
-- [ ] Add deterministic seed replay tests for failures.
+- [x] Add parity tests for each player routine.
+- [x] Add randomized control stream generators.
+- [x] Add deterministic seed replay tests for failures.
 
 ### 5.3 Gate Checklist
 
-- [ ] All Phase 5 tasks checked
-- [ ] Local gate green (>=1k random cases per covered function)
-- [ ] CI gate green (>=10k random cases per covered function)
-- [ ] Phase commit pushed (`phase-5: player movement parity complete`)
+- [x] All Phase 5 tasks checked
+- [x] Local gate green (>=1k random cases per covered function)
+- [x] CI gate green (>=10k random cases per covered function)
+- [x] Phase commit pushed (`phase-5: player movement parity complete`)
 
 ---
 
