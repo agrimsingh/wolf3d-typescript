@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime Parity TODO (R-Phases)
 
-**Status:** In Progress (`R7` active)  
+**Status:** In Progress (`R8` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -84,12 +84,12 @@
 
 ## R7: TS Port Wave D (Actors/AI + Combat)
 
-- [ ] Port actor/AI runtime transitions from `WL_STATE.C` and `WL_ACT2.C`.
-- [ ] Add deterministic combat encounter parity traces.
-- [ ] Gate: stateful actor tick parity tests
-- [ ] Gate: deterministic combat trace parity
-- [ ] Tests green
-- [ ] Phase commit pushed (`r7: actors-ai-combat parity`)
+- [x] Port actor/AI runtime transitions from `WL_STATE.C` and `WL_ACT2.C`.
+- [x] Add deterministic combat encounter parity traces.
+- [x] Gate: stateful actor tick parity tests
+- [x] Gate: deterministic combat trace parity
+- [x] Tests green
+- [x] Phase commit pushed (`r7: actors-ai-combat parity`)
 
 ## R8: TS Port Wave E (Menu/Text/Input/Audio State)
 

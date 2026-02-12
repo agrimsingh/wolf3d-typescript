@@ -1,5 +1,5 @@
 {
-  "phase": "R6",
+  "phase": "R7",
   "mode": "real",
-  "notes": "R6 player/doors/game-loop parity gate is green with deterministic checkpoint traces."
+  "notes": "R7 actors/AI/combat parity gate is green with deterministic episode trace verification."
 }
