@@ -95,6 +95,16 @@ done
   cat "$FAIL_LIST"
   echo
   echo "Per-file compiler logs are in: $OUT_DIR"
+  if [[ -s "$FAIL_LIST" ]]; then
+    echo
+    echo "Failure excerpts (first 60 lines per failed file):"
+    while IFS= read -r failed_file; do
+      [[ -z "$failed_file" ]] && continue
+      echo
+      echo "--- $failed_file ---"
+      sed -n '1,60p' "$OUT_DIR/${failed_file}.log"
+    done < "$FAIL_LIST"
+  fi
 } >"$SUMMARY"
 
 cat "$SUMMARY"
