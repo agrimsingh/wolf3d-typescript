@@ -5,8 +5,12 @@ export interface RuntimeConfig {
   mapName?: string;
   mapWidth?: number;
   mapHeight?: number;
+  runtimeWindowOriginX?: number;
+  runtimeWindowOriginY?: number;
   plane0?: Uint16Array;
   plane1?: Uint16Array;
+  playerStartAbsTileX?: number;
+  playerStartAbsTileY?: number;
   playerStartTileX?: number;
   playerStartTileY?: number;
   playerStartAngleDeg?: number;

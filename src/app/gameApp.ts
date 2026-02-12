@@ -1,7 +1,7 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
 import { loadWl1RuntimeScenarios } from '../runtime/wl1RuntimeScenarios';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
-import { RuntimeAppController } from './runtimeController';
+import { RuntimeAppController, type RuntimeScenario } from './runtimeController';
 
 const WIDTH = 320;
 const HEIGHT = 200;
@@ -193,10 +193,7 @@ export class WolfApp {
       if (this.controller.getState().mode !== 'playing') {
         return;
       }
-      if (document.pointerLockElement && document.pointerLockElement !== this.canvas) {
-        return;
-      }
-      if (document.pointerLockElement !== this.canvas && document.activeElement !== this.canvas) {
+      if (document.pointerLockElement !== this.canvas) {
         return;
       }
       this.controller.onMouseMove(event.movementX);
@@ -317,7 +314,7 @@ export class WolfApp {
     }
 
     this.ctx.putImageData(this.image, 0, 0);
-    this.drawMiniMap(mapLo, mapHi, snapshot);
+    this.drawMiniMap(mapLo, mapHi, snapshot, scenario ?? null);
 
     this.ctx.fillStyle = '#f5f7ff';
     this.ctx.font = '10px monospace';
@@ -331,7 +328,7 @@ export class WolfApp {
     this.ctx.fillText(`snapshot:${snapshot.hash >>> 0} frame:${state.frameHash >>> 0}`, 8, HEIGHT - 10);
   }
 
-  private drawMiniMap(mapLo: number, mapHi: number, snapshot: RuntimeSnapshot): void {
+  private drawMiniMap(mapLo: number, mapHi: number, snapshot: RuntimeSnapshot, scenario: RuntimeScenario | null): void {
     const ox = WIDTH - MINIMAP_TILE_SIZE * 8 - 10;
     const oy = 10;
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
@@ -344,17 +341,40 @@ export class WolfApp {
       }
     }
 
-    const px = ox + (snapshot.xQ8 / 256) * MINIMAP_TILE_SIZE;
-    const py = oy + (snapshot.yQ8 / 256) * MINIMAP_TILE_SIZE;
+    let localX = snapshot.xQ8 / 256;
+    let localY = snapshot.yQ8 / 256;
+    if (localX > 8 || localY > 8 || localX < -1 || localY < -1) {
+      const mapWidth = scenario?.config.mapWidth ?? 8;
+      const mapHeight = scenario?.config.mapHeight ?? 8;
+      const startAbsX = scenario?.config.playerStartAbsTileX ?? scenario?.config.playerStartTileX ?? 3;
+      const startAbsY = scenario?.config.playerStartAbsTileY ?? scenario?.config.playerStartTileY ?? 3;
+      const originX =
+        scenario?.config.runtimeWindowOriginX ??
+        Math.max(0, Math.min(Math.max(0, mapWidth - 8), startAbsX - 3));
+      const originY =
+        scenario?.config.runtimeWindowOriginY ??
+        Math.max(0, Math.min(Math.max(0, mapHeight - 8), startAbsY - 3));
+      localX -= originX;
+      localY -= originY;
+    }
+    const px = ox + localX * MINIMAP_TILE_SIZE;
+    const py = oy + localY * MINIMAP_TILE_SIZE;
+    const minPx = ox + 1;
+    const maxPx = ox + MINIMAP_TILE_SIZE * 8 - 2;
+    const minPy = oy + 1;
+    const maxPy = oy + MINIMAP_TILE_SIZE * 8 - 2;
+    const clampedPx = Math.max(minPx, Math.min(maxPx, px));
+    const clampedPy = Math.max(minPy, Math.min(maxPy, py));
+
     this.ctx.fillStyle = '#ffe082';
-    this.ctx.fillRect(px - 1.5, py - 1.5, 3, 3);
+    this.ctx.fillRect(clampedPx - 1.5, clampedPy - 1.5, 3, 3);
 
     const dir = (snapshot.angleDeg * Math.PI) / 180;
     this.ctx.strokeStyle = '#ffe082';
     this.ctx.lineWidth = 1;
     this.ctx.beginPath();
-    this.ctx.moveTo(px, py);
-    this.ctx.lineTo(px + Math.cos(dir) * 7, py + Math.sin(dir) * 7);
+    this.ctx.moveTo(clampedPx, clampedPy);
+    this.ctx.lineTo(clampedPx + Math.cos(dir) * 7, clampedPy + Math.sin(dir) * 7);
     this.ctx.stroke();
   }
 

@@ -199,8 +199,10 @@ export function buildWl1RuntimeScenariosFromBytes(
 
     const start = findPlayerStart(plane1, width, height);
     const mapBits = buildRuntimeWindowBits(plane0, width, height, start.tileX, start.tileY);
-    const startXQ8 = (start.tileX * 256 + 128) | 0;
-    const startYQ8 = (start.tileY * 256 + 128) | 0;
+    const localStartTileX = (start.tileX - mapBits.originX) | 0;
+    const localStartTileY = (start.tileY - mapBits.originY) | 0;
+    const startXQ8 = (localStartTileX * 256 + 128) | 0;
+    const startYQ8 = (localStartTileY * 256 + 128) | 0;
     const startAngleDeg = start.angleDeg | 0;
     const seed = buildScenarioSeed(mapIndex, mapName, startXQ8, startYQ8);
 
@@ -216,10 +218,14 @@ export function buildWl1RuntimeScenariosFromBytes(
         mapName,
         mapWidth: width | 0,
         mapHeight: height | 0,
+        runtimeWindowOriginX: mapBits.originX | 0,
+        runtimeWindowOriginY: mapBits.originY | 0,
         plane0,
         plane1,
-        playerStartTileX: start.tileX | 0,
-        playerStartTileY: start.tileY | 0,
+        playerStartAbsTileX: start.tileX | 0,
+        playerStartAbsTileY: start.tileY | 0,
+        playerStartTileX: localStartTileX | 0,
+        playerStartTileY: localStartTileY | 0,
         playerStartAngleDeg: startAngleDeg,
         startXQ8,
         startYQ8,
