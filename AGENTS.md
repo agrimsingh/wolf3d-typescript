@@ -59,6 +59,7 @@ Rules:
 - Verify WL1 episode checkpoint lock: `pnpm runtime:episode:verify`
 - Run browser-runtime smoke suite: `pnpm runtime:browser:smoke`
 - Verify required-runtime symbol parity coverage + no-fallback policy: `pnpm runtime:required:verify`
+- Verify runtime core mode guard (`synthetic` vs `real`): `bash scripts/runtime/verify-runtime-core-guard.sh`
 - Replay runtime repro artifact: `pnpm runtime:replay <artifact.json>`
 - Run smoke tests directly: `pnpm test:smoke`
 - Run PR 1k changed-symbol property selection: `pnpm ci:property:pr`

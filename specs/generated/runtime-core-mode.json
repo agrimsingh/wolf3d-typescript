@@ -1,0 +1,5 @@
+{
+  "phase": "F0",
+  "mode": "synthetic",
+  "notes": "Set mode to \"real\" once F5 browser runtime replacement is complete and synthetic core is removed from the production path."
+}

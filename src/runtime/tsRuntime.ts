@@ -1,6 +1,8 @@
 import type { RuntimeConfig, RuntimeInput, RuntimePort, RuntimeSnapshot, RuntimeStepResult } from './contracts';
 import { wlAgentRealClipMoveQ16 } from '../wolf/player/wlAgentReal';
 
+export const RUNTIME_CORE_KIND = 'synthetic' as const;
+
 const DEG_TO_RAD = 3.14159265358979323846 / 180.0;
 
 function fnv1a(hash: number, value: number): number {

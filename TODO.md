@@ -1,120 +1,111 @@
-# Wolf3D TypeScript Runtime-Complete Execution Plan
+# Wolf3D TypeScript Full Runtime Parity Plan
 
-**Status:** All R-phases complete (R0..R8)
+**Status:** Active F-phase execution (F0..F8)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
 
-- Target: Full WL1 shareware gameplay-complete browser port.
-- Fidelity: Deterministic tick-state parity + frame-hash checkpoint parity.
-- Symbol policy: Runtime-path symbols only (derived from traced execution), not dead/debug-only paths.
-- Portability policy: Modernized low-level internals allowed, gameplay behavior must match oracle.
-- CI policy: PR `1k` runs, nightly/release sharded `10k` runs.
+- Target: gameplay-complete WL1 shareware in browser.
+- Fidelity: deterministic TS-vs-C/WASM parity for runtime-reachable behavior.
+- Symbol policy: all 568 manifest symbols must be classified with evidence; only `required-runtime` symbols must be fully parity-ported.
+- Audio policy: behavior/state parity (not bit-level DAC stream parity).
+- Phase policy: no advancement before gate is green and phase commit exists.
 
-## Legacy Status (Superseded)
+## Current Reality
 
-The previous phase `0..8` completion tracks prototype oracle parity wrappers and does **not** represent full WOLFSRC runtime completion.
+- Current browser runtime still relies on a synthetic core (`src/runtime/tsRuntime.ts`).
+- Runtime symbol coverage is currently wrapper-level and under-represents full runtime behavior.
+- Remote CI failed because WOLFSRC prepare path depended on a local absolute directory.
 
-## Phase R0: Recovery Reset to Runtime Truth
+## Phase F0: Truth Reset + De-Sim Baseline
 
-- [x] Add `specs/runtime-gap-assessment.md` with objective gaps from current prototype to runtime-complete state.
-- [x] Add `specs/runtime-symbol-manifest.md` as authoritative runtime-path symbol tracker.
-- [x] Update specs/workflows/TODO to R-phase model and runtime acceptance gates.
-- [x] Mark old completion claims as superseded in docs.
-- [x] Gate: docs reflect runtime reality and new phase model.
-- [x] Commit: `phase-r0: reset baseline for full wl1 gameplay parity`
+- [x] Update docs to explicitly mark current runtime as synthetic baseline.
+- [x] Add `specs/runtime-parity-master-plan.md` as authoritative implementation plan.
+- [x] Add runtime core guard script (`scripts/runtime/verify-runtime-core-guard.sh`) with mode control.
+- [x] Add mode file (`specs/generated/runtime-core-mode.json`) defaulting to `synthetic`.
+- [x] Wire guard into `pnpm verify`.
+- [x] Gate: docs + guard green in `pnpm verify`.
+- [x] Commit: `phase-f0: reset to runtime-faithful baseline`
 
-## Phase R1: Real WOLFSRC Oracle Bring-Up + Portability Layer
+## Phase F1: Deterministic Source + CI Bootstrap
 
-- [x] Add compatibility layer for DOS/BIOS/asm-era includes and calling conventions.
-- [x] Add runtime oracle entrypoints (`init/reset/step/snapshot/render/serialize`).
-- [x] Build real WOLFSRC runtime path to WASM (not synthetic hash wrappers).
-: Completed baseline: compatibility pipeline now compiles all runtime-target files in probe (`18/18` pass via `pnpm wasm:verify:compat`), oracle links real `WL_STATE.C` + `WL_AGENT.C`, exports real wrappers `oracle_real_wl_state_check_line`, `oracle_real_wl_state_check_sight`, `oracle_real_wl_state_move_obj_hash`, `oracle_real_wl_state_select_chase_dir_hash`, `oracle_real_wl_agent_try_move`, `oracle_real_wl_agent_clip_move_hash`, and runtime step movement routes through real `WL_AGENT.ClipMove` (q8<->q16 bridge) with property gates green at `1k/10k`.
-- [x] Add deterministic reset and state serialization API.
-- [x] Gate: oracle boots, steps deterministically, can snapshot state.
-- [x] Commit: `phase-r1: real wolfsrc oracle runtime + portability layer`
+- [ ] Add pinned vendored sanitized WOLFSRC snapshot under `c-oracle/vendor/wolfsrc-sanitized/`.
+- [ ] Add vendored checksum manifest (`c-oracle/vendor/wolfsrc-sanitized.sha256`).
+- [ ] Refactor `scripts/wasm/prepare-wolfsrc.sh`:
+  - default to vendored snapshot
+  - optionally refresh from `WOLF3D_SRC_DIR` when requested
+  - remove local absolute path dependency
+- [ ] Update CI workflows to set up pinned emsdk/emcc before compatibility/build steps.
+- [ ] Gate: `parity-pr` remote workflow passes from clean checkout.
+- [ ] Commit: `phase-f1: deterministic wolfsrc source and ci bootstrap`
 
-## Phase R2: Runtime-Path Symbol Discovery and Freeze
+## Phase F2: Real Runtime Oracle Driver
 
-- [x] Instrument oracle with symbol hit tracing.
-- [x] Run deterministic traces across menu/gameplay for all WL1 maps.
-: Deterministic trace harness runs via `pnpm runtime:manifest:extract` against real WL1 assets (`MAPHEAD.WL1`/`GAMEMAPS.WL1`) for all 10 shareware maps, and includes a deterministic menu-flow digest (`3960187756`) generated from real menu/text oracle wrappers.
-- [x] Generate runtime-path symbol set from actual execution.
-- [x] Freeze runtime symbol manifest (`required` vs `excluded-non-runtime`).
-- [x] Gate: runtime-path manifest locked and reproducible from trace tooling.
-: `pnpm runtime:manifest:verify` now enforces lock parity (`specs/generated/runtime-symbol-lock.json`) against regenerated trace output and is green; full gates also green (`pnpm verify`, `pnpm test:property:ci`).
-- [x] Commit: `phase-r2: lock runtime symbol manifest from wl1 traces`
+- [ ] Replace synthetic runtime oracle core logic in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
+- [ ] Add bridge/shim APIs for real boot/tick/snapshot/framebuffer/save-load.
+- [ ] Export updated runtime bridge in WASM and update `src/oracle/runtimeOracle.ts`.
+- [ ] Add oracle determinism tests for repeated identical traces.
+- [ ] Gate: oracle-only determinism suite green.
+- [ ] Commit: `phase-f2: real wolfsrc runtime oracle driver`
 
-## Phase R3: Deterministic Runtime Contracts + Harness
+## Phase F3: Full Symbol Classification Burn-Down
 
-- [x] Add `RuntimePort` contract for oracle and TS runtimes.
-- [x] Build parity harness for step parity and frame parity.
-: Added reusable runtime trace/parity harness in `src/runtime/parityHarness.ts`, with runtime property tests moved to harness-based comparisons for step/frame/snapshot parity.
-- [x] Add deterministic replay tooling and artifact capture.
-: Added runtime repro artifact writer (`test/property/runtimeRepro.ts`) and replay script (`pnpm runtime:replay <artifact.json>`).
-- [x] Gate: replay determinism and oracle self-consistency validated.
-: Green on `pnpm verify`, `pnpm test:property:ci`, `pnpm runtime:manifest:verify`, and `pnpm runtime:parity:test`; runtime suite now includes explicit oracle and TS self-consistency checks.
-- [x] Commit: `phase-r3: deterministic runtime contracts + parity harness`
+- [ ] Replace static trace symbol map with generated inventory-backed map.
+- [ ] Classify all 568 manifest symbols as `required-runtime` or `excluded-non-runtime` with evidence.
+- [ ] Generate `specs/runtime-symbol-manifest.md` from classification artifacts.
+- [ ] Add verification that zero symbols remain unclassified.
+- [ ] Gate: classification + lock reproducibility green.
+- [ ] Commit: `phase-f3: full symbol classification and runtime manifest freeze`
 
-## Phase R4: Runtime-Path Function Porting (Manifest-Driven)
+## Phase F4: Runtime-Required TS Parity Port Waves
 
-- [x] Port runtime-path functions subsystem by subsystem.
-: Runtime-path APIs listed in `specs/runtime-symbol-manifest.md` are implemented in TS runtime + oracle port layers and exercised through shared parity harness.
-- [x] For every function: TS port + property parity test + green local gate.
-: Added required-runtime function parity suite (`test/property/runtime.required-symbols.test.ts`) and marked all required symbols `done` in the frozen manifest.
-- [x] Enforce no prototype fallback in runtime execution path.
-: Added guard script `scripts/runtime/verify-no-prototype-fallback.sh` and gate command `pnpm runtime:required:verify`.
-- [x] Gate: all required runtime symbols marked complete with parity tests.
-: Green on `pnpm runtime:required:verify`, `pnpm verify`, and `pnpm test:property:ci` (1k/10k property gates).
-- [x] Commit: `phase-r4: runtime-path symbol parity complete`
+- [ ] Wave A: ID_CA/ID_MM/ID_PM runtime-required symbols parity.
+- [ ] Wave B: WL_DRAW/WL_SCALE/ID_VH/ID_VL runtime-required symbols parity.
+- [ ] Wave C: WL_STATE/WL_ACT1/WL_ACT2/WL_AGENT/WL_PLAY/WL_GAME/WL_INTER runtime-required symbols parity.
+- [ ] Wave D: WL_MENU/WL_TEXT/ID_US_1/ID_IN runtime-required symbols parity.
+- [ ] Wave E: ID_SD runtime-required audio-state parity.
+- [ ] Gate: all required-runtime symbols marked done with explicit property tests.
+- [ ] Commit: `phase-f4: runtime-required symbol parity complete`
 
-## Phase R5: Tick + Frame Fidelity Lock
+## Phase F5: Browser Runtime Core Replacement
 
-- [x] Add checkpointed frame hashing from software framebuffer.
-: Added deterministic runtime checkpoint generator + verifier (`scripts/runtime/runtime-checkpoints.ts`, `scripts/runtime/generate-runtime-checkpoints.ts`, `scripts/runtime/verify-runtime-checkpoints.ts`) and frozen lock artifacts (`specs/generated/runtime-checkpoints.json`, `specs/generated/runtime-checkpoints-lock.json`, digest `1566426645`).
-- [x] Run deterministic tick parity and frame-hash parity across map fixtures.
-: Added fixture parity suite (`test/property/runtime.checkpoints.test.ts`) over WL1 scenarios plus random fixture-prefix parity runs.
-- [x] Gate: no drift on parity checkpoints.
-: Green on `pnpm runtime:checkpoints:verify`, `pnpm verify`, and `pnpm test:property:ci` after parity fixes in `src/wolf/ai/wlStateReal.ts` (`CheckLine` unsigned intercept semantics and `spectreobj` enum value).
-- [x] Commit: `phase-r5: tick and frame hash parity locked`
+- [ ] Remove synthetic scenario-driver runtime path from production app flow.
+- [ ] Rewire `src/app/runtimeController.ts` and `src/app/gameApp.ts` to real runtime lifecycle.
+- [ ] Preserve software rendering via Canvas2D/ImageData with runtime-fed frame state.
+- [ ] Keep keyboard + mouse parity mapping.
+- [ ] Gate: boot -> menu -> new game -> level progression manually playable.
+- [ ] Commit: `phase-f5: browser app wired to real runtime core`
 
-## Phase R6: Browser Runtime Integration
+## Phase F6: End-to-End Per-Tic Episode Parity
 
-- [x] Replace prototype app path with real runtime integration.
-: Replaced legacy prototype loop with runtime-driven browser integration via `src/app/runtimeController.ts`, `src/app/runtimeAudio.ts`, and updated `src/app/gameApp.ts`.
-- [x] Wire WL1 assets + input + menu + audio adapters to runtime core.
-: Added browser-safe WL1 asset decode/fixture loader (`src/runtime/wl1RuntimeScenarios.ts`), deterministic input/tick controller flow, menu map selection/start flow, and Web Audio event adapter.
-- [x] Add browser smoke tests for boot/menu/new-game/level transitions.
-: Added deterministic smoke suite `test/smoke/runtime-browser.test.ts` and command wiring (`pnpm test:smoke`, `pnpm runtime:browser:smoke`).
-- [x] Gate: browser runtime fully playable for WL1 flow.
-: Green on `pnpm build`, `pnpm verify` (now includes smoke), and `pnpm test:property:ci`.
-- [x] Commit: `phase-r6: browser runtime integration complete`
+- [ ] Add deterministic real WL1 input traces for full episode progression.
+- [ ] Store canonical per-tic trace lock artifacts in `specs/generated/`.
+- [ ] Add TS-vs-oracle per-tic parity assertions (state + frame hash each tic).
+- [ ] Persist minimal repro trace JSON for first mismatch.
+- [ ] Gate: full-episode per-tic parity green locally and in CI.
+- [ ] Commit: `phase-f6: full episode per-tic parity locked`
 
-## Phase R7: End-to-End WL1 Episode Parity Acceptance
+## Phase F7: Remote CI Hardening + Release Gates
 
-- [x] Build deterministic traces for all WL1 maps.
-: Added all-map episode artifact pipeline (`scripts/runtime/runtime-episode.ts`, `scripts/runtime/generate-runtime-episode.ts`, `scripts/runtime/verify-runtime-episode.ts`) and frozen artifacts (`specs/generated/runtime-episode-checkpoints.json`, `specs/generated/runtime-episode-checkpoints-lock.json`).
-- [x] Validate full episode parity checkpoints (state + frame hashes).
-: Added deterministic acceptance tests `test/property/runtime.episode.test.ts` and verified contiguous map-order WL1 episode digest (`1566426645`) with per-map state/frame parity checkpoints.
-- [x] Gate: all-map + full-episode acceptance green.
-: Green on `pnpm runtime:episode:verify`, `pnpm verify`, and `pnpm test:property:ci`.
-- [x] Commit: `phase-r7: full wl1 episode parity acceptance`
+- [ ] Enforce vendored-source + emsdk setup in `.github/workflows/parity-pr.yml`.
+- [ ] Enforce vendored-source + emsdk setup in `.github/workflows/parity-10k.yml`.
+- [ ] Keep PR 1k targeted parity + mandatory runtime e2e smoke parity.
+- [ ] Keep nightly/release 10k shards + episode parity + browser smoke/build.
+- [ ] Ensure triage artifacts include seed/path/repro + trace diffs.
+- [ ] Gate: 3 consecutive green runs for PR and nightly workflows.
+- [ ] Commit: `phase-f7: remote ci parity gates stabilized`
 
-## Phase R8: CI Hardening + Release Gating
+## Phase F8: Final Acceptance + Done Freeze
 
-- [x] Add sharded nightly/release `10k` parity jobs.
-: Added matrix-sharded workflow `.github/workflows/parity-10k.yml` (4 shards, `FAST_CHECK_NUM_RUNS=10000`) for nightly schedule, manual dispatch, and release tags.
-- [x] Keep PR gate at `1k` with changed-symbol selection.
-: Added PR selector runner `scripts/ci/run-pr-property-suite.ts`, script `pnpm ci:property:pr`, and workflow `.github/workflows/parity-pr.yml` to run targeted 1k property suites.
-- [x] Add reproducible triage artifacts for parity failures.
-: Added triage collector `scripts/ci/collect-triage.ts`, script `pnpm ci:triage:collect`, and workflow artifact uploads (`artifacts/ci-triage-summary.md`, `test/repro/**`, runtime lock artifacts).
-- [x] Gate: stable CI over full runtime-path suite.
-: Local validation green on `pnpm verify`, `pnpm test:property:ci`, `FAST_CHECK_NUM_RUNS=1 pnpm ci:property:pr`, and `FAST_CHECK_NUM_RUNS=10 CI_PARITY_SHARD=4 pnpm ci:property:shard`.
-- [x] Commit: `phase-r8: parity ci hardening and release gates`
+- [ ] Freeze manifests/lock artifacts for final runtime-complete baseline.
+- [ ] Validate end-to-end WL1 done definition in browser.
+- [ ] Update docs/TODO with run ids and acceptance evidence.
+- [ ] Gate: all acceptance criteria green with clean tree.
+- [ ] Commit: `phase-f8: gameplay-complete wl1 runtime parity done`
 
 ## Global Rules
 
-- No phase advancement before current phase gate is green and committed.
-- Runtime-path manifest is authoritative for required function parity.
-- Every parity failure must emit seed/path and minimized repro artifact.
-- No approximate parity assertions in runtime-complete phases.
+- No phase advancement before current gate is green and committed.
+- Every required-runtime ported function needs TS-vs-oracle property parity tests.
+- Property thresholds remain: local 1k / CI 10k.
+- Every parity failure must emit seed/path and write repro artifact in `test/repro/`.
