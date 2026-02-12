@@ -87,6 +87,46 @@ export type OracleFunctionId =
   | 'wl_menu.MenuFlowHash'
   | 'id_sd.AudioStateHash';
 
+export type OracleRuntimeExportId =
+  | 'oracle_runtime_init'
+  | 'oracle_runtime_reset'
+  | 'oracle_runtime_step'
+  | 'oracle_runtime_snapshot_hash'
+  | 'oracle_runtime_render_frame_hash'
+  | 'oracle_runtime_set_state'
+  | 'oracle_runtime_get_map_lo'
+  | 'oracle_runtime_get_map_hi'
+  | 'oracle_runtime_get_xq8'
+  | 'oracle_runtime_get_yq8'
+  | 'oracle_runtime_get_angle_deg'
+  | 'oracle_runtime_get_health'
+  | 'oracle_runtime_get_ammo'
+  | 'oracle_runtime_get_cooldown'
+  | 'oracle_runtime_get_flags'
+  | 'oracle_runtime_get_tick'
+  | 'oracle_runtime_trace_reset'
+  | 'oracle_runtime_trace_count'
+  | 'oracle_runtime_trace_symbol_id_at';
+
+export type OracleFunctionClassification = 'required-runtime' | 'excluded-non-runtime' | 'unclassified';
+
+export interface OracleFunctionManifestEntry {
+  id: OracleFunctionId;
+  sourceFile: string;
+  classification: OracleFunctionClassification;
+  evidence: string;
+  parityTestPath?: string;
+}
+
+export interface OracleTraceRecord {
+  tic: number;
+  inputMask: number;
+  rng: number;
+  snapshotHash: number;
+  frameHash: number;
+  symbolIds: number[];
+}
+
 export interface OracleCall<TInput, TOutput> {
   fn: OracleFunctionId;
   input: TInput;

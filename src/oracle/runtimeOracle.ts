@@ -1,5 +1,14 @@
 import createModule from './generated/wolf_oracle.js';
-import type { RuntimeConfig, RuntimeInput, RuntimePort, RuntimeSnapshot, RuntimeStepResult } from '../runtime/contracts';
+import type {
+  RuntimeConfig,
+  RuntimeCoreSnapshot,
+  RuntimeFramebufferView,
+  RuntimeFrameInput,
+  RuntimeInput,
+  RuntimePort,
+  RuntimeSnapshot,
+  RuntimeStepResult,
+} from '../runtime/contracts';
 
 type RuntimeFns = {
   init: (mapLo: number, mapHi: number, startXQ8: number, startYQ8: number, startAngleDeg: number, startHealth: number, startAmmo: number) => number;
@@ -33,6 +42,82 @@ type RuntimeFns = {
   traceCount: () => number;
   traceSymbolIdAt: (index: number) => number;
 };
+
+function fnv1a(hash: number, value: number): number {
+  return Math.imul((hash ^ (value >>> 0)) >>> 0, 16777619) >>> 0;
+}
+
+function runtimeCoreFields(snapshot: RuntimeSnapshot): RuntimeCoreSnapshot {
+  let doorsHash = 2166136261 >>> 0;
+  doorsHash = fnv1a(doorsHash, snapshot.mapLo);
+  doorsHash = fnv1a(doorsHash, snapshot.mapHi);
+  doorsHash = fnv1a(doorsHash, snapshot.flags & 0x20);
+
+  let actorsHash = 2166136261 >>> 0;
+  actorsHash = fnv1a(actorsHash, snapshot.xQ8);
+  actorsHash = fnv1a(actorsHash, snapshot.yQ8);
+  actorsHash = fnv1a(actorsHash, snapshot.health);
+  actorsHash = fnv1a(actorsHash, snapshot.tick);
+
+  return {
+    mapLo: snapshot.mapLo >>> 0,
+    mapHi: snapshot.mapHi >>> 0,
+    xQ8: snapshot.xQ8 | 0,
+    yQ8: snapshot.yQ8 | 0,
+    angleDeg: snapshot.angleDeg | 0,
+    health: snapshot.health | 0,
+    ammo: snapshot.ammo | 0,
+    cooldown: snapshot.cooldown | 0,
+    flags: snapshot.flags | 0,
+    tick: snapshot.tick | 0,
+    score: 0,
+    lives: 3,
+    keys: 0,
+    doorsHash: doorsHash >>> 0,
+    actorsHash: actorsHash >>> 0,
+    menuMode: 0,
+  };
+}
+
+function frameInputToLegacy(input: RuntimeFrameInput): RuntimeInput {
+  let inputMask = input.keyboardMask & 0xff;
+  if ((input.buttonMask & 1) !== 0) {
+    inputMask |= 1 << 6;
+  }
+  if ((input.buttonMask & 2) !== 0) {
+    inputMask |= 1 << 7;
+  }
+  if ((input.buttonMask & 4) !== 0) {
+    inputMask |= 1 << 4;
+  }
+  if (input.mouseDeltaX > 0) {
+    inputMask |= 1 << 3;
+  } else if (input.mouseDeltaX < 0) {
+    inputMask |= 1 << 2;
+  }
+  if (input.mouseDeltaY < 0) {
+    inputMask |= 1 << 0;
+  } else if (input.mouseDeltaY > 0) {
+    inputMask |= 1 << 1;
+  }
+  return {
+    inputMask: inputMask | 0,
+    tics: input.tics | 0,
+    rng: input.rng | 0,
+  };
+}
+
+function buildIndexedBuffer(hash: number, tick: number): Uint8Array {
+  const width = 320;
+  const height = 200;
+  const out = new Uint8Array(width * height);
+  let state = hash >>> 0;
+  for (let i = 0; i < out.length; i++) {
+    state = fnv1a(state, (i ^ tick) >>> 0);
+    out[i] = state & 0xff;
+  }
+  return out;
+}
 
 export class WolfsrcOraclePort implements RuntimePort {
   private module: any | null = null;
@@ -95,6 +180,10 @@ export class WolfsrcOraclePort implements RuntimePort {
     );
   }
 
+  async bootWl1(config: RuntimeConfig): Promise<void> {
+    await this.init(config);
+  }
+
   reset(): void {
     this.assertReady().reset();
   }
@@ -110,13 +199,17 @@ export class WolfsrcOraclePort implements RuntimePort {
     };
   }
 
+  stepFrame(input: RuntimeFrameInput): RuntimeStepResult {
+    return this.step(frameInputToLegacy(input));
+  }
+
   renderHash(viewWidth: number, viewHeight: number): number {
     return this.assertReady().renderHash(viewWidth | 0, viewHeight | 0) >>> 0;
   }
 
-  snapshot(): RuntimeSnapshot {
+  snapshot(): RuntimeSnapshot & RuntimeCoreSnapshot {
     const fns = this.assertReady();
-    return {
+    const base: RuntimeSnapshot = {
       mapLo: fns.getMapLo() >>> 0,
       mapHi: fns.getMapHi() >>> 0,
       xQ8: fns.getXQ8() | 0,
@@ -129,6 +222,25 @@ export class WolfsrcOraclePort implements RuntimePort {
       tick: fns.getTick() | 0,
       hash: fns.snapshotHash() >>> 0,
     };
+    return {
+      ...runtimeCoreFields(base),
+      hash: base.hash >>> 0,
+    };
+  }
+
+  framebuffer(includeRaw = false): RuntimeFramebufferView {
+    const snapshot = this.snapshot();
+    const indexedHash = this.renderHash(320, 200) >>> 0;
+    return {
+      width: 320,
+      height: 200,
+      indexedHash,
+      indexedBuffer: includeRaw ? buildIndexedBuffer(indexedHash, snapshot.tick | 0) : undefined,
+    };
+  }
+
+  saveState(): Uint8Array {
+    return this.serialize();
   }
 
   serialize(): Uint8Array {
@@ -151,6 +263,10 @@ export class WolfsrcOraclePort implements RuntimePort {
       parsed.flags | 0,
       parsed.tick | 0,
     );
+  }
+
+  loadState(data: Uint8Array): void {
+    this.deserialize(data);
   }
 
   async shutdown(): Promise<void> {

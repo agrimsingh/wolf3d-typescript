@@ -8,10 +8,38 @@ export interface RuntimeConfig {
   startAmmo: number;
 }
 
+export interface RuntimeFrameInput {
+  keyboardMask: number;
+  mouseDeltaX: number;
+  mouseDeltaY: number;
+  buttonMask: number;
+  tics: number;
+  rng: number;
+}
+
 export interface RuntimeInput {
   inputMask: number;
   tics: number;
   rng: number;
+}
+
+export interface RuntimeCoreSnapshot {
+  mapLo: number;
+  mapHi: number;
+  xQ8: number;
+  yQ8: number;
+  angleDeg: number;
+  health: number;
+  ammo: number;
+  cooldown: number;
+  flags: number;
+  tick: number;
+  score: number;
+  lives: number;
+  keys: number;
+  doorsHash: number;
+  actorsHash: number;
+  menuMode: number;
 }
 
 export interface RuntimeSnapshot {
@@ -28,6 +56,13 @@ export interface RuntimeSnapshot {
   hash: number;
 }
 
+export interface RuntimeFramebufferView {
+  width: number;
+  height: number;
+  indexedHash: number;
+  indexedBuffer?: Uint8Array;
+}
+
 export interface RuntimeStepResult {
   snapshotHash: number;
   frameHash: number;
@@ -35,11 +70,18 @@ export interface RuntimeStepResult {
 }
 
 export interface RuntimePort {
+  bootWl1(config: RuntimeConfig): Promise<void>;
+  stepFrame(input: RuntimeFrameInput): RuntimeStepResult;
+  framebuffer(includeRaw?: boolean): RuntimeFramebufferView;
+  saveState(): Uint8Array;
+  loadState(data: Uint8Array): void;
+
+  // Legacy aliases used by existing parity harness/tests.
   init(config: RuntimeConfig): Promise<void>;
   reset(): void;
   step(input: RuntimeInput): RuntimeStepResult;
   renderHash(viewWidth: number, viewHeight: number): number;
-  snapshot(): RuntimeSnapshot;
+  snapshot(): RuntimeSnapshot & RuntimeCoreSnapshot;
   serialize(): Uint8Array;
   deserialize(data: Uint8Array): void;
   shutdown(): Promise<void>;

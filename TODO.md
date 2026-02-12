@@ -15,7 +15,7 @@
 
 - Current browser runtime still relies on a synthetic core (`src/runtime/tsRuntime.ts`).
 - Runtime symbol coverage is currently wrapper-level and under-represents full runtime behavior.
-- Remote CI failed because WOLFSRC prepare path depended on a local absolute directory.
+- Remote CI bootstrap is now green with vendored WOLFSRC + emsdk setup (`parity-pr` run `21933009204` on 2026-02-12).
 
 ## Phase F0: Truth Reset + De-Sim Baseline
 
@@ -29,15 +29,15 @@
 
 ## Phase F1: Deterministic Source + CI Bootstrap
 
-- [ ] Add pinned vendored sanitized WOLFSRC snapshot under `c-oracle/vendor/wolfsrc-sanitized/`.
-- [ ] Add vendored checksum manifest (`c-oracle/vendor/wolfsrc-sanitized.sha256`).
-- [ ] Refactor `scripts/wasm/prepare-wolfsrc.sh`:
+- [x] Add pinned vendored sanitized WOLFSRC snapshot under `c-oracle/vendor/wolfsrc-sanitized/`.
+- [x] Add vendored checksum manifest (`c-oracle/vendor/wolfsrc-sanitized.sha256`).
+- [x] Refactor `scripts/wasm/prepare-wolfsrc.sh`:
   - default to vendored snapshot
   - optionally refresh from `WOLF3D_SRC_DIR` when requested
   - remove local absolute path dependency
-- [ ] Update CI workflows to set up pinned emsdk/emcc before compatibility/build steps.
-- [ ] Gate: `parity-pr` remote workflow passes from clean checkout.
-- [ ] Commit: `phase-f1: deterministic wolfsrc source and ci bootstrap`
+- [x] Update CI workflows to set up pinned emsdk/emcc before compatibility/build steps.
+- [x] Gate: `parity-pr` remote workflow passes from clean checkout.
+- [x] Commit: `phase-f1: deterministic wolfsrc source and ci bootstrap`
 
 ## Phase F2: Real Runtime Oracle Driver
 

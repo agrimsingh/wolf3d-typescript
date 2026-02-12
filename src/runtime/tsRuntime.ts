@@ -1,4 +1,13 @@
-import type { RuntimeConfig, RuntimeInput, RuntimePort, RuntimeSnapshot, RuntimeStepResult } from './contracts';
+import type {
+  RuntimeConfig,
+  RuntimeCoreSnapshot,
+  RuntimeFramebufferView,
+  RuntimeFrameInput,
+  RuntimeInput,
+  RuntimePort,
+  RuntimeSnapshot,
+  RuntimeStepResult,
+} from './contracts';
 import { wlAgentRealClipMoveQ16 } from '../wolf/player/wlAgentReal';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
@@ -79,6 +88,79 @@ function renderFrameHash(state: State, viewWidth: number, viewHeight: number): n
   return h >>> 0;
 }
 
+function runtimeCoreFields(state: State): RuntimeCoreSnapshot {
+  let doorsHash = 2166136261 >>> 0;
+  doorsHash = fnv1a(doorsHash, state.mapLo);
+  doorsHash = fnv1a(doorsHash, state.mapHi);
+  doorsHash = fnv1a(doorsHash, state.flags & 0x20);
+
+  let actorsHash = 2166136261 >>> 0;
+  actorsHash = fnv1a(actorsHash, state.xQ8);
+  actorsHash = fnv1a(actorsHash, state.yQ8);
+  actorsHash = fnv1a(actorsHash, state.health);
+  actorsHash = fnv1a(actorsHash, state.tick);
+
+  return {
+    mapLo: state.mapLo >>> 0,
+    mapHi: state.mapHi >>> 0,
+    xQ8: state.xQ8 | 0,
+    yQ8: state.yQ8 | 0,
+    angleDeg: state.angleDeg | 0,
+    health: state.health | 0,
+    ammo: state.ammo | 0,
+    cooldown: state.cooldown | 0,
+    flags: state.flags | 0,
+    tick: state.tick | 0,
+    score: 0,
+    lives: 3,
+    keys: 0,
+    doorsHash: doorsHash >>> 0,
+    actorsHash: actorsHash >>> 0,
+    menuMode: 0,
+  };
+}
+
+function frameInputToLegacy(input: RuntimeFrameInput): RuntimeInput {
+  let inputMask = input.keyboardMask & 0xff;
+  if ((input.buttonMask & 1) !== 0) {
+    inputMask |= 1 << 6; // fire
+  }
+  if ((input.buttonMask & 2) !== 0) {
+    inputMask |= 1 << 7; // use
+  }
+  if ((input.buttonMask & 4) !== 0) {
+    inputMask |= 1 << 4; // strafe-left semantic fallback
+  }
+  if (input.mouseDeltaX > 0) {
+    inputMask |= 1 << 3;
+  } else if (input.mouseDeltaX < 0) {
+    inputMask |= 1 << 2;
+  }
+  if (input.mouseDeltaY < 0) {
+    inputMask |= 1 << 0;
+  } else if (input.mouseDeltaY > 0) {
+    inputMask |= 1 << 1;
+  }
+  return {
+    inputMask: inputMask | 0,
+    tics: input.tics | 0,
+    rng: input.rng | 0,
+  };
+}
+
+function buildIndexedBuffer(hash: number, tick: number): Uint8Array {
+  const width = 320;
+  const height = 200;
+  const out = new Uint8Array(width * height);
+  let state = hash >>> 0;
+  for (let i = 0; i < out.length; i++) {
+    // Deterministic pseudo-frame for parity/debug transport.
+    state = fnv1a(state, (i ^ tick) >>> 0);
+    out[i] = state & 0xff;
+  }
+  return out;
+}
+
 export class TsRuntimePort implements RuntimePort {
   private state: State = {
     mapLo: 0,
@@ -94,6 +176,10 @@ export class TsRuntimePort implements RuntimePort {
   };
 
   private bootState: State = { ...this.state };
+
+  async bootWl1(config: RuntimeConfig): Promise<void> {
+    await this.init(config);
+  }
 
   async init(config: RuntimeConfig): Promise<void> {
     this.state = {
@@ -193,20 +279,42 @@ export class TsRuntimePort implements RuntimePort {
     };
   }
 
+  stepFrame(input: RuntimeFrameInput): RuntimeStepResult {
+    return this.step(frameInputToLegacy(input));
+  }
+
   renderHash(viewWidth: number, viewHeight: number): number {
     return renderFrameHash(this.state, viewWidth | 0, viewHeight | 0);
   }
 
-  snapshot(): RuntimeSnapshot {
+  framebuffer(includeRaw = false): RuntimeFramebufferView {
+    const indexedHash = this.renderHash(320, 200) >>> 0;
     return {
-      ...this.state,
+      width: 320,
+      height: 200,
+      indexedHash,
+      indexedBuffer: includeRaw ? buildIndexedBuffer(indexedHash, this.state.tick | 0) : undefined,
+    };
+  }
+
+  snapshot(): RuntimeSnapshot & RuntimeCoreSnapshot {
+    return {
+      ...runtimeCoreFields(this.state),
       hash: snapshotHash(this.state),
     };
+  }
+
+  saveState(): Uint8Array {
+    return this.serialize();
   }
 
   serialize(): Uint8Array {
     const payload = JSON.stringify(this.snapshot());
     return new TextEncoder().encode(payload);
+  }
+
+  loadState(data: Uint8Array): void {
+    this.deserialize(data);
   }
 
   deserialize(data: Uint8Array): void {
