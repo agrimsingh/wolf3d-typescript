@@ -101,12 +101,12 @@
 
 ## G8: TS Port Wave D (Actors/AI/Combat)
 
-- [ ] Port runtime-faithful actor state machines and combat transitions from `WL_STATE.C` and `WL_ACT2.C`.
-- [ ] Gate: stateful actor tick parity suites
-- [ ] Gate: deterministic combat trace parity
-- [ ] Gate: agent-browser enemy encounter script validates chase/attack/death flow
-- [ ] Tests green
-- [ ] Phase commit pushed (`g8: actors-ai-combat parity`)
+- [x] Port runtime-faithful actor state machines and combat transitions from `WL_STATE.C` and `WL_ACT2.C`.
+- [x] Gate: stateful actor tick parity suites
+- [x] Gate: deterministic combat trace parity
+- [x] Gate: agent-browser enemy encounter script validates chase/attack/death flow
+- [x] Tests green
+- [x] Phase commit pushed (`g8: actors-ai-combat parity`)
 
 ## G9: TS Port Wave E (Menu/Text/Input/Intermission/Audio State)
 
