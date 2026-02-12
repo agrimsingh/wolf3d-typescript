@@ -1,5 +1,7 @@
 # One-Pass Autonomous Execution Spec: WL1 Gameplay-Complete TS Runtime Parity
 
+> Superseded by `specs/wl1-real-runtime-execution-spec.md` for active `G0..G12` execution.
+
 ## Summary
 
 This runbook defines the strict no-skip execution path from the current synthetic parity harness to a real gameplay-complete WL1 TypeScript runtime.

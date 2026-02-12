@@ -1,5 +1,5 @@
 {
-  "phase": "R10",
-  "mode": "real",
-  "notes": "R10 freeze: production runtime defaults to TsRuntimePort; oracle runtime is parity-reference only."
+  "phase": "G0",
+  "mode": "synthetic",
+  "notes": "G0 baseline reset: synthetic runtime remains active until G10 production swap."
 }

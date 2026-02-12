@@ -1,14 +1,14 @@
 # Wolf3D TypeScript Specifications
 
-Design documentation for the browser TypeScript port of Wolfenstein 3D, validated against original C/WASM oracle behavior.
+Design documentation for the browser TypeScript port of Wolfenstein 3D with strict C/WASM oracle parity.
 
-## Runtime Completion Track (Active)
+## Runtime Recovery Track (Active)
 
-- [runtime-parity-execution-spec.md](./runtime-parity-execution-spec.md): authoritative one-pass execution spec (`R0..R10`).
-- [runtime-gap-assessment.md](./runtime-gap-assessment.md): current truth snapshot of synthetic-vs-runtime-faithful gap.
-- [runtime-symbol-manifest.md](./runtime-symbol-manifest.md): runtime-path symbol checklist derived from trace artifacts.
+- [wl1-real-runtime-execution-spec.md](./wl1-real-runtime-execution-spec.md): authoritative one-shot execution spec (`G0..G12`).
+- [runtime-gap-assessment.md](./runtime-gap-assessment.md): current truth snapshot of synthetic-vs-real runtime gap.
+- [runtime-symbol-manifest.md](./runtime-symbol-manifest.md): runtime symbol checklist from trace artifacts (currently synthetic-biased evidence).
 - [runtime-symbol-classification.md](./runtime-symbol-classification.md): full WOLFSRC inventory classification summary.
-- [wolfsrc-compatibility.md](./wolfsrc-compatibility.md): WOLFSRC compatibility and portability constraints.
+- [wolfsrc-compatibility.md](./wolfsrc-compatibility.md): WOLFSRC portability constraints and toolchain notes.
 
 ## Generated Runtime Artifacts
 
@@ -40,27 +40,14 @@ Design documentation for the browser TypeScript port of Wolfenstein 3D, validate
 ## How To Use Specs
 
 1. Read `testing-strategy.md` before implementing any function.
-2. Implement exactly one function/slice at a time.
-3. Add TS-vs-C/WASM property parity tests for that function/slice.
-4. Run local gate (1k) and CI gate (10k) before marking complete.
-5. Update `TODO.md` and manifest evidence.
-6. Do not advance phase until all current phase gates are green and committed.
+2. Work from `TODO.md` current G-phase only.
+3. Implement one function/slice at a time, then add TS-vs-C/WASM property tests.
+4. Run local (1k) and CI-strength (10k) parity gates before marking complete.
+5. Keep docs/manifests/checkpoints synchronized with implementation reality.
+6. Do not advance phases until gates are green and a phase commit exists.
 
-## Spec Status
+## Current Truth
 
-| Spec | Status | Notes |
-| :--- | :--- | :--- |
-| runtime-parity-execution-spec.md | Active | Authoritative R-phase execution plan. |
-| runtime-gap-assessment.md | Active | Truth baseline for current gap. |
-| runtime-symbol-manifest.md | Active | Runtime symbol checklist and parity status. |
-| runtime-symbol-classification.md | Active | Inventory classification output. |
-| testing-strategy.md | Active | Mandatory oracle-parity workflow. |
-| c-wasm-bridge.md | Active | Bridge architecture and ABI constraints. |
-| math-fixed-point.md | Active | Phase coverage pending R4+ runtime-fidelity uplift. |
-| map-loading.md | Active | Phase coverage pending R1/R4 uplift. |
-| raycasting.md | Active | Phase coverage pending R5 uplift. |
-| actors-ai.md | Active | Phase coverage pending R7 uplift. |
-| player-movement.md | Active | Phase coverage pending R6 uplift. |
-| game-state.md | Active | Phase coverage pending R6 uplift. |
-| menu-text.md | Active | Phase coverage pending R8 uplift. |
-| audio.md | Active | Phase coverage pending R8 uplift. |
+- Current runtime remains synthetic in production path and is not gameplay-complete WL1.
+- Current map/runtime model still uses an 8x8 window abstraction in active paths.
+- Existing lock artifacts prove deterministic behavior of the current harness, not final real-game parity.

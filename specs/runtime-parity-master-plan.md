@@ -1,6 +1,6 @@
 # Full WOLFSRC Runtime Parity Master Plan
 
-> Superseded by `specs/runtime-parity-execution-spec.md` for the active R-phase execution track.
+> Superseded by `specs/wl1-real-runtime-execution-spec.md` for the active G-phase execution track.
 
 ## Status
 

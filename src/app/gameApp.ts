@@ -9,6 +9,8 @@ const FOV = Math.PI / 3;
 const MINIMAP_TILE_SIZE = 8;
 const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
+const PROTOTYPE_BASELINE_BANNER = 'Prototype runtime baseline active (G0-G9)';
+const PROTOTYPE_BASELINE_BANNER_ID = 'runtime-baseline-banner';
 
 type RayHit = {
   distance: number;
@@ -138,6 +140,16 @@ export class WolfApp {
   private lastMouseClientX: number | null = null;
 
   constructor(container: HTMLElement) {
+    if (!container.querySelector(`#${PROTOTYPE_BASELINE_BANNER_ID}`)) {
+      const banner = document.createElement('div');
+      banner.id = PROTOTYPE_BASELINE_BANNER_ID;
+      banner.textContent = PROTOTYPE_BASELINE_BANNER;
+      banner.style.color = '#ffb703';
+      banner.style.font = '12px monospace';
+      banner.style.marginBottom = '8px';
+      container.appendChild(banner);
+    }
+
     this.canvas = document.createElement('canvas');
     this.canvas.width = WIDTH;
     this.canvas.height = HEIGHT;
@@ -231,6 +243,9 @@ export class WolfApp {
     this.ctx.fillStyle = '#d6d6d6';
     this.ctx.font = '12px monospace';
     this.ctx.fillText('Loading WL1 assets and runtime...', 18, HEIGHT / 2);
+    this.ctx.fillStyle = '#ffb703';
+    this.ctx.font = '10px monospace';
+    this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 18, HEIGHT / 2 + 16);
   }
 
   private drawMenuFrame(): void {
@@ -241,10 +256,14 @@ export class WolfApp {
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.font = '14px monospace';
     this.ctx.fillText('Wolf3D TS Runtime Menu', 18, 24);
+    this.ctx.fillStyle = '#ffb703';
     this.ctx.font = '10px monospace';
-    this.ctx.fillText('Arrow keys: select map  Enter: start  N: next level  Esc: menu', 18, 40);
+    this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 18, 34);
+    this.ctx.font = '10px monospace';
+    this.ctx.fillStyle = '#d6dfef';
+    this.ctx.fillText('Arrow keys: select map  Enter: start  N: next level  Esc: menu', 18, 48);
 
-    let y = 62;
+    let y = 70;
     for (let i = 0; i < state.scenarios.length; i++) {
       const scenario = state.scenarios[i]!;
       const selected = i === state.selectedScenarioIndex;

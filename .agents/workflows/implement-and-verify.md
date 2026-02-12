@@ -1,8 +1,8 @@
-# Implement and Verify Workflow (R-Phase Strict)
+# Implement and Verify Workflow (G-Phase Strict)
 
 ## Purpose
 
-Enforce strict function-by-function oracle parity workflow for runtime-complete WL1 execution phases (`R0..R10`).
+Enforce strict function-by-function oracle parity workflow for runtime-complete WL1 execution phases (`G0..G12`).
 
 ## Trigger
 
@@ -10,9 +10,9 @@ Use whenever implementing any execution task from `TODO.md`.
 
 ## Steps
 
-1. Read `TODO.md` and identify current R-phase tasks.
+1. Read `TODO.md` and identify current G-phase tasks.
 2. Read `specs/testing-strategy.md`, `specs/runtime-gap-assessment.md`, and `specs/runtime-symbol-manifest.md`.
-3. If in `R4..R8`, select next unchecked symbol from `required-runtime`.
+3. If in `G5..G9`, select next unchecked symbol from `required-runtime`.
 4. Implement one function or one deterministic runtime contract unit.
 5. Add parity test (function-level or runtime-step/frame parity) against the oracle.
 6. Run local gate (minimum 1,000 random runs for function tests, deterministic replay for runtime traces).
@@ -30,10 +30,10 @@ Use whenever implementing any execution task from `TODO.md`.
 - Never advance phase while any gate is red.
 - Preserve deterministic seed replay output for any failure.
 - Keep specs, manifest, and TODO in sync with implementation reality.
-- Use `agent-browser` for browser-acceptance steps in `R9` and `R10`.
+- Use `agent-browser` for browser-acceptance steps in every phase; required from `G0` onward.
 
 ## Success Criteria
 
-- Current R-phase gates are all green.
+- Current G-phase gates are all green.
 - Runtime-path symbol checklist is updated (where applicable).
 - Phase completion commit is created.

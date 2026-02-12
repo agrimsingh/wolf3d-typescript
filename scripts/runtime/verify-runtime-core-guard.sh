@@ -19,23 +19,31 @@ if [[ "$mode" != "synthetic" && "$mode" != "real" ]]; then
   exit 1
 fi
 
-if [[ "$phase" != "" && ! "$phase" =~ ^(F[0-9]+|R[0-9]+)$ ]]; then
-  echo "Invalid runtime phase '$phase' in $MODE_FILE (expected F# or R#)." >&2
+if [[ "$phase" != "" && ! "$phase" =~ ^([FRG][0-9]+)$ ]]; then
+  echo "Invalid runtime phase '$phase' in $MODE_FILE (expected F#, R#, or G#)." >&2
   exit 1
 fi
+
+phase_family="$(node -e "const p=process.argv[1]||''; const m=p.match(/^([FRG])[0-9]+$/); process.stdout.write(m?m[1]:'');" "$phase")"
+phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^[FRG]([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
 
 if [[ "$mode" == "synthetic" ]]; then
   if ! rg -q "RUNTIME_CORE_KIND = 'synthetic'" "$TS_RUNTIME"; then
     echo "Mode is synthetic, but synthetic runtime marker was not found in $TS_RUNTIME" >&2
     exit 1
   fi
-  echo "Runtime core guard: synthetic mode active (expected for pre-F5 phases)."
+  echo "Runtime core guard: synthetic mode active for phase '$phase'."
   exit 0
 fi
 
-phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^R([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
+requires_pure_ts="false"
+if [[ "$phase_family" == "R" && "$phase_num" -ge 9 ]]; then
+  requires_pure_ts="true"
+elif [[ "$phase_family" == "G" && "$phase_num" -ge 10 ]]; then
+  requires_pure_ts="true"
+fi
 
-if [[ "$phase_num" -ge 9 ]]; then
+if [[ "$requires_pure_ts" == "true" ]]; then
   if ! rg -q "new TsRuntimePort\\(" "$RUNTIME_CONTROLLER"; then
     echo "Runtime core guard failed: phase '$phase' requires browser runtime to default to TsRuntimePort." >&2
     exit 1
@@ -44,8 +52,12 @@ if [[ "$phase_num" -ge 9 ]]; then
     echo "Runtime core guard failed: phase '$phase' still defaults browser runtime to WolfsrcOraclePort." >&2
     exit 1
   fi
-  echo "Runtime core guard: phase '$phase' uses TsRuntimePort in production runtime path."
+  if rg -q "RUNTIME_CORE_KIND = 'synthetic'" "$TS_RUNTIME"; then
+    echo "Runtime core guard failed: phase '$phase' requires non-synthetic TS runtime core." >&2
+    exit 1
+  fi
+  echo "Runtime core guard: phase '$phase' uses non-synthetic TsRuntimePort production runtime path."
   exit 0
 fi
 
-echo "Runtime core guard: real mode active for pre-R9 phase '$phase'."
+echo "Runtime core guard: real mode active for phase '$phase'."
