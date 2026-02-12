@@ -19,13 +19,13 @@ if [[ "$mode" != "synthetic" && "$mode" != "real" ]]; then
   exit 1
 fi
 
-if [[ "$phase" != "" && ! "$phase" =~ ^([FRG][0-9]+)$ ]]; then
-  echo "Invalid runtime phase '$phase' in $MODE_FILE (expected F#, R#, or G#)." >&2
+if [[ "$phase" != "" && ! "$phase" =~ ^([FRGK][0-9]+)$ ]]; then
+  echo "Invalid runtime phase '$phase' in $MODE_FILE (expected F#, R#, G#, or K#)." >&2
   exit 1
 fi
 
-phase_family="$(node -e "const p=process.argv[1]||''; const m=p.match(/^([FRG])[0-9]+$/); process.stdout.write(m?m[1]:'');" "$phase")"
-phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^[FRG]([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
+phase_family="$(node -e "const p=process.argv[1]||''; const m=p.match(/^([FRGK])[0-9]+$/); process.stdout.write(m?m[1]:'');" "$phase")"
+phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^[FRGK]([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
 
 if [[ "$mode" == "synthetic" ]]; then
   if ! rg -q "RUNTIME_CORE_KIND = 'synthetic'" "$TS_RUNTIME"; then
@@ -40,6 +40,8 @@ requires_pure_ts="false"
 if [[ "$phase_family" == "R" && "$phase_num" -ge 9 ]]; then
   requires_pure_ts="true"
 elif [[ "$phase_family" == "G" && "$phase_num" -ge 10 ]]; then
+  requires_pure_ts="true"
+elif [[ "$phase_family" == "K" && "$phase_num" -ge 11 ]]; then
   requires_pure_ts="true"
 fi
 

@@ -38,8 +38,8 @@ function hashSnapshot(hash: number, snapshot: RuntimeSnapshot): number {
 
 function hashConfig(hash: number, config: RuntimeConfig): number {
   let h = hash >>> 0;
-  h = fnv1a(h, config.mapLo >>> 0);
-  h = fnv1a(h, config.mapHi >>> 0);
+  h = fnv1a(h, (config.mapLo ?? 0) >>> 0);
+  h = fnv1a(h, (config.mapHi ?? 0) >>> 0);
   h = fnv1a(h, config.startXQ8 | 0);
   h = fnv1a(h, config.startYQ8 | 0);
   h = fnv1a(h, config.startAngleDeg | 0);

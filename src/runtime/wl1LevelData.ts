@@ -1,7 +1,5 @@
 import type { RuntimeConfig, RuntimeInput } from './contracts';
 import { idCaCarmackExpandWords, idCaRlewExpandWords } from '../wolf/map/wlMap';
-
-const AREATILE = 107;
 const PLAYER_START_MIN = 19;
 const PLAYER_START_MAX = 22;
 
@@ -60,10 +58,6 @@ function angleFromPlayerStartTile(tile: number): number {
   return angle | 0;
 }
 
-function isWall(tile: number): boolean {
-  return (tile & 0xffff) < AREATILE;
-}
-
 function findPlayerStart(
   plane1: Uint16Array,
   width: number,
@@ -95,40 +89,6 @@ function findPlayerStart(
   return { tileX: 1, tileY: 1, angleDeg: 0 };
 }
 
-function buildRuntimeWindowBits(
-  plane0: Uint16Array,
-  width: number,
-  height: number,
-  centerTileX: number,
-  centerTileY: number,
-): { mapLo: number; mapHi: number; originX: number; originY: number } {
-  const originX = Math.max(0, Math.min(Math.max(0, width - 8), (centerTileX - 3) | 0)) | 0;
-  const originY = Math.max(0, Math.min(Math.max(0, height - 8), (centerTileY - 3) | 0)) | 0;
-
-  let lo = 0;
-  let hi = 0;
-  for (let wy = 0; wy < 8; wy++) {
-    for (let wx = 0; wx < 8; wx++) {
-      const x = originX + wx;
-      const y = originY + wy;
-      const border = wx === 0 || wy === 0 || wx === 7 || wy === 7;
-      const tile = (x >= 0 && x < width && y >= 0 && y < height) ? (plane0[y * width + x] ?? 0) : 1;
-      const wall = border || isWall(tile);
-      if (!wall) {
-        continue;
-      }
-      const bit = wy * 8 + wx;
-      if (bit < 32) {
-        lo |= 1 << bit;
-      } else {
-        hi |= 1 << (bit - 32);
-      }
-    }
-  }
-
-  return { mapLo: lo >>> 0, mapHi: hi >>> 0, originX, originY };
-}
-
 function buildScenarioSeed(mapIndex: number, mapName: string, startXQ8: number, startYQ8: number): number {
   let hash = 2166136261 >>> 0;
   hash = fnv1a(hash, mapIndex | 0);
@@ -158,6 +118,7 @@ export function buildWl1RuntimeScenariosFromBytes(
   mapheadBytes: Uint8Array,
   gamemapsBytes: Uint8Array,
   stepsPerScenario = 64,
+  variant: 'WL1' | 'WL6' = 'WL1',
 ): Wl1RuntimeScenarioData[] {
   const rlewTag = readU16(mapheadBytes, 0);
   const scenarios: Wl1RuntimeScenarioData[] = [];
@@ -198,41 +159,44 @@ export function buildWl1RuntimeScenariosFromBytes(
     const plane1 = idCaRlewExpandWords(rlewSource1, width * height * 2, rlewTag);
 
     const start = findPlayerStart(plane1, width, height);
-    const mapBits = buildRuntimeWindowBits(plane0, width, height, start.tileX, start.tileY);
-    const localStartTileX = (start.tileX - mapBits.originX) | 0;
-    const localStartTileY = (start.tileY - mapBits.originY) | 0;
-    const startXQ8 = (localStartTileX * 256 + 128) | 0;
-    const startYQ8 = (localStartTileY * 256 + 128) | 0;
+    const startXQ8 = (start.tileX * 256 + 128) | 0;
+    const startYQ8 = (start.tileY * 256 + 128) | 0;
     const startAngleDeg = start.angleDeg | 0;
     const seed = buildScenarioSeed(mapIndex, mapName, startXQ8, startYQ8);
 
+    const config: RuntimeConfig = {
+      variant,
+      // Compatibility fields are intentionally zeroed and derived by runtime.
+      mapLo: 0,
+      mapHi: 0,
+      mapIndex,
+      mapName,
+      mapWidth: width | 0,
+      mapHeight: height | 0,
+      runtimeWindowOriginX: 0,
+      runtimeWindowOriginY: 0,
+      plane0,
+      plane1,
+      worldStartXQ8: startXQ8,
+      worldStartYQ8: startYQ8,
+      playerStartAbsTileX: start.tileX | 0,
+      playerStartAbsTileY: start.tileY | 0,
+      playerStartTileX: start.tileX | 0,
+      playerStartTileY: start.tileY | 0,
+      playerStartAngleDeg: startAngleDeg,
+      startXQ8,
+      startYQ8,
+      startAngleDeg,
+      startHealth: 100,
+      startAmmo: 8,
+    };
+
     scenarios.push({
-      id: `wl1-map-${mapIndex}`,
+      id: `${variant.toLowerCase()}-map-${mapIndex}`,
       mapIndex,
       mapName,
       seed,
-      config: {
-        mapLo: mapBits.mapLo,
-        mapHi: mapBits.mapHi,
-        mapIndex,
-        mapName,
-        mapWidth: width | 0,
-        mapHeight: height | 0,
-        runtimeWindowOriginX: mapBits.originX | 0,
-        runtimeWindowOriginY: mapBits.originY | 0,
-        plane0,
-        plane1,
-        playerStartAbsTileX: start.tileX | 0,
-        playerStartAbsTileY: start.tileY | 0,
-        playerStartTileX: localStartTileX | 0,
-        playerStartTileY: localStartTileY | 0,
-        playerStartAngleDeg: startAngleDeg,
-        startXQ8,
-        startYQ8,
-        startAngleDeg,
-        startHealth: 100,
-        startAmmo: 8,
-      },
+      config,
       steps: buildScenarioSteps(seed | 0, stepsPerScenario),
     });
   }

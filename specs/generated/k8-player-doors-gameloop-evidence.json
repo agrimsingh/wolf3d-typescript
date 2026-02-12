@@ -1,0 +1,45 @@
+{
+  "phase": "K8",
+  "timestamp": "2026-02-12",
+  "codeChanges": {
+    "syntheticHealthDrain": "Removed periodic full-map HP countdown path from runtime step loop."
+  },
+  "gates": {
+    "playerAndGameStateLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/phase5.player-movement.test.ts test/property/phase6.game-state.test.ts",
+      "status": "pass"
+    },
+    "playerAndGameStateCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/phase5.player-movement.test.ts test/property/phase6.game-state.test.ts",
+      "status": "pass"
+    },
+    "fullMapInteractionsLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/runtime.fullmap-interactions.test.ts",
+      "status": "pass"
+    },
+    "fullMapInteractionsCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/runtime.fullmap-interactions.test.ts",
+      "status": "pass"
+    },
+    "runtimeStepParityLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/runtime.step-parity.test.ts",
+      "status": "pass"
+    }
+  },
+  "agentBrowser": {
+    "session": "k8",
+    "artifact": "artifacts/agent-browser/k8/gameplay-flow-check.json",
+    "checks": {
+      "moved": true,
+      "pickedItem": true,
+      "pushedWall": true,
+      "doorOpened": true,
+      "tookDamage": true,
+      "survivedAfterDamage": true
+    },
+    "screenshots": [
+      "artifacts/agent-browser/k8/title.png",
+      "artifacts/agent-browser/k8/gameplay-flow.png"
+    ]
+  }
+}

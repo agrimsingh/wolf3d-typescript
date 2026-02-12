@@ -13,20 +13,22 @@ if [[ ! -f "$MODE_FILE" ]]; then
 fi
 
 phase="$(node -e "const fs=require('fs'); const v=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(String(v.phase||''));" "$MODE_FILE")"
-phase_family="$(node -e "const p=process.argv[1]||''; const m=p.match(/^([FRG])[0-9]+$/); process.stdout.write(m?m[1]:'');" "$phase")"
-phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^[FRG]([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
+phase_family="$(node -e "const p=process.argv[1]||''; const m=p.match(/^([FRGK])[0-9]+$/); process.stdout.write(m?m[1]:'');" "$phase")"
+phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^[FRGK]([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
 
 requires_full_world="false"
 if [[ "$phase_family" == "G" && "$phase_num" -ge 4 ]]; then
   requires_full_world="true"
+elif [[ "$phase_family" == "K" && "$phase_num" -ge 4 ]]; then
+  requires_full_world="true"
 fi
 
 if [[ "$requires_full_world" == "true" ]]; then
-  if ! rg -q "enableFullMapRuntime:\\s*true" "$RUNTIME_CONTROLLER"; then
-    echo "Runtime world guard failed: runtime controller is not forcing full-map runtime mode at phase '$phase'." >&2
+  if ! rg -q "runtime\\.init\\(\\{ \\.\\.\\.scenario\\.config \\}\\)" "$RUNTIME_CONTROLLER"; then
+    echo "Runtime world guard failed: runtime controller is not initializing from full scenario config at phase '$phase'." >&2
     exit 1
   fi
-  if ! rg -q "plane0" "$WL1_DATA" || ! rg -q "plane1" "$WL1_DATA"; then
+  if ! rg -q "plane0" "$WL1_DATA" || ! rg -q "plane1" "$WL1_DATA" || ! rg -q "worldStartXQ8|worldStartYQ8" "$WL1_DATA"; then
     echo "Runtime world guard failed: WL1 loader is missing full plane data fields at phase '$phase'." >&2
     exit 1
   fi

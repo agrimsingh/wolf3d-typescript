@@ -1,0 +1,31 @@
+{
+  "kind": "wl6-raw",
+  "generatedAt": "2026-02-12T18:50:22.000Z",
+  "source": {
+    "repo": "https://github.com/vpoupet/wolfenstein",
+    "commit": "5a1464d0bc907f4216f8db5e7f874ee8817771c5",
+    "subdir": "data",
+    "files": [
+      "MAPHEAD.WL6",
+      "GAMEMAPS.WL6",
+      "VSWAP.WL6"
+    ]
+  },
+  "files": [
+    {
+      "path": "assets/wl6/raw/GAMEMAPS.WL6",
+      "size": 150652,
+      "sha256": "3df9f2ad54c601e79ab117c8175477b5d96571ba9e290cb9cd7d910abfeaae56"
+    },
+    {
+      "path": "assets/wl6/raw/MAPHEAD.WL6",
+      "size": 402,
+      "sha256": "289e04f47128a5ba19f9b3f912b4048e26dc16c6fa00205ead51efb1d8e23c69"
+    },
+    {
+      "path": "assets/wl6/raw/VSWAP.WL6",
+      "size": 1545400,
+      "sha256": "49ba24e0b3916732cd065122de4fe6fb6e6a5009c353eafa407c0e3a5a503407"
+    }
+  ]
+}

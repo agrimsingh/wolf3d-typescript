@@ -1212,8 +1212,8 @@ export class TsRuntimePort implements RuntimePort {
     };
 
     this.state = {
-      mapLo: config.mapLo >>> 0,
-      mapHi: config.mapHi >>> 0,
+      mapLo: (config.mapLo ?? 0) >>> 0,
+      mapHi: (config.mapHi ?? 0) >>> 0,
       xQ8: config.startXQ8 | 0,
       yQ8: config.startYQ8 | 0,
       angleDeg: normalizeAngleDeg(config.startAngleDeg | 0),
@@ -1226,26 +1226,29 @@ export class TsRuntimePort implements RuntimePort {
 
     const width = config.mapWidth ?? 0;
     const height = config.mapHeight ?? 0;
-    const hasFullMap = config.enableFullMapRuntime === true && !!config.plane0 && width > 0 && height > 0;
+    const hasFullMap = config.enableFullMapRuntime !== false && !!config.plane0 && width > 0 && height > 0;
     if (hasFullMap) {
       const plane0 = new Uint16Array(config.plane0!);
       const plane1 = config.plane1 ? new Uint16Array(config.plane1) : null;
       let originX = clampWindowOrigin(config.runtimeWindowOriginX ?? 0, width);
       let originY = clampWindowOrigin(config.runtimeWindowOriginY ?? 0, height);
 
-      let worldXQ8 = config.startXQ8 | 0;
-      let worldYQ8 = config.startYQ8 | 0;
-      if (
-        Number.isInteger(config.playerStartAbsTileX)
-        && Number.isInteger(config.playerStartAbsTileY)
-      ) {
-        const fracX = config.startXQ8 & 0xff;
-        const fracY = config.startYQ8 & 0xff;
-        worldXQ8 = (Math.imul(config.playerStartAbsTileX as number, 256) + fracX) | 0;
-        worldYQ8 = (Math.imul(config.playerStartAbsTileY as number, 256) + fracY) | 0;
-      } else {
-        worldXQ8 = (worldXQ8 + Math.imul(originX, 256)) | 0;
-        worldYQ8 = (worldYQ8 + Math.imul(originY, 256)) | 0;
+      let worldXQ8 = (config.worldStartXQ8 ?? config.startXQ8) | 0;
+      let worldYQ8 = (config.worldStartYQ8 ?? config.startYQ8) | 0;
+      const hasExplicitWorldStart = Number.isInteger(config.worldStartXQ8) && Number.isInteger(config.worldStartYQ8);
+      if (!hasExplicitWorldStart) {
+        if (
+          Number.isInteger(config.playerStartAbsTileX)
+          && Number.isInteger(config.playerStartAbsTileY)
+        ) {
+          const fracX = config.startXQ8 & 0xff;
+          const fracY = config.startYQ8 & 0xff;
+          worldXQ8 = (Math.imul(config.playerStartAbsTileX as number, 256) + fracX) | 0;
+          worldYQ8 = (Math.imul(config.playerStartAbsTileY as number, 256) + fracY) | 0;
+        } else {
+          worldXQ8 = (worldXQ8 + Math.imul(originX, 256)) | 0;
+          worldYQ8 = (worldYQ8 + Math.imul(originY, 256)) | 0;
+        }
       }
 
       const playerTileX = clampI32((worldXQ8 >> 8) | 0, 0, (width - 1) | 0);
@@ -2489,10 +2492,6 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
-    if (this.fullMap.enabled && this.state.health > 1 && (this.state.tick % 96) === 0) {
-      this.state.health = (this.state.health - 1) | 0;
-    }
-
     if (this.state.health <= 0) {
       this.state.flags |= 0x40;
     } else {
@@ -2555,8 +2554,8 @@ export class TsRuntimePort implements RuntimePort {
       for (let y = top; y <= bottom; y++) {
         if (texture) {
           const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
-          // VSWAP walls are stored column-major (x-major).
-          const sampleX = (63 - hit.texX) & 63;
+          // VSWAP walls are stored column-major (x-major). castRayFullMap already applies side-dependent flips.
+          const sampleX = hit.texX & 63;
           indexed[y * FRAME_WIDTH + x] = texture[(sampleX * 64 + ty) & 4095] ?? wallIndex;
         } else {
           indexed[y * FRAME_WIDTH + x] = wallIndex;

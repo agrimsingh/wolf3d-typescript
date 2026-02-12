@@ -1,0 +1,33 @@
+{
+  "phase": "K11",
+  "timestamp": "2026-02-12",
+  "guardUpdates": {
+    "phaseSupport": "Runtime guard scripts now support K-phase tags.",
+    "oracleIsolation": "Added scripts/runtime/verify-oracle-test-only.sh and wired into runtime:required:verify.",
+    "fullWorldGuard": "Updated world guard to validate full scenario-config init path instead of legacy force-flag wiring."
+  },
+  "gates": {
+    "runtimeRequiredVerify": {
+      "command": "pnpm runtime:required:verify",
+      "status": "pass"
+    },
+    "smoke": {
+      "command": "pnpm test:smoke",
+      "status": "pass"
+    },
+    "build": {
+      "command": "pnpm build",
+      "status": "pass"
+    }
+  },
+  "agentBrowser": {
+    "session": "k11",
+    "artifact": "artifacts/agent-browser/k11/pure-ts-runtime-check.json",
+    "result": {
+      "runtimeCtor": "TsRuntimePort",
+      "mode": "playing",
+      "map": "Wolf1 Map1"
+    },
+    "screenshot": "artifacts/agent-browser/k11/smoke-playing.png"
+  }
+}

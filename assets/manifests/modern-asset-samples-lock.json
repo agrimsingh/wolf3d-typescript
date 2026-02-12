@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "generatedAt": "2026-02-12T18:58:37.671Z",
+  "samples": [
+    {
+      "targetKind": "wallTexture",
+      "targetId": "wall.stone.01",
+      "sha256": "caa82a12e54b6ceb2a692355425ddb75c6a7381904d600295a3712ff3871aa6b"
+    },
+    {
+      "targetKind": "wallTexture",
+      "targetId": "ui.achtung.sign",
+      "sha256": "df3282c6eac91e0b151e1149ecf9aac2315fa29fc344a0db7c7a1e101449a581"
+    },
+    {
+      "targetKind": "uiSprite",
+      "targetId": "ui.hud.panel",
+      "sha256": "df50f1eb86e11d2966838c8e082b441fe66f7191bccad951397520ad23ea969f"
+    },
+    {
+      "targetKind": "actorSheet",
+      "targetId": "actor.guard.sheet",
+      "sha256": "f710d4c401a111c06c172b18d39d4a1d2e10a63cd03613bdd86c743d80068388"
+    },
+    {
+      "targetKind": "soundEffect",
+      "targetId": "sfx.door.open",
+      "sha256": "d139486075701dde7aa66b2955f0c6f735318f1434a52fd32062d14aab3c7bd5"
+    },
+    {
+      "targetKind": "soundEffect",
+      "targetId": "sfx.weapon.pistol",
+      "sha256": "51d22353a522e666cac84b3f5766c98e66a6f0a7065cce98848e302a2eeeece9"
+    }
+  ]
+}

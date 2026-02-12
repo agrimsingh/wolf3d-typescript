@@ -131,7 +131,7 @@ export class RuntimeAppController {
     try {
       const scenarios = await this.scenarioLoader();
       if (scenarios.length === 0) {
-        throw new Error('No WL1 scenarios were loaded.');
+        throw new Error('No runtime scenarios were loaded.');
       }
       this.state = {
         ...this.state,
@@ -194,11 +194,7 @@ export class RuntimeAppController {
     }
 
     const token = ++this.transitionToken;
-    const runtimeConfig: RuntimeConfig = {
-      ...scenario.config,
-      enableFullMapRuntime: true,
-    };
-    await this.runtime.init(runtimeConfig);
+    await this.runtime.init({ ...scenario.config });
     if (token !== this.transitionToken) {
       return;
     }

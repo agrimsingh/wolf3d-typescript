@@ -29,11 +29,11 @@ async function main(): Promise<void> {
   const generated = JSON.parse(await readFile(generatedPath, 'utf8')) as RuntimeCheckpointArtifact;
   const lock = JSON.parse(await readFile(lockPath, 'utf8')) as RuntimeCheckpointArtifact;
 
-  if (lock.phase !== 'R5') {
-    throw new Error(`Expected lock.phase to be "R5", got "${lock.phase}"`);
+  if (lock.phase !== 'K12') {
+    throw new Error(`Expected lock.phase to be "K12", got "${lock.phase}"`);
   }
-  if (generated.phase !== 'R5') {
-    throw new Error(`Expected generated.phase to be "R5", got "${generated.phase}"`);
+  if (generated.phase !== 'K12') {
+    throw new Error(`Expected generated.phase to be "K12", got "${generated.phase}"`);
   }
   assertSortedUniqueMapIndexes(generated);
   assertSortedUniqueMapIndexes(lock);

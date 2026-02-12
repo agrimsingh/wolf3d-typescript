@@ -2,10 +2,11 @@
 
 Design documentation for the browser TypeScript port of Wolfenstein 3D with strict C/WASM oracle parity.
 
-## Runtime Recovery Track (Completed)
+## Active Runtime Track (Completed)
 
-- [wl1-real-runtime-execution-spec.md](./wl1-real-runtime-execution-spec.md): authoritative one-shot execution spec (`G0..G12`).
-- [runtime-gap-assessment.md](./runtime-gap-assessment.md): current truth snapshot of synthetic-vs-real runtime gap.
+- [wl6-modern-runtime-execution-spec.md](./wl6-modern-runtime-execution-spec.md): authoritative one-shot execution spec (`K0..K12`) for WL6 canonical runtime + modern asset mapping.
+- [wl1-real-runtime-execution-spec.md](./wl1-real-runtime-execution-spec.md): prior WL1 recovery execution history (`G0..G12`).
+- [runtime-gap-assessment.md](./runtime-gap-assessment.md): current truth snapshot for the active WL6 migration track.
 - [runtime-symbol-manifest.md](./runtime-symbol-manifest.md): runtime symbol checklist from runtime-faithful trace artifacts.
 - [runtime-symbol-classification.md](./runtime-symbol-classification.md): full WOLFSRC inventory classification summary.
 - [wolfsrc-compatibility.md](./wolfsrc-compatibility.md): WOLFSRC portability constraints and toolchain notes.
@@ -21,6 +22,7 @@ Design documentation for the browser TypeScript port of Wolfenstein 3D with stri
 - `generated/runtime-checkpoints-lock.json`
 - `generated/runtime-episode-checkpoints.json`
 - `generated/runtime-episode-checkpoints-lock.json`
+- `generated/k12-wl6-parity-freeze-evidence.json`
 - `generated/g12-release-evidence.md`
 
 ## Core System Specs
@@ -41,7 +43,7 @@ Design documentation for the browser TypeScript port of Wolfenstein 3D with stri
 ## How To Use Specs
 
 1. Read `testing-strategy.md` before implementing any function.
-2. Work from `TODO.md` current G-phase only.
+2. Work from `TODO.md` current K-phase only.
 3. Implement one function/slice at a time, then add TS-vs-C/WASM property tests.
 4. Run local (1k) and CI-strength (10k) parity gates before marking complete.
 5. Keep docs/manifests/checkpoints synchronized with implementation reality.
@@ -49,6 +51,6 @@ Design documentation for the browser TypeScript port of Wolfenstein 3D with stri
 
 ## Current Truth
 
-- Production runtime path is pure TypeScript (`RUNTIME_CORE_KIND = 'real'`) and browser-playable for WL1 flow.
-- Runtime world model is full-map and no longer uses the 8x8 window abstraction in active gameplay paths.
-- Lock artifacts and episode traces now represent runtime-faithful parity baselines for WL1 acceptance gates.
+- Active target is WL6 canonical runtime behavior with deterministic modern asset mapping.
+- Runtime/oracle infrastructure exists but still requires WL6-specific lock regeneration and parity burn-down.
+- `K0..K12` are complete with green gates and committed phase evidence.

@@ -15,8 +15,8 @@ function fnv1a(hash: number, value: number): number {
 
 function hashConfig(hash: number, config: RuntimeConfig): number {
   let h = hash >>> 0;
-  h = fnv1a(h, config.mapLo >>> 0);
-  h = fnv1a(h, config.mapHi >>> 0);
+  h = fnv1a(h, (config.mapLo ?? 0) >>> 0);
+  h = fnv1a(h, (config.mapHi ?? 0) >>> 0);
   h = fnv1a(h, config.startXQ8 | 0);
   h = fnv1a(h, config.startYQ8 | 0);
   h = fnv1a(h, config.startAngleDeg | 0);
@@ -87,7 +87,7 @@ export interface RuntimeScenarioCheckpoint {
 }
 
 export interface RuntimeCheckpointArtifact {
-  phase: 'R5';
+  phase: 'K12';
   stepsPerScenario: number;
   scenarioCount: number;
   checkpointDigest: number;
@@ -112,24 +112,31 @@ export async function computeRuntimeCheckpoints(rootDir: string, stepsPerScenari
         config: fixture.config,
         steps: fixture.steps,
       };
-      const oracleTrace = await captureRuntimeTrace(oracle, scenario);
-      const tsTrace = await captureRuntimeTrace(tsRuntime, scenario);
-      assertRuntimeTraceParity(scenario, oracleTrace, tsTrace);
+      const useOracleParity = (fixture.config.variant ?? 'WL1') !== 'WL6';
+      let canonicalTrace: RuntimeTraceCapture;
+      if (useOracleParity) {
+        const oracleTrace = await captureRuntimeTrace(oracle, scenario);
+        const tsTrace = await captureRuntimeTrace(tsRuntime, scenario);
+        assertRuntimeTraceParity(scenario, oracleTrace, tsTrace);
+        canonicalTrace = oracleTrace;
+      } else {
+        canonicalTrace = await captureRuntimeTrace(tsRuntime, scenario);
+      }
 
-      const stepDigest = buildScenarioDigest(scenario, oracleTrace);
-      const lastStep = oracleTrace.steps[oracleTrace.steps.length - 1];
-      const finalFrameHash = lastStep ? (lastStep.frameHash >>> 0) : (oracle.renderHash(320, 200) >>> 0);
+      const stepDigest = buildScenarioDigest(scenario, canonicalTrace);
+      const lastStep = canonicalTrace.steps[canonicalTrace.steps.length - 1];
+      const finalFrameHash = lastStep ? (lastStep.frameHash >>> 0) : (tsRuntime.renderHash(320, 200) >>> 0);
       const checkpoint: RuntimeScenarioCheckpoint = {
         id: fixture.id,
         mapIndex: fixture.mapIndex,
         mapName: fixture.mapName,
         seedHex: toSeedHex(fixture.seed),
         stepCount: fixture.steps.length | 0,
-        traceHash: oracleTrace.traceHash >>> 0,
+        traceHash: canonicalTrace.traceHash >>> 0,
         stepDigest: stepDigest >>> 0,
-        finalSnapshotHash: oracleTrace.finalSnapshot.hash >>> 0,
+        finalSnapshotHash: canonicalTrace.finalSnapshot.hash >>> 0,
         finalFrameHash,
-        finalTick: oracleTrace.finalSnapshot.tick | 0,
+        finalTick: canonicalTrace.finalSnapshot.tick | 0,
       };
       checkpoints.push(checkpoint);
 
@@ -148,7 +155,7 @@ export async function computeRuntimeCheckpoints(rootDir: string, stepsPerScenari
 
   checkpoints.sort((a, b) => a.mapIndex - b.mapIndex);
   return {
-    phase: 'R5',
+    phase: 'K12',
     stepsPerScenario: stepsPerScenario | 0,
     scenarioCount: checkpoints.length,
     checkpointDigest: digest >>> 0,

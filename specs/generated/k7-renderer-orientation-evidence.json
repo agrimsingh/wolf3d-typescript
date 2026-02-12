@@ -1,0 +1,38 @@
+{
+  "phase": "K7",
+  "timestamp": "2026-02-12",
+  "codeChanges": {
+    "textureSampling": "Removed extra horizontal mirror pass in full-map wall texture sampling.",
+    "hudOverlay": "Added modern HUD panel overlay loading/render path in app runtime view.",
+    "regressionTest": "Added runtime renderer orientation test for column-major VSWAP sampling."
+  },
+  "gates": {
+    "phase3Local": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/phase3.raycast.test.ts",
+      "status": "pass"
+    },
+    "phase3Ci": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/phase3.raycast.test.ts",
+      "status": "pass"
+    },
+    "stepParityLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/runtime.step-parity.test.ts test/property/runtime.renderer-orientation.test.ts",
+      "status": "pass"
+    },
+    "stepParityCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/runtime.step-parity.test.ts",
+      "status": "pass"
+    }
+  },
+  "sceneHashes": [
+    { "label": "start", "frame": 3316999512, "snapshot": 521493092, "tick": 2 },
+    { "label": "corridor", "frame": 3987513112, "snapshot": 505198206, "tick": 53 },
+    { "label": "sign", "frame": 584401590, "snapshot": 1061149033, "tick": 85 }
+  ],
+  "agentBrowserArtifacts": [
+    "artifacts/agent-browser/k7/start-room.png",
+    "artifacts/agent-browser/k7/corridor.png",
+    "artifacts/agent-browser/k7/sign-view.png",
+    "artifacts/agent-browser/k7/scene-hashes.json"
+  ]
+}

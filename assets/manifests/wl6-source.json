@@ -1,0 +1,10 @@
+{
+  "repo": "https://github.com/vpoupet/wolfenstein",
+  "commit": "5a1464d0bc907f4216f8db5e7f874ee8817771c5",
+  "subdir": "data",
+  "files": [
+    "MAPHEAD.WL6",
+    "GAMEMAPS.WL6",
+    "VSWAP.WL6"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "phase": "K4",
+  "timestamp": "2026-02-12",
+  "gates": {
+    "runtimeParityTest": {
+      "command": "pnpm runtime:parity:test",
+      "status": "pass"
+    },
+    "oracleDeterminismSuite": {
+      "command": "pnpm exec vitest run test/property/runtime.oracle-determinism.test.ts",
+      "status": "pass"
+    }
+  },
+  "agentBrowserDeterminism": {
+    "command": "agent-browser eval deterministic runtime trace replay (2 runs)",
+    "same": true,
+    "digestA": 199040750,
+    "digestB": 199040750,
+    "firstStep": {
+      "tick": 1,
+      "snapshot": 2559851045,
+      "frame": 1924017671
+    },
+    "lastStep": {
+      "tick": 120,
+      "snapshot": 4209570667,
+      "frame": 469236360
+    }
+  },
+  "notes": [
+    "WL6 runtime fixtures are sourced from assets/wl6/raw when available.",
+    "Determinism evidence is captured from browser-driven runtime debug handles."
+  ]
+}

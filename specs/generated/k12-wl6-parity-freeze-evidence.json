@@ -1,0 +1,92 @@
+{
+  "phase": "K12",
+  "timestamp": "2026-02-12",
+  "gates": {
+    "runtimeCheckpointsVerify": {
+      "command": "pnpm runtime:checkpoints:verify",
+      "status": "pass",
+      "checkpointDigest": 4231790286,
+      "scenarioCount": 60
+    },
+    "runtimeEpisodeVerify": {
+      "command": "pnpm runtime:episode:verify",
+      "status": "pass",
+      "episodeDigest": 2829906843,
+      "mapCount": 60
+    },
+    "runtimeRequiredVerify": {
+      "command": "pnpm runtime:required:verify",
+      "status": "pass"
+    },
+    "smoke": {
+      "command": "pnpm test:smoke",
+      "status": "pass"
+    },
+    "build": {
+      "command": "pnpm build",
+      "status": "pass"
+    }
+  },
+  "agentBrowser": {
+    "session": "k12",
+    "artifact": "artifacts/agent-browser/k12/flow-check.json",
+    "checks": {
+      "reachedTitle": true,
+      "reachedMenu": true,
+      "reachedPlaying": true,
+      "gameplayAdvanced": true,
+      "intermissionTriggered": true,
+      "nextLevelStarted": true
+    },
+    "screenshots": [
+      "artifacts/agent-browser/k12/title.png",
+      "artifacts/agent-browser/k12/menu.png",
+      "artifacts/agent-browser/k12/playing-start.png",
+      "artifacts/agent-browser/k12/playing-action.png",
+      "artifacts/agent-browser/k12/intermission.png",
+      "artifacts/agent-browser/k12/next-level.png"
+    ]
+  },
+  "remoteCi": {
+    "parityPrConsecutiveGreen": [
+      {
+        "runId": 21960237208,
+        "url": "https://github.com/agrimsingh/wolf3d-typescript/actions/runs/21960237208",
+        "headBranch": "main",
+        "conclusion": "success"
+      },
+      {
+        "runId": 21957067033,
+        "url": "https://github.com/agrimsingh/wolf3d-typescript/actions/runs/21957067033",
+        "headBranch": "main",
+        "conclusion": "success"
+      },
+      {
+        "runId": 21956014888,
+        "url": "https://github.com/agrimsingh/wolf3d-typescript/actions/runs/21956014888",
+        "headBranch": "codex/wl1-real-runtime-one-shot",
+        "conclusion": "success"
+      }
+    ],
+    "parity10kConsecutiveGreen": [
+      {
+        "runId": 21956641931,
+        "url": "https://github.com/agrimsingh/wolf3d-typescript/actions/runs/21956641931",
+        "headBranch": "codex/wl1-real-runtime-one-shot",
+        "conclusion": "success"
+      },
+      {
+        "runId": 21956472111,
+        "url": "https://github.com/agrimsingh/wolf3d-typescript/actions/runs/21956472111",
+        "headBranch": "codex/wl1-real-runtime-one-shot",
+        "conclusion": "success"
+      },
+      {
+        "runId": 21956285908,
+        "url": "https://github.com/agrimsingh/wolf3d-typescript/actions/runs/21956285908",
+        "headBranch": "codex/wl1-real-runtime-one-shot",
+        "conclusion": "success"
+      }
+    ]
+  }
+}
