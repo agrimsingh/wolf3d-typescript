@@ -1,5 +1,7 @@
 # Full WOLFSRC Runtime Parity Master Plan
 
+> Superseded by `specs/runtime-parity-execution-spec.md` for the active R-phase execution track.
+
 ## Status
 
 Completed on 2026-02-12 (`F0..F8`).

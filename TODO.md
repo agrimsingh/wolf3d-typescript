@@ -1,132 +1,130 @@
-# Wolf3D TypeScript Full Runtime Parity Plan
+# Wolf3D TypeScript Runtime Parity TODO (R-Phases)
 
-**Status:** Completed F-phase execution (F0..F8)  
+**Status:** In Progress (`R0` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
 
 - Target: gameplay-complete WL1 shareware in browser.
-- Fidelity: deterministic TS-vs-C/WASM parity for runtime-reachable behavior.
-- Symbol policy: all 568 manifest symbols must be classified with evidence; only `required-runtime` symbols must be fully parity-ported.
-- Audio policy: behavior/state parity (not bit-level DAC stream parity).
+- End state: production gameplay runtime is pure TypeScript; C/WASM is oracle-only.
+- Parity policy: deterministic TS-vs-C/WASM parity for all required-runtime behavior.
+- Frame policy: per-tic exact indexed framebuffer parity (320x200).
 - Phase policy: no advancement before gate is green and phase commit exists.
 
-## Current Reality
+## Phase Checklist
 
-- Browser runtime path now defaults to oracle-backed runtime (`WolfsrcOraclePort`) with runtime framebuffer output.
-- `src/runtime/tsRuntime.ts` remains as a parity harness implementation and must continue matching oracle tests until full TS runtime replacement lands.
-- Remote CI gates are green with vendored WOLFSRC + pinned emsdk setup.
-- Runtime checkpoints and full-episode parity lock artifacts are stable and reproducible.
+## R0: Truth Reset + Guard Hardening
 
-## Phase F0: Truth Reset + De-Sim Baseline
+- [x] Rewrite project docs to reflect synthetic-harness reality (not complete runtime parity).
+- [x] Add `specs/runtime-parity-execution-spec.md` as authoritative plan.
+- [x] Extend guard scripts to block synthetic scenario fixtures in production path at/after R9.
+- [x] Gate: `pnpm verify`
+- [x] Tests green
+- [ ] Phase commit pushed (`r0: truth reset and execution baseline`)
 
-- [x] Update docs to explicitly mark current runtime as synthetic baseline.
-- [x] Add `specs/runtime-parity-master-plan.md` as authoritative implementation plan.
-- [x] Add runtime core guard script (`scripts/runtime/verify-runtime-core-guard.sh`) with mode control.
-- [x] Add mode file (`specs/generated/runtime-core-mode.json`) defaulting to `synthetic`.
-- [x] Wire guard into `pnpm verify`.
-- [x] Gate: docs + guard green in `pnpm verify`.
-- [x] Commit: `phase-f0: reset to runtime-faithful baseline`
+## R1: Real WL1 Data Pipeline
 
-## Phase F1: Deterministic Source + CI Bootstrap
+- [ ] Implement canonical map-plane decode + runtime boot extraction from WL1 assets.
+- [ ] Remove 8x8 sampled map-bit runtime boot assumptions.
+- [ ] Define deterministic trace seed policy for real gameplay traces.
+- [ ] Gate: `pnpm test:property:local -- test/property/phase2.map-loading.test.ts`
+- [ ] Gate: `pnpm test:property:ci -- test/property/phase2.map-loading.test.ts`
+- [ ] Gate: `pnpm verify:assets`
+- [ ] Tests green
+- [ ] Phase commit pushed (`r1: wl1 data pipeline parity`)
 
-- [x] Add pinned vendored sanitized WOLFSRC snapshot under `c-oracle/vendor/wolfsrc-sanitized/`.
-- [x] Add vendored checksum manifest (`c-oracle/vendor/wolfsrc-sanitized.sha256`).
-- [x] Refactor `scripts/wasm/prepare-wolfsrc.sh`:
-  - default to vendored snapshot
-  - optionally refresh from `WOLF3D_SRC_DIR` when requested
-  - remove local absolute path dependency
-- [x] Update CI workflows to set up pinned emsdk/emcc before compatibility/build steps.
-- [x] Gate: `parity-pr` remote workflow passes from clean checkout.
-- [x] Commit: `phase-f1: deterministic wolfsrc source and ci bootstrap`
+## R2: Real C Runtime Oracle Driver
 
-## Phase F2: Real Runtime Oracle Driver
+- [ ] Replace synthetic runtime state engine in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
+- [ ] Drive real WOLFSRC runtime stepping/snapshot/framebuffer/save-load from oracle exports.
+- [ ] Keep wrappers for oracle/test interfaces only.
+- [ ] Gate: `pnpm wasm:build`
+- [ ] Gate: `pnpm runtime:parity:test`
+- [ ] Gate: deterministic replay equality for repeated traces
+- [ ] Tests green
+- [ ] Phase commit pushed (`r2: real wolfsrc runtime oracle`)
 
-- [x] Replace synthetic runtime oracle core logic in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
-  - Progress (2026-02-12): runtime step now routes movement/use blocking through real `WL_AGENT` shims (`TryMove` + `ControlMovement`) instead of local tile-wall helpers.
-  - Progress (2026-02-12): runtime step now derives chase/damage flags and per-tic damage application from real `WL_STATE`/`WL_AGENT` apply outputs (`MoveObj`, `SelectChaseDir`, `TakeDamage`) rather than hash-bit or RNG-driven toggles.
-  - Progress (2026-02-12): probe/hash wrappers remain for runtime symbol coverage, but runtime gameplay mutations are no longer driven by probe hash bits.
-- [x] Add bridge/shim APIs for real boot/tick/snapshot/framebuffer/save-load.
-  - Progress (2026-02-12): added binary runtime state save/load and indexed framebuffer APIs in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
-- [x] Export updated runtime bridge in WASM and update `src/oracle/runtimeOracle.ts`.
-  - Progress (2026-02-12): `scripts/wasm/build-oracle.sh` exports new runtime functions and `WolfsrcOraclePort` now uses them.
-- [x] Add oracle determinism tests for repeated identical traces.
-  - Progress (2026-02-12): deterministic parity covered in `test/property/runtime.step-parity.test.ts` and `test/property/runtime.lifecycle.test.ts`.
-- [x] Gate: oracle-only determinism suite green.
-  - Evidence (2026-02-12): `pnpm runtime:parity:test` passed with all runtime suites green.
-- [x] Commit: `phase-f2: real wolfsrc runtime oracle driver`
+## R3: Runtime Symbol Reclassification From Real Traces
 
-## Phase F3: Full Symbol Classification Burn-Down
+- [ ] Regenerate runtime hits using real runtime menu/gameplay/progression traces.
+- [ ] Rebuild `specs/runtime-symbol-manifest.md` from artifacts.
+- [ ] Ensure all inventory entries remain classified with explicit evidence.
+- [ ] Gate: `pnpm runtime:manifest:extract`
+- [ ] Gate: `pnpm runtime:classification:verify`
+- [ ] Gate: `pnpm runtime:manifest:verify`
+- [ ] Tests green
+- [ ] Phase commit pushed (`r3: real-runtime symbol classification freeze`)
 
-- [x] Replace static trace symbol map with generated inventory-backed map.
-- [x] Classify all 568 manifest symbols as `required-runtime` or `excluded-non-runtime` with evidence.
-- [x] Generate `specs/runtime-symbol-manifest.md` from classification artifacts.
-- [x] Add verification that zero symbols remain unclassified.
-- [x] Gate: classification + lock reproducibility green.
-- [x] Commit: `phase-f3: full symbol classification and runtime manifest freeze`
+## R4: TS Port Wave A (Map/Memory/Cache Runtime Paths)
 
-## Phase F4: Runtime-Required TS Parity Port Waves
+- [ ] Port runtime-required behavior from `ID_CA.C`, `ID_MM.C`, `ID_PM.C`, `WL_GAME.C::SetupGameLevel`.
+- [ ] Add per-function property parity tests mapped to manifest entries.
+- [ ] Gate: local 1k + CI 10k parity for all R4 functions
+- [ ] Gate: deterministic representative level-load trace parity
+- [ ] Tests green
+- [ ] Phase commit pushed (`r4: map-memory-cache runtime parity`)
 
-- [x] Wave A: ID_CA/ID_MM/ID_PM runtime-required symbols parity.
-- [x] Wave B: WL_DRAW/WL_SCALE/ID_VH/ID_VL runtime-required symbols parity.
-- [x] Wave C: WL_STATE/WL_ACT1/WL_ACT2/WL_AGENT/WL_PLAY/WL_GAME/WL_INTER runtime-required symbols parity.
-- [x] Wave D: WL_MENU/WL_TEXT/ID_US_1/ID_IN runtime-required symbols parity.
-- [x] Wave E: ID_SD runtime-required audio-state parity.
-- [x] Gate: all required-runtime symbols marked done with explicit property tests.
-- [x] Commit: `phase-f4: runtime-required symbol parity complete`
+## R5: TS Port Wave B (Renderer Core)
 
-## Phase F5: Browser Runtime Core Replacement
+- [ ] Port runtime-faithful renderer behavior from `WL_DRAW.C`, `WL_SCALE.C`, `ID_VH.C`, `ID_VL.C`.
+- [ ] Verify deterministic indexed framebuffer output semantics.
+- [ ] Gate: function-level parity suites green
+- [ ] Gate: per-tic exact indexed framebuffer parity on deterministic traces
+- [ ] Tests green
+- [ ] Phase commit pushed (`r5: renderer runtime parity`)
 
-- [x] Remove synthetic scenario-driver runtime path from production app flow.
-- [x] Rewire `src/app/runtimeController.ts` and `src/app/gameApp.ts` to real runtime lifecycle.
-- [x] Preserve software rendering via Canvas2D/ImageData with runtime-fed frame state.
-- [x] Keep keyboard + mouse parity mapping.
-- [x] Gate: boot -> menu -> new game -> level progression manually playable.
-- [x] Commit: `phase-f5: browser app wired to real runtime core`
+## R6: TS Port Wave C (Player, Doors, Game Loop)
 
-## Phase F6: End-to-End Per-Tic Episode Parity
+- [ ] Port runtime transitions from `WL_AGENT.C`, `WL_PLAY.C`, `WL_ACT1.C`, `WL_GAME.C`, `WL_INTER.C`.
+- [ ] Remove synthetic HP countdown/revive behavior from runtime path.
+- [ ] Gate: property parity suites for movement/use/fire/door/game-loop functions
+- [ ] Gate: deterministic door/level-completion traces
+- [ ] Tests green
+- [ ] Phase commit pushed (`r6: player-doors-gameloop parity`)
 
-- [x] Add deterministic real WL1 input traces for full episode progression.
-- [x] Store canonical per-tic trace lock artifacts in `specs/generated/`.
-- [x] Add TS-vs-oracle per-tic parity assertions (state + frame hash each tic).
-- [x] Persist minimal repro trace JSON for first mismatch.
-- [x] Gate: full-episode per-tic parity green locally and in CI.
-- [x] Commit: `phase-f6: full episode per-tic parity locked`
+## R7: TS Port Wave D (Actors/AI + Combat)
 
-## Phase F7: Remote CI Hardening + Release Gates
+- [ ] Port actor/AI runtime transitions from `WL_STATE.C` and `WL_ACT2.C`.
+- [ ] Add deterministic combat encounter parity traces.
+- [ ] Gate: stateful actor tick parity tests
+- [ ] Gate: deterministic combat trace parity
+- [ ] Tests green
+- [ ] Phase commit pushed (`r7: actors-ai-combat parity`)
 
-- [x] Enforce vendored-source + emsdk setup in `.github/workflows/parity-pr.yml`.
-- [x] Enforce vendored-source + emsdk setup in `.github/workflows/parity-10k.yml`.
-- [x] Keep PR 1k targeted parity + mandatory runtime e2e smoke parity.
-- [x] Keep nightly/release 10k shards + episode parity + browser smoke/build.
-- [x] Ensure triage artifacts include seed/path/repro + trace diffs.
-- [x] Gate: 3 consecutive green runs for PR and nightly workflows.
-  - Evidence (2026-02-12):
-    - `parity-pr`: `21942569861`, `21942444879`, `21942313625` (all success)
-    - `parity-10k`: `21942620377`, `21942620230`, `21935039117` (all success)
-- [x] Commit: `phase-f7: remote ci parity gates stabilized`
+## R8: TS Port Wave E (Menu/Text/Input/Audio State)
 
-## Phase F8: Final Acceptance + Done Freeze
+- [ ] Port runtime-required behavior from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`, `ID_IN.C`, `ID_SD.C`.
+- [ ] Keep audio parity at behavior/state level.
+- [ ] Gate: deterministic menu/input trace parity
+- [ ] Gate: deterministic audio state transition parity
+- [ ] Tests green
+- [ ] Phase commit pushed (`r8: menu-input-audio parity`)
 
-- [x] Freeze manifests/lock artifacts for final runtime-complete baseline.
-- [x] Validate end-to-end WL1 done definition in browser.
-- [x] Update docs/TODO with run ids and acceptance evidence.
-- [x] Gate: all acceptance criteria green with clean tree.
-  - Evidence (2026-02-12 local):
-    - `pnpm verify`
-    - `pnpm runtime:required:verify`
-    - `pnpm runtime:checkpoints:verify`
-    - `pnpm runtime:episode:verify`
-    - `pnpm test:smoke`
-    - `pnpm build`
-  - Evidence (2026-02-12 remote):
-    - `parity-pr` consecutive success runs: `21942569861`, `21942444879`, `21942313625`
-    - `parity-10k` consecutive success runs: `21942620377`, `21942620230`, `21935039117`
-- [x] Commit: `phase-f8: gameplay-complete wl1 runtime parity done`
+## R9: Browser Runtime Swap to Pure TS Core
+
+- [ ] Switch production gameplay path to TS runtime core.
+- [ ] Keep oracle/WASM usage in tests only.
+- [ ] Remove synthetic scenario-driver gameplay path from app runtime loop.
+- [ ] Gate: agent-browser flow (boot -> menu -> start -> move -> door -> enemy -> fire -> damage -> exit)
+- [ ] Tests green
+- [ ] Phase commit pushed (`r9: browser app on ts runtime core`)
+
+## R10: Full Episode Parity + CI Freeze
+
+- [ ] Lock full deterministic WL1 episode traces (per-tic snapshot + indexed frame exact parity).
+- [ ] Harden PR/nightly CI workflows and triage artifacts.
+- [ ] Gate: `pnpm runtime:required:verify`
+- [ ] Gate: `pnpm runtime:checkpoints:verify`
+- [ ] Gate: `pnpm runtime:episode:verify`
+- [ ] Gate: `pnpm test:smoke`
+- [ ] Gate: `pnpm build`
+- [ ] Gate: 3 consecutive green remote runs on `parity-pr.yml` and `parity-10k.yml`
+- [ ] Tests green
+- [ ] Phase commit pushed (`r10: wl1 gameplay-complete parity freeze`)
 
 ## Global Rules
 
-- No phase advancement before current gate is green and committed.
-- Every required-runtime ported function needs TS-vs-oracle property parity tests.
-- Property thresholds remain: local 1k / CI 10k.
-- Every parity failure must emit seed/path and write repro artifact in `test/repro/`.
+- Do not advance phases while any current phase gate is red.
+- Every required-runtime function needs explicit oracle parity test coverage.
+- Property thresholds: local `1,000` / CI `10,000` runs per function.
+- Every parity mismatch must emit seed/path and write repro under `test/repro/`.

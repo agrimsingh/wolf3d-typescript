@@ -12,9 +12,15 @@ if [[ ! -f "$MODE_FILE" ]]; then
 fi
 
 mode="$(node -e "const fs=require('fs'); const v=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(String(v.mode||''));" "$MODE_FILE")"
+phase="$(node -e "const fs=require('fs'); const v=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(String(v.phase||''));" "$MODE_FILE")"
 
 if [[ "$mode" != "synthetic" && "$mode" != "real" ]]; then
   echo "Invalid runtime core mode '$mode' in $MODE_FILE" >&2
+  exit 1
+fi
+
+if [[ "$phase" != "" && ! "$phase" =~ ^(F[0-9]+|R[0-9]+)$ ]]; then
+  echo "Invalid runtime phase '$phase' in $MODE_FILE (expected F# or R#)." >&2
   exit 1
 fi
 

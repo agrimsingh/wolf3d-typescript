@@ -1,5 +1,5 @@
 {
-  "phase": "F5",
+  "phase": "R0",
   "mode": "real",
-  "notes": "Browser runtime path now defaults to WolfsrcOraclePort with runtime framebuffer output; TsRuntimePort remains for parity harness and tests."
+  "notes": "R-phase execution baseline: browser runtime defaults to WolfsrcOraclePort, but runtime behavior remains synthetic-harness and not gameplay-complete."
 }

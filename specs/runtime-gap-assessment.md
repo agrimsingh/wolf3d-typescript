@@ -1,36 +1,37 @@
-# Runtime Gap Assessment (Synthetic Runtime -> Full WOLFSRC Runtime Parity)
+# Runtime Gap Assessment (Current)
 
 ## Objective
 
-Track the gap from synthetic runtime behavior to runtime-faithful WL1 browser parity against WOLFSRC, and capture closure evidence.
+Track the real gap between current runtime behavior and true gameplay-complete WL1 runtime parity against original WOLFSRC.
 
-## Current Reality (2026-02-12, F8)
+## Current Reality (2026-02-12, R0 Baseline)
 
-1. Browser runtime defaults to real oracle-backed runtime (`WolfsrcOraclePort`) with deterministic framebuffer output and runtime snapshots.
-2. Runtime symbol inventory is fully classified (`568` total, `required=130`, `excluded=438`, `unclassified=0`) with generated artifacts under `specs/generated/`.
-3. Runtime-required parity coverage gates are enforced by property suites and manifest verification tooling.
-4. Deterministic checkpoint and full-episode per-tic parity locks are in place and verified (`runtime-checkpoints` and `runtime-episode-checkpoints` lock files).
-5. CI is reproducible from clean checkout using vendored WOLFSRC and pinned emsdk setup.
+1. Browser runtime currently defaults to oracle-backed runtime (`WolfsrcOraclePort`) in `src/app/runtimeController.ts`.
+2. Both oracle-side runtime (`c-oracle/runtime/wolfsrc_runtime_oracle.c`) and TS runtime harness (`src/runtime/tsRuntime.ts`) still contain synthetic behavior patterns and probe-driven logic.
+3. Runtime scenarios and episode fixtures are currently generated from 8x8 sampled map-bit fixtures rather than canonical full-map runtime world state.
+4. Existing “phase complete” evidence in prior F-phase docs reflects parity within the synthetic harness, not full gameplay-faithful WOLFSRC runtime behavior.
 
-## Closed Gaps
+## Primary Gaps To Close
 
-- Replaced synthetic runtime C driver behavior with real WOLFSRC-backed runtime stepping/snapshotting APIs.
-- Replaced static/manual runtime symbol manifest mapping with generated, evidence-based classification.
-- Wired browser production path to runtime-backed frame output and lifecycle flow.
-- Added deterministic full-episode trace locks and replay-ready parity checks.
-- Stabilized PR and nightly parity workflows with reproducible artifact collection and triage summaries.
+1. Replace synthetic runtime engine behavior with runtime-faithful world simulation semantics.
+2. Replace synthetic fixture/scenario model with real deterministic WL1 runtime traces.
+3. Reclassify runtime symbols from real gameplay traces (not synthetic driver traces).
+4. Port required-runtime behavior function-by-function to TS and enforce strict parity gates.
+5. Swap production path to pure TS runtime and keep oracle/WASM test-only.
+6. Lock full deterministic WL1 episode parity at per-tic snapshot + indexed frame exactness.
 
-## Residual Scope (Outside This F-Phase Completion)
+## Not Done Yet
 
-- `src/runtime/tsRuntime.ts` remains a parity harness implementation and is not the production runtime driver.
-- WL6/Spear of Destiny variants remain out of scope for this WL1 completion track.
-- Audio parity remains behavior/state-level, not bit-level DAC stream equivalence.
+- Doors, actors, weapons, and level progression are not yet validated as full runtime-faithful behavior in production path.
+- Current browser “playability” signals do not satisfy final done definition.
+- CI green status today is insufficient proof of full WL1 runtime equivalence.
 
-## Acceptance Evidence for Gap Closure
+## Done Criteria (Target)
 
-- All F-phases (`F0..F8`) completed with phase commits.
-- Runtime classification and required-symbol parity verification pass.
-- Full-episode per-tic parity lock verification passes locally and in CI.
-- CI hardening gate satisfied by three consecutive green runs for both:
-  - `parity-pr`: `21942569861`, `21942444879`, `21942313625`
-  - `parity-10k`: `21942620377`, `21942620230`, `21935039117`
+Project is only done when all are true:
+
+1. Browser runtime is gameplay-complete across WL1 episode flow.
+2. Production gameplay runtime is pure TypeScript.
+3. Every required-runtime symbol is covered by function-level TS-vs-C oracle property parity.
+4. Full deterministic episode traces pass per-tic snapshot + indexed frame exact parity.
+5. R-phase gates (`R0..R10`) are green with required phase commits.
