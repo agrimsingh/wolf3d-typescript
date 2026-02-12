@@ -1,6 +1,6 @@
 # WOLFSRC Runtime Symbol Classification
 
-- Generated: 2026-02-12T21:21:56.614Z
+- Generated: 2026-02-12T21:24:42.912Z
 - Source manifest: `specs/generated/wolfsrc-manifest.json`
 - Runtime hits: `specs/generated/runtime-symbol-hits.json`
 - Trace scenarios: 10
