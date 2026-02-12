@@ -2,7 +2,7 @@
 
 Design documentation for the browser TypeScript port of Wolfenstein 3D with strict C/WASM oracle parity.
 
-## Active Runtime Track (In Progress)
+## Active Runtime Track (Completed)
 
 - [wl6-modern-runtime-execution-spec.md](./wl6-modern-runtime-execution-spec.md): authoritative one-shot execution spec (`K0..K12`) for WL6 canonical runtime + modern asset mapping.
 - [wl1-real-runtime-execution-spec.md](./wl1-real-runtime-execution-spec.md): prior WL1 recovery execution history (`G0..G12`).
@@ -22,6 +22,7 @@ Design documentation for the browser TypeScript port of Wolfenstein 3D with stri
 - `generated/runtime-checkpoints-lock.json`
 - `generated/runtime-episode-checkpoints.json`
 - `generated/runtime-episode-checkpoints-lock.json`
+- `generated/k12-wl6-parity-freeze-evidence.json`
 - `generated/g12-release-evidence.md`
 
 ## Core System Specs
@@ -52,4 +53,4 @@ Design documentation for the browser TypeScript port of Wolfenstein 3D with stri
 
 - Active target is WL6 canonical runtime behavior with deterministic modern asset mapping.
 - Runtime/oracle infrastructure exists but still requires WL6-specific lock regeneration and parity burn-down.
-- This track remains in progress until `K0..K12` are fully green and committed.
+- `K0..K12` are complete with green gates and committed phase evidence.

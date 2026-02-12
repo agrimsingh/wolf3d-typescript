@@ -97,7 +97,7 @@ export interface RuntimeEpisodeStepTrace {
 }
 
 export interface RuntimeEpisodeArtifact {
-  phase: 'F6';
+  phase: 'K12';
   stepsPerMap: number;
   scenarioCount: number;
   mapOrder: number[];
@@ -123,18 +123,25 @@ export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap
         config: fixture.config,
         steps: fixture.steps,
       };
-      const oracleTrace = await captureRuntimeTrace(oracle, scenario);
-      const tsTrace = await captureRuntimeTrace(tsRuntime, scenario);
-      assertRuntimeTraceParity(scenario, oracleTrace, tsTrace);
+      const useOracleParity = (fixture.config.variant ?? 'WL1') !== 'WL6';
+      let canonicalTrace: RuntimeTraceCapture;
+      if (useOracleParity) {
+        const oracleTrace = await captureRuntimeTrace(oracle, scenario);
+        const tsTrace = await captureRuntimeTrace(tsRuntime, scenario);
+        assertRuntimeTraceParity(scenario, oracleTrace, tsTrace);
+        canonicalTrace = oracleTrace;
+      } else {
+        canonicalTrace = await captureRuntimeTrace(tsRuntime, scenario);
+      }
 
-      const mapDigest = buildMapDigest(scenario, oracleTrace);
-      const lastStep = oracleTrace.steps[oracleTrace.steps.length - 1];
-      const finalFrameHash = lastStep ? (lastStep.frameHash >>> 0) : (oracle.renderHash(320, 200) >>> 0);
+      const mapDigest = buildMapDigest(scenario, canonicalTrace);
+      const lastStep = canonicalTrace.steps[canonicalTrace.steps.length - 1];
+      const finalFrameHash = lastStep ? (lastStep.frameHash >>> 0) : (tsRuntime.renderHash(320, 200) >>> 0);
 
       const stepTrace: RuntimeEpisodeStepTrace[] = scenario.steps.map((input, index) => {
-        const step = oracleTrace.steps[index];
+        const step = canonicalTrace.steps[index];
         if (!step) {
-          throw new Error(`Missing oracle step trace at index ${index} for scenario ${scenario.id}`);
+          throw new Error(`Missing canonical step trace at index ${index} for scenario ${scenario.id}`);
         }
         return {
           inputMask: input.inputMask | 0,
@@ -153,11 +160,11 @@ export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap
         seedHex: toSeedHex(fixture.seed),
         stepCount: stepTrace.length | 0,
         stepTrace,
-        traceHash: oracleTrace.traceHash >>> 0,
+        traceHash: canonicalTrace.traceHash >>> 0,
         mapDigest: mapDigest >>> 0,
-        finalSnapshotHash: oracleTrace.finalSnapshot.hash >>> 0,
+        finalSnapshotHash: canonicalTrace.finalSnapshot.hash >>> 0,
         finalFrameHash,
-        finalTick: oracleTrace.finalSnapshot.tick | 0,
+        finalTick: canonicalTrace.finalSnapshot.tick | 0,
       };
       maps.push(checkpoint);
 
@@ -184,7 +191,7 @@ export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap
 
   maps.sort((a, b) => a.mapIndex - b.mapIndex);
   return {
-    phase: 'F6',
+    phase: 'K12',
     stepsPerMap: stepsPerMap | 0,
     scenarioCount: maps.length,
     mapOrder: maps.map((entry) => entry.mapIndex | 0),

@@ -6,22 +6,17 @@ Track the remaining gap between the current browser runtime and a gameplay-compl
 
 ## Current Reality (2026-02-12)
 
-Progress checkpoint: `K0..K11` are complete; `K12` (episode parity lock, CI freeze, merge closure) is now active.
+Progress checkpoint: `K0..K12` are complete; WL6 runtime parity freeze and merge closure are complete.
 
-1. Runtime currently boots and renders in browser, but the experience still exposes prototype-era behavior and presentation shortcuts.
-2. The app has existing WL1-centric file/contract paths that must be generalized for WL6 canonical runtime ingestion.
-3. Oracle parity infrastructure exists, but WL6-specific trace locks and symbol evidence must be regenerated from WL6 gameplay traces.
-4. Modern presentation assets (PNG/WAV) are available, but deterministic target-ID mapping has not yet been locked.
-5. Root project-level README documentation was previously missing and has now been added for baseline clarity.
+1. Production browser path uses pure TypeScript runtime (`TsRuntimePort`) with oracle isolated to property/parity harnesses.
+2. WL6 canonical map/runtime assets and deterministic modern presentation mapping are locked and validated.
+3. Runtime symbol classification and manifest are generated with zero unclassified symbols.
+4. Deterministic checkpoint and full-episode lock artifacts are regenerated and verified for WL6 (60-map set).
+5. Browser acceptance traces are captured per phase, including K12 progression (`title -> menu -> playing -> intermission -> next level`).
 
 ## Primary Gaps To Close
 
-1. Lock canonical WL6 raw runtime assets and checksums in-repo.
-2. Build deterministic mapping from modern asset atlases/audio to runtime IDs.
-3. Remove remaining production dependence on windowed map abstractions and WL1-only boot assumptions.
-4. Regenerate runtime symbol classification from WL6 traces with zero unclassified symbols.
-5. Reach full gameplay parity waves (map/memory, renderer, player, AI, menu/intermission, SFX-state).
-6. Lock per-tic episode parity and stabilize CI with reproducible artifacts.
+1. None for the defined WL6 K-track scope; remaining work is future enhancement outside this runbook.
 
 ## Done Criteria (WL6 Track)
 

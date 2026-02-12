@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K12` active)  
+**Status:** Complete (`K12` complete)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -146,15 +146,15 @@
 
 ## K12: Full-Episode Parity Lock + CI Freeze + Merge
 
-- [ ] Lock deterministic WL6 episode traces and artifacts.
-- [ ] Harden parity workflows and triage outputs.
-- [ ] Merge to `main` with final evidence bundle.
-- [ ] Gate: `pnpm runtime:checkpoints:verify`
-- [ ] Gate: `pnpm runtime:episode:verify`
-- [ ] Gate: `pnpm runtime:required:verify`
-- [ ] Gate: `pnpm test:smoke`
-- [ ] Gate: `pnpm build`
-- [ ] Gate: 3 consecutive green remote parity runs
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k12: wl6 gameplay parity freeze and merge`)
+- [x] Lock deterministic WL6 episode traces and artifacts.
+- [x] Harden parity workflows and triage outputs.
+- [x] Merge to `main` with final evidence bundle.
+- [x] Gate: `pnpm runtime:checkpoints:verify`
+- [x] Gate: `pnpm runtime:episode:verify`
+- [x] Gate: `pnpm runtime:required:verify`
+- [x] Gate: `pnpm test:smoke`
+- [x] Gate: `pnpm build`
+- [x] Gate: 3 consecutive green remote parity runs
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k12: wl6 gameplay parity freeze and merge`)

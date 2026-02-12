@@ -1,5 +1,5 @@
 {
-  "phase": "K11",
+  "phase": "K12",
   "mode": "real",
-  "notes": "K11 production runtime swap complete: browser app defaults to pure TypeScript runtime core with oracle isolated to tests."
+  "notes": "K12 parity freeze complete: production runtime remains pure TypeScript with oracle isolated to tests and WL6 lock artifacts updated."
 }
