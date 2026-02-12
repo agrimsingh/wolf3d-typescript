@@ -226,6 +226,10 @@ describe('runtime step parity', () => {
     expect(a.includes(39)).toBe(true); // WL_ACT1.CloseDoor
     expect(a.includes(40)).toBe(true); // WL_ACT1.OperateDoor
     expect(a.includes(41)).toBe(true); // WL_ACT1.MoveDoors
+    expect(a.includes(42)).toBe(true); // WL_AGENT.GetBonus
+    expect(a.includes(43)).toBe(true); // WL_AGENT.GiveAmmo
+    expect(a.includes(44)).toBe(true); // WL_AGENT.GivePoints
+    expect(a.includes(45)).toBe(true); // WL_AGENT.HealSelf
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

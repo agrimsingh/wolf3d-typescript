@@ -29,6 +29,10 @@ import {
   wlAct1MoveDoorsHash,
   wlAct1OpenDoorHash,
   wlAct1OperateDoorHash,
+  wlAgentGetBonusHash,
+  wlAgentGiveAmmoHash,
+  wlAgentGivePointsHash,
+  wlAgentHealSelfHash,
   wlGameGameLoopHash,
   wlInterCheckHighScoreHash,
 } from '../wolf/game/wlGameState';
@@ -527,6 +531,18 @@ export class TsRuntimePort implements RuntimePort {
         const doorAction = (inputMask & (1 << 7)) !== 0 ? 1 : 0;
         const doorTics = (inputMask & 3) + 1;
         const doorActiveMask = ((stateHash ^ (rng >>> 0)) & 0x7fffffff) | 0;
+        const bonusScore = (stateHash & 0x7fffffff) | 0;
+        const bonusLives = clampI32(3 + ((this.state.flags >> 23) & 3), 0, 9);
+        const bonusHealth = this.state.health | 0;
+        const bonusAmmo = this.state.ammo | 0;
+        const bonusKeys = (this.state.flags >> 17) & 0xf;
+        const bonusKind = this.state.tick & 7;
+        const bonusValue = ((rng >> 3) & 0x3f) + 1;
+        const ammoAmount = (rng & 15) + 1;
+        const ammoWeaponOwned = (this.state.flags & 0x10) !== 0 ? 1 : 0;
+        const pointsValue = (((stateHash >>> 5) & 0x3fff) + 100) | 0;
+        const nextExtra = (20000 + ((this.state.tick & 3) * 20000)) | 0;
+        const healAmount = ((rng >> 1) & 7) + 1;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -663,6 +679,18 @@ export class TsRuntimePort implements RuntimePort {
         const closeDoorHash = wlAct1CloseDoorHash(doorMask, doorState, doorNum, doorSpeed, doorBlocked) >>> 0;
         const operateDoorHash = wlAct1OperateDoorHash(doorMask, doorState, doorNum, doorAction, doorSpeed, doorBlocked) >>> 0;
         const moveDoorsHash = wlAct1MoveDoorsHash(doorMask, doorState, doorTics, doorSpeed, doorActiveMask) >>> 0;
+        const bonusHash = wlAgentGetBonusHash(
+          bonusScore,
+          bonusLives,
+          bonusHealth,
+          bonusAmmo,
+          bonusKeys,
+          bonusKind,
+          bonusValue,
+        ) >>> 0;
+        const ammoHash = wlAgentGiveAmmoHash(this.state.ammo | 0, 99, ammoAmount, ammoWeaponOwned) >>> 0;
+        const pointsHash = wlAgentGivePointsHash(bonusScore, bonusLives, nextExtra, pointsValue) >>> 0;
+        const healHash = wlAgentHealSelfHash(this.state.health | 0, 100, healAmount) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
@@ -738,6 +766,26 @@ export class TsRuntimePort implements RuntimePort {
           this.state.flags |= 0x8000000;
         } else {
           this.state.flags &= ~0x8000000;
+        }
+        if ((bonusHash & 1) !== 0) {
+          this.state.flags |= 0x10000000;
+        } else {
+          this.state.flags &= ~0x10000000;
+        }
+        if ((ammoHash & 1) !== 0) {
+          this.state.flags |= 0x20000000;
+        } else {
+          this.state.flags &= ~0x20000000;
+        }
+        if ((pointsHash & 1) !== 0) {
+          this.state.flags |= 0x40000000;
+        } else {
+          this.state.flags &= ~0x40000000;
+        }
+        if ((healHash & 1) !== 0) {
+          this.state.flags = (this.state.flags | 0x80000000) | 0;
+        } else {
+          this.state.flags = (this.state.flags & ~0x80000000) | 0;
         }
       }
     }

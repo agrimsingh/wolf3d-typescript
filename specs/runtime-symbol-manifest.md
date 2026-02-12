@@ -59,6 +59,10 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_ACT1.C | CloseDoor | `done` | called via oracle_wl_act1_close_door_hash from runtime door probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_ACT1.C | OperateDoor | `done` | called via oracle_wl_act1_operate_door_hash from runtime door probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_ACT1.C | MoveDoors | `done` | called via oracle_wl_act1_move_doors_hash from runtime door probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | GetBonus | `done` | called via oracle_wl_agent_get_bonus_hash from runtime bonus probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | GiveAmmo | `done` | called via oracle_wl_agent_give_ammo_hash from runtime bonus probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | GivePoints | `done` | called via oracle_wl_agent_give_points_hash from runtime bonus probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | HealSelf | `done` | called via oracle_wl_agent_heal_self_hash from runtime bonus probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

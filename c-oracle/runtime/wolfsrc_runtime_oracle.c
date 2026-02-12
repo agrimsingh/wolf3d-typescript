@@ -128,6 +128,32 @@ uint32_t oracle_wl_act1_move_doors_hash(
   int32_t speed,
   int32_t active_mask
 );
+uint32_t oracle_wl_agent_get_bonus_hash(
+  int32_t score,
+  int32_t lives,
+  int32_t health,
+  int32_t ammo,
+  int32_t keys,
+  int32_t bonus_kind,
+  int32_t value
+);
+uint32_t oracle_wl_agent_give_ammo_hash(
+  int32_t ammo,
+  int32_t max_ammo,
+  int32_t amount,
+  int32_t weapon_owned
+);
+uint32_t oracle_wl_agent_give_points_hash(
+  int32_t score,
+  int32_t lives,
+  int32_t next_extra,
+  int32_t points
+);
+uint32_t oracle_wl_agent_heal_self_hash(
+  int32_t health,
+  int32_t max_health,
+  int32_t amount
+);
 uint32_t oracle_wl_state_first_sighting_hash(
   int32_t ax,
   int32_t ay,
@@ -324,6 +350,10 @@ enum runtime_trace_symbol_e {
   TRACE_WL_ACT1_CLOSE_DOOR = 39,
   TRACE_WL_ACT1_OPERATE_DOOR = 40,
   TRACE_WL_ACT1_MOVE_DOORS = 41,
+  TRACE_WL_AGENT_GET_BONUS = 42,
+  TRACE_WL_AGENT_GIVE_AMMO = 43,
+  TRACE_WL_AGENT_GIVE_POINTS = 44,
+  TRACE_WL_AGENT_HEAL_SELF = 45,
 };
 
 #define TRACE_SYMBOL_MAX 48
@@ -598,6 +628,10 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t close_door_hash;
       uint32_t operate_door_hash;
       uint32_t move_doors_hash;
+      uint32_t bonus_hash;
+      uint32_t ammo_hash;
+      uint32_t points_hash;
+      uint32_t heal_hash;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
       int32_t ai_dir = (state->angle_deg / 90) & 3;
@@ -614,6 +648,18 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t door_action = (input_mask & (1 << 7)) ? 1 : 0;
       int32_t door_tics = ((input_mask & 3) + 1);
       int32_t door_active_mask = (int32_t)((state_hash ^ (uint32_t)rng) & 0x7fffffffu);
+      int32_t bonus_score = (int32_t)(state_hash & 0x7fffffffu);
+      int32_t bonus_lives = clamp_i32(3 + ((state->flags >> 23) & 3), 0, 9);
+      int32_t bonus_health = state->health;
+      int32_t bonus_ammo = state->ammo;
+      int32_t bonus_keys = (state->flags >> 17) & 0xf;
+      int32_t bonus_kind = state->tick & 7;
+      int32_t bonus_value = ((rng >> 3) & 0x3f) + 1;
+      int32_t ammo_amount = (rng & 15) + 1;
+      int32_t ammo_weapon_owned = (state->flags & 0x10) ? 1 : 0;
+      int32_t points_value = (int32_t)((state_hash >> 5) & 0x3fffu) + 100;
+      int32_t next_extra = 20000 + ((state->tick & 3) * 20000);
+      int32_t heal_amount = ((rng >> 1) & 7) + 1;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -771,6 +817,22 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       operate_door_hash = oracle_wl_act1_operate_door_hash(door_mask, door_state, door_num, door_action, door_speed, door_blocked);
       trace_hit(TRACE_WL_ACT1_MOVE_DOORS);
       move_doors_hash = oracle_wl_act1_move_doors_hash(door_mask, door_state, door_tics, door_speed, door_active_mask);
+      trace_hit(TRACE_WL_AGENT_GET_BONUS);
+      bonus_hash = oracle_wl_agent_get_bonus_hash(
+        bonus_score,
+        bonus_lives,
+        bonus_health,
+        bonus_ammo,
+        bonus_keys,
+        bonus_kind,
+        bonus_value
+      );
+      trace_hit(TRACE_WL_AGENT_GIVE_AMMO);
+      ammo_hash = oracle_wl_agent_give_ammo_hash(state->ammo, 99, ammo_amount, ammo_weapon_owned);
+      trace_hit(TRACE_WL_AGENT_GIVE_POINTS);
+      points_hash = oracle_wl_agent_give_points_hash(bonus_score, bonus_lives, next_extra, points_value);
+      trace_hit(TRACE_WL_AGENT_HEAL_SELF);
+      heal_hash = oracle_wl_agent_heal_self_hash(state->health, 100, heal_amount);
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
@@ -846,6 +908,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->flags |= 0x8000000;
       } else {
         state->flags &= ~0x8000000;
+      }
+      if (bonus_hash & 1u) {
+        state->flags |= 0x10000000;
+      } else {
+        state->flags &= ~0x10000000;
+      }
+      if (ammo_hash & 1u) {
+        state->flags |= 0x20000000;
+      } else {
+        state->flags &= ~0x20000000;
+      }
+      if (points_hash & 1u) {
+        state->flags |= 0x40000000;
+      } else {
+        state->flags &= ~0x40000000;
+      }
+      if (heal_hash & 1u) {
+        state->flags = (int32_t)(((uint32_t)state->flags) | 0x80000000u);
+      } else {
+        state->flags = (int32_t)(((uint32_t)state->flags) & ~0x80000000u);
       }
     }
   }
