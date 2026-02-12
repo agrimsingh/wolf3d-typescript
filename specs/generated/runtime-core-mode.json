@@ -1,5 +1,5 @@
 {
-  "phase": "G10",
+  "phase": "K11",
   "mode": "real",
-  "notes": "G10 production runtime swap complete: browser app defaults to pure TypeScript runtime core."
+  "notes": "K11 production runtime swap complete: browser app defaults to pure TypeScript runtime core with oracle isolated to tests."
 }

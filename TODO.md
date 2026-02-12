@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K11` active)  
+**Status:** In Progress (`K12` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -135,14 +135,14 @@
 
 ## K11: Production Runtime Swap + Oracle Isolation
 
-- [ ] Ensure production path is pure TS runtime only.
-- [ ] Enforce anti-fallback guard scripts.
-- [ ] Gate: `pnpm runtime:required:verify`
-- [ ] Gate: `pnpm test:smoke`
-- [ ] Gate: `pnpm build`
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k11: production runtime on pure ts with oracle isolation`)
+- [x] Ensure production path is pure TS runtime only.
+- [x] Enforce anti-fallback guard scripts.
+- [x] Gate: `pnpm runtime:required:verify`
+- [x] Gate: `pnpm test:smoke`
+- [x] Gate: `pnpm build`
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k11: production runtime on pure ts with oracle isolation`)
 
 ## K12: Full-Episode Parity Lock + CI Freeze + Merge
 

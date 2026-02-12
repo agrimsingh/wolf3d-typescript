@@ -31,7 +31,7 @@
     "runtime:checkpoints:verify": "pnpm runtime:checkpoints:generate && tsx scripts/runtime/verify-runtime-checkpoints.ts",
     "runtime:episode:generate": "pnpm wasm:build && tsx scripts/runtime/generate-runtime-episode.ts",
     "runtime:episode:verify": "pnpm runtime:episode:generate && tsx scripts/runtime/verify-runtime-episode.ts",
-    "runtime:required:verify": "pnpm runtime:manifest:verify && pnpm runtime:classification:verify && pnpm runtime:parity:test && tsx scripts/runtime/verify-required-symbol-parity.ts && bash scripts/runtime/verify-no-prototype-fallback.sh && bash scripts/runtime/verify-runtime-core-guard.sh && bash scripts/runtime/verify-runtime-scenario-guard.sh && bash scripts/runtime/verify-runtime-world-guard.sh",
+    "runtime:required:verify": "pnpm runtime:manifest:verify && pnpm runtime:classification:verify && pnpm runtime:parity:test && tsx scripts/runtime/verify-required-symbol-parity.ts && bash scripts/runtime/verify-no-prototype-fallback.sh && bash scripts/runtime/verify-runtime-core-guard.sh && bash scripts/runtime/verify-runtime-scenario-guard.sh && bash scripts/runtime/verify-runtime-world-guard.sh && bash scripts/runtime/verify-oracle-test-only.sh",
     "runtime:browser:smoke": "pnpm test:smoke",
     "ci:property:pr": "tsx scripts/ci/run-pr-property-suite.ts",
     "ci:property:shard": "tsx scripts/ci/run-parity-shard.ts",

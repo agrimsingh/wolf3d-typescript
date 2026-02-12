@@ -12,13 +12,15 @@ if [[ ! -f "$MODE_FILE" ]]; then
 fi
 
 phase="$(node -e "const fs=require('fs'); const v=JSON.parse(fs.readFileSync(process.argv[1],'utf8')); process.stdout.write(String(v.phase||''));" "$MODE_FILE")"
-phase_family="$(node -e "const p=process.argv[1]||''; const m=p.match(/^([FRG])[0-9]+$/); process.stdout.write(m?m[1]:'');" "$phase")"
-phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^[FRG]([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
+phase_family="$(node -e "const p=process.argv[1]||''; const m=p.match(/^([FRGK])[0-9]+$/); process.stdout.write(m?m[1]:'');" "$phase")"
+phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^[FRGK]([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
 
 requires_no_fixture_loader="false"
 if [[ "$phase_family" == "R" && "$phase_num" -ge 9 ]]; then
   requires_no_fixture_loader="true"
 elif [[ "$phase_family" == "G" && "$phase_num" -ge 10 ]]; then
+  requires_no_fixture_loader="true"
+elif [[ "$phase_family" == "K" && "$phase_num" -ge 11 ]]; then
   requires_no_fixture_loader="true"
 fi
 
