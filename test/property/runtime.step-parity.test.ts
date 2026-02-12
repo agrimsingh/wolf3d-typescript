@@ -206,6 +206,8 @@ describe('runtime step parity', () => {
     expect(a.includes(19)).toBe(true); // real WL_AGENT.ControlMovement
     expect(a.includes(21)).toBe(true); // real WL_DRAW.WallRefresh
     expect(a.includes(22)).toBe(true); // real WL_DRAW.ThreeDRefresh
+    expect(a.includes(23)).toBe(true); // real WL_STATE.CheckLine
+    expect(a.includes(24)).toBe(true); // real WL_STATE.CheckSight
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

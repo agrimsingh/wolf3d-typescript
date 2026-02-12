@@ -39,6 +39,8 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_AGENT.C | TakeDamage | `done` | called via real_wl_agent_take_damage_apply shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_DRAW.C | WallRefresh | `done` | called via oracle_wl_draw_wall_refresh_hash from runtime render hash; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_DRAW.C | ThreeDRefresh | `done` | called via oracle_wl_draw_three_d_refresh_hash from runtime render hash; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | CheckLine | `done` | called via oracle_real_wl_state_check_line from runtime sight probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | CheckSight | `done` | called via oracle_real_wl_state_check_sight from runtime sight probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

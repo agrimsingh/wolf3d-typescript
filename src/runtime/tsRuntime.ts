@@ -8,6 +8,7 @@ import type {
   RuntimeSnapshot,
   RuntimeStepResult,
 } from './contracts';
+import { wlStateRealCheckLine, wlStateRealCheckSight } from '../wolf/ai/wlStateReal';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
 
@@ -383,6 +384,40 @@ export class TsRuntimePort implements RuntimePort {
         this.state.flags |= 0x100;
       } else {
         this.state.flags &= ~0x100;
+      }
+    }
+
+    {
+      const playerXQ16 = this.state.xQ8 << 8;
+      const playerYQ16 = this.state.yQ8 << 8;
+      const obx = (playerXQ16 + ((this.state.tick & 1) !== 0 ? (1 << 16) : -(1 << 16))) | 0;
+      const oby = (playerYQ16 + ((this.state.tick & 2) !== 0 ? (1 << 15) : -(1 << 15))) | 0;
+      const angleNorm = ((this.state.angleDeg % 360) + 360) % 360;
+      const dirOctant = (angleNorm / 45) | 0;
+      const areaConnected = (this.state.flags & 0x40) !== 0 ? 0 : 1;
+      const doorMask = (this.state.mapLo ^ this.state.mapHi) & 0xff;
+      const doorPosQ8 = (Math.imul(this.state.tick | 0, 17) & 0xff) >>> 0;
+      const hasLine = wlStateRealCheckLine(obx, oby, playerXQ16, playerYQ16, doorMask >>> 0, doorPosQ8) | 0;
+      const hasSight = wlStateRealCheckSight(
+        obx,
+        oby,
+        playerXQ16,
+        playerYQ16,
+        dirOctant,
+        areaConnected,
+        doorMask >>> 0,
+        doorPosQ8,
+      );
+
+      if (hasLine !== 0) {
+        this.state.flags |= 0x200;
+      } else {
+        this.state.flags &= ~0x200;
+      }
+      if ((hasSight | 0) !== 0) {
+        this.state.flags |= 0x400;
+      } else {
+        this.state.flags &= ~0x400;
       }
     }
 

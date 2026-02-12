@@ -37,6 +37,24 @@ int32_t real_wl_agent_take_damage_apply(
   int32_t god_mode_enabled,
   int32_t victory_flag
 );
+int32_t oracle_real_wl_state_check_line(
+  int32_t obx,
+  int32_t oby,
+  int32_t px,
+  int32_t py,
+  uint32_t door_mask,
+  uint32_t door_pos_q8
+);
+int32_t oracle_real_wl_state_check_sight(
+  int32_t obx,
+  int32_t oby,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t area_connected,
+  uint32_t door_mask,
+  uint32_t door_pos_q8
+);
 uint32_t oracle_wl_draw_wall_refresh_hash(
   int32_t player_angle,
   int32_t player_x,
@@ -93,6 +111,8 @@ enum runtime_trace_symbol_e {
   TRACE_REAL_WL_AGENT_TAKE_DAMAGE = 20,
   TRACE_REAL_WL_DRAW_WALL_REFRESH = 21,
   TRACE_REAL_WL_DRAW_THREE_D_REFRESH = 22,
+  TRACE_REAL_WL_STATE_CHECK_LINE = 23,
+  TRACE_REAL_WL_STATE_CHECK_SIGHT = 24,
 };
 
 #define TRACE_SYMBOL_MAX 32
@@ -249,6 +269,36 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       state->flags |= 0x100;
     } else {
       state->flags &= ~0x100;
+    }
+  }
+
+  {
+    int32_t player_x = state->xq8 << 8;
+    int32_t player_y = state->yq8 << 8;
+    int32_t obx = player_x + ((state->tick & 1) ? (1 << 16) : -(1 << 16));
+    int32_t oby = player_y + ((state->tick & 2) ? (1 << 15) : -(1 << 15));
+    int32_t angle_norm = ((state->angle_deg % 360) + 360) % 360;
+    int32_t dir_octant = angle_norm / 45;
+    int32_t area_connected = (state->flags & 0x40) ? 0 : 1;
+    uint32_t door_mask = (state->map_lo ^ state->map_hi) & 0xffu;
+    uint32_t door_pos_q8 = (uint32_t)((state->tick * 17) & 0xff);
+    int32_t has_line = 0;
+    int32_t has_sight = 0;
+
+    trace_hit(TRACE_REAL_WL_STATE_CHECK_LINE);
+    has_line = oracle_real_wl_state_check_line(obx, oby, player_x, player_y, door_mask, door_pos_q8);
+    trace_hit(TRACE_REAL_WL_STATE_CHECK_SIGHT);
+    has_sight = oracle_real_wl_state_check_sight(obx, oby, player_x, player_y, dir_octant, area_connected, door_mask, door_pos_q8);
+
+    if (has_line) {
+      state->flags |= 0x200;
+    } else {
+      state->flags &= ~0x200;
+    }
+    if (has_sight) {
+      state->flags |= 0x400;
+    } else {
+      state->flags &= ~0x400;
     }
   }
 

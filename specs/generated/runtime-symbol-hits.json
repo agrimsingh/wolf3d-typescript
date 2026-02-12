@@ -74,7 +74,9 @@
     19,
     20,
     21,
-    22
+    22,
+    23,
+    24
   ],
   "requiredRuntimeSymbols": [
     {
@@ -202,6 +204,18 @@
       "file": "WL_DRAW.C",
       "func": "ThreeDRefresh",
       "notes": "called via oracle_wl_draw_three_d_refresh_hash from runtime render hash"
+    },
+    {
+      "id": 23,
+      "file": "WL_STATE.C",
+      "func": "CheckLine",
+      "notes": "called via oracle_real_wl_state_check_line from runtime sight probe"
+    },
+    {
+      "id": 24,
+      "file": "WL_STATE.C",
+      "func": "CheckSight",
+      "notes": "called via oracle_real_wl_state_check_sight from runtime sight probe"
     }
   ],
   "excludedRuntimeSymbols": [
