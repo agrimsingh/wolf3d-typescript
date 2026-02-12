@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Real Runtime TODO (G-Phases)
 
-**Status:** In Progress (`G5` active)  
+**Status:** In Progress (`G6` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -70,13 +70,13 @@
 
 ## G5: TS Port Wave A (Cache/Memory/Map Runtime Paths)
 
-- [ ] Port runtime-required paths from `ID_CA.C`, `ID_MM.C`, `ID_PM.C`, `WL_GAME.C::SetupGameLevel` into active runtime flow.
-- [ ] Add per-function property parity tests.
-- [ ] Gate: local 1k + CI 10k per function
-- [ ] Gate: deterministic representative level-load parity
-- [ ] Gate: agent-browser verifies level transitions and setup across multiple maps
-- [ ] Tests green
-- [ ] Phase commit pushed (`g5: cache-memory-map runtime parity`)
+- [x] Port runtime-required paths from `ID_CA.C`, `ID_MM.C`, `ID_PM.C`, `WL_GAME.C::SetupGameLevel` into active runtime flow.
+- [x] Add per-function property parity tests.
+- [x] Gate: local 1k + CI 10k per function
+- [x] Gate: deterministic representative level-load parity
+- [x] Gate: agent-browser verifies level transitions and setup across multiple maps
+- [x] Tests green
+- [x] Phase commit pushed (`g5: cache-memory-map runtime parity`)
 
 ## G6: TS Port Wave B (Real Renderer Pipeline)
 
