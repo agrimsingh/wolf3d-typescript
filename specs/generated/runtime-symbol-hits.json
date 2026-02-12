@@ -173,7 +173,17 @@
     117,
     118,
     119,
-    120
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    127,
+    128,
+    129,
+    130
   ],
   "requiredRuntimeSymbols": [
     {
@@ -895,6 +905,66 @@
       "file": "ID_VL.C",
       "func": "VL_Hlin",
       "notes": "called via oracle_id_vl_vl_hlin_hash from runtime video probe"
+    },
+    {
+      "id": 121,
+      "file": "ID_VH.C",
+      "func": "VWB_Plot",
+      "notes": "called via oracle_id_vh_vwb_plot_hash from runtime video probe"
+    },
+    {
+      "id": 122,
+      "file": "ID_VH.C",
+      "func": "VWB_Hlin",
+      "notes": "called via oracle_id_vh_vwb_hlin_hash from runtime video probe"
+    },
+    {
+      "id": 123,
+      "file": "ID_VH.C",
+      "func": "VWB_Vlin",
+      "notes": "called via oracle_id_vh_vwb_vlin_hash from runtime video probe"
+    },
+    {
+      "id": 124,
+      "file": "ID_VH.C",
+      "func": "VWL_MeasureString",
+      "notes": "called via oracle_id_vh_vwl_measure_string_hash from runtime video probe"
+    },
+    {
+      "id": 125,
+      "file": "ID_VH.C",
+      "func": "VWB_DrawPropString",
+      "notes": "called via oracle_id_vh_vwb_draw_prop_string_hash from runtime video probe"
+    },
+    {
+      "id": 126,
+      "file": "ID_VL.C",
+      "func": "VL_Vlin",
+      "notes": "called via oracle_id_vl_vl_vlin_hash from runtime video probe"
+    },
+    {
+      "id": 127,
+      "file": "ID_VL.C",
+      "func": "VL_ScreenToScreen",
+      "notes": "called via oracle_id_vl_vl_screen_to_screen_hash from runtime video probe"
+    },
+    {
+      "id": 128,
+      "file": "ID_VL.C",
+      "func": "VL_MaskedToScreen",
+      "notes": "called via oracle_id_vl_vl_masked_to_screen_hash from runtime video probe"
+    },
+    {
+      "id": 129,
+      "file": "ID_VL.C",
+      "func": "VL_MemToLatch",
+      "notes": "called via oracle_id_vl_vl_mem_to_latch_hash from runtime video probe"
+    },
+    {
+      "id": 130,
+      "file": "ID_VL.C",
+      "func": "VL_ClearVideo",
+      "notes": "called via oracle_id_vl_vl_clear_video_hash from runtime video probe"
     }
   ],
   "excludedRuntimeSymbols": []

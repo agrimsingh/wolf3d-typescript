@@ -848,6 +848,73 @@ uint32_t oracle_id_vl_vl_hlin_hash(
   int32_t color,
   int32_t linewidth
 );
+uint32_t oracle_id_vh_vwb_plot_hash(
+  int32_t x,
+  int32_t y,
+  int32_t color,
+  int32_t linewidth
+);
+uint32_t oracle_id_vh_vwb_hlin_hash(
+  int32_t x,
+  int32_t y,
+  int32_t width,
+  int32_t color,
+  int32_t linewidth
+);
+uint32_t oracle_id_vh_vwb_vlin_hash(
+  int32_t x,
+  int32_t y,
+  int32_t height,
+  int32_t color,
+  int32_t linewidth
+);
+uint32_t oracle_id_vh_vwl_measure_string_hash(
+  int32_t text_len,
+  int32_t font_width,
+  int32_t font_height,
+  int32_t max_width
+);
+uint32_t oracle_id_vh_vwb_draw_prop_string_hash(
+  int32_t text_len,
+  int32_t x,
+  int32_t y,
+  int32_t color,
+  int32_t max_width
+);
+uint32_t oracle_id_vl_vl_vlin_hash(
+  int32_t x,
+  int32_t y,
+  int32_t height,
+  int32_t color,
+  int32_t linewidth
+);
+uint32_t oracle_id_vl_vl_screen_to_screen_hash(
+  int32_t source,
+  int32_t dest,
+  int32_t width,
+  int32_t height,
+  int32_t linewidth
+);
+uint32_t oracle_id_vl_vl_masked_to_screen_hash(
+  int32_t source,
+  int32_t width,
+  int32_t height,
+  int32_t x,
+  int32_t y,
+  int32_t mask
+);
+uint32_t oracle_id_vl_vl_mem_to_latch_hash(
+  int32_t source_len,
+  int32_t width,
+  int32_t height,
+  int32_t dest
+);
+uint32_t oracle_id_vl_vl_clear_video_hash(
+  int32_t color,
+  int32_t linewidth,
+  int32_t pages,
+  int32_t bufferofs
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -987,9 +1054,19 @@ enum runtime_trace_symbol_e {
   TRACE_ID_VL_VL_FADE_OUT = 118,
   TRACE_ID_VL_VL_PLOT = 119,
   TRACE_ID_VL_VL_HLIN = 120,
+  TRACE_ID_VH_VWB_PLOT = 121,
+  TRACE_ID_VH_VWB_HLIN = 122,
+  TRACE_ID_VH_VWB_VLIN = 123,
+  TRACE_ID_VH_VWL_MEASURE_STRING = 124,
+  TRACE_ID_VH_VWB_DRAW_PROP_STRING = 125,
+  TRACE_ID_VL_VL_VLIN = 126,
+  TRACE_ID_VL_VL_SCREEN_TO_SCREEN = 127,
+  TRACE_ID_VL_VL_MASKED_TO_SCREEN = 128,
+  TRACE_ID_VL_VL_MEM_TO_LATCH = 129,
+  TRACE_ID_VL_VL_CLEAR_VIDEO = 130,
 };
 
-#define TRACE_SYMBOL_MAX 128
+#define TRACE_SYMBOL_MAX 192
 static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
 static int32_t g_trace_count = 0;
 
@@ -1359,6 +1436,16 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t vl_fade_out_hash;
       uint32_t vl_plot_hash;
       uint32_t vl_hlin_hash;
+      uint32_t vh_plot_hash;
+      uint32_t vh_hlin_hash;
+      uint32_t vh_vlin_hash;
+      uint32_t vh_measure_string_hash;
+      uint32_t vh_draw_prop_string_hash;
+      uint32_t vl_vlin_hash;
+      uint32_t vl_screen_to_screen_hash;
+      uint32_t vl_masked_to_screen_hash;
+      uint32_t vl_mem_to_latch_hash;
+      uint32_t vl_clear_video_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -1564,6 +1651,10 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t vl_fade_end = 255;
       int32_t vl_fade_steps = ((state->tick >> 2) & 15) + 1;
       int32_t vl_palette_seed = rng;
+      int32_t vh_font_height = 8 + ((state->tick >> 3) & 3);
+      int32_t vh_draw_prop_max_width = 160 + ((rng >> 4) & 127);
+      int32_t vl_vlin_height = 8 + ((rng >> 11) & 63);
+      int32_t vl_pages = ((state->tick >> 3) & 3) + 1;
       uint8_t carmack_source[64];
       uint8_t rlew_source_bytes[64];
       uint8_t maphead_bytes[402];
@@ -2155,6 +2246,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       vl_plot_hash = oracle_id_vl_vl_plot_hash(vh_pic_x, vh_pic_y, vh_color, vl_line_width);
       trace_hit(TRACE_ID_VL_VL_HLIN);
       vl_hlin_hash = oracle_id_vl_vl_hlin_hash(vh_pic_x, vh_pic_y, vh_bar_w, vh_color, vl_line_width);
+      trace_hit(TRACE_ID_VH_VWB_PLOT);
+      vh_plot_hash = oracle_id_vh_vwb_plot_hash(vh_pic_x, vh_pic_y, vh_color, vl_line_width);
+      trace_hit(TRACE_ID_VH_VWB_HLIN);
+      vh_hlin_hash = oracle_id_vh_vwb_hlin_hash(vh_pic_x, vh_pic_y, vh_bar_w, vh_color, vl_line_width);
+      trace_hit(TRACE_ID_VH_VWB_VLIN);
+      vh_vlin_hash = oracle_id_vh_vwb_vlin_hash(vh_pic_x, vh_pic_y, vl_vlin_height, vh_color, vl_line_width);
+      trace_hit(TRACE_ID_VH_VWL_MEASURE_STRING);
+      vh_measure_string_hash = oracle_id_vh_vwl_measure_string_hash(text_len, vh_font_width, vh_font_height, vh_max_width);
+      trace_hit(TRACE_ID_VH_VWB_DRAW_PROP_STRING);
+      vh_draw_prop_string_hash = oracle_id_vh_vwb_draw_prop_string_hash(text_len, vh_pic_x, vh_pic_y, vh_color, vh_draw_prop_max_width);
+      trace_hit(TRACE_ID_VL_VL_VLIN);
+      vl_vlin_hash = oracle_id_vl_vl_vlin_hash(vh_pic_x, vh_pic_y, vl_vlin_height, vh_color, vl_line_width);
+      trace_hit(TRACE_ID_VL_VL_SCREEN_TO_SCREEN);
+      vl_screen_to_screen_hash = oracle_id_vl_vl_screen_to_screen_hash(vh_bufferofs, vl_dest, vh_bar_w, vh_bar_h, vl_line_width);
+      trace_hit(TRACE_ID_VL_VL_MASKED_TO_SCREEN);
+      vl_masked_to_screen_hash = oracle_id_vl_vl_masked_to_screen_hash(vh_pic_num, vh_bar_w, vh_bar_h, vh_pic_x, vh_pic_y, vl_mask);
+      trace_hit(TRACE_ID_VL_VL_MEM_TO_LATCH);
+      vl_mem_to_latch_hash = oracle_id_vl_vl_mem_to_latch_hash(vl_src_len, vh_bar_w, vh_bar_h, vl_dest);
+      trace_hit(TRACE_ID_VL_VL_CLEAR_VIDEO);
+      vl_clear_video_hash = oracle_id_vl_vl_clear_video_hash(vh_color, vl_line_width, vl_pages, vh_bufferofs);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -2226,7 +2337,17 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         vl_fade_in_hash ^
         vl_fade_out_hash ^
         vl_plot_hash ^
-        vl_hlin_hash;
+        vl_hlin_hash ^
+        vh_plot_hash ^
+        vh_hlin_hash ^
+        vh_vlin_hash ^
+        vh_measure_string_hash ^
+        vh_draw_prop_string_hash ^
+        vl_vlin_hash ^
+        vl_screen_to_screen_hash ^
+        vl_masked_to_screen_hash ^
+        vl_mem_to_latch_hash ^
+        vl_clear_video_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

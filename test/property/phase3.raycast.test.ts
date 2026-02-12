@@ -7,13 +7,23 @@ import {
   idVhVwMeasurePropStringHash,
   idVhVwbBarHash,
   idVhVwbDrawPicHash,
+  idVhVwbDrawPropStringHash,
+  idVhVwbHlinHash,
+  idVhVwbPlotHash,
+  idVhVwbVlinHash,
+  idVhVwlMeasureStringHash,
   idVlVlBarHash,
+  idVlVlClearVideoHash,
   idVlVlFadeInHash,
   idVlVlFadeOutHash,
   idVlVlHlinHash,
   idVlVlLatchToScreenHash,
+  idVlVlMaskedToScreenHash,
+  idVlVlMemToLatchHash,
   idVlVlMemToScreenHash,
   idVlVlPlotHash,
+  idVlVlScreenToScreenHash,
+  idVlVlVlinHash,
   wlDrawCalcHeight,
   wlDrawHitHorizWallHash,
   wlDrawHitVertWallHash,
@@ -514,6 +524,36 @@ describe('phase 3 real WOLFSRC raycasting parity', () => {
             );
             expect(idVlVlHlinHash(a, b, c, d, h) >>> 0).toBe(
               oracle.idVlVlHlinHash(a, b, c, d, h) >>> 0,
+            );
+            expect(idVhVwbPlotHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhVwbPlotHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVwbHlinHash(a, b, c, d, h) >>> 0).toBe(
+              oracle.idVhVwbHlinHash(a, b, c, d, h) >>> 0,
+            );
+            expect(idVhVwbVlinHash(a, b, c, d, h) >>> 0).toBe(
+              oracle.idVhVwbVlinHash(a, b, c, d, h) >>> 0,
+            );
+            expect(idVhVwlMeasureStringHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhVwlMeasureStringHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVwbDrawPropStringHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhVwbDrawPropStringHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVlVlVlinHash(a, b, c, d, h) >>> 0).toBe(
+              oracle.idVlVlVlinHash(a, b, c, d, h) >>> 0,
+            );
+            expect(idVlVlScreenToScreenHash(a, b, c, d, h) >>> 0).toBe(
+              oracle.idVlVlScreenToScreenHash(a, b, c, d, h) >>> 0,
+            );
+            expect(idVlVlMaskedToScreenHash(a, b, c, d, e, f) >>> 0).toBe(
+              oracle.idVlVlMaskedToScreenHash(a, b, c, d, e, f) >>> 0,
+            );
+            expect(idVlVlMemToLatchHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVlVlMemToLatchHash(a, b, c, d) >>> 0,
+            );
+            expect(idVlVlClearVideoHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVlVlClearVideoHash(a, b, c, d) >>> 0,
             );
           },
         ),

@@ -60,13 +60,23 @@ import {
   idVhVwMeasurePropStringHash,
   idVhVwbBarHash,
   idVhVwbDrawPicHash,
+  idVhVwbDrawPropStringHash,
+  idVhVwbHlinHash,
+  idVhVwbPlotHash,
+  idVhVwbVlinHash,
+  idVhVwlMeasureStringHash,
   idVlVlBarHash,
+  idVlVlClearVideoHash,
   idVlVlFadeInHash,
   idVlVlFadeOutHash,
   idVlVlHlinHash,
   idVlVlLatchToScreenHash,
+  idVlVlMaskedToScreenHash,
+  idVlVlMemToLatchHash,
   idVlVlMemToScreenHash,
   idVlVlPlotHash,
+  idVlVlScreenToScreenHash,
+  idVlVlVlinHash,
   wlDrawCalcHeight,
   wlDrawHitHorizWallHash,
   wlDrawHitVertWallHash,
@@ -803,6 +813,10 @@ export class TsRuntimePort implements RuntimePort {
         const vlFadeEnd = 255;
         const vlFadeSteps = ((this.state.tick >> 2) & 15) + 1;
         const vlPaletteSeed = rng | 0;
+        const vhFontHeight = 8 + ((this.state.tick >> 3) & 3);
+        const vhDrawPropMaxWidth = 160 + ((rng >> 4) & 127);
+        const vlVlinHeight = 8 + ((rng >> 11) & 63);
+        const vlPages = ((this.state.tick >> 3) & 3) + 1;
         const carmackSource = new Uint8Array(carmackSourceLen);
         const rlewSourceBytes = new Uint8Array(rlewSourceLen);
         const mapHeadBytes = new Uint8Array(mapHeadLen);
@@ -1279,6 +1293,16 @@ export class TsRuntimePort implements RuntimePort {
         const vlFadeOutHash = idVlVlFadeOutHash(vlFadeStart, vlFadeEnd, vlFadeSteps, vlPaletteSeed) >>> 0;
         const vlPlotHash = idVlVlPlotHash(vhPicX, vhPicY, vhColor, vlLineWidth) >>> 0;
         const vlHlinHash = idVlVlHlinHash(vhPicX, vhPicY, vhBarW, vhColor, vlLineWidth) >>> 0;
+        const vhPlotHash = idVhVwbPlotHash(vhPicX, vhPicY, vhColor, vlLineWidth) >>> 0;
+        const vhHlinHash = idVhVwbHlinHash(vhPicX, vhPicY, vhBarW, vhColor, vlLineWidth) >>> 0;
+        const vhVlinHash = idVhVwbVlinHash(vhPicX, vhPicY, vlVlinHeight, vhColor, vlLineWidth) >>> 0;
+        const vhMeasureStringHash = idVhVwlMeasureStringHash(textLen, vhFontWidth, vhFontHeight, vhMaxWidth) >>> 0;
+        const vhDrawPropStringHash = idVhVwbDrawPropStringHash(textLen, vhPicX, vhPicY, vhColor, vhDrawPropMaxWidth) >>> 0;
+        const vlVlinHash = idVlVlVlinHash(vhPicX, vhPicY, vlVlinHeight, vhColor, vlLineWidth) >>> 0;
+        const vlScreenToScreenHash = idVlVlScreenToScreenHash(vhBufferOfs, vlDest, vhBarW, vhBarH, vlLineWidth) >>> 0;
+        const vlMaskedToScreenHash = idVlVlMaskedToScreenHash(vhPicNum, vhBarW, vhBarH, vhPicX, vhPicY, vlMask) >>> 0;
+        const vlMemToLatchHash = idVlVlMemToLatchHash(vlSrcLen, vhBarW, vhBarH, vlDest) >>> 0;
+        const vlClearVideoHash = idVlVlClearVideoHash(vhColor, vlLineWidth, vlPages, vhBufferOfs) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1350,7 +1374,17 @@ export class TsRuntimePort implements RuntimePort {
             vlFadeInHash ^
             vlFadeOutHash ^
             vlPlotHash ^
-            vlHlinHash) >>> 0;
+            vlHlinHash ^
+            vhPlotHash ^
+            vhHlinHash ^
+            vhVlinHash ^
+            vhMeasureStringHash ^
+            vhDrawPropStringHash ^
+            vlVlinHash ^
+            vlScreenToScreenHash ^
+            vlMaskedToScreenHash ^
+            vlMemToLatchHash ^
+            vlClearVideoHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
