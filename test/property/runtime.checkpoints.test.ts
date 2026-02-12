@@ -37,8 +37,8 @@ describe('runtime fixture checkpoints', () => {
   });
 
   async function captureParityOrPersist(suite: string, scenario: RuntimeParityScenario): Promise<void> {
-    let oracleTrace;
-    let tsTrace;
+    let oracleTrace: Awaited<ReturnType<typeof captureRuntimeTrace>> | undefined;
+    let tsTrace: Awaited<ReturnType<typeof captureRuntimeTrace>> | undefined;
     try {
       const useOracleParity = (scenario.config.variant ?? 'WL1') !== 'WL6';
       if (useOracleParity) {
@@ -46,6 +46,9 @@ describe('runtime fixture checkpoints', () => {
       }
       tsTrace = await captureRuntimeTrace(tsRuntime, scenario);
       if (useOracleParity) {
+        if (!oracleTrace || !tsTrace) {
+          throw new Error(`Missing oracle/ts traces for oracle parity scenario "${scenario.id}"`);
+        }
         assertRuntimeTraceParity(scenario, oracleTrace, tsTrace);
       }
     } catch (error) {
