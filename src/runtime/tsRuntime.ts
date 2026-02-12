@@ -172,6 +172,8 @@ const ANGLESCALE = 20;
 const MINDIST = 0x5800;
 const PI = 3.141592657;
 const SIN_TABLE = new Int32Array(ANGLES + ANGLEQUAD + 1);
+const FULL_MAP_WINDOW_SIZE = 8;
+const AREATILE = 107;
 
 {
   let angle = 0.0;
@@ -224,14 +226,60 @@ function probeFixedByFrac(a: number, b: number): number {
 }
 
 function probeWallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
-  if (x < 0 || x >= 8 || y < 0 || y >= 8) {
+  if (x < 0 || x >= FULL_MAP_WINDOW_SIZE || y < 0 || y >= FULL_MAP_WINDOW_SIZE) {
     return true;
   }
-  const bit = y * 8 + x;
+  const bit = y * FULL_MAP_WINDOW_SIZE + x;
   if (bit < 32) {
     return ((mapLo >>> bit) & 1) === 1;
   }
   return ((mapHi >>> (bit - 32)) & 1) === 1;
+}
+
+function planeWallAt(plane0: Uint16Array, width: number, height: number, x: number, y: number): boolean {
+  if (x < 0 || y < 0 || x >= width || y >= height) {
+    return true;
+  }
+  const tile = plane0[y * width + x] ?? 0;
+  return (tile & 0xffff) < AREATILE;
+}
+
+function clampWindowOrigin(origin: number, limit: number): number {
+  if (limit <= FULL_MAP_WINDOW_SIZE) {
+    return 0;
+  }
+  return Math.max(0, Math.min(limit - FULL_MAP_WINDOW_SIZE, origin | 0)) | 0;
+}
+
+function buildWindowBitsFromPlane(
+  plane0: Uint16Array,
+  width: number,
+  height: number,
+  originX: number,
+  originY: number,
+): { mapLo: number; mapHi: number } {
+  let mapLo = 0;
+  let mapHi = 0;
+
+  for (let wy = 0; wy < FULL_MAP_WINDOW_SIZE; wy++) {
+    for (let wx = 0; wx < FULL_MAP_WINDOW_SIZE; wx++) {
+      const worldX = originX + wx;
+      const worldY = originY + wy;
+      const border = wx === 0 || wy === 0 || wx === FULL_MAP_WINDOW_SIZE - 1 || wy === FULL_MAP_WINDOW_SIZE - 1;
+      const wall = border || planeWallAt(plane0, width, height, worldX, worldY);
+      if (!wall) {
+        continue;
+      }
+      const bit = wy * FULL_MAP_WINDOW_SIZE + wx;
+      if (bit < 32) {
+        mapLo |= 1 << bit;
+      } else {
+        mapHi |= 1 << (bit - 32);
+      }
+    }
+  }
+
+  return { mapLo: mapLo >>> 0, mapHi: mapHi >>> 0 };
 }
 
 function probeRlewExpandChecksum(source: Uint16Array, tag: number, outLen: number): number {
@@ -466,6 +514,17 @@ type State = {
   tick: number;
 };
 
+type FullMapState = {
+  enabled: boolean;
+  width: number;
+  height: number;
+  plane0: Uint16Array | null;
+  originX: number;
+  originY: number;
+  worldXQ8: number;
+  worldYQ8: number;
+};
+
 function snapshotHash(state: State, angleFrac: number): number {
   let h = 2166136261 >>> 0;
   h = fnv1a(h, state.mapLo);
@@ -624,12 +683,99 @@ export class TsRuntimePort implements RuntimePort {
   private bootState: State = { ...this.state };
   private angleFrac = 0;
   private bootAngleFrac = 0;
+  private fullMap: FullMapState = {
+    enabled: false,
+    width: 0,
+    height: 0,
+    plane0: null,
+    originX: 0,
+    originY: 0,
+    worldXQ8: 0,
+    worldYQ8: 0,
+  };
+  private bootFullMap: FullMapState = { ...this.fullMap };
+
+  private cloneFullMapState(source: FullMapState): FullMapState {
+    return {
+      enabled: source.enabled,
+      width: source.width | 0,
+      height: source.height | 0,
+      plane0: source.plane0,
+      originX: source.originX | 0,
+      originY: source.originY | 0,
+      worldXQ8: source.worldXQ8 | 0,
+      worldYQ8: source.worldYQ8 | 0,
+    };
+  }
+
+  private refreshMapWindowFromWorld(recenterWindow: boolean): void {
+    if (!this.fullMap.enabled || !this.fullMap.plane0) {
+      return;
+    }
+
+    const plane0 = this.fullMap.plane0;
+    const width = this.fullMap.width | 0;
+    const height = this.fullMap.height | 0;
+
+    let worldXQ8 = this.fullMap.worldXQ8 | 0;
+    let worldYQ8 = this.fullMap.worldYQ8 | 0;
+    if (worldXQ8 < 0) worldXQ8 = 0;
+    if (worldYQ8 < 0) worldYQ8 = 0;
+    const maxWorldXQ8 = Math.max(0, (width * 256) - 1) | 0;
+    const maxWorldYQ8 = Math.max(0, (height * 256) - 1) | 0;
+    if (worldXQ8 > maxWorldXQ8) worldXQ8 = maxWorldXQ8;
+    if (worldYQ8 > maxWorldYQ8) worldYQ8 = maxWorldYQ8;
+
+    let originX = this.fullMap.originX | 0;
+    let originY = this.fullMap.originY | 0;
+    if (recenterWindow) {
+      const tileX = Math.max(0, Math.min(width - 1, worldXQ8 >> 8)) | 0;
+      const tileY = Math.max(0, Math.min(height - 1, worldYQ8 >> 8)) | 0;
+      originX = clampWindowOrigin(tileX - 3, width);
+      originY = clampWindowOrigin(tileY - 3, height);
+    } else {
+      originX = clampWindowOrigin(originX, width);
+      originY = clampWindowOrigin(originY, height);
+    }
+
+    const bits = buildWindowBitsFromPlane(plane0, width, height, originX, originY);
+
+    this.fullMap.originX = originX;
+    this.fullMap.originY = originY;
+    this.fullMap.worldXQ8 = worldXQ8;
+    this.fullMap.worldYQ8 = worldYQ8;
+
+    this.state.mapLo = bits.mapLo >>> 0;
+    this.state.mapHi = bits.mapHi >>> 0;
+    this.state.xQ8 = (worldXQ8 - Math.imul(originX, 256)) | 0;
+    this.state.yQ8 = (worldYQ8 - Math.imul(originY, 256)) | 0;
+  }
+
+  private updateWorldFromLocalAndRefreshWindow(): void {
+    if (!this.fullMap.enabled) {
+      return;
+    }
+    this.fullMap.worldXQ8 = (this.state.xQ8 + Math.imul(this.fullMap.originX, 256)) | 0;
+    this.fullMap.worldYQ8 = (this.state.yQ8 + Math.imul(this.fullMap.originY, 256)) | 0;
+    this.refreshMapWindowFromWorld(true);
+  }
 
   async bootWl1(config: RuntimeConfig): Promise<void> {
     await this.init(config);
   }
 
   async init(config: RuntimeConfig): Promise<void> {
+    this.fullMap = {
+      enabled: false,
+      width: 0,
+      height: 0,
+      plane0: null,
+      originX: 0,
+      originY: 0,
+      worldXQ8: 0,
+      worldYQ8: 0,
+    };
+
     this.state = {
       mapLo: config.mapLo >>> 0,
       mapHi: config.mapHi >>> 0,
@@ -642,14 +788,56 @@ export class TsRuntimePort implements RuntimePort {
       flags: 0,
       tick: 0,
     };
+
+    const width = config.mapWidth ?? 0;
+    const height = config.mapHeight ?? 0;
+    const hasFullMap = config.enableFullMapRuntime === true && !!config.plane0 && width > 0 && height > 0;
+    if (hasFullMap) {
+      const plane0 = config.plane0!;
+      let originX = clampWindowOrigin(config.runtimeWindowOriginX ?? 0, width);
+      let originY = clampWindowOrigin(config.runtimeWindowOriginY ?? 0, height);
+
+      let worldXQ8 = config.startXQ8 | 0;
+      let worldYQ8 = config.startYQ8 | 0;
+      if (
+        Number.isInteger(config.playerStartAbsTileX)
+        && Number.isInteger(config.playerStartAbsTileY)
+      ) {
+        const fracX = config.startXQ8 & 0xff;
+        const fracY = config.startYQ8 & 0xff;
+        worldXQ8 = (Math.imul(config.playerStartAbsTileX as number, 256) + fracX) | 0;
+        worldYQ8 = (Math.imul(config.playerStartAbsTileY as number, 256) + fracY) | 0;
+      } else {
+        worldXQ8 = (worldXQ8 + Math.imul(originX, 256)) | 0;
+        worldYQ8 = (worldYQ8 + Math.imul(originY, 256)) | 0;
+      }
+
+      this.fullMap = {
+        enabled: true,
+        width: width | 0,
+        height: height | 0,
+        plane0,
+        originX,
+        originY,
+        worldXQ8,
+        worldYQ8,
+      };
+      this.refreshMapWindowFromWorld(true);
+    }
+
     this.angleFrac = 0;
     this.bootAngleFrac = 0;
     this.bootState = { ...this.state };
+    this.bootFullMap = this.cloneFullMapState(this.fullMap);
   }
 
   reset(): void {
     this.state = { ...this.bootState };
     this.angleFrac = this.bootAngleFrac;
+    this.fullMap = this.cloneFullMapState(this.bootFullMap);
+    if (this.fullMap.enabled) {
+      this.refreshMapWindowFromWorld(false);
+    }
   }
 
   private thrustQ16(xQ16: number, yQ16: number, angle: number, speed: number): { xQ16: number; yQ16: number } {
@@ -723,6 +911,7 @@ export class TsRuntimePort implements RuntimePort {
     }
     this.state.xQ8 = xQ16 >> 8;
     this.state.yQ8 = yQ16 >> 8;
+    this.updateWorldFromLocalAndRefreshWindow();
 
     {
       const firePressed = (inputMask & (1 << 6)) !== 0;
@@ -1885,9 +2074,29 @@ export class TsRuntimePort implements RuntimePort {
   }
 
   snapshot(): RuntimeSnapshot & RuntimeCoreSnapshot {
+    if (!this.fullMap.enabled) {
+      return {
+        ...runtimeCoreFields(this.state),
+        hash: snapshotHash(this.state, this.angleFrac),
+      };
+    }
+
+    const worldState: State = {
+      ...this.state,
+      xQ8: this.fullMap.worldXQ8 | 0,
+      yQ8: this.fullMap.worldYQ8 | 0,
+    };
     return {
-      ...runtimeCoreFields(this.state),
-      hash: snapshotHash(this.state, this.angleFrac),
+      ...runtimeCoreFields(worldState),
+      localXQ8: this.state.xQ8 | 0,
+      localYQ8: this.state.yQ8 | 0,
+      worldXQ8: this.fullMap.worldXQ8 | 0,
+      worldYQ8: this.fullMap.worldYQ8 | 0,
+      runtimeWindowOriginX: this.fullMap.originX | 0,
+      runtimeWindowOriginY: this.fullMap.originY | 0,
+      worldWidth: this.fullMap.width | 0,
+      worldHeight: this.fullMap.height | 0,
+      hash: snapshotHash(worldState, this.angleFrac),
     };
   }
 
@@ -1907,11 +2116,13 @@ export class TsRuntimePort implements RuntimePort {
   deserialize(data: Uint8Array): void {
     const text = new TextDecoder().decode(data);
     const parsed = JSON.parse(text) as RuntimeSnapshot;
+    const parsedLocalX = Number.isInteger(parsed.localXQ8) ? (parsed.localXQ8 as number) : parsed.xQ8;
+    const parsedLocalY = Number.isInteger(parsed.localYQ8) ? (parsed.localYQ8 as number) : parsed.yQ8;
     this.state = {
       mapLo: parsed.mapLo >>> 0,
       mapHi: parsed.mapHi >>> 0,
-      xQ8: parsed.xQ8 | 0,
-      yQ8: parsed.yQ8 | 0,
+      xQ8: parsedLocalX | 0,
+      yQ8: parsedLocalY | 0,
       angleDeg: normalizeAngleDeg(parsed.angleDeg | 0),
       health: clampI32(parsed.health, 0, 100),
       ammo: clampI32(parsed.ammo, 0, 99),
@@ -1919,6 +2130,21 @@ export class TsRuntimePort implements RuntimePort {
       flags: parsed.flags | 0,
       tick: parsed.tick | 0,
     };
+    if (this.fullMap.enabled) {
+      if (Number.isInteger(parsed.runtimeWindowOriginX)) {
+        this.fullMap.originX = clampWindowOrigin(parsed.runtimeWindowOriginX as number, this.fullMap.width);
+      }
+      if (Number.isInteger(parsed.runtimeWindowOriginY)) {
+        this.fullMap.originY = clampWindowOrigin(parsed.runtimeWindowOriginY as number, this.fullMap.height);
+      }
+      this.fullMap.worldXQ8 = Number.isInteger(parsed.worldXQ8)
+        ? ((parsed.worldXQ8 as number) | 0)
+        : ((this.state.xQ8 + Math.imul(this.fullMap.originX, 256)) | 0);
+      this.fullMap.worldYQ8 = Number.isInteger(parsed.worldYQ8)
+        ? ((parsed.worldYQ8 as number) | 0)
+        : ((this.state.yQ8 + Math.imul(this.fullMap.originY, 256)) | 0);
+      this.refreshMapWindowFromWorld(false);
+    }
     this.angleFrac = 0;
   }
 

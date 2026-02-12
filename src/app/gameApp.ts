@@ -9,6 +9,7 @@ const FOV = Math.PI / 3;
 const MINIMAP_TILE_SIZE = 8;
 const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
+const AREATILE = 107;
 const PROTOTYPE_BASELINE_BANNER = 'Prototype runtime baseline active (G0-G9)';
 const PROTOTYPE_BASELINE_BANNER_ID = 'runtime-baseline-banner';
 
@@ -20,7 +21,7 @@ type RayHit = {
   texX: number;
 };
 
-function wallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
+function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
     return true;
   }
@@ -29,6 +30,14 @@ function wallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
     return ((mapLo >>> bit) & 1) === 1;
   }
   return ((mapHi >>> (bit - 32)) & 1) === 1;
+}
+
+function wallAtPlane(plane0: Uint16Array, mapWidth: number, mapHeight: number, x: number, y: number): boolean {
+  if (x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {
+    return true;
+  }
+  const tile = plane0[y * mapWidth + x] ?? 0;
+  return (tile & 0xffff) < AREATILE;
 }
 
 function readU16LE(bytes: Uint8Array, offset: number): number {
@@ -76,7 +85,7 @@ function paletteIndexToRgb(index: number): [number, number, number] {
   return [r | 0, g | 0, b | 0];
 }
 
-function castRay(
+function castRayWindowBits(
   mapLo: number,
   mapHi: number,
   posX: number,
@@ -110,7 +119,58 @@ function castRay(
       side = 1;
     }
 
-    if (wallAt(mapLo, mapHi, mapX, mapY)) {
+    if (wallAtWindowBits(mapLo, mapHi, mapX, mapY)) {
+      const perpDist = side === 0
+        ? (mapX - posX + (1 - stepX) / 2) / (dirX === 0 ? 1e-6 : dirX)
+        : (mapY - posY + (1 - stepY) / 2) / (dirY === 0 ? 1e-6 : dirY);
+      const distance = Math.max(0.02, Math.abs(perpDist));
+      let wallX = side === 0 ? posY + perpDist * dirY : posX + perpDist * dirX;
+      wallX -= Math.floor(wallX);
+      let texX = Math.floor(wallX * TEXTURE_SIZE) & (TEXTURE_SIZE - 1);
+      if (side === 0 && dirX > 0) texX = (TEXTURE_SIZE - 1) - texX;
+      if (side === 1 && dirY < 0) texX = (TEXTURE_SIZE - 1) - texX;
+      return { distance, side, tileX: mapX, tileY: mapY, texX };
+    }
+  }
+  return null;
+}
+
+function castRayPlane(
+  plane0: Uint16Array,
+  mapWidth: number,
+  mapHeight: number,
+  posX: number,
+  posY: number,
+  dirX: number,
+  dirY: number,
+): RayHit | null {
+  let mapX = Math.floor(posX);
+  let mapY = Math.floor(posY);
+  if (!Number.isFinite(posX) || !Number.isFinite(posY) || !Number.isFinite(dirX) || !Number.isFinite(dirY)) {
+    return null;
+  }
+
+  const deltaDistX = dirX === 0 ? 1e30 : Math.abs(1 / dirX);
+  const deltaDistY = dirY === 0 ? 1e30 : Math.abs(1 / dirY);
+
+  const stepX = dirX < 0 ? -1 : 1;
+  const stepY = dirY < 0 ? -1 : 1;
+  let sideDistX = dirX < 0 ? (posX - mapX) * deltaDistX : (mapX + 1 - posX) * deltaDistX;
+  let sideDistY = dirY < 0 ? (posY - mapY) * deltaDistY : (mapY + 1 - posY) * deltaDistY;
+
+  let side: 0 | 1 = 0;
+  for (let i = 0; i < 512; i++) {
+    if (sideDistX < sideDistY) {
+      sideDistX += deltaDistX;
+      mapX += stepX;
+      side = 0;
+    } else {
+      sideDistY += deltaDistY;
+      mapY += stepY;
+      side = 1;
+    }
+
+    if (wallAtPlane(plane0, mapWidth, mapHeight, mapX, mapY)) {
       const perpDist = side === 0
         ? (mapX - posX + (1 - stepX) / 2) / (dirX === 0 ? 1e-6 : dirX)
         : (mapY - posY + (1 - stepY) / 2) / (dirY === 0 ? 1e-6 : dirY);
@@ -297,20 +357,28 @@ export class WolfApp {
 
     const mapLo = snapshot.mapLo >>> 0;
     const mapHi = snapshot.mapHi >>> 0;
+    const mapWidth = scenario?.config.mapWidth ?? 8;
+    const mapHeight = scenario?.config.mapHeight ?? 8;
+    const plane0 = scenario?.config.plane0;
+    const useFullMap = !!plane0 && mapWidth > 0 && mapHeight > 0;
+    const posXQ8 = (snapshot.worldXQ8 ?? snapshot.xQ8) | 0;
+    const posYQ8 = (snapshot.worldYQ8 ?? snapshot.yQ8) | 0;
     const pixels = this.image.data;
     pixels.fill(0);
 
-    // Runtime bridge frame bytes are still synthetic; render from state and real WL1 textures.
+    // Runtime bridge frame bytes are still synthetic; render from runtime state and WL1 textures.
     const angleRad = (snapshot.angleDeg * Math.PI) / 180;
-    const posX = snapshot.xQ8 / 256;
-    const posY = snapshot.yQ8 / 256;
+    const posX = posXQ8 / 256;
+    const posY = posYQ8 / 256;
     const textures = this.wallTexturesReady ? this.wallTextures : [];
     for (let x = 0; x < WIDTH; x++) {
       const camera = x / WIDTH - 0.5;
       const rayAngle = angleRad - camera * FOV;
       const dirX = Math.cos(rayAngle);
       const dirY = -Math.sin(rayAngle);
-      const hit = castRay(mapLo, mapHi, posX, posY, dirX, dirY);
+      const hit = useFullMap
+        ? castRayPlane(plane0!, mapWidth, mapHeight, posX, posY, dirX, dirY)
+        : castRayWindowBits(mapLo, mapHi, posX, posY, dirX, dirY);
       const safeDist = hit ? hit.distance : 1000;
       const wallHeight = Math.min(HEIGHT, Math.max(2, (HEIGHT / Math.max(0.001, safeDist)) | 0));
       const top = (HEIGHT / 2 - wallHeight / 2) | 0;
@@ -368,48 +436,69 @@ export class WolfApp {
       this.ctx.fillText('Runtime Framebuffer', 8, 12);
     }
     this.ctx.fillText(`hp:${snapshot.health} ammo:${snapshot.ammo} tick:${snapshot.tick}`, 8, 24);
-    this.ctx.fillText(`x:${(snapshot.xQ8 / 256).toFixed(2)} y:${(snapshot.yQ8 / 256).toFixed(2)} angle:${snapshot.angleDeg}`, 8, 36);
+    this.ctx.fillText(`x:${(posXQ8 / 256).toFixed(2)} y:${(posYQ8 / 256).toFixed(2)} angle:${snapshot.angleDeg}`, 8, 36);
     this.ctx.fillText(`snapshot:${snapshot.hash >>> 0} frame:${state.frameHash >>> 0}`, 8, HEIGHT - 10);
   }
 
   private drawMiniMap(mapLo: number, mapHi: number, snapshot: RuntimeSnapshot, scenario: RuntimeScenario | null): void {
-    const ox = WIDTH - MINIMAP_TILE_SIZE * 8 - 10;
+    const miniSize = MINIMAP_TILE_SIZE * 8;
+    const ox = WIDTH - miniSize - 10;
     const oy = 10;
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-    this.ctx.fillRect(ox - 3, oy - 3, MINIMAP_TILE_SIZE * 8 + 6, MINIMAP_TILE_SIZE * 8 + 6);
+    this.ctx.fillRect(ox - 3, oy - 3, miniSize + 6, miniSize + 6);
+
+    const plane0 = scenario?.config.plane0;
+    const mapWidth = scenario?.config.mapWidth ?? 8;
+    const mapHeight = scenario?.config.mapHeight ?? 8;
+    const useFullMap = !!plane0 && mapWidth > 0 && mapHeight > 0;
+
+    if (useFullMap) {
+      const tileW = miniSize / mapWidth;
+      const tileH = miniSize / mapHeight;
+      for (let y = 0; y < mapHeight; y++) {
+        for (let x = 0; x < mapWidth; x++) {
+          this.ctx.fillStyle = wallAtPlane(plane0!, mapWidth, mapHeight, x, y) ? '#61351d' : '#263243';
+          this.ctx.fillRect(
+            ox + x * tileW,
+            oy + y * tileH,
+            Math.max(1, tileW),
+            Math.max(1, tileH),
+          );
+        }
+      }
+
+      const worldX = (snapshot.worldXQ8 ?? snapshot.xQ8) / 256;
+      const worldY = (snapshot.worldYQ8 ?? snapshot.yQ8) / 256;
+      const px = ox + worldX * tileW;
+      const py = oy + worldY * tileH;
+      const clampedPx = Math.max(ox + 1, Math.min(ox + miniSize - 2, px));
+      const clampedPy = Math.max(oy + 1, Math.min(oy + miniSize - 2, py));
+
+      this.ctx.fillStyle = '#ffe082';
+      this.ctx.fillRect(clampedPx - 1.5, clampedPy - 1.5, 3, 3);
+      const dir = (snapshot.angleDeg * Math.PI) / 180;
+      this.ctx.strokeStyle = '#ffe082';
+      this.ctx.lineWidth = 1;
+      this.ctx.beginPath();
+      this.ctx.moveTo(clampedPx, clampedPy);
+      this.ctx.lineTo(clampedPx + Math.cos(dir) * 7, clampedPy - Math.sin(dir) * 7);
+      this.ctx.stroke();
+      return;
+    }
 
     for (let y = 0; y < 8; y++) {
       for (let x = 0; x < 8; x++) {
-        this.ctx.fillStyle = wallAt(mapLo, mapHi, x, y) ? '#61351d' : '#263243';
+        this.ctx.fillStyle = wallAtWindowBits(mapLo, mapHi, x, y) ? '#61351d' : '#263243';
         this.ctx.fillRect(ox + x * MINIMAP_TILE_SIZE, oy + y * MINIMAP_TILE_SIZE, MINIMAP_TILE_SIZE - 1, MINIMAP_TILE_SIZE - 1);
       }
     }
 
-    let localX = snapshot.xQ8 / 256;
-    let localY = snapshot.yQ8 / 256;
-    if (localX > 8 || localY > 8 || localX < -1 || localY < -1) {
-      const mapWidth = scenario?.config.mapWidth ?? 8;
-      const mapHeight = scenario?.config.mapHeight ?? 8;
-      const startAbsX = scenario?.config.playerStartAbsTileX ?? scenario?.config.playerStartTileX ?? 3;
-      const startAbsY = scenario?.config.playerStartAbsTileY ?? scenario?.config.playerStartTileY ?? 3;
-      const originX =
-        scenario?.config.runtimeWindowOriginX ??
-        Math.max(0, Math.min(Math.max(0, mapWidth - 8), startAbsX - 3));
-      const originY =
-        scenario?.config.runtimeWindowOriginY ??
-        Math.max(0, Math.min(Math.max(0, mapHeight - 8), startAbsY - 3));
-      localX -= originX;
-      localY -= originY;
-    }
+    const localX = snapshot.xQ8 / 256;
+    const localY = snapshot.yQ8 / 256;
     const px = ox + localX * MINIMAP_TILE_SIZE;
     const py = oy + localY * MINIMAP_TILE_SIZE;
-    const minPx = ox + 1;
-    const maxPx = ox + MINIMAP_TILE_SIZE * 8 - 2;
-    const minPy = oy + 1;
-    const maxPy = oy + MINIMAP_TILE_SIZE * 8 - 2;
-    const clampedPx = Math.max(minPx, Math.min(maxPx, px));
-    const clampedPy = Math.max(minPy, Math.min(maxPy, py));
-
+    const clampedPx = Math.max(ox + 1, Math.min(ox + miniSize - 2, px));
+    const clampedPy = Math.max(oy + 1, Math.min(oy + miniSize - 2, py));
     this.ctx.fillStyle = '#ffe082';
     this.ctx.fillRect(clampedPx - 1.5, clampedPy - 1.5, 3, 3);
 

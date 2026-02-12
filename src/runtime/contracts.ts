@@ -1,6 +1,7 @@
 export interface RuntimeConfig {
   mapLo: number;
   mapHi: number;
+  enableFullMapRuntime?: boolean;
   mapIndex?: number;
   mapName?: string;
   mapWidth?: number;
@@ -47,8 +48,17 @@ export interface RuntimeInput {
 export interface RuntimeCoreSnapshot {
   mapLo: number;
   mapHi: number;
+  // Local runtime-window coordinates for legacy parity (8x8 compatibility window).
+  localXQ8?: number;
+  localYQ8?: number;
   xQ8: number;
   yQ8: number;
+  worldXQ8?: number;
+  worldYQ8?: number;
+  runtimeWindowOriginX?: number;
+  runtimeWindowOriginY?: number;
+  worldWidth?: number;
+  worldHeight?: number;
   angleDeg: number;
   health: number;
   ammo: number;
@@ -66,8 +76,16 @@ export interface RuntimeCoreSnapshot {
 export interface RuntimeSnapshot {
   mapLo: number;
   mapHi: number;
+  localXQ8?: number;
+  localYQ8?: number;
   xQ8: number;
   yQ8: number;
+  worldXQ8?: number;
+  worldYQ8?: number;
+  runtimeWindowOriginX?: number;
+  runtimeWindowOriginY?: number;
+  worldWidth?: number;
+  worldHeight?: number;
   angleDeg: number;
   health: number;
   ammo: number;

@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Real Runtime TODO (G-Phases)
 
-**Status:** In Progress (`G4` active)  
+**Status:** In Progress (`G5` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -60,13 +60,13 @@
 
 ## G4: Replace 8x8 Runtime World Model With Full Map/World State
 
-- [ ] Remove `mapLo/mapHi` world abstraction from production runtime flow.
-- [ ] Upgrade `src/runtime/wl1LevelData.ts` and runtime boot contracts to full map planes, true spawn, full connectivity.
-- [ ] Preserve deterministic trace seed policy.
-- [ ] Gate: map/load parity properties (local 1k / CI 10k where applicable)
-- [ ] Gate: agent-browser verifies E1M1 connected topology and non-windowed map context
-- [ ] Tests green
-- [ ] Phase commit pushed (`g4: full-map runtime world state foundation`)
+- [x] Remove `mapLo/mapHi` world abstraction from production runtime flow.
+- [x] Upgrade `src/runtime/wl1LevelData.ts` and runtime boot contracts to full map planes, true spawn, full connectivity.
+- [x] Preserve deterministic trace seed policy.
+- [x] Gate: map/load parity properties (local 1k / CI 10k where applicable)
+- [x] Gate: agent-browser verifies E1M1 connected topology and non-windowed map context
+- [x] Tests green
+- [x] Phase commit pushed (`g4: full-map runtime world state foundation`)
 
 ## G5: TS Port Wave A (Cache/Memory/Map Runtime Paths)
 
