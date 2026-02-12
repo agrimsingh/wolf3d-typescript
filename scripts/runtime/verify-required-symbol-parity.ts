@@ -102,6 +102,11 @@ const REQUIRED_SYMBOL_TEST_COVERAGE = new Map<number, string>([
   [93, 'test/property/runtime.required-symbols.test.ts'],
   [94, 'test/property/runtime.required-symbols.test.ts'],
   [95, 'test/property/runtime.required-symbols.test.ts'],
+  [96, 'test/property/runtime.required-symbols.test.ts'],
+  [97, 'test/property/runtime.required-symbols.test.ts'],
+  [98, 'test/property/runtime.required-symbols.test.ts'],
+  [99, 'test/property/runtime.required-symbols.test.ts'],
+  [100, 'test/property/runtime.required-symbols.test.ts'],
 ]);
 
 async function main(): Promise<void> {

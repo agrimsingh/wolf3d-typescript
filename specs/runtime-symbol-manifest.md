@@ -113,6 +113,11 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_AGENT.C | TryMove | `done` | called via oracle_wl_agent_try_move_hash from runtime movement probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | ClipMove | `done` | called via oracle_wl_agent_clip_move_hash from runtime movement probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | ControlMovement | `done` | called via oracle_wl_agent_control_movement_hash from runtime movement probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_CA.C | CarmackExpand | `done` | called via oracle_id_ca_carmack_expand_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_CA.C | RLEWExpand | `done` | called via oracle_id_ca_rlew_expand_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_CA.C | SetupMapFile | `done` | called via oracle_id_ca_setup_map_file_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_CA.C | CacheMap | `done` | called via oracle_id_ca_cache_map_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_GAME.C | SetupGameLevel | `done` | called via oracle_wl_game_setup_game_level_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

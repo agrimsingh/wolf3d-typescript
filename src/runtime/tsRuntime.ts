@@ -69,7 +69,14 @@ import {
   wlScaleSimpleScaleShapeHash,
 } from '../wolf/render/wlRaycast';
 import { wlDrawFixedByFrac, wlMainBuildTablesHash, wlMainCalcProjectionHash } from '../wolf/math/wlMath';
-import { wlGameDrawPlayScreenHash } from '../wolf/map/wlMap';
+import {
+  idCaCacheMapHash,
+  idCaCarmackExpandHash,
+  idCaRlewExpandHash,
+  idCaSetupMapFileHash,
+  wlGameDrawPlayScreenHash,
+  wlGameSetupGameLevelHash,
+} from '../wolf/map/wlMap';
 import {
   idCaCacheAudioChunkHash,
   idCaCalSetupAudioFileHash,
@@ -726,6 +733,75 @@ export class TsRuntimePort implements RuntimePort {
         const playScreenLoc1 = 16640;
         const playScreenLoc2 = 33280;
         const playScreenStatusBarPic = rng & 255;
+        const carmackSourceLen = 64;
+        const carmackExpandedLength = 128;
+        const rlewSourceLen = 64;
+        const rlewExpandedLength = 128;
+        const rlewTag = 0xabcd;
+        const mapHeadLen = 402;
+        const gameMapsLen = 4096;
+        const mapHeaderOffset = 512;
+        const plane0Start = 1024;
+        const plane1Start = 1600;
+        const plane0Len = 128;
+        const plane1Len = 64;
+        const planeWordCount = 64;
+        const mapWidth = 8;
+        const mapHeight = 8;
+        const carmackSource = new Uint8Array(carmackSourceLen);
+        const rlewSourceBytes = new Uint8Array(rlewSourceLen);
+        const mapHeadBytes = new Uint8Array(mapHeadLen);
+        const gameMapsBytes = new Uint8Array(gameMapsLen);
+        const plane0Bytes = new Uint8Array(planeWordCount * 2);
+        const plane0Words = new Uint16Array(planeWordCount);
+        for (let i = 0; i < carmackSourceLen; i++) {
+          carmackSource[i] = (rng + i * 13 + this.state.tick * 7) & 0xff;
+        }
+        for (let i = 0; i < rlewSourceLen; i++) {
+          rlewSourceBytes[i] = (rng + i * 9 + this.state.tick * 5 + 17) & 0xff;
+        }
+        const mapHeadView = new DataView(mapHeadBytes.buffer, mapHeadBytes.byteOffset, mapHeadBytes.byteLength);
+        const gameMapsView = new DataView(gameMapsBytes.buffer, gameMapsBytes.byteOffset, gameMapsBytes.byteLength);
+        mapHeadView.setUint16(0, rlewTag, true);
+        for (let i = 0; i < 100; i++) {
+          mapHeadView.setInt32(2 + i * 4, i === 0 ? mapHeaderOffset : -1, true);
+        }
+        gameMapsView.setInt32(mapHeaderOffset + 0, plane0Start, true);
+        gameMapsView.setInt32(mapHeaderOffset + 4, plane1Start, true);
+        gameMapsView.setInt32(mapHeaderOffset + 8, 0, true);
+        gameMapsView.setUint16(mapHeaderOffset + 12, plane0Len, true);
+        gameMapsView.setUint16(mapHeaderOffset + 14, plane1Len, true);
+        gameMapsView.setUint16(mapHeaderOffset + 16, 0, true);
+        gameMapsView.setUint16(mapHeaderOffset + 18, mapWidth, true);
+        gameMapsView.setUint16(mapHeaderOffset + 20, mapHeight, true);
+        gameMapsBytes[mapHeaderOffset + 22] = 'R'.charCodeAt(0);
+        gameMapsBytes[mapHeaderOffset + 23] = 'U'.charCodeAt(0);
+        gameMapsBytes[mapHeaderOffset + 24] = 'N'.charCodeAt(0);
+        gameMapsBytes[mapHeaderOffset + 25] = 'T'.charCodeAt(0);
+        gameMapsBytes[mapHeaderOffset + 26] = 'I'.charCodeAt(0);
+        gameMapsBytes[mapHeaderOffset + 27] = 'M'.charCodeAt(0);
+        gameMapsBytes[mapHeaderOffset + 28] = 'E'.charCodeAt(0);
+        for (let i = 0; i < plane0Len; i++) {
+          gameMapsBytes[plane0Start + i] = (rng + i * 5 + this.state.tick * 3) & 0xff;
+        }
+        for (let i = 0; i < plane1Len; i++) {
+          gameMapsBytes[plane1Start + i] = (rng + i * 7 + this.state.tick * 11) & 0xff;
+        }
+        for (let i = 0; i < planeWordCount; i++) {
+          let tile = (rng + i * 7 + this.state.tick * 11) & 0xff;
+          if (i % 9 === 0) {
+            tile = 90 + (i % 12);
+          }
+          plane0Words[i] = tile & 0xffff;
+          plane0Bytes[i * 2] = tile & 0xff;
+          plane0Bytes[i * 2 + 1] = (tile >> 8) & 0xff;
+        }
+        const rlewSourceWords = new Uint16Array(rlewSourceLen >>> 1);
+        for (let i = 0; i < rlewSourceWords.length; i++) {
+          const lo = rlewSourceBytes[i * 2] ?? 0;
+          const hi = rlewSourceBytes[i * 2 + 1] ?? 0;
+          rlewSourceWords[i] = ((lo | (hi << 8)) & 0xffff) >>> 0;
+        }
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -1123,6 +1199,11 @@ export class TsRuntimePort implements RuntimePort {
           strafe | 0,
           turn | 0,
         ) >>> 0;
+        const carmackExpandHash = idCaCarmackExpandHash(carmackSource, carmackExpandedLength) >>> 0;
+        const rlewExpandHash = idCaRlewExpandHash(rlewSourceWords, rlewExpandedLength, rlewTag) >>> 0;
+        const setupMapFileHash = idCaSetupMapFileHash(mapHeadBytes) >>> 0;
+        const cacheMapHash = idCaCacheMapHash(gameMapsBytes, mapHeadBytes, 0) >>> 0;
+        const setupGameLevelHash = wlGameSetupGameLevelHash(plane0Words, mapWidth, mapHeight) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1169,7 +1250,12 @@ export class TsRuntimePort implements RuntimePort {
             damageActorHash ^
             agentTryMoveHash ^
             agentClipMoveHash ^
-            agentControlMovementHash) >>> 0;
+            agentControlMovementHash ^
+            carmackExpandHash ^
+            rlewExpandHash ^
+            setupMapFileHash ^
+            cacheMapHash ^
+            setupGameLevelHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

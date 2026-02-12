@@ -148,7 +148,12 @@
     92,
     93,
     94,
-    95
+    95,
+    96,
+    97,
+    98,
+    99,
+    100
   ],
   "requiredRuntimeSymbols": [
     {
@@ -720,6 +725,36 @@
       "file": "WL_AGENT.C",
       "func": "ControlMovement",
       "notes": "called via oracle_wl_agent_control_movement_hash from runtime movement probe"
+    },
+    {
+      "id": 96,
+      "file": "ID_CA.C",
+      "func": "CarmackExpand",
+      "notes": "called via oracle_id_ca_carmack_expand_hash from runtime map probe"
+    },
+    {
+      "id": 97,
+      "file": "ID_CA.C",
+      "func": "RLEWExpand",
+      "notes": "called via oracle_id_ca_rlew_expand_hash from runtime map probe"
+    },
+    {
+      "id": 98,
+      "file": "ID_CA.C",
+      "func": "SetupMapFile",
+      "notes": "called via oracle_id_ca_setup_map_file_hash from runtime map probe"
+    },
+    {
+      "id": 99,
+      "file": "ID_CA.C",
+      "func": "CacheMap",
+      "notes": "called via oracle_id_ca_cache_map_hash from runtime map probe"
+    },
+    {
+      "id": 100,
+      "file": "WL_GAME.C",
+      "func": "SetupGameLevel",
+      "notes": "called via oracle_wl_game_setup_game_level_hash from runtime map probe"
     }
   ],
   "excludedRuntimeSymbols": []

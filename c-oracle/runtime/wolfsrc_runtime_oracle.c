@@ -696,6 +696,34 @@ uint32_t oracle_wl_game_draw_play_screen_hash(
   int32_t screenloc2,
   int32_t statusbarpic
 );
+uint32_t oracle_id_ca_carmack_expand_hash(
+  const uint8_t *source_bytes,
+  int source_len,
+  int expanded_length_bytes
+);
+uint32_t oracle_id_ca_rlew_expand_hash(
+  const uint8_t *source_bytes,
+  int source_len,
+  int expanded_length_bytes,
+  uint16_t rlew_tag
+);
+uint32_t oracle_id_ca_setup_map_file_hash(
+  const uint8_t *maphead_bytes,
+  int maphead_len
+);
+uint32_t oracle_id_ca_cache_map_hash(
+  const uint8_t *gamemaps_bytes,
+  int gamemaps_len,
+  const uint8_t *maphead_bytes,
+  int maphead_len,
+  int mapnum
+);
+uint32_t oracle_wl_game_setup_game_level_hash(
+  const uint8_t *plane0_bytes,
+  int word_count,
+  int mapwidth,
+  int mapheight
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -810,9 +838,14 @@ enum runtime_trace_symbol_e {
   TRACE_WL_AGENT_TRY_MOVE_HASH = 93,
   TRACE_WL_AGENT_CLIP_MOVE_HASH = 94,
   TRACE_WL_AGENT_CONTROL_MOVEMENT_HASH = 95,
+  TRACE_ID_CA_CARMACK_EXPAND = 96,
+  TRACE_ID_CA_RLEW_EXPAND = 97,
+  TRACE_ID_CA_SETUP_MAP_FILE = 98,
+  TRACE_ID_CA_CACHE_MAP = 99,
+  TRACE_WL_GAME_SETUP_GAME_LEVEL = 100,
 };
 
-#define TRACE_SYMBOL_MAX 96
+#define TRACE_SYMBOL_MAX 128
 static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
 static int32_t g_trace_count = 0;
 
@@ -837,6 +870,25 @@ static int32_t clamp_i32(int32_t v, int32_t minv, int32_t maxv) {
   if (v < minv) return minv;
   if (v > maxv) return maxv;
   return v;
+}
+
+static void write_u16_le(uint8_t *bytes, int len, int offset, uint16_t value) {
+  if (!bytes || offset < 0 || offset + 1 >= len) {
+    return;
+  }
+  bytes[offset] = (uint8_t)(value & 0xffu);
+  bytes[offset + 1] = (uint8_t)((value >> 8) & 0xffu);
+}
+
+static void write_s32_le(uint8_t *bytes, int len, int offset, int32_t value) {
+  uint32_t uvalue = (uint32_t)value;
+  if (!bytes || offset < 0 || offset + 3 >= len) {
+    return;
+  }
+  bytes[offset] = (uint8_t)(uvalue & 0xffu);
+  bytes[offset + 1] = (uint8_t)((uvalue >> 8) & 0xffu);
+  bytes[offset + 2] = (uint8_t)((uvalue >> 16) & 0xffu);
+  bytes[offset + 3] = (uint8_t)((uvalue >> 24) & 0xffu);
 }
 
 static uint32_t runtime_snapshot_hash(const runtime_state_t *state) {
@@ -1138,6 +1190,11 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t agent_try_move_hash;
       uint32_t agent_clip_move_hash;
       uint32_t agent_control_movement_hash;
+      uint32_t carmack_expand_hash;
+      uint32_t rlew_expand_hash;
+      uint32_t setup_map_file_hash;
+      uint32_t cache_map_hash;
+      uint32_t setup_game_level_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -1293,11 +1350,83 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t play_screen_screenloc1 = 16640;
       int32_t play_screen_screenloc2 = 33280;
       int32_t play_screen_statusbarpic = rng & 255;
+      int32_t carmack_source_len = 64;
+      int32_t carmack_expanded_length = 128;
+      int32_t rlew_source_len = 64;
+      int32_t rlew_expanded_length = 128;
+      uint16_t rlew_tag = 0xabcd;
+      int32_t maphead_len = 402;
+      int32_t gamemaps_len = 4096;
+      int32_t map_header_offset = 512;
+      int32_t plane0_start = 1024;
+      int32_t plane1_start = 1600;
+      int32_t plane0_len = 128;
+      int32_t plane1_len = 64;
+      int32_t plane_word_count = 64;
+      int32_t map_width = 8;
+      int32_t map_height = 8;
+      uint8_t carmack_source[64];
+      uint8_t rlew_source_bytes[64];
+      uint8_t maphead_bytes[402];
+      uint8_t gamemaps_bytes[4096];
+      uint8_t plane0_bytes[128];
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
       int32_t score3 = (int32_t)((state_hash >> 12) & 0xffffu);
       int32_t score4 = (int32_t)((state_hash >> 16) & 0xffffu);
+
+      {
+        int i;
+        memset(carmack_source, 0, sizeof(carmack_source));
+        memset(rlew_source_bytes, 0, sizeof(rlew_source_bytes));
+        memset(maphead_bytes, 0, sizeof(maphead_bytes));
+        memset(gamemaps_bytes, 0, sizeof(gamemaps_bytes));
+        memset(plane0_bytes, 0, sizeof(plane0_bytes));
+
+        for (i = 0; i < carmack_source_len; i++) {
+          carmack_source[i] = (uint8_t)((rng + i * 13 + state->tick * 7) & 0xff);
+        }
+        for (i = 0; i < rlew_source_len; i++) {
+          rlew_source_bytes[i] = (uint8_t)((rng + i * 9 + state->tick * 5 + 17) & 0xff);
+        }
+
+        write_u16_le(maphead_bytes, maphead_len, 0, rlew_tag);
+        for (i = 0; i < 100; i++) {
+          write_s32_le(maphead_bytes, maphead_len, 2 + i * 4, (i == 0) ? map_header_offset : -1);
+        }
+
+        write_s32_le(gamemaps_bytes, gamemaps_len, map_header_offset + 0, plane0_start);
+        write_s32_le(gamemaps_bytes, gamemaps_len, map_header_offset + 4, plane1_start);
+        write_s32_le(gamemaps_bytes, gamemaps_len, map_header_offset + 8, 0);
+        write_u16_le(gamemaps_bytes, gamemaps_len, map_header_offset + 12, (uint16_t)plane0_len);
+        write_u16_le(gamemaps_bytes, gamemaps_len, map_header_offset + 14, (uint16_t)plane1_len);
+        write_u16_le(gamemaps_bytes, gamemaps_len, map_header_offset + 16, 0);
+        write_u16_le(gamemaps_bytes, gamemaps_len, map_header_offset + 18, (uint16_t)map_width);
+        write_u16_le(gamemaps_bytes, gamemaps_len, map_header_offset + 20, (uint16_t)map_height);
+        gamemaps_bytes[map_header_offset + 22] = 'R';
+        gamemaps_bytes[map_header_offset + 23] = 'U';
+        gamemaps_bytes[map_header_offset + 24] = 'N';
+        gamemaps_bytes[map_header_offset + 25] = 'T';
+        gamemaps_bytes[map_header_offset + 26] = 'I';
+        gamemaps_bytes[map_header_offset + 27] = 'M';
+        gamemaps_bytes[map_header_offset + 28] = 'E';
+
+        for (i = 0; i < plane0_len; i++) {
+          gamemaps_bytes[plane0_start + i] = (uint8_t)((rng + i * 5 + state->tick * 3) & 0xff);
+        }
+        for (i = 0; i < plane1_len; i++) {
+          gamemaps_bytes[plane1_start + i] = (uint8_t)((rng + i * 7 + state->tick * 11) & 0xff);
+        }
+
+        for (i = 0; i < plane_word_count; i++) {
+          uint16_t tile = (uint16_t)((rng + i * 7 + state->tick * 11) & 0xff);
+          if ((i % 9) == 0) {
+            tile = (uint16_t)(90 + (i % 12));
+          }
+          write_u16_le(plane0_bytes, (int)sizeof(plane0_bytes), i * 2, tile);
+        }
+      }
 
       trace_hit(TRACE_WL_PLAY_PLAY_LOOP);
       play_loop_hash = oracle_wl_play_play_loop_hash(state_hash, 1, input_mask, rng);
@@ -1777,6 +1906,16 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         strafe,
         turn
       );
+      trace_hit(TRACE_ID_CA_CARMACK_EXPAND);
+      carmack_expand_hash = oracle_id_ca_carmack_expand_hash(carmack_source, carmack_source_len, carmack_expanded_length);
+      trace_hit(TRACE_ID_CA_RLEW_EXPAND);
+      rlew_expand_hash = oracle_id_ca_rlew_expand_hash(rlew_source_bytes, rlew_source_len, rlew_expanded_length, rlew_tag);
+      trace_hit(TRACE_ID_CA_SETUP_MAP_FILE);
+      setup_map_file_hash = oracle_id_ca_setup_map_file_hash(maphead_bytes, maphead_len);
+      trace_hit(TRACE_ID_CA_CACHE_MAP);
+      cache_map_hash = oracle_id_ca_cache_map_hash(gamemaps_bytes, gamemaps_len, maphead_bytes, maphead_len, 0);
+      trace_hit(TRACE_WL_GAME_SETUP_GAME_LEVEL);
+      setup_game_level_hash = oracle_wl_game_setup_game_level_hash(plane0_bytes, plane_word_count, map_width, map_height);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -1823,7 +1962,12 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         damage_actor_hash ^
         agent_try_move_hash ^
         agent_clip_move_hash ^
-        agent_control_movement_hash;
+        agent_control_movement_hash ^
+        carmack_expand_hash ^
+        rlew_expand_hash ^
+        setup_map_file_hash ^
+        cache_map_hash ^
+        setup_game_level_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
