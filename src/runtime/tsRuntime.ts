@@ -8,7 +8,12 @@ import type {
   RuntimeSnapshot,
   RuntimeStepResult,
 } from './contracts';
-import { wlStateRealCheckLine, wlStateRealCheckSight } from '../wolf/ai/wlStateReal';
+import {
+  wlStateRealCheckLine,
+  wlStateRealCheckSight,
+  wlStateRealMoveObjHash,
+  wlStateRealSelectChaseDirHash,
+} from '../wolf/ai/wlStateReal';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
 
@@ -431,6 +436,53 @@ export class TsRuntimePort implements RuntimePort {
         this.state.flags |= 0x400;
       } else {
         this.state.flags &= ~0x400;
+      }
+
+      {
+        const chaseObx = (playerXQ16 + ((this.state.tick & 1) !== 0 ? (1 << 15) : -(1 << 15))) | 0;
+        const chaseOby = (playerYQ16 + ((this.state.tick & 2) !== 0 ? (1 << 15) : -(1 << 15))) | 0;
+        const chaseDir = (this.state.tick % 9) | 0;
+        const chaseConnected = (this.state.flags & 0x400) !== 0 ? 1 : 0;
+        const chaseDistance = (0x20000 + ((this.state.tick & 0xff) << 8)) | 0;
+        const chaseMove = (0x2000 + ((this.state.tick & 0x1f) << 4)) | 0;
+        const chaseObclass = (this.state.tick & 4) !== 0 ? 15 : 21;
+        const chaseTics = this.state.tick & 0xff;
+        const obTileX = ((this.state.xQ8 >> 8) & 0x1f) + 2;
+        const obTileY = ((this.state.yQ8 >> 8) & 0x1f) + 2;
+        const playerTileX = ((this.state.xQ8 >> 8) & 0x1f) + 3;
+        const playerTileY = ((this.state.yQ8 >> 8) & 0x1f) + 3;
+        const moveHash = wlStateRealMoveObjHash(
+          chaseObx,
+          chaseOby,
+          chaseDir,
+          playerXQ16,
+          playerYQ16,
+          chaseConnected,
+          chaseDistance,
+          chaseMove,
+          chaseObclass,
+          chaseTics,
+        ) >>> 0;
+        const chaseHash = wlStateRealSelectChaseDirHash(
+          obTileX,
+          obTileY,
+          chaseDir,
+          chaseObclass,
+          this.state.flags | 0,
+          playerTileX,
+          playerTileY,
+        ) >>> 0;
+
+        if ((moveHash & 1) !== 0) {
+          this.state.flags |= 0x800;
+        } else {
+          this.state.flags &= ~0x800;
+        }
+        if ((chaseHash & 1) !== 0) {
+          this.state.flags |= 0x1000;
+        } else {
+          this.state.flags &= ~0x1000;
+        }
       }
     }
 

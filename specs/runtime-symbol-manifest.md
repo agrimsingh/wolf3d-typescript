@@ -42,6 +42,8 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_DRAW.C | ThreeDRefresh | `done` | called via oracle_wl_draw_three_d_refresh_hash from runtime render hash; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_STATE.C | CheckLine | `done` | called via oracle_real_wl_state_check_line from runtime sight probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_STATE.C | CheckSight | `done` | called via oracle_real_wl_state_check_sight from runtime sight probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | MoveObj | `done` | called via oracle_real_wl_state_move_obj_hash from runtime chase probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | SelectChaseDir | `done` | called via oracle_real_wl_state_select_chase_dir_hash from runtime chase probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

@@ -77,7 +77,9 @@
     21,
     22,
     23,
-    24
+    24,
+    25,
+    26
   ],
   "requiredRuntimeSymbols": [
     {
@@ -223,6 +225,18 @@
       "file": "WL_STATE.C",
       "func": "CheckSight",
       "notes": "called via oracle_real_wl_state_check_sight from runtime sight probe"
+    },
+    {
+      "id": 25,
+      "file": "WL_STATE.C",
+      "func": "MoveObj",
+      "notes": "called via oracle_real_wl_state_move_obj_hash from runtime chase probe"
+    },
+    {
+      "id": 26,
+      "file": "WL_STATE.C",
+      "func": "SelectChaseDir",
+      "notes": "called via oracle_real_wl_state_select_chase_dir_hash from runtime chase probe"
     }
   ],
   "excludedRuntimeSymbols": []

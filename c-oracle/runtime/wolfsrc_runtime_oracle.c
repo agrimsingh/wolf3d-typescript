@@ -55,6 +55,27 @@ int32_t oracle_real_wl_state_check_sight(
   uint32_t door_mask,
   uint32_t door_pos_q8
 );
+uint32_t oracle_real_wl_state_move_obj_hash(
+  int32_t obx,
+  int32_t oby,
+  int32_t dir,
+  int32_t playerx,
+  int32_t playery,
+  int32_t area_connected,
+  int32_t distance,
+  int32_t move,
+  int32_t obclass,
+  int32_t tics_value
+);
+uint32_t oracle_real_wl_state_select_chase_dir_hash(
+  int32_t ob_tilex,
+  int32_t ob_tiley,
+  int32_t dir,
+  int32_t obclass,
+  int32_t flags,
+  int32_t player_tilex,
+  int32_t player_tiley
+);
 uint32_t oracle_wl_draw_wall_refresh_hash(
   int32_t player_angle,
   int32_t player_x,
@@ -113,6 +134,8 @@ enum runtime_trace_symbol_e {
   TRACE_REAL_WL_DRAW_THREE_D_REFRESH = 22,
   TRACE_REAL_WL_STATE_CHECK_LINE = 23,
   TRACE_REAL_WL_STATE_CHECK_SIGHT = 24,
+  TRACE_REAL_WL_STATE_MOVE_OBJ = 25,
+  TRACE_REAL_WL_STATE_SELECT_CHASE_DIR = 26,
 };
 
 #define TRACE_SYMBOL_MAX 32
@@ -316,6 +339,58 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       state->flags |= 0x400;
     } else {
       state->flags &= ~0x400;
+    }
+
+    {
+      int32_t chase_obx = player_x + ((state->tick & 1) ? (1 << 15) : -(1 << 15));
+      int32_t chase_oby = player_y + ((state->tick & 2) ? (1 << 15) : -(1 << 15));
+      int32_t chase_dir = state->tick % 9;
+      int32_t chase_connected = (state->flags & 0x400) ? 1 : 0;
+      int32_t chase_distance = 0x20000 + ((state->tick & 0xff) << 8);
+      int32_t chase_move = 0x2000 + ((state->tick & 0x1f) << 4);
+      int32_t chase_obclass = ((state->tick & 4) ? 15 : 21);
+      int32_t chase_tics = (state->tick & 0xff);
+      int32_t ob_tilex = (((state->xq8 >> 8) & 0x1f) + 2);
+      int32_t ob_tiley = (((state->yq8 >> 8) & 0x1f) + 2);
+      int32_t player_tilex = (((state->xq8 >> 8) & 0x1f) + 3);
+      int32_t player_tiley = (((state->yq8 >> 8) & 0x1f) + 3);
+      uint32_t move_hash;
+      uint32_t chase_hash;
+
+      trace_hit(TRACE_REAL_WL_STATE_MOVE_OBJ);
+      move_hash = oracle_real_wl_state_move_obj_hash(
+        chase_obx,
+        chase_oby,
+        chase_dir,
+        player_x,
+        player_y,
+        chase_connected,
+        chase_distance,
+        chase_move,
+        chase_obclass,
+        chase_tics
+      );
+      trace_hit(TRACE_REAL_WL_STATE_SELECT_CHASE_DIR);
+      chase_hash = oracle_real_wl_state_select_chase_dir_hash(
+        ob_tilex,
+        ob_tiley,
+        chase_dir,
+        chase_obclass,
+        state->flags,
+        player_tilex,
+        player_tiley
+      );
+
+      if (move_hash & 1u) {
+        state->flags |= 0x800;
+      } else {
+        state->flags &= ~0x800;
+      }
+      if (chase_hash & 1u) {
+        state->flags |= 0x1000;
+      } else {
+        state->flags &= ~0x1000;
+      }
     }
   }
 

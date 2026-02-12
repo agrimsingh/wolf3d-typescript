@@ -60,6 +60,8 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 22, file: 'WL_DRAW.C', func: 'ThreeDRefresh', notes: 'called via oracle_wl_draw_three_d_refresh_hash from runtime render hash' },
   { id: 23, file: 'WL_STATE.C', func: 'CheckLine', notes: 'called via oracle_real_wl_state_check_line from runtime sight probe' },
   { id: 24, file: 'WL_STATE.C', func: 'CheckSight', notes: 'called via oracle_real_wl_state_check_sight from runtime sight probe' },
+  { id: 25, file: 'WL_STATE.C', func: 'MoveObj', notes: 'called via oracle_real_wl_state_move_obj_hash from runtime chase probe' },
+  { id: 26, file: 'WL_STATE.C', func: 'SelectChaseDir', notes: 'called via oracle_real_wl_state_select_chase_dir_hash from runtime chase probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -89,6 +91,8 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [22, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [23, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [24, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [25, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [26, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {
