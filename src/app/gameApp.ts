@@ -1,4 +1,3 @@
-import { raycastDistanceQ16 } from '../render/raycast';
 import type { RuntimeSnapshot } from '../runtime/contracts';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController } from './runtimeController';
@@ -7,6 +6,16 @@ const WIDTH = 320;
 const HEIGHT = 200;
 const FOV = Math.PI / 3;
 const MINIMAP_TILE_SIZE = 8;
+const TEXTURE_SIZE = 64;
+const MAX_WALL_TEXTURES = 64;
+
+type RayHit = {
+  distance: number;
+  side: 0 | 1;
+  tileX: number;
+  tileY: number;
+  texX: number;
+};
 
 function wallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -19,6 +28,101 @@ function wallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
   return ((mapHi >>> (bit - 32)) & 1) === 1;
 }
 
+function readU16LE(bytes: Uint8Array, offset: number): number {
+  if (offset < 0 || offset + 1 >= bytes.length) return 0;
+  return (bytes[offset]! | (bytes[offset + 1]! << 8)) & 0xffff;
+}
+
+function readU32LE(bytes: Uint8Array, offset: number): number {
+  if (offset < 0 || offset + 3 >= bytes.length) return 0;
+  return (
+    (bytes[offset]!) |
+    (bytes[offset + 1]! << 8) |
+    (bytes[offset + 2]! << 16) |
+    (bytes[offset + 3]! << 24)
+  ) >>> 0;
+}
+
+function parseVswapWallTextures(bytes: Uint8Array, maxTextures = MAX_WALL_TEXTURES): Uint8Array[] {
+  if (bytes.length < 10) return [];
+  const chunks = readU16LE(bytes, 0);
+  const spriteStart = readU16LE(bytes, 2);
+  if (chunks <= 0 || spriteStart <= 0) return [];
+
+  const offsetTableStart = 6;
+  const lengthTableStart = offsetTableStart + chunks * 4;
+  if (lengthTableStart + chunks * 2 > bytes.length) return [];
+
+  const out: Uint8Array[] = [];
+  const wallChunks = Math.min(spriteStart, chunks, maxTextures);
+  for (let i = 0; i < wallChunks; i++) {
+    const off = readU32LE(bytes, offsetTableStart + i * 4);
+    const len = readU16LE(bytes, lengthTableStart + i * 2);
+    if (off === 0 || len < TEXTURE_SIZE * TEXTURE_SIZE) continue;
+    if (off + len > bytes.length) continue;
+    out.push(bytes.slice(off, off + TEXTURE_SIZE * TEXTURE_SIZE));
+  }
+  return out;
+}
+
+function paletteIndexToRgb(index: number): [number, number, number] {
+  const c = index & 0xff;
+  const r = Math.min(255, c * 3);
+  const g = Math.min(255, c * 2);
+  const b = Math.min(255, c + ((c >> 5) * 8));
+  return [r | 0, g | 0, b | 0];
+}
+
+function castRay(
+  mapLo: number,
+  mapHi: number,
+  posX: number,
+  posY: number,
+  dirX: number,
+  dirY: number,
+): RayHit | null {
+  let mapX = Math.floor(posX);
+  let mapY = Math.floor(posY);
+  if (!Number.isFinite(posX) || !Number.isFinite(posY) || !Number.isFinite(dirX) || !Number.isFinite(dirY)) {
+    return null;
+  }
+
+  const deltaDistX = dirX === 0 ? 1e30 : Math.abs(1 / dirX);
+  const deltaDistY = dirY === 0 ? 1e30 : Math.abs(1 / dirY);
+
+  const stepX = dirX < 0 ? -1 : 1;
+  const stepY = dirY < 0 ? -1 : 1;
+  let sideDistX = dirX < 0 ? (posX - mapX) * deltaDistX : (mapX + 1 - posX) * deltaDistX;
+  let sideDistY = dirY < 0 ? (posY - mapY) * deltaDistY : (mapY + 1 - posY) * deltaDistY;
+
+  let side: 0 | 1 = 0;
+  for (let i = 0; i < 128; i++) {
+    if (sideDistX < sideDistY) {
+      sideDistX += deltaDistX;
+      mapX += stepX;
+      side = 0;
+    } else {
+      sideDistY += deltaDistY;
+      mapY += stepY;
+      side = 1;
+    }
+
+    if (wallAt(mapLo, mapHi, mapX, mapY)) {
+      const perpDist = side === 0
+        ? (mapX - posX + (1 - stepX) / 2) / (dirX === 0 ? 1e-6 : dirX)
+        : (mapY - posY + (1 - stepY) / 2) / (dirY === 0 ? 1e-6 : dirY);
+      const distance = Math.max(0.02, Math.abs(perpDist));
+      let wallX = side === 0 ? posY + perpDist * dirY : posX + perpDist * dirX;
+      wallX -= Math.floor(wallX);
+      let texX = Math.floor(wallX * TEXTURE_SIZE) & (TEXTURE_SIZE - 1);
+      if (side === 0 && dirX > 0) texX = (TEXTURE_SIZE - 1) - texX;
+      if (side === 1 && dirY < 0) texX = (TEXTURE_SIZE - 1) - texX;
+      return { distance, side, tileX: mapX, tileY: mapY, texX };
+    }
+  }
+  return null;
+}
+
 export class WolfApp {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
@@ -26,6 +130,8 @@ export class WolfApp {
   private readonly controller = new RuntimeAppController({
     audio: new WebAudioRuntimeAdapter(),
   });
+  private wallTextures: Uint8Array[] = [];
+  private wallTexturesReady = false;
   private loopHandle = 0;
 
   constructor(container: HTMLElement) {
@@ -40,19 +146,40 @@ export class WolfApp {
     this.image = ctx.createImageData(WIDTH, HEIGHT);
 
     this.bindControls();
+    void this.loadWallTextures();
     void this.controller.boot();
     this.loopHandle = requestAnimationFrame((now) => this.loop(now));
+  }
+
+  private async loadWallTextures(): Promise<void> {
+    try {
+      const response = await fetch('/assets/wl1/VSWAP.WL1');
+      if (!response.ok) return;
+      const bytes = new Uint8Array(await response.arrayBuffer());
+      const textures = parseVswapWallTextures(bytes, MAX_WALL_TEXTURES);
+      if (textures.length > 0) {
+        this.wallTextures = textures;
+        this.wallTexturesReady = true;
+      }
+    } catch {
+      this.wallTextures = [];
+      this.wallTexturesReady = false;
+    }
   }
 
   private bindControls(): void {
     window.addEventListener('keydown', (event) => {
       this.controller.onKeyDown(event.code);
-      event.preventDefault();
+      if (event.code.startsWith('Arrow') || event.code === 'Space' || event.code === 'Enter') {
+        event.preventDefault();
+      }
     });
 
     window.addEventListener('keyup', (event) => {
       this.controller.onKeyUp(event.code);
-      event.preventDefault();
+      if (event.code.startsWith('Arrow') || event.code === 'Space' || event.code === 'Enter') {
+        event.preventDefault();
+      }
     });
 
     this.canvas.addEventListener('click', () => {
@@ -125,35 +252,56 @@ export class WolfApp {
     const pixels = this.image.data;
     pixels.fill(0);
 
-    // The oracle runtime currently exports a deterministic synthetic indexed buffer,
-    // not a real frame. Render from runtime state + map data until real frame export lands.
+    // Runtime bridge frame bytes are still synthetic; render from state and real WL1 textures.
     const angleRad = (snapshot.angleDeg * Math.PI) / 180;
+    const posX = snapshot.xQ8 / 256;
+    const posY = snapshot.yQ8 / 256;
+    const textures = this.wallTexturesReady ? this.wallTextures : [];
     for (let x = 0; x < WIDTH; x++) {
       const camera = x / WIDTH - 0.5;
       const rayAngle = angleRad + camera * FOV;
-      const dirXQ16 = (Math.cos(rayAngle) * 0.05 * 65536) | 0;
-      const dirYQ16 = (Math.sin(rayAngle) * 0.05 * 65536) | 0;
-      const distQ16 = raycastDistanceQ16(mapLo, mapHi, snapshot.xQ8 << 8, snapshot.yQ8 << 8, dirXQ16, dirYQ16, 1024);
-      const safeDist = distQ16 > 0 ? distQ16 / 65536 : 1;
-      const wallHeight = Math.min(HEIGHT, Math.max(2, (HEIGHT / (safeDist * 4)) | 0));
+      const dirX = Math.cos(rayAngle);
+      const dirY = Math.sin(rayAngle);
+      const hit = castRay(mapLo, mapHi, posX, posY, dirX, dirY);
+      const safeDist = hit ? hit.distance : 1000;
+      const wallHeight = Math.min(HEIGHT, Math.max(2, (HEIGHT / Math.max(0.001, safeDist)) | 0));
       const top = (HEIGHT / 2 - wallHeight / 2) | 0;
       const bottom = top + wallHeight;
-      const shade = Math.max(40, Math.min(220, (220 / (1 + safeDist * 0.8)) | 0));
+      const tex = hit && textures.length > 0
+        ? textures[Math.abs((hit.tileX * 13 + hit.tileY * 7 + hit.side * 3) | 0) % textures.length]!
+        : null;
+      const shade = Math.max(40, Math.min(220, (220 / (1 + safeDist * 0.65)) | 0));
 
       for (let y = 0; y < HEIGHT; y++) {
         const idx = (y * WIDTH + x) * 4;
-        if (y >= top && y <= bottom) {
-          pixels[idx] = shade;
-          pixels[idx + 1] = (shade * 0.4) | 0;
-          pixels[idx + 2] = (shade * 0.3) | 0;
+        if (hit && y >= top && y <= bottom) {
+          if (tex) {
+            const ty = ((((y - top) * TEXTURE_SIZE) / Math.max(1, wallHeight)) | 0) & (TEXTURE_SIZE - 1);
+            const palIndex = tex[(ty * TEXTURE_SIZE + hit.texX) & (TEXTURE_SIZE * TEXTURE_SIZE - 1)] ?? 0;
+            let [r, g, b] = paletteIndexToRgb(palIndex);
+            if (hit.side === 1) {
+              r = (r * 3) >> 2;
+              g = (g * 3) >> 2;
+              b = (b * 3) >> 2;
+            }
+            pixels[idx] = r;
+            pixels[idx + 1] = g;
+            pixels[idx + 2] = b;
+          } else {
+            pixels[idx] = shade;
+            pixels[idx + 1] = (shade * 0.4) | 0;
+            pixels[idx + 2] = (shade * 0.3) | 0;
+          }
         } else if (y < HEIGHT / 2) {
-          pixels[idx] = 22;
-          pixels[idx + 1] = 28;
-          pixels[idx + 2] = 56;
+          const t = y / (HEIGHT / 2);
+          pixels[idx] = (16 + t * 20) | 0;
+          pixels[idx + 1] = (22 + t * 16) | 0;
+          pixels[idx + 2] = (56 + t * 24) | 0;
         } else {
-          pixels[idx] = 16;
-          pixels[idx + 1] = 14;
-          pixels[idx + 2] = 12;
+          const t = (y - HEIGHT / 2) / (HEIGHT / 2);
+          pixels[idx] = (12 + t * 10) | 0;
+          pixels[idx + 1] = (10 + t * 8) | 0;
+          pixels[idx + 2] = (8 + t * 6) | 0;
         }
         pixels[idx + 3] = 255;
       }
@@ -220,6 +368,7 @@ export class WolfApp {
 
   private loop(now: number): void {
     this.controller.tick(now);
+    (globalThis as { __wolfDebugState?: unknown }).__wolfDebugState = this.controller.getState();
     this.drawFrame();
     this.loopHandle = requestAnimationFrame((nextNow) => this.loop(nextNow));
   }
