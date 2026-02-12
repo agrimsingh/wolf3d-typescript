@@ -1,5 +1,5 @@
-import type { RuntimePort, RuntimeInput, RuntimeSnapshot } from '../runtime/contracts';
-import { TsRuntimePort } from '../runtime/tsRuntime';
+import type { RuntimeFramebufferView, RuntimePort, RuntimeInput, RuntimeSnapshot } from '../runtime/contracts';
+import { WolfsrcOraclePort } from '../oracle/runtimeOracle';
 import { loadWl1RuntimeScenarios, type Wl1RuntimeScenario } from '../runtime/wl1RuntimeScenarios';
 import { NullRuntimeAudioAdapter, type RuntimeAudioAdapter } from './runtimeAudio';
 
@@ -14,6 +14,7 @@ export interface RuntimeAppState {
   selectedScenarioIndex: number;
   currentScenario: Wl1RuntimeScenario | null;
   snapshot: RuntimeSnapshot | null;
+  framebuffer: RuntimeFramebufferView | null;
   frameHash: number;
 }
 
@@ -36,6 +37,7 @@ export class RuntimeAppController {
     selectedScenarioIndex: 0,
     currentScenario: null,
     snapshot: null,
+    framebuffer: null,
     frameHash: 0,
   };
 
@@ -46,7 +48,7 @@ export class RuntimeAppController {
   private transitionToken = 0;
 
   constructor(options: RuntimeControllerOptions = {}) {
-    this.runtime = options.runtime ?? new TsRuntimePort();
+    this.runtime = options.runtime ?? new WolfsrcOraclePort();
     this.scenarioLoader = options.scenarioLoader ?? (() => loadWl1RuntimeScenarios('/assets/wl1', 64));
     this.audio = options.audio ?? new NullRuntimeAudioAdapter();
   }
@@ -59,6 +61,7 @@ export class RuntimeAppController {
       selectedScenarioIndex: this.state.selectedScenarioIndex,
       currentScenario: this.state.currentScenario,
       snapshot: this.state.snapshot,
+      framebuffer: this.state.framebuffer,
       frameHash: this.state.frameHash >>> 0,
     };
   }
@@ -72,6 +75,7 @@ export class RuntimeAppController {
       selectedScenarioIndex: 0,
       currentScenario: null,
       snapshot: null,
+      framebuffer: null,
       frameHash: 0,
     };
 
@@ -87,6 +91,7 @@ export class RuntimeAppController {
         selectedScenarioIndex: 0,
         currentScenario: null,
         snapshot: null,
+        framebuffer: null,
         frameHash: 0,
       };
     } catch (error) {
@@ -144,13 +149,15 @@ export class RuntimeAppController {
     this.runtime.reset();
 
     const snapshot = this.runtime.snapshot();
+    const framebuffer = this.runtime.framebuffer(true);
     this.state = {
       ...this.state,
       mode: 'playing',
       selectedScenarioIndex: index,
       currentScenario: scenario,
       snapshot,
-      frameHash: this.runtime.renderHash(320, 200) >>> 0,
+      framebuffer,
+      frameHash: framebuffer.indexedHash >>> 0,
     };
     this.tickAccumulatorMs = 0;
     this.lastFrameAtMs = 0;
@@ -178,6 +185,7 @@ export class RuntimeAppController {
       mode: 'menu',
       currentScenario: null,
       snapshot: null,
+      framebuffer: null,
       frameHash: 0,
     };
     this.lastFrameAtMs = 0;
@@ -274,6 +282,13 @@ export class RuntimeAppController {
       };
       pendingTics -= tics;
     }
+
+    const framebuffer = this.runtime.framebuffer(true);
+    this.state = {
+      ...this.state,
+      framebuffer,
+      frameHash: framebuffer.indexedHash >>> 0,
+    };
   }
 
   async shutdown(): Promise<void> {

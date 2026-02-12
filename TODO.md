@@ -13,8 +13,8 @@
 
 ## Current Reality
 
-- Current browser runtime still relies on a synthetic core (`src/runtime/tsRuntime.ts`).
-- Runtime symbol coverage is currently wrapper-level and under-represents full runtime behavior.
+- Browser runtime path now defaults to oracle-backed runtime (`WolfsrcOraclePort`) with runtime framebuffer output.
+- `src/runtime/tsRuntime.ts` remains as a parity harness implementation and must continue matching oracle tests until full TS runtime replacement lands.
 - Remote CI bootstrap is now green with vendored WOLFSRC + emsdk setup (`parity-pr` run `21933009204` on 2026-02-12).
 
 ## Phase F0: Truth Reset + De-Sim Baseline
@@ -76,12 +76,12 @@
 
 ## Phase F5: Browser Runtime Core Replacement
 
-- [ ] Remove synthetic scenario-driver runtime path from production app flow.
-- [ ] Rewire `src/app/runtimeController.ts` and `src/app/gameApp.ts` to real runtime lifecycle.
-- [ ] Preserve software rendering via Canvas2D/ImageData with runtime-fed frame state.
-- [ ] Keep keyboard + mouse parity mapping.
-- [ ] Gate: boot -> menu -> new game -> level progression manually playable.
-- [ ] Commit: `phase-f5: browser app wired to real runtime core`
+- [x] Remove synthetic scenario-driver runtime path from production app flow.
+- [x] Rewire `src/app/runtimeController.ts` and `src/app/gameApp.ts` to real runtime lifecycle.
+- [x] Preserve software rendering via Canvas2D/ImageData with runtime-fed frame state.
+- [x] Keep keyboard + mouse parity mapping.
+- [x] Gate: boot -> menu -> new game -> level progression manually playable.
+- [x] Commit: `phase-f5: browser app wired to real runtime core`
 
 ## Phase F6: End-to-End Per-Tic Episode Parity
 

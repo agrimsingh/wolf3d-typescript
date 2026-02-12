@@ -1,11 +1,9 @@
-import { raycastDistanceQ16 } from '../render/raycast';
 import type { RuntimeSnapshot } from '../runtime/contracts';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController } from './runtimeController';
 
 const WIDTH = 320;
 const HEIGHT = 200;
-const FOV = Math.PI / 3;
 const MINIMAP_TILE_SIZE = 8;
 
 function wallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
@@ -115,46 +113,27 @@ export class WolfApp {
     const state = this.controller.getState();
     const scenario = state.currentScenario;
     const snapshot = state.snapshot;
-    if (!scenario || !snapshot) {
+    if (!snapshot) {
       this.drawMenuFrame();
       return;
     }
 
-    const mapLo = scenario.config.mapLo >>> 0;
-    const mapHi = scenario.config.mapHi >>> 0;
+    const mapLo = snapshot.mapLo >>> 0;
+    const mapHi = snapshot.mapHi >>> 0;
     const pixels = this.image.data;
-    pixels.fill(0);
-
-    const angleRad = (snapshot.angleDeg * Math.PI) / 180;
-    for (let x = 0; x < WIDTH; x++) {
-      const camera = x / WIDTH - 0.5;
-      const rayAngle = angleRad + camera * FOV;
-      const dirXQ16 = (Math.cos(rayAngle) * 0.05 * 65536) | 0;
-      const dirYQ16 = (Math.sin(rayAngle) * 0.05 * 65536) | 0;
-      const distQ16 = raycastDistanceQ16(mapLo, mapHi, snapshot.xQ8 << 8, snapshot.yQ8 << 8, dirXQ16, dirYQ16, 1024);
-      const safeDist = distQ16 > 0 ? distQ16 / 65536 : 1;
-      const wallHeight = Math.min(HEIGHT, Math.max(2, (HEIGHT / (safeDist * 4)) | 0));
-      const top = (HEIGHT / 2 - wallHeight / 2) | 0;
-      const bottom = top + wallHeight;
-      const shade = Math.max(40, Math.min(220, (220 / (1 + safeDist * 0.8)) | 0));
-
-      for (let y = 0; y < HEIGHT; y++) {
-        const idx = (y * WIDTH + x) * 4;
-        if (y >= top && y <= bottom) {
-          pixels[idx] = shade;
-          pixels[idx + 1] = (shade * 0.4) | 0;
-          pixels[idx + 2] = (shade * 0.3) | 0;
-        } else if (y < HEIGHT / 2) {
-          pixels[idx] = 22;
-          pixels[idx + 1] = 28;
-          pixels[idx + 2] = 56;
-        } else {
-          pixels[idx] = 16;
-          pixels[idx + 1] = 14;
-          pixels[idx + 2] = 12;
-        }
+    const frame = state.framebuffer;
+    if (frame?.indexedBuffer && frame.width === WIDTH && frame.height === HEIGHT) {
+      const indexed = frame.indexedBuffer;
+      for (let i = 0; i < indexed.length; i++) {
+        const color = indexed[i]!;
+        const idx = i * 4;
+        pixels[idx] = ((color >>> 5) & 0x07) * 36;
+        pixels[idx + 1] = ((color >>> 2) & 0x07) * 36;
+        pixels[idx + 2] = (color & 0x03) * 85;
         pixels[idx + 3] = 255;
       }
+    } else {
+      pixels.fill(0);
     }
 
     this.ctx.putImageData(this.image, 0, 0);
@@ -162,7 +141,11 @@ export class WolfApp {
 
     this.ctx.fillStyle = '#f5f7ff';
     this.ctx.font = '10px monospace';
-    this.ctx.fillText(`Map ${scenario.mapIndex}: ${scenario.mapName}`, 8, 12);
+    if (scenario) {
+      this.ctx.fillText(`Map ${scenario.mapIndex}: ${scenario.mapName}`, 8, 12);
+    } else {
+      this.ctx.fillText('Runtime Framebuffer', 8, 12);
+    }
     this.ctx.fillText(`hp:${snapshot.health} ammo:${snapshot.ammo} tick:${snapshot.tick}`, 8, 24);
     this.ctx.fillText(`x:${(snapshot.xQ8 / 256).toFixed(2)} y:${(snapshot.yQ8 / 256).toFixed(2)} angle:${snapshot.angleDeg}`, 8, 36);
     this.ctx.fillText(`snapshot:${snapshot.hash >>> 0} frame:${state.frameHash >>> 0}`, 8, HEIGHT - 10);
