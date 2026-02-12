@@ -76,6 +76,29 @@ uint32_t oracle_real_wl_state_select_chase_dir_hash(
   int32_t player_tilex,
   int32_t player_tiley
 );
+uint32_t oracle_wl_play_play_loop_hash(
+  uint32_t state_hash,
+  int32_t tics,
+  int32_t input_mask,
+  int32_t rng
+);
+uint32_t oracle_wl_game_game_loop_hash(
+  uint32_t state_hash,
+  int32_t tics,
+  int32_t input_mask,
+  int32_t rng,
+  int32_t door_hash,
+  int32_t player_hash,
+  int32_t actor_hash
+);
+uint32_t oracle_wl_inter_check_high_score_hash(
+  int32_t new_score,
+  int32_t s0,
+  int32_t s1,
+  int32_t s2,
+  int32_t s3,
+  int32_t s4
+);
 uint32_t oracle_wl_draw_wall_refresh_hash(
   int32_t player_angle,
   int32_t player_x,
@@ -136,6 +159,9 @@ enum runtime_trace_symbol_e {
   TRACE_REAL_WL_STATE_CHECK_SIGHT = 24,
   TRACE_REAL_WL_STATE_MOVE_OBJ = 25,
   TRACE_REAL_WL_STATE_SELECT_CHASE_DIR = 26,
+  TRACE_WL_PLAY_PLAY_LOOP = 27,
+  TRACE_WL_GAME_GAME_LOOP = 28,
+  TRACE_WL_INTER_CHECK_HIGH_SCORE = 29,
 };
 
 #define TRACE_SYMBOL_MAX 32
@@ -390,6 +416,49 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->flags |= 0x1000;
       } else {
         state->flags &= ~0x1000;
+      }
+    }
+
+    {
+      uint32_t state_hash = runtime_snapshot_hash(state);
+      uint32_t play_loop_hash;
+      uint32_t game_loop_hash;
+      uint32_t score_hash;
+      int32_t score0 = (int32_t)(state_hash & 0xffffu);
+      int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
+      int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
+      int32_t score3 = (int32_t)((state_hash >> 12) & 0xffffu);
+      int32_t score4 = (int32_t)((state_hash >> 16) & 0xffffu);
+
+      trace_hit(TRACE_WL_PLAY_PLAY_LOOP);
+      play_loop_hash = oracle_wl_play_play_loop_hash(state_hash, 1, input_mask, rng);
+      trace_hit(TRACE_WL_GAME_GAME_LOOP);
+      game_loop_hash = oracle_wl_game_game_loop_hash(
+        state_hash,
+        1,
+        input_mask,
+        rng,
+        (int32_t)state->map_lo,
+        state->xq8,
+        state->yq8
+      );
+      trace_hit(TRACE_WL_INTER_CHECK_HIGH_SCORE);
+      score_hash = oracle_wl_inter_check_high_score_hash((int32_t)(play_loop_hash & 0xffffu), score0, score1, score2, score3, score4);
+
+      if (play_loop_hash & 1u) {
+        state->flags |= 0x2000;
+      } else {
+        state->flags &= ~0x2000;
+      }
+      if (game_loop_hash & 1u) {
+        state->flags |= 0x4000;
+      } else {
+        state->flags &= ~0x4000;
+      }
+      if (score_hash & 1u) {
+        state->flags |= 0x8000;
+      } else {
+        state->flags &= ~0x8000;
       }
     }
   }

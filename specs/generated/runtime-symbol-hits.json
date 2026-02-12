@@ -79,7 +79,10 @@
     23,
     24,
     25,
-    26
+    26,
+    27,
+    28,
+    29
   ],
   "requiredRuntimeSymbols": [
     {
@@ -237,6 +240,24 @@
       "file": "WL_STATE.C",
       "func": "SelectChaseDir",
       "notes": "called via oracle_real_wl_state_select_chase_dir_hash from runtime chase probe"
+    },
+    {
+      "id": 27,
+      "file": "WL_PLAY.C",
+      "func": "PlayLoop",
+      "notes": "called via oracle_wl_play_play_loop_hash from runtime loop probe"
+    },
+    {
+      "id": 28,
+      "file": "WL_GAME.C",
+      "func": "GameLoop",
+      "notes": "called via oracle_wl_game_game_loop_hash from runtime loop probe"
+    },
+    {
+      "id": 29,
+      "file": "WL_INTER.C",
+      "func": "CheckHighScore",
+      "notes": "called via oracle_wl_inter_check_high_score_hash from runtime score probe"
     }
   ],
   "excludedRuntimeSymbols": []

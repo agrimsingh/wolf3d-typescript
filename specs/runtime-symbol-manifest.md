@@ -44,6 +44,9 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_STATE.C | CheckSight | `done` | called via oracle_real_wl_state_check_sight from runtime sight probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_STATE.C | MoveObj | `done` | called via oracle_real_wl_state_move_obj_hash from runtime chase probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_STATE.C | SelectChaseDir | `done` | called via oracle_real_wl_state_select_chase_dir_hash from runtime chase probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_PLAY.C | PlayLoop | `done` | called via oracle_wl_play_play_loop_hash from runtime loop probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_GAME.C | GameLoop | `done` | called via oracle_wl_game_game_loop_hash from runtime loop probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_INTER.C | CheckHighScore | `done` | called via oracle_wl_inter_check_high_score_hash from runtime score probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

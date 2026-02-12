@@ -14,7 +14,9 @@ import {
   wlStateRealMoveObjHash,
   wlStateRealSelectChaseDirHash,
 } from '../wolf/ai/wlStateReal';
+import { wlGameGameLoopHash, wlInterCheckHighScoreHash } from '../wolf/game/wlGameState';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
+import { wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
@@ -482,6 +484,42 @@ export class TsRuntimePort implements RuntimePort {
           this.state.flags |= 0x1000;
         } else {
           this.state.flags &= ~0x1000;
+        }
+      }
+
+      {
+        const stateHash = snapshotHash(this.state, this.angleFrac) >>> 0;
+        const score0 = stateHash & 0xffff;
+        const score1 = (stateHash >>> 4) & 0xffff;
+        const score2 = (stateHash >>> 8) & 0xffff;
+        const score3 = (stateHash >>> 12) & 0xffff;
+        const score4 = (stateHash >>> 16) & 0xffff;
+        const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
+        const gameLoopHash = wlGameGameLoopHash(
+          stateHash,
+          1,
+          inputMask | 0,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+        ) >>> 0;
+        const scoreHash = wlInterCheckHighScoreHash(playLoopHash & 0xffff, score0, score1, score2, score3, score4) >>> 0;
+
+        if ((playLoopHash & 1) !== 0) {
+          this.state.flags |= 0x2000;
+        } else {
+          this.state.flags &= ~0x2000;
+        }
+        if ((gameLoopHash & 1) !== 0) {
+          this.state.flags |= 0x4000;
+        } else {
+          this.state.flags &= ~0x4000;
+        }
+        if ((scoreHash & 1) !== 0) {
+          this.state.flags |= 0x8000;
+        } else {
+          this.state.flags &= ~0x8000;
         }
       }
     }
