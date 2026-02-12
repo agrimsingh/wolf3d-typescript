@@ -74,20 +74,6 @@ export class RuntimeAppController {
     }
   }
 
-  private reviveIfDead<T extends RuntimeSnapshot>(snapshot: T): T {
-    if ((snapshot.health | 0) > 0) {
-      return snapshot;
-    }
-    const revived: RuntimeSnapshot = {
-      ...snapshot,
-      health: this.state.currentScenario?.config.startHealth ?? 100,
-      flags: (snapshot.flags & ~0x40) | 0,
-    };
-    // Keep the browser runtime interactive even when synthetic damage spikes kill the player.
-    this.runtime.deserialize(new TextEncoder().encode(JSON.stringify(revived)));
-    return this.runtime.snapshot() as unknown as T;
-  }
-
   constructor(options: RuntimeControllerOptions = {}) {
     this.runtime = options.runtime ?? new WolfsrcOraclePort();
     this.scenarioLoader = options.scenarioLoader ?? (() => loadWl1RuntimeScenarios('/assets/wl1', 64));
@@ -317,8 +303,7 @@ export class RuntimeAppController {
         break;
       }
       const step = this.runtime.step(input);
-      let nextSnapshot = this.runtime.snapshot();
-      nextSnapshot = this.reviveIfDead(nextSnapshot);
+      const nextSnapshot = this.runtime.snapshot();
 
       this.audio.onStep(previousSnapshot, nextSnapshot, inputMask);
 

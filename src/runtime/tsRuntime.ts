@@ -1823,22 +1823,12 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
-    if ((pendingDamageCalls | 0) > 0 && this.state.health > 0) {
-      const damage = wlAgentTakeDamageStep(
-        this.state.health,
-        pendingDamageCalls | 0,
-        2, // gd_medium
-        false,
-        false,
-      );
-      this.state.health = damage.health | 0;
-      if (damage.died) {
-        this.state.flags |= 0x40;
-      } else {
-        this.state.flags &= ~0x40;
-      }
-    } else if (this.state.health <= 0) {
+    // Synthetic probe traffic must not mutate player health outside explicit gameplay events.
+    void pendingDamageCalls;
+    if (this.state.health <= 0) {
       this.state.flags |= 0x40;
+    } else {
+      this.state.flags &= ~0x40;
     }
 
     this.state.tick++;

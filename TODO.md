@@ -20,7 +20,7 @@
 - [x] Extend guard scripts to block synthetic scenario fixtures in production path at/after R9.
 - [x] Gate: `pnpm verify`
 - [x] Tests green
-- [ ] Phase commit pushed (`r0: truth reset and execution baseline`)
+- [x] Phase commit pushed (`r0: truth reset and execution baseline`)
 
 ## R1: Real WL1 Data Pipeline
 
@@ -31,17 +31,17 @@
 - [x] Gate: `pnpm test:property:ci -- test/property/phase2.map-loading.test.ts`
 - [x] Gate: `pnpm verify:assets`
 - [x] Tests green
-- [ ] Phase commit pushed (`r1: wl1 data pipeline parity`)
+- [x] Phase commit pushed (`r1: wl1 data pipeline parity`)
 
 ## R2: Real C Runtime Oracle Driver
 
-- [ ] Replace synthetic runtime state engine in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
-- [ ] Drive real WOLFSRC runtime stepping/snapshot/framebuffer/save-load from oracle exports.
-- [ ] Keep wrappers for oracle/test interfaces only.
-- [ ] Gate: `pnpm wasm:build`
-- [ ] Gate: `pnpm runtime:parity:test`
-- [ ] Gate: deterministic replay equality for repeated traces
-- [ ] Tests green
+- [x] Replace synthetic runtime state engine in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
+- [x] Drive real WOLFSRC runtime stepping/snapshot/framebuffer/save-load from oracle exports.
+- [x] Keep wrappers for oracle/test interfaces only.
+- [x] Gate: `pnpm wasm:build`
+- [x] Gate: `pnpm runtime:parity:test`
+- [x] Gate: deterministic replay equality for repeated traces
+- [x] Tests green
 - [ ] Phase commit pushed (`r2: real wolfsrc runtime oracle`)
 
 ## R3: Runtime Symbol Reclassification From Real Traces

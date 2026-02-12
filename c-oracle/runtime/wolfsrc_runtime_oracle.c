@@ -2981,24 +2981,12 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
     }
   }
 
-  if (pending_damage_calls > 0 && state->health > 0) {
-    int32_t damage_out;
-    trace_hit(TRACE_REAL_WL_AGENT_TAKE_DAMAGE);
-    damage_out = real_wl_agent_take_damage_apply(
-      state->health,
-      pending_damage_calls, /* points */
-      2, /* gd_medium */
-      0, /* god mode off */
-      0  /* victory flag off */
-    );
-    state->health = clamp_i32(damage_out & 0xffff, 0, 100);
-    if ((damage_out & (1 << 16)) != 0) {
-      state->flags |= 0x40;
-    } else {
-      state->flags &= ~0x40;
-    }
-  } else if (state->health <= 0) {
+  /* Synthetic background probes must not mutate health outside explicit gameplay events. */
+  (void)pending_damage_calls;
+  if (state->health <= 0) {
     state->flags |= 0x40;
+  } else {
+    state->flags &= ~0x40;
   }
 
   state->tick++;
