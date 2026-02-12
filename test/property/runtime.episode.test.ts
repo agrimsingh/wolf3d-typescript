@@ -17,7 +17,7 @@ describe('runtime episode parity checkpoints', () => {
   it('episode per-step trace structure is contiguous and deterministic', async () => {
     await withReplay('runtime.episode.trace-structure', async () => {
       const artifact = await computeRuntimeEpisodeArtifact(process.cwd(), 64);
-      expect(artifact.phase).toBe('F6');
+      expect(artifact.phase).toBe('K12');
       expect(artifact.scenarioCount).toBeGreaterThan(0);
       expect(artifact.mapOrder.length).toBe(artifact.scenarioCount);
       for (let i = 0; i < artifact.mapOrder.length; i++) {
