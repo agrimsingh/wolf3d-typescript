@@ -1,5 +1,5 @@
 {
-  "phase": "R5",
+  "phase": "R6",
   "mode": "real",
-  "notes": "R5 renderer parity gate is green; browser runtime still defaults to WolfsrcOraclePort while TS runtime parity waves continue."
+  "notes": "R6 player/doors/game-loop parity gate is green with deterministic checkpoint traces."
 }

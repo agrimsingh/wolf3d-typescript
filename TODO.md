@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime Parity TODO (R-Phases)
 
-**Status:** In Progress (`R6` active)  
+**Status:** In Progress (`R7` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -75,12 +75,12 @@
 
 ## R6: TS Port Wave C (Player, Doors, Game Loop)
 
-- [ ] Port runtime transitions from `WL_AGENT.C`, `WL_PLAY.C`, `WL_ACT1.C`, `WL_GAME.C`, `WL_INTER.C`.
-- [ ] Remove synthetic HP countdown/revive behavior from runtime path.
-- [ ] Gate: property parity suites for movement/use/fire/door/game-loop functions
-- [ ] Gate: deterministic door/level-completion traces
-- [ ] Tests green
-- [ ] Phase commit pushed (`r6: player-doors-gameloop parity`)
+- [x] Port runtime transitions from `WL_AGENT.C`, `WL_PLAY.C`, `WL_ACT1.C`, `WL_GAME.C`, `WL_INTER.C`.
+- [x] Remove synthetic HP countdown/revive behavior from runtime path.
+- [x] Gate: property parity suites for movement/use/fire/door/game-loop functions
+- [x] Gate: deterministic door/level-completion traces
+- [x] Tests green
+- [x] Phase commit pushed (`r6: player-doors-gameloop parity`)
 
 ## R7: TS Port Wave D (Actors/AI + Combat)
 
