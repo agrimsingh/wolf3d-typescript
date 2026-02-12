@@ -72,6 +72,9 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_AGENT.C | TakeDamage | `done` | called via oracle_wl_agent_take_damage_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_INTER.C | LevelCompleted | `done` | called via oracle_wl_inter_level_completed_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_INTER.C | Victory | `done` | called via oracle_wl_inter_victory_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_GAME.C | SetSoundLoc | `done` | called via oracle_wl_game_set_sound_loc_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_GAME.C | UpdateSoundLoc | `done` | called via oracle_wl_game_update_sound_loc_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_GAME.C | PlaySoundLocGlobal | `done` | called via oracle_wl_game_play_sound_loc_global_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

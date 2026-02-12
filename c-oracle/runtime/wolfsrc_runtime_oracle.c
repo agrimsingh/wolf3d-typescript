@@ -232,6 +232,29 @@ uint32_t oracle_wl_inter_victory_hash(
   int32_t episode,
   int32_t difficulty
 );
+uint32_t oracle_wl_game_set_sound_loc_hash(
+  int32_t gx,
+  int32_t gy,
+  int32_t listener_x,
+  int32_t listener_y
+);
+uint32_t oracle_wl_game_update_sound_loc_hash(
+  int32_t gx,
+  int32_t gy,
+  int32_t listener_x,
+  int32_t listener_y,
+  int32_t velocity_x,
+  int32_t velocity_y
+);
+uint32_t oracle_wl_game_play_sound_loc_global_hash(
+  int32_t sound_mode,
+  int32_t sound_id,
+  int32_t gx,
+  int32_t gy,
+  int32_t listener_x,
+  int32_t listener_y,
+  int32_t channel_busy
+);
 uint32_t oracle_wl_state_first_sighting_hash(
   int32_t ax,
   int32_t ay,
@@ -441,6 +464,9 @@ enum runtime_trace_symbol_e {
   TRACE_WL_AGENT_TAKE_DAMAGE_HASH = 52,
   TRACE_WL_INTER_LEVEL_COMPLETED = 53,
   TRACE_WL_INTER_VICTORY = 54,
+  TRACE_WL_GAME_SET_SOUND_LOC = 55,
+  TRACE_WL_GAME_UPDATE_SOUND_LOC = 56,
+  TRACE_WL_GAME_PLAY_SOUND_LOC_GLOBAL = 57,
 };
 
 #define TRACE_SYMBOL_MAX 64
@@ -728,6 +754,9 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t take_damage_hash;
       uint32_t level_completed_hash;
       uint32_t victory_hash;
+      uint32_t sound_loc_hash;
+      uint32_t update_sound_loc_hash;
+      uint32_t play_sound_loc_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -779,6 +808,15 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t treasure_found = state->ammo & 31;
       int32_t treasure_total = 1 + ((state->health + 31) & 31);
       int32_t victory_time = (state->tick * 3) + 120;
+      int32_t sound_gx = state->xq8;
+      int32_t sound_gy = state->yq8;
+      int32_t listener_x = state->xq8 + ((rng & 31) - 16);
+      int32_t listener_y = state->yq8 + (((rng >> 5) & 31) - 16);
+      int32_t velocity_x = ((rng >> 2) & 31) - 16;
+      int32_t velocity_y = ((rng >> 7) & 31) - 16;
+      int32_t sound_mode = state->tick & 3;
+      int32_t sound_id = rng & 0xff;
+      int32_t channel_busy = (state->flags & 0x10) ? 1 : 0;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -1015,7 +1053,36 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->tick & 7,
         (state->tick >> 3) & 3
       );
-      runtime_probe_mix = spawn_door_hash ^ push_wall_hash ^ take_damage_hash ^ level_completed_hash ^ victory_hash;
+      trace_hit(TRACE_WL_GAME_SET_SOUND_LOC);
+      sound_loc_hash = oracle_wl_game_set_sound_loc_hash(sound_gx, sound_gy, listener_x, listener_y);
+      trace_hit(TRACE_WL_GAME_UPDATE_SOUND_LOC);
+      update_sound_loc_hash = oracle_wl_game_update_sound_loc_hash(
+        sound_gx,
+        sound_gy,
+        listener_x,
+        listener_y,
+        velocity_x,
+        velocity_y
+      );
+      trace_hit(TRACE_WL_GAME_PLAY_SOUND_LOC_GLOBAL);
+      play_sound_loc_hash = oracle_wl_game_play_sound_loc_global_hash(
+        sound_mode,
+        sound_id,
+        sound_gx,
+        sound_gy,
+        listener_x,
+        listener_y,
+        channel_busy
+      );
+      runtime_probe_mix =
+        spawn_door_hash ^
+        push_wall_hash ^
+        take_damage_hash ^
+        level_completed_hash ^
+        victory_hash ^
+        sound_loc_hash ^
+        update_sound_loc_hash ^
+        play_sound_loc_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

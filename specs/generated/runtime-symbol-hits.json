@@ -107,7 +107,10 @@
     51,
     52,
     53,
-    54
+    54,
+    55,
+    56,
+    57
   ],
   "requiredRuntimeSymbols": [
     {
@@ -433,6 +436,24 @@
       "file": "WL_INTER.C",
       "func": "Victory",
       "notes": "called via oracle_wl_inter_victory_hash from runtime game-state probe"
+    },
+    {
+      "id": 55,
+      "file": "WL_GAME.C",
+      "func": "SetSoundLoc",
+      "notes": "called via oracle_wl_game_set_sound_loc_hash from runtime audio probe"
+    },
+    {
+      "id": 56,
+      "file": "WL_GAME.C",
+      "func": "UpdateSoundLoc",
+      "notes": "called via oracle_wl_game_update_sound_loc_hash from runtime audio probe"
+    },
+    {
+      "id": 57,
+      "file": "WL_GAME.C",
+      "func": "PlaySoundLocGlobal",
+      "notes": "called via oracle_wl_game_play_sound_loc_global_hash from runtime audio probe"
     }
   ],
   "excludedRuntimeSymbols": []

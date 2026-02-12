@@ -90,6 +90,9 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 52, file: 'WL_AGENT.C', func: 'TakeDamage', notes: 'called via oracle_wl_agent_take_damage_hash from runtime game-state probe' },
   { id: 53, file: 'WL_INTER.C', func: 'LevelCompleted', notes: 'called via oracle_wl_inter_level_completed_hash from runtime game-state probe' },
   { id: 54, file: 'WL_INTER.C', func: 'Victory', notes: 'called via oracle_wl_inter_victory_hash from runtime game-state probe' },
+  { id: 55, file: 'WL_GAME.C', func: 'SetSoundLoc', notes: 'called via oracle_wl_game_set_sound_loc_hash from runtime audio probe' },
+  { id: 56, file: 'WL_GAME.C', func: 'UpdateSoundLoc', notes: 'called via oracle_wl_game_update_sound_loc_hash from runtime audio probe' },
+  { id: 57, file: 'WL_GAME.C', func: 'PlaySoundLocGlobal', notes: 'called via oracle_wl_game_play_sound_loc_global_hash from runtime audio probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -149,6 +152,9 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [52, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [53, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [54, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [55, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [56, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [57, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

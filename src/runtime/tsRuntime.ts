@@ -44,6 +44,7 @@ import {
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 import { wlAgentCmdFireHash, wlAgentCmdUseHash, wlAgentTPlayerHash, wlAgentThrustHash, wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
+import { wlGamePlaySoundLocGlobalHash, wlGameSetSoundLocHash, wlGameUpdateSoundLocHash } from '../wolf/audio/wlAudio';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
 
@@ -570,6 +571,15 @@ export class TsRuntimePort implements RuntimePort {
         const treasureFound = this.state.ammo & 31;
         const treasureTotal = 1 + ((this.state.health + 31) & 31);
         const victoryTime = (this.state.tick * 3) + 120;
+        const soundGx = this.state.xQ8 | 0;
+        const soundGy = this.state.yQ8 | 0;
+        const listenerX = (this.state.xQ8 + ((rng & 31) - 16)) | 0;
+        const listenerY = (this.state.yQ8 + (((rng >> 5) & 31) - 16)) | 0;
+        const velocityX = (((rng >> 2) & 31) - 16) | 0;
+        const velocityY = (((rng >> 7) & 31) - 16) | 0;
+        const soundMode = this.state.tick & 3;
+        const soundId = rng & 0xff;
+        const channelBusy = (this.state.flags & 0x10) !== 0 ? 1 : 0;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -779,7 +789,26 @@ export class TsRuntimePort implements RuntimePort {
           this.state.tick & 7,
           (this.state.tick >> 3) & 3,
         ) >>> 0;
-        const runtimeProbeMix = (spawnDoorHash ^ pushWallHash ^ takeDamageHash ^ levelCompletedHash ^ victoryHash) >>> 0;
+        const soundLocHash = wlGameSetSoundLocHash(soundGx, soundGy, listenerX, listenerY) >>> 0;
+        const updateSoundLocHash = wlGameUpdateSoundLocHash(soundGx, soundGy, listenerX, listenerY, velocityX, velocityY) >>> 0;
+        const playSoundLocHash = wlGamePlaySoundLocGlobalHash(
+          soundMode,
+          soundId,
+          soundGx,
+          soundGy,
+          listenerX,
+          listenerY,
+          channelBusy,
+        ) >>> 0;
+        const runtimeProbeMix =
+          (spawnDoorHash ^
+            pushWallHash ^
+            takeDamageHash ^
+            levelCompletedHash ^
+            victoryHash ^
+            soundLocHash ^
+            updateSoundLocHash ^
+            playSoundLocHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
