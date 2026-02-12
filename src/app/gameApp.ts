@@ -135,6 +135,7 @@ export class WolfApp {
   private wallTextures: Uint8Array[] = [];
   private wallTexturesReady = false;
   private loopHandle = 0;
+  private lastMouseClientX: number | null = null;
 
   constructor(container: HTMLElement) {
     this.canvas = document.createElement('canvas');
@@ -187,16 +188,40 @@ export class WolfApp {
 
     this.canvas.addEventListener('click', () => {
       this.canvas.focus();
+      this.lastMouseClientX = null;
+      if (document.pointerLockElement !== this.canvas) {
+        this.canvas.requestPointerLock?.();
+      }
+    });
+
+    window.addEventListener('pointerlockchange', () => {
+      if (document.pointerLockElement !== this.canvas) {
+        this.lastMouseClientX = null;
+      }
     });
 
     window.addEventListener('mousemove', (event) => {
       if (this.controller.getState().mode !== 'playing') {
+        this.lastMouseClientX = null;
         return;
       }
+      let deltaX = 0;
       if (document.pointerLockElement !== this.canvas) {
+        if (document.activeElement !== this.canvas) {
+          this.lastMouseClientX = null;
+          return;
+        }
+        if (this.lastMouseClientX !== null) {
+          deltaX = event.clientX - this.lastMouseClientX;
+        }
+        this.lastMouseClientX = event.clientX;
+      } else {
+        deltaX = event.movementX;
+      }
+      if (deltaX === 0) {
         return;
       }
-      this.controller.onMouseMove(event.movementX);
+      this.controller.onMouseMove(deltaX);
     });
   }
 

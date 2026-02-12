@@ -47,6 +47,11 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_wl_main_build_tables_hash(void) {
 
   for (int i = 0; i <= ANGLEQUAD; i++) {
     int32_t value = (int32_t)(GLOBAL1 * sin(angle));
+    if (value > 0xffff) {
+      value = 0xffff;
+    } else if (value < 0) {
+      value = 0;
+    }
     sintable[i] = value;
     sintable[i + ANGLES] = value;
     sintable[ANGLES / 2 - i] = value;

@@ -36,7 +36,12 @@ export function wlMainBuildTablesHash(): number {
   const anglestep = PI / 2 / ANGLEQUAD;
 
   for (let i = 0; i <= ANGLEQUAD; i++) {
-    const value = Math.trunc(GLOBAL1 * Math.sin(angle)) | 0;
+    let value = Math.trunc(GLOBAL1 * Math.sin(angle)) | 0;
+    if (value > 0xffff) {
+      value = 0xffff;
+    } else if (value < 0) {
+      value = 0;
+    }
     sintable[i] = value;
     sintable[i + ANGLES] = value;
     sintable[ANGLES / 2 - i] = value;

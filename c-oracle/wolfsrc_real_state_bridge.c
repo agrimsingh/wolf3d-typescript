@@ -121,6 +121,11 @@ static void ensure_trig_tables(void) {
   anglestep = pi / 2.0 / (double)ANGLEQUAD;
   for (i = 0; i <= ANGLEQUAD; i++) {
     int32_t value = (int32_t)(GLOBAL1 * sin(angle));
+    if (value > 0xffff) {
+      value = 0xffff;
+    } else if (value < 0) {
+      value = 0;
+    }
     sintable[i] = value;
     sintable[i + ANGLES] = value;
     sintable[ANGLES / 2 - i] = value;

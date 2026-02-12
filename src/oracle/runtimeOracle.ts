@@ -96,9 +96,9 @@ function frameInputToLegacy(input: RuntimeFrameInput): RuntimeInput {
     inputMask |= 1 << 4;
   }
   if (input.mouseDeltaX > 0) {
-    inputMask |= 1 << 3;
-  } else if (input.mouseDeltaX < 0) {
     inputMask |= 1 << 2;
+  } else if (input.mouseDeltaX < 0) {
+    inputMask |= 1 << 3;
   }
   if (input.mouseDeltaY < 0) {
     inputMask |= 1 << 0;

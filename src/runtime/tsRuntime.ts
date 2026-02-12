@@ -177,7 +177,12 @@ const SIN_TABLE = new Int32Array(ANGLES + ANGLEQUAD + 1);
   let angle = 0.0;
   const anglestep = PI / 2.0 / ANGLEQUAD;
   for (let i = 0; i <= ANGLEQUAD; i++) {
-    const value = (GLOBAL1 * Math.sin(angle)) | 0;
+    let value = Math.trunc(GLOBAL1 * Math.sin(angle)) | 0;
+    if (value > 0xffff) {
+      value = 0xffff;
+    } else if (value < 0) {
+      value = 0;
+    }
     SIN_TABLE[i] = value;
     SIN_TABLE[i + ANGLES] = value;
     SIN_TABLE[ANGLES / 2 - i] = value;
@@ -573,9 +578,9 @@ function frameInputToLegacy(input: RuntimeFrameInput): RuntimeInput {
     inputMask |= 1 << 4; // strafe-left semantic fallback
   }
   if (input.mouseDeltaX > 0) {
-    inputMask |= 1 << 3;
-  } else if (input.mouseDeltaX < 0) {
     inputMask |= 1 << 2;
+  } else if (input.mouseDeltaX < 0) {
+    inputMask |= 1 << 3;
   }
   if (input.mouseDeltaY < 0) {
     inputMask |= 1 << 0;
