@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K1` active)  
+**Status:** In Progress (`K2` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -30,16 +30,16 @@
 
 ## K1: WL6 Raw Asset Source Lock + Modern Zip Intake
 
-- [ ] Pin vpoupet source commit and ingest WL6 raw lumps under `assets/wl6/raw`.
-- [ ] Import modern asset pack under `assets/wl6-modern`.
-- [ ] Create checksum/provenance lock manifests.
-- [ ] Add `verify:assets:wl6` command.
-- [ ] Gate: `pnpm verify:assets:wl6`
-- [ ] Gate: `pnpm wasm:build`
-- [ ] Gate: provenance checksum verification
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k1: lock wl6 raw assets and import modern pack`)
+- [x] Pin vpoupet source commit and ingest WL6 raw lumps under `assets/wl6/raw`.
+- [x] Import modern asset pack under `assets/wl6-modern`.
+- [x] Create checksum/provenance lock manifests.
+- [x] Add `verify:assets:wl6` command.
+- [x] Gate: `pnpm verify:assets:wl6`
+- [x] Gate: `pnpm wasm:build`
+- [x] Gate: provenance checksum verification
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k1: lock wl6 raw assets and import modern pack`)
 
 ## K2: Asset Mapping Layer
 

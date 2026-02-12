@@ -1,0 +1,570 @@
+{
+  "kind": "wl6-modern",
+  "generatedAt": "2026-02-12T18:50:22.028Z",
+  "source": {
+    "zipPath": "/Users/agrim/Downloads/wolf3d-assets.zip",
+    "targetDir": "assets/wl6-modern"
+  },
+  "files": [
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/BOSSFIRESND.WAV",
+      "size": 10760,
+      "sha256": "a29ad7880b86bc4c1e49693404b6b1a3acf3d36d21203b0898dd9c9440826298"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/DIESND.WAV",
+      "size": 10993,
+      "sha256": "5f6b4e62c70ef0ba69a5eff352e1d515dce6e31ae3e664aa078a27c690ac97b6"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/DONNERSND.WAV",
+      "size": 9588,
+      "sha256": "19a7705966700101144fb19aa877587459d7855905c08e381706a1dc8b771093"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/EINESND.WAV",
+      "size": 17492,
+      "sha256": "46388ecadc712a4a3e62bfa1e6ffa8e48c34ea0122f6070d1dbb3af1d3241bd2"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/ERLAUBENSND.WAV",
+      "size": 24416,
+      "sha256": "4b5b762ec96c987d4b5ca57cee68f854f83bc80eb92cb030755614994efaf3b7"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/EVASND.WAV",
+      "size": 13910,
+      "sha256": "264a5350df4c224591d8e825737a7fda7f03213805c6d83d6d156bc6a580d7c1"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/GUTENTAGSND.WAV",
+      "size": 6378,
+      "sha256": "da2eed1bf0f3e1b056efe70067c33f937693fb98beb3fe3887192607d478dfca"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/KEINSND.WAV",
+      "size": 8606,
+      "sha256": "83d2a64def7ed1d595dc84ea2735a6ac2f415512b8c9870566d8961b6e007d24"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/MECHSTEPSND.WAV",
+      "size": 5393,
+      "sha256": "5415f9794fcd56a33ffbfae7623e5f4b2384d202555b28a537c7160594497000"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/MEINGOTTSND.WAV",
+      "size": 24621,
+      "sha256": "8b1c2e1aa5958429270dc55dd93c4982ce171b6e01908875ee0951113d750f47"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/MEINSND.WAV",
+      "size": 11092,
+      "sha256": "0e3a148e99e3da52b7b0aa060dfc1cb3112bb732acc865bf0d7a1715b0a5d590"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/MUTTISND.WAV",
+      "size": 5825,
+      "sha256": "d7ff5898746395254b549954e55b17b02e3b1ec48dec9c8c03b8f4a3c5a148cd"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/ROSESND.WAV",
+      "size": 12543,
+      "sha256": "2244eaa8051fb0a994688ee5f79e4616cb5ec755a579e7758f77e6fe4d3701a6"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/SCHABBSHASND.WAV",
+      "size": 13250,
+      "sha256": "424eaac0847fb8cc8e4d321528b884ef7cf7ce6c5fbb3252b0fb490a3b404cb4"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/SCHEISTSND.WAV",
+      "size": 7068,
+      "sha256": "d658ae93a8c105fbf684e9ba3c5d49b45ae7d8d1c0653a461c16f487deed43bd"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/Bosses/TOT_HUNDSND.WAV",
+      "size": 5733,
+      "sha256": "4aa308812277701c9622a734e368e0af23f1e9d1b871a431f1a46a3dac6dcbf6"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/bossfiresnd.wav",
+      "size": 10760,
+      "sha256": "a29ad7880b86bc4c1e49693404b6b1a3acf3d36d21203b0898dd9c9440826298"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/diesnd.wav",
+      "size": 10993,
+      "sha256": "5f6b4e62c70ef0ba69a5eff352e1d515dce6e31ae3e664aa078a27c690ac97b6"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/donnersnd.wav",
+      "size": 9588,
+      "sha256": "19a7705966700101144fb19aa877587459d7855905c08e381706a1dc8b771093"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/einesnd.wav",
+      "size": 17492,
+      "sha256": "46388ecadc712a4a3e62bfa1e6ffa8e48c34ea0122f6070d1dbb3af1d3241bd2"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/erlaubensnd.wav",
+      "size": 24416,
+      "sha256": "4b5b762ec96c987d4b5ca57cee68f854f83bc80eb92cb030755614994efaf3b7"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/evasnd.wav",
+      "size": 13910,
+      "sha256": "264a5350df4c224591d8e825737a7fda7f03213805c6d83d6d156bc6a580d7c1"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/gutentagsnd.wav",
+      "size": 6378,
+      "sha256": "da2eed1bf0f3e1b056efe70067c33f937693fb98beb3fe3887192607d478dfca"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/keinsnd.wav",
+      "size": 8606,
+      "sha256": "83d2a64def7ed1d595dc84ea2735a6ac2f415512b8c9870566d8961b6e007d24"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/mechstepsnd.wav",
+      "size": 5393,
+      "sha256": "5415f9794fcd56a33ffbfae7623e5f4b2384d202555b28a537c7160594497000"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/meingottsnd.wav",
+      "size": 24621,
+      "sha256": "8b1c2e1aa5958429270dc55dd93c4982ce171b6e01908875ee0951113d750f47"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/meinsnd.wav",
+      "size": 11092,
+      "sha256": "0e3a148e99e3da52b7b0aa060dfc1cb3112bb732acc865bf0d7a1715b0a5d590"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/muttisnd.wav",
+      "size": 5825,
+      "sha256": "d7ff5898746395254b549954e55b17b02e3b1ec48dec9c8c03b8f4a3c5a148cd"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/rosesnd.wav",
+      "size": 12543,
+      "sha256": "2244eaa8051fb0a994688ee5f79e4616cb5ec755a579e7758f77e6fe4d3701a6"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/schabbshasnd.wav",
+      "size": 13250,
+      "sha256": "424eaac0847fb8cc8e4d321528b884ef7cf7ce6c5fbb3252b0fb490a3b404cb4"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/scheistsnd.wav",
+      "size": 7068,
+      "sha256": "d658ae93a8c105fbf684e9ba3c5d49b45ae7d8d1c0653a461c16f487deed43bd"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/bosses/tot_hundsnd.wav",
+      "size": 5733,
+      "sha256": "4aa308812277701c9622a734e368e0af23f1e9d1b871a431f1a46a3dac6dcbf6"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/ahhhgsnd.wav",
+      "size": 5676,
+      "sha256": "846a08bd2552ad084aca556b9673ff13b023db79c22e0b2e7eaafc9c9d0d4627"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream1snd.wav",
+      "size": 2894,
+      "sha256": "c6cb0a8aa04e2ba4adf4de7763b7ab4d2c1662d3c2eb155207b6b2188f6654e1"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream2snd.wav",
+      "size": 3794,
+      "sha256": "86430e8ae27f95b6463f39771872294abe166c5de1c226c722ef03b8bd932d98"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream4snd.wav",
+      "size": 7648,
+      "sha256": "154046827775d5c9cfae46e951b7f2cc873ac559b39a6fd1ceb6e82c9da68804"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream5snd.wav",
+      "size": 4388,
+      "sha256": "94a16cd056343bcc85f0f89b47525aae3e653474c9fe3741be7a72047d23d863"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream6snd.wav",
+      "size": 3074,
+      "sha256": "2fca695d7278d4ce71ea009a437fdc0b8f528a6f1138e31b70e0f7902da6ab48"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream7snd.wav",
+      "size": 6344,
+      "sha256": "a11eb42a98484ffbfd00dfeea4da52e7cd6c61e3fec3e1d1e5270fa61d356d99"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream8snd.wav",
+      "size": 5288,
+      "sha256": "0079a6177df02423ab6188c88e7e068926aa9b5c58808d31ce9ecf0a7d8b2997"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/deathscream9snd.wav",
+      "size": 6853,
+      "sha256": "e7beeebadefbf4cfa8a49453ccabc50b482207df19eebefe84fff444bf7fcea7"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/dogattacksnd.wav",
+      "size": 4481,
+      "sha256": "748e4b18898dfc3eb4668368e392c37423fcc0a3481567cb2249b8251a4fce31"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/dogbarksnd.wav",
+      "size": 3837,
+      "sha256": "cef605a4209331597559390a0ee5998c66088a8cae0397a3e178ecb2fe8b9cc4"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/dogdeathsnd.wav",
+      "size": 3101,
+      "sha256": "ae8b35b0e1870a807f370c19f90bb6496a8a043e753d1b39db41cc465620fd20"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/AHHHGSND.WAV",
+      "size": 5676,
+      "sha256": "846a08bd2552ad084aca556b9673ff13b023db79c22e0b2e7eaafc9c9d0d4627"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM1SND.WAV",
+      "size": 2894,
+      "sha256": "c6cb0a8aa04e2ba4adf4de7763b7ab4d2c1662d3c2eb155207b6b2188f6654e1"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM2SND.WAV",
+      "size": 3794,
+      "sha256": "86430e8ae27f95b6463f39771872294abe166c5de1c226c722ef03b8bd932d98"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM4SND.WAV",
+      "size": 7648,
+      "sha256": "154046827775d5c9cfae46e951b7f2cc873ac559b39a6fd1ceb6e82c9da68804"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM5SND.WAV",
+      "size": 4388,
+      "sha256": "94a16cd056343bcc85f0f89b47525aae3e653474c9fe3741be7a72047d23d863"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM6SND.WAV",
+      "size": 3074,
+      "sha256": "2fca695d7278d4ce71ea009a437fdc0b8f528a6f1138e31b70e0f7902da6ab48"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM7SND.WAV",
+      "size": 6344,
+      "sha256": "a11eb42a98484ffbfd00dfeea4da52e7cd6c61e3fec3e1d1e5270fa61d356d99"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM8SND.WAV",
+      "size": 5288,
+      "sha256": "0079a6177df02423ab6188c88e7e068926aa9b5c58808d31ce9ecf0a7d8b2997"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DEATHSCREAM9SND.WAV",
+      "size": 6853,
+      "sha256": "e7beeebadefbf4cfa8a49453ccabc50b482207df19eebefe84fff444bf7fcea7"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DOGATTACKSND.WAV",
+      "size": 4481,
+      "sha256": "748e4b18898dfc3eb4668368e392c37423fcc0a3481567cb2249b8251a4fce31"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DOGBARKSND.WAV",
+      "size": 3837,
+      "sha256": "cef605a4209331597559390a0ee5998c66088a8cae0397a3e178ecb2fe8b9cc4"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/DOGDEATHSND.WAV",
+      "size": 3101,
+      "sha256": "ae8b35b0e1870a807f370c19f90bb6496a8a043e753d1b39db41cc465620fd20"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/HALTSND.WAV",
+      "size": 6040,
+      "sha256": "1f2e3694a827ca70c800924d13455ce188f7646be08fbac964245fe2ff9b5189"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/HITLERHASND.WAV",
+      "size": 14893,
+      "sha256": "433dfcab7eef66fa6d187e39000fa33330b18d4ff054bff9601afdc738d34e24"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/LEBENSND.WAV",
+      "size": 5918,
+      "sha256": "b935a67a2f7262d3d36643809bb9b5d9c486231a2cdc3efa0e0c040510944726"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/NAZIFIRESND.WAV",
+      "size": 8859,
+      "sha256": "3684cd49dc93196c1593978490a4ae69ba2616a4c2b02766cb717dbf0cc6f536"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/NEINSOVASSND.WAV",
+      "size": 8390,
+      "sha256": "e18e4c79d5e7c5a1469451a47960356178a0b2be3572769c9a43ba3a37c1c6ad"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/SCHUTZADSND.WAV",
+      "size": 4539,
+      "sha256": "2a70d871e43b7077cea727e41eb098232740c278ddcc43ad084949d02f05ecf4"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/SLURPIESND.WAV",
+      "size": 9139,
+      "sha256": "a0520dce8b24fbaee16bb46c74a2dc143ce9ea3657d2d8af6e081a9ad7936fc2"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/SPIONSND.WAV",
+      "size": 5181,
+      "sha256": "0e921866f7abb56c9fa1d83ce609252e3c2ace80709dd74d41d4d56a37463042"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/SSFIRESND.WAV",
+      "size": 5454,
+      "sha256": "b41321f0a805203ca2be24d5e8ca1953f2a34840fffbd12a9d4e4b4e34837f07"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/Enemies/TAKEDAMAGESND.WAV",
+      "size": 2259,
+      "sha256": "222957bfc0469f16bfe7deed668a800d3983ef5b5b3f2279b6d464fa52a82b6c"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/haltsnd.wav",
+      "size": 6040,
+      "sha256": "1f2e3694a827ca70c800924d13455ce188f7646be08fbac964245fe2ff9b5189"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/hitlerhasnd.wav",
+      "size": 14893,
+      "sha256": "433dfcab7eef66fa6d187e39000fa33330b18d4ff054bff9601afdc738d34e24"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/lebensnd.wav",
+      "size": 5918,
+      "sha256": "b935a67a2f7262d3d36643809bb9b5d9c486231a2cdc3efa0e0c040510944726"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/nazifiresnd.wav",
+      "size": 8859,
+      "sha256": "3684cd49dc93196c1593978490a4ae69ba2616a4c2b02766cb717dbf0cc6f536"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/neinsovassnd.wav",
+      "size": 8390,
+      "sha256": "e18e4c79d5e7c5a1469451a47960356178a0b2be3572769c9a43ba3a37c1c6ad"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/schutzadsnd.wav",
+      "size": 4539,
+      "sha256": "2a70d871e43b7077cea727e41eb098232740c278ddcc43ad084949d02f05ecf4"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/slurpiesnd.wav",
+      "size": 9139,
+      "sha256": "a0520dce8b24fbaee16bb46c74a2dc143ce9ea3657d2d8af6e081a9ad7936fc2"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/spionsnd.wav",
+      "size": 5181,
+      "sha256": "0e921866f7abb56c9fa1d83ce609252e3c2ace80709dd74d41d4d56a37463042"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/ssfiresnd.wav",
+      "size": 5454,
+      "sha256": "b41321f0a805203ca2be24d5e8ca1953f2a34840fffbd12a9d4e4b4e34837f07"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/enemies/takedamagesnd.wav",
+      "size": 2259,
+      "sha256": "222957bfc0469f16bfe7deed668a800d3983ef5b5b3f2279b6d464fa52a82b6c"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/closedoorsnd.wav",
+      "size": 20039,
+      "sha256": "6ede96c4e9e0f67e49a0551bc861c25832d8c22709b0ee79379de0f86a8181e1"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/leveldonesnd.wav",
+      "size": 4612,
+      "sha256": "dfcfb13714593a0c5fec7a9c681d44c07bec6bfb4809210616ef7518bf96184c"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/Misc/CLOSEDOORSND.WAV",
+      "size": 20039,
+      "sha256": "6ede96c4e9e0f67e49a0551bc861c25832d8c22709b0ee79379de0f86a8181e1"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/Misc/LEVELDONESND.WAV",
+      "size": 4612,
+      "sha256": "dfcfb13714593a0c5fec7a9c681d44c07bec6bfb4809210616ef7518bf96184c"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/Misc/OPENDOORSND.WAV",
+      "size": 10066,
+      "sha256": "d139486075701dde7aa66b2955f0c6f735318f1434a52fd32062d14aab3c7bd5"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/Misc/PUSHWALLSND.WAV",
+      "size": 24807,
+      "sha256": "d09afb6e028b6731efeed8e9272007584f44a18cdd760b893dc4244d354db6f5"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/Misc/YEAHSND.WAV",
+      "size": 7046,
+      "sha256": "b6af4a69d46572c2223bb5639b0825154aea5c8066b75e5466774b3318430077"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/opendoorsnd.wav",
+      "size": 10066,
+      "sha256": "d139486075701dde7aa66b2955f0c6f735318f1434a52fd32062d14aab3c7bd5"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/pushwallsnd.wav",
+      "size": 24807,
+      "sha256": "d09afb6e028b6731efeed8e9272007584f44a18cdd760b893dc4244d354db6f5"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/misc/yeahsnd.wav",
+      "size": 7046,
+      "sha256": "b6af4a69d46572c2223bb5639b0825154aea5c8066b75e5466774b3318430077"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/weapons/atkgatlingsnd.wav",
+      "size": 4109,
+      "sha256": "745c036e9770916fec3691f2f681b1d5b19dfa59bc5c07d6278fb3ff58b3abf9"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/weapons/atkmachinegunsnd.wav",
+      "size": 3644,
+      "sha256": "db15f7ba5af6b9380559544f45719c2a8c3cc64b992d145a57e2b7260801105c"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/weapons/atkpistolsnd.wav",
+      "size": 3649,
+      "sha256": "51d22353a522e666cac84b3f5766c98e66a6f0a7065cce98848e302a2eeeece9"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/weapons/Weapons/ATKGATLINGSND.WAV",
+      "size": 4109,
+      "sha256": "745c036e9770916fec3691f2f681b1d5b19dfa59bc5c07d6278fb3ff58b3abf9"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/weapons/Weapons/ATKMACHINEGUNSND.WAV",
+      "size": 3644,
+      "sha256": "db15f7ba5af6b9380559544f45719c2a8c3cc64b992d145a57e2b7260801105c"
+    },
+    {
+      "path": "assets/wl6-modern/sounds/weapons/Weapons/ATKPISTOLSND.WAV",
+      "size": 3649,
+      "sha256": "51d22353a522e666cac84b3f5766c98e66a6f0a7065cce98848e302a2eeeece9"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/bosses/dr-schabbs.png",
+      "size": 22488,
+      "sha256": "f69099adba335d470a8a39711bb351afbd278b4cfbc4fd321476f41031053ac4"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/bosses/general-fettgesicht.png",
+      "size": 28593,
+      "sha256": "25da5a13cfea28887379f336eba0727c20bd65791b2e2f7fac70affacafa36aa"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/bosses/gretel-grosse.png",
+      "size": 26014,
+      "sha256": "b20897e000017e6e23ff83b6916c4e8f9940ffe245e8cdecb9c88462fc54cdd8"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/bosses/hans-grosse.png",
+      "size": 22706,
+      "sha256": "0b9e056a95989788621cf80ee007e21194d69746800cfa54bfc266ee523a1895"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/bosses/otto-giftmacher.png",
+      "size": 25274,
+      "sha256": "ca842d33932675c19b834655b9d884922e8cc5ad1abe13eb7570820f2bcfc022"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/characters/bj-blazkowicz.png",
+      "size": 9727,
+      "sha256": "71afbe7a5320ed20e6aaab65262e9a06d9aa5a9c2f5da1be62442a6a96660950"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/characters/ghosts.png",
+      "size": 4147,
+      "sha256": "3df3c831e90d596c7ed3f507479efe422fc54c5596a8dae2ab78eaf708e5391b"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/characters/guard-dog.png",
+      "size": 33677,
+      "sha256": "8e33c2ce0eb59743670d37be5a9f7fa7b2b8f176395370bd12390ffef4466c0c"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/characters/guard.png",
+      "size": 53632,
+      "sha256": "a4b3e8f9e3f40e97b5f002f9116c7498a4a97e4e2a6c829a2350eff60a41902b"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/characters/mutant.png",
+      "size": 41351,
+      "sha256": "c96f8a8617ffdfac2cbedc518af7c776637212da4984332bf8331abb8051d527"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/characters/officer.png",
+      "size": 57793,
+      "sha256": "d5c2a4071b2c2748bb5018d57ffb56e4cfa6cdcaedf60d33056424b541f6ff76"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/characters/ss.png",
+      "size": 54518,
+      "sha256": "889c1e697ca91a9e126853c8ba5507559a0209226c3c1e0ade04e7f5e0f64f10"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/objects/objects.png",
+      "size": 24844,
+      "sha256": "7e081c3c27cf45eea48b43e9079c95e7f091527eb20cc18093375cac0ebfef34"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/objects/weapons.png",
+      "size": 9193,
+      "sha256": "8783116677ce49873fcc02f667d43fca53a03c2a2977485acb0a28a7fadb0c74"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/ui/end-level-font.png",
+      "size": 2693,
+      "sha256": "29d7ad379e5a6badbd90f110eab925548f5f04761bfd15c9c5fe819ab16b08ce"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/ui/font.png",
+      "size": 5872,
+      "sha256": "8e07e5909404ff9f944404f67d11272e43277c5416ca3697c51222389d279546"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/ui/hud-and-cutscenes.png",
+      "size": 69103,
+      "sha256": "458d15f04c1f9d402353c5c43983638256654f71427186d00cc77c54503a58a9"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/ui/hud.png",
+      "size": 25805,
+      "sha256": "cadf9a4fa74e74d5b236a49d6c0a0547de517452bbd293d674b84d79f61bc42c"
+    },
+    {
+      "path": "assets/wl6-modern/sprites/ui/menu-and-miscellaneous.png",
+      "size": 156061,
+      "sha256": "87ea5f3d43474fa4958f8ea86948d273ffcd013dcba10174608f763231cf4fd4"
+    },
+    {
+      "path": "assets/wl6-modern/textures/walls.png",
+      "size": 281828,
+      "sha256": "16c34991328f508ce949188d04b6bb2ec0831f572c96065a97166686a2213923"
+    }
+  ]
+}

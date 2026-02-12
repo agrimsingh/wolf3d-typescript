@@ -39,7 +39,12 @@
     "runtime:replay": "tsx scripts/runtime/replay-runtime-artifact.ts",
     "assets:fetch": "bash scripts/assets/fetch-wl1.sh",
     "assets:validate": "tsx scripts/assets/validate-wl1.ts",
-    "verify:assets": "pnpm assets:validate"
+    "verify:assets": "pnpm assets:validate",
+    "assets:fetch:wl6": "bash scripts/assets/fetch-wl6.sh",
+    "assets:import:modern:wl6": "bash scripts/assets/import-modern-wl6.sh",
+    "assets:lock:wl6": "tsx scripts/assets/generate-wl6-locks.ts",
+    "assets:validate:wl6": "tsx scripts/assets/validate-wl6.ts",
+    "verify:assets:wl6": "pnpm assets:validate:wl6"
   },
   "dependencies": {},
   "devDependencies": {

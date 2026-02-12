@@ -10,6 +10,8 @@ const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
 const AREATILE = 107;
 const BASELINE_STATUS_TEXT = 'Baseline: WL6 migration in progress (K0)';
+const DATA_VARIANT = 'WL6';
+const CAMPAIGN_BASE_URL = '/assets/wl6/raw';
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -81,7 +83,12 @@ export class WolfApp {
   private readonly image: ImageData;
   private readonly controller = new RuntimeAppController({
     audio: new WebAudioRuntimeAdapter(),
-    scenarioLoader: () => loadWl1Campaign('/assets/wl1', 64),
+    scenarioLoader: () =>
+      loadWl1Campaign({
+        baseUrl: CAMPAIGN_BASE_URL,
+        stepsPerScenario: 64,
+        variant: DATA_VARIANT,
+      }),
   });
   private loopHandle = 0;
   private lastMouseClientX: number | null = null;
@@ -106,7 +113,7 @@ export class WolfApp {
 
   private async loadWallTextures(): Promise<void> {
     try {
-      const response = await fetch('/assets/wl1/VSWAP.WL1');
+      const response = await fetch(`${CAMPAIGN_BASE_URL}/VSWAP.${DATA_VARIANT}`);
       if (!response.ok) return;
       const bytes = new Uint8Array(await response.arrayBuffer());
       const textures = parseVswapWallTextures(bytes, MAX_WALL_TEXTURES);
@@ -177,7 +184,7 @@ export class WolfApp {
     this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
     this.ctx.fillStyle = '#d6d6d6';
     this.ctx.font = '12px monospace';
-    this.ctx.fillText('Loading WL1 assets and runtime...', 18, HEIGHT / 2);
+    this.ctx.fillText('Loading WL6 assets and runtime...', 18, HEIGHT / 2);
   }
 
   private drawTitleFrame(): void {
@@ -185,7 +192,7 @@ export class WolfApp {
     this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
     this.ctx.fillStyle = '#f7f1d1';
     this.ctx.font = '18px monospace';
-    this.ctx.fillText('Wolf3D TS Runtime', 58, 82);
+    this.ctx.fillText('Wolf3D TS Runtime (WL6)', 34, 82);
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.font = '12px monospace';
     this.ctx.fillText('Press Enter to open Control Panel', 52, 128);
@@ -198,7 +205,7 @@ export class WolfApp {
     this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.font = '14px monospace';
-    this.ctx.fillText('Wolf3D TS Control Panel', 18, 24);
+    this.ctx.fillText('Wolf3D TS Control Panel (WL6)', 18, 24);
     this.ctx.font = '10px monospace';
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.fillText('Arrow keys: select map  Enter: New Game', 18, 40);
@@ -391,10 +398,10 @@ export class WolfApp {
 
   private drawBaselineStatus(): void {
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-    this.ctx.fillRect(4, HEIGHT - 22, 198, 16);
+    this.ctx.fillRect(4, HEIGHT - 22, 230, 16);
     this.ctx.fillStyle = '#dce6ff';
     this.ctx.font = '8px monospace';
-    this.ctx.fillText(BASELINE_STATUS_TEXT, 8, HEIGHT - 11);
+    this.ctx.fillText(`${BASELINE_STATUS_TEXT} [asset profile: ${DATA_VARIANT}]`, 8, HEIGHT - 11);
   }
 
   private loop(now: number): void {
