@@ -129,6 +129,34 @@ function runtimeCoreFields(state: State): RuntimeCoreSnapshot {
   };
 }
 
+function wlAgentTakeDamageStep(
+  health: number,
+  points: number,
+  difficulty: number,
+  godModeEnabled: boolean,
+  victoryFlag: boolean,
+): { health: number; died: boolean } {
+  let nextHealth = clampI32(health, 0, 100);
+  if (victoryFlag) {
+    return { health: nextHealth, died: nextHealth <= 0 };
+  }
+
+  let scaledPoints = points | 0;
+  if ((difficulty | 0) === 0) {
+    scaledPoints >>= 2;
+  }
+
+  if (!godModeEnabled) {
+    nextHealth = (nextHealth - scaledPoints) | 0;
+  }
+
+  if (nextHealth <= 0) {
+    return { health: 0, died: true };
+  }
+
+  return { health: nextHealth, died: false };
+}
+
 function frameInputToLegacy(input: RuntimeFrameInput): RuntimeInput {
   let inputMask = input.keyboardMask & 0xff;
   if ((input.buttonMask & 1) !== 0) {
@@ -307,7 +335,21 @@ export class TsRuntimePort implements RuntimePort {
     }
 
     if (((rng | 0) & 0x1f) === 0 && this.state.health > 0) {
-      this.state.health--;
+      const damage = wlAgentTakeDamageStep(
+        this.state.health,
+        1,
+        2, // gd_medium
+        false,
+        false,
+      );
+      this.state.health = damage.health | 0;
+      if (damage.died) {
+        this.state.flags |= 0x40;
+      } else {
+        this.state.flags &= ~0x40;
+      }
+    } else if (this.state.health <= 0) {
+      this.state.flags |= 0x40;
     }
 
     this.state.tick++;

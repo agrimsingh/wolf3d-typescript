@@ -71,7 +71,8 @@
     15,
     16,
     18,
-    19
+    19,
+    20
   ],
   "requiredRuntimeSymbols": [
     {
@@ -181,6 +182,12 @@
       "file": "WL_AGENT.C",
       "func": "ControlMovement",
       "notes": "called via real_wl_agent_control_movement_apply shim"
+    },
+    {
+      "id": 20,
+      "file": "WL_AGENT.C",
+      "func": "TakeDamage",
+      "notes": "called via real_wl_agent_take_damage_apply shim"
     }
   ],
   "excludedRuntimeSymbols": [

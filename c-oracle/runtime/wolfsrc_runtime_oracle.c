@@ -30,6 +30,13 @@ int32_t oracle_real_wl_agent_try_move(
   uint32_t map_lo,
   uint32_t map_hi
 );
+int32_t real_wl_agent_take_damage_apply(
+  int32_t health,
+  int32_t points,
+  int32_t difficulty,
+  int32_t god_mode_enabled,
+  int32_t victory_flag
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -68,6 +75,7 @@ enum runtime_trace_symbol_e {
   TRACE_REAL_WL_AGENT_CLIP_MOVE_APPLY = 17,
   TRACE_REAL_WL_AGENT_TRY_MOVE = 18,
   TRACE_REAL_WL_AGENT_CONTROL_MOVEMENT = 19,
+  TRACE_REAL_WL_AGENT_TAKE_DAMAGE = 20,
 };
 
 #define TRACE_SYMBOL_MAX 32
@@ -193,7 +201,23 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   }
 
   if ((rng & 0x1f) == 0 && state->health > 0) {
-    state->health--;
+    int32_t damage_out;
+    trace_hit(TRACE_REAL_WL_AGENT_TAKE_DAMAGE);
+    damage_out = real_wl_agent_take_damage_apply(
+      state->health,
+      1, /* points */
+      2, /* gd_medium */
+      0, /* god mode off */
+      0  /* victory flag off */
+    );
+    state->health = clamp_i32(damage_out & 0xffff, 0, 100);
+    if ((damage_out & (1 << 16)) != 0) {
+      state->flags |= 0x40;
+    } else {
+      state->flags &= ~0x40;
+    }
+  } else if (state->health <= 0) {
+    state->flags |= 0x40;
   }
 
   state->tick++;

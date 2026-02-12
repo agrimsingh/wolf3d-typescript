@@ -10,7 +10,7 @@
 #include <math.h>
 #include <emscripten/emscripten.h>
 
-objtype objlist[MAXACTORS], *new, *obj, *player, *lastobj, *objfreelist;
+objtype objlist[MAXACTORS], *new, *obj, *player, *lastobj, *objfreelist, *killerobj;
 statobj_t statobjlist[MAXSTATS], *laststatobj;
 doorobj_t doorobjlist[MAXDOORS], *lastdoorobj;
 unsigned farmapylookup[MAPSIZE];
@@ -22,6 +22,7 @@ static unsigned mapplane1[MAPSIZE * MAPSIZE];
 unsigned doorposition[MAXDOORS], pwallstate;
 boolean areabyplayer[NUMAREAS];
 boolean noclip;
+boolean singlestep, godmode;
 gametype gamestate;
 exit_t playstate;
 boolean madenoise;
@@ -41,6 +42,7 @@ unsigned uwidthtable[UPDATEHIGH];
 unsigned blockstarts[UPDATEWIDE * UPDATEHIGH];
 byte fontcolor, backcolor;
 longword TimeCount;
+unsigned bufferofs;
 
 void Quit(char *error) { (void)error; }
 boolean SD_PlaySound(soundnames sound) {
@@ -56,6 +58,14 @@ void PlaceItemType(int itemtype, int tilex, int tiley) {
   (void)tilex;
   (void)tiley;
 }
+void LatchDrawPic(unsigned x, unsigned y, unsigned picnum) {
+  (void)x;
+  (void)y;
+  (void)picnum;
+}
+void StartDamageFlash(int damage) {
+  (void)damage;
+}
 
 boolean CheckLine(objtype *ob);
 boolean CheckSight(objtype *ob);
@@ -65,6 +75,7 @@ void MoveObj(objtype *ob, long move);
 void SelectChaseDir(objtype *ob);
 void ControlMovement(objtype *ob);
 extern int anglefrac;
+void TakeDamage(int points, objtype *attacker);
 
 static int32_t g_take_damage_stub_calls;
 
@@ -324,6 +335,40 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_real_wl_agent_try_move(
   objlist[1].flags = 0;
 
   return TryMove(&objlist[1]) ? 1 : 0;
+}
+
+int32_t real_wl_agent_take_damage_apply(
+  int32_t health,
+  int32_t points,
+  int32_t difficulty,
+  int32_t god_mode_enabled,
+  int32_t victory_flag
+) {
+  int32_t clamped_health = health;
+  uint32_t out;
+
+  if (clamped_health < 0) {
+    clamped_health = 0;
+  } else if (clamped_health > 100) {
+    clamped_health = 100;
+  }
+
+  memset(&gamestate, 0, sizeof(gamestate));
+  gamestate.health = clamped_health;
+  gamestate.difficulty = difficulty;
+  gamestate.victoryflag = victory_flag ? true : false;
+  godmode = god_mode_enabled ? true : false;
+  playstate = ex_stillplaying;
+
+  player = &objlist[1];
+  objlist[2].obclass = guardobj;
+  TakeDamage(points, &objlist[2]);
+
+  out = ((uint32_t)(gamestate.health & 0xffff));
+  if (playstate == ex_died) {
+    out |= (1u << 16);
+  }
+  return (int32_t)out;
 }
 
 EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_agent_clip_move_hash(

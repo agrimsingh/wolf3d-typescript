@@ -55,6 +55,7 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 17, file: 'WL_AGENT.C', func: 'ClipMove', notes: 'called via real_wl_agent_clip_move_apply shim' },
   { id: 18, file: 'WL_AGENT.C', func: 'TryMove', notes: 'called via oracle_real_wl_agent_try_move shim' },
   { id: 19, file: 'WL_AGENT.C', func: 'ControlMovement', notes: 'called via real_wl_agent_control_movement_apply shim' },
+  { id: 20, file: 'WL_AGENT.C', func: 'TakeDamage', notes: 'called via real_wl_agent_take_damage_apply shim' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -79,6 +80,7 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [17, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [18, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [19, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [20, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

@@ -36,6 +36,7 @@ Symbols exercised by deterministic runtime trace scenarios.
 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_tick | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | TryMove | `done` | called via oracle_real_wl_agent_try_move shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | ControlMovement | `done` | called via real_wl_agent_control_movement_apply shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | TakeDamage | `done` | called via real_wl_agent_take_damage_apply shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 
