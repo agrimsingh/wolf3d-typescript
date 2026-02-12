@@ -1,0 +1,180 @@
+{
+  "scenarioCount": 10,
+  "menuTraceDigest": 3960187756,
+  "traceScenarios": [
+    {
+      "mapIndex": 0,
+      "mapName": "Wolf1 Map1",
+      "seedHex": "0x9a6ae682"
+    },
+    {
+      "mapIndex": 1,
+      "mapName": "Wolf1 Map2",
+      "seedHex": "0x968c47cf"
+    },
+    {
+      "mapIndex": 2,
+      "mapName": "Wolf1 Map3",
+      "seedHex": "0x932fa408"
+    },
+    {
+      "mapIndex": 3,
+      "mapName": "Wolf1 Map4",
+      "seedHex": "0x8f410555"
+    },
+    {
+      "mapIndex": 4,
+      "mapName": "Wolf1 Map5",
+      "seedHex": "0x8be3659e"
+    },
+    {
+      "mapIndex": 5,
+      "mapName": "Wolf1 Map6",
+      "seedHex": "0x8406c2db"
+    },
+    {
+      "mapIndex": 6,
+      "mapName": "Wolf1 Map7",
+      "seedHex": "0x80b82324"
+    },
+    {
+      "mapIndex": 7,
+      "mapName": "Wolf1 Map8",
+      "seedHex": "0xbcdb8061"
+    },
+    {
+      "mapIndex": 8,
+      "mapName": "Wolf1 Boss",
+      "seedHex": "0xb97de0aa"
+    },
+    {
+      "mapIndex": 9,
+      "mapName": "Wolf1 Secret",
+      "seedHex": "0xb59f41f7"
+    }
+  ],
+  "requiredRuntimeSymbolIds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17
+  ],
+  "requiredRuntimeSymbols": [
+    {
+      "id": 1,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_init",
+      "notes": "runtime bootstrap entrypoint"
+    },
+    {
+      "id": 2,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_reset",
+      "notes": "restores boot snapshot"
+    },
+    {
+      "id": 3,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_step",
+      "notes": "runtime tick loop entrypoint"
+    },
+    {
+      "id": 4,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_snapshot_hash",
+      "notes": "snapshot hash API"
+    },
+    {
+      "id": 5,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_render_frame_hash",
+      "notes": "frame-hash API"
+    },
+    {
+      "id": 6,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_set_state",
+      "notes": "deserialize/state restore API"
+    },
+    {
+      "id": 7,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_map_lo",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 8,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_map_hi",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 9,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_xq8",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 10,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_yq8",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 11,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_angle_deg",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 12,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_health",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 13,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_ammo",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 14,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_cooldown",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 15,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_flags",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 16,
+      "file": "runtime/wolfsrc_runtime_oracle.c",
+      "func": "oracle_runtime_get_tick",
+      "notes": "snapshot readout"
+    },
+    {
+      "id": 17,
+      "file": "WL_AGENT.C",
+      "func": "ClipMove",
+      "notes": "called via real_wl_agent_clip_move_apply shim"
+    }
+  ],
+  "excludedRuntimeSymbols": []
+}

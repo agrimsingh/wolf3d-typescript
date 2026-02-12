@@ -29,6 +29,9 @@ type RuntimeFns = {
   getCooldown: () => number;
   getFlags: () => number;
   getTick: () => number;
+  traceReset: () => void;
+  traceCount: () => number;
+  traceSymbolIdAt: (index: number) => number;
 };
 
 export class WolfsrcOraclePort implements RuntimePort {
@@ -74,6 +77,9 @@ export class WolfsrcOraclePort implements RuntimePort {
         getCooldown: cwrap('oracle_runtime_get_cooldown', 'number', []),
         getFlags: cwrap('oracle_runtime_get_flags', 'number', []),
         getTick: cwrap('oracle_runtime_get_tick', 'number', []),
+        traceReset: cwrap('oracle_runtime_trace_reset', null, []),
+        traceCount: cwrap('oracle_runtime_trace_count', 'number', []),
+        traceSymbolIdAt: cwrap('oracle_runtime_trace_symbol_id_at', 'number', ['number']),
       };
     }
 
@@ -150,5 +156,22 @@ export class WolfsrcOraclePort implements RuntimePort {
   async shutdown(): Promise<void> {
     this.fns = null;
     this.module = null;
+  }
+
+  resetTrace(): void {
+    this.assertReady().traceReset();
+  }
+
+  traceSymbolIds(): number[] {
+    const fns = this.assertReady();
+    const count = fns.traceCount() | 0;
+    const ids: number[] = [];
+    for (let i = 0; i < count; i++) {
+      const id = fns.traceSymbolIdAt(i) | 0;
+      if (id > 0) {
+        ids.push(id);
+      }
+    }
+    return ids;
   }
 }

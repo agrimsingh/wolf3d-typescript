@@ -50,6 +50,8 @@ Rules:
 - Probe real-source compile compatibility: `pnpm wasm:probe:wolfsrc`
 - Verify real-source compatibility gate (expects zero probe failures): `pnpm wasm:verify:compat`
 - Build C/WASM oracle: `pnpm wasm:build`
+- Extract runtime trace symbol manifest: `pnpm runtime:manifest:extract`
+- Verify runtime symbol manifest lock: `pnpm runtime:manifest:verify`
 - Run local property tests (1k): `pnpm test:property:local`
 - Run CI property tests (10k): `pnpm test:property:ci`
 - Replay failing seed: `pnpm test:property -- --seed <seed>`

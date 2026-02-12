@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R2 in progress (runtime-path symbol discovery + freeze)
+**Status:** Phase R3 in progress (deterministic runtime contracts + harness)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -32,16 +32,18 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 : Completed baseline: compatibility pipeline now compiles all runtime-target files in probe (`18/18` pass via `pnpm wasm:verify:compat`), oracle links real `WL_STATE.C` + `WL_AGENT.C`, exports real wrappers `oracle_real_wl_state_check_line`, `oracle_real_wl_state_check_sight`, `oracle_real_wl_state_move_obj_hash`, `oracle_real_wl_state_select_chase_dir_hash`, `oracle_real_wl_agent_try_move`, `oracle_real_wl_agent_clip_move_hash`, and runtime step movement routes through real `WL_AGENT.ClipMove` (q8<->q16 bridge) with property gates green at `1k/10k`.
 - [x] Add deterministic reset and state serialization API.
 - [x] Gate: oracle boots, steps deterministically, can snapshot state.
-- [ ] Commit: `phase-r1: real wolfsrc oracle runtime + portability layer`
+- [x] Commit: `phase-r1: real wolfsrc oracle runtime + portability layer`
 
 ## Phase R2: Runtime-Path Symbol Discovery and Freeze
 
-- [ ] Instrument oracle with symbol hit tracing.
-- [ ] Run deterministic traces across menu/gameplay for all WL1 maps.
-- [ ] Generate runtime-path symbol set from actual execution.
-- [ ] Freeze runtime symbol manifest (`required` vs `excluded-non-runtime`).
-- [ ] Gate: runtime-path manifest locked and reproducible from trace tooling.
-- [ ] Commit: `phase-r2: lock runtime symbol manifest from wl1 traces`
+- [x] Instrument oracle with symbol hit tracing.
+- [x] Run deterministic traces across menu/gameplay for all WL1 maps.
+: Deterministic trace harness runs via `pnpm runtime:manifest:extract` against real WL1 assets (`MAPHEAD.WL1`/`GAMEMAPS.WL1`) for all 10 shareware maps, and includes a deterministic menu-flow digest (`3960187756`) generated from real menu/text oracle wrappers.
+- [x] Generate runtime-path symbol set from actual execution.
+- [x] Freeze runtime symbol manifest (`required` vs `excluded-non-runtime`).
+- [x] Gate: runtime-path manifest locked and reproducible from trace tooling.
+: `pnpm runtime:manifest:verify` now enforces lock parity (`specs/generated/runtime-symbol-lock.json`) against regenerated trace output and is green; full gates also green (`pnpm verify`, `pnpm test:property:ci`).
+- [x] Commit: `phase-r2: lock runtime symbol manifest from wl1 traces`
 
 ## Phase R3: Deterministic Runtime Contracts + Harness
 

@@ -152,4 +152,37 @@ describe('runtime step parity', () => {
       );
     });
   });
+
+  it('oracle runtime trace symbols are deterministic for identical scenarios', async () => {
+    const config: RuntimeConfig = {
+      mapLo: 0xff818181,
+      mapHi: 0x818181ff,
+      startXQ8: 3 * 256,
+      startYQ8: 4 * 256,
+      startAngleDeg: 90,
+      startHealth: 75,
+      startAmmo: 12,
+    };
+
+    const runTrace = async (): Promise<number[]> => {
+      await oracle.init(config);
+      oracle.resetTrace();
+      await oracle.init(config);
+      oracle.reset();
+      oracle.snapshot();
+      oracle.step({ inputMask: 0xbf, tics: 4, rng: 0x12345678 });
+      oracle.renderHash(320, 200);
+      return oracle.traceSymbolIds();
+    };
+
+    const a = await runTrace();
+    const b = await runTrace();
+
+    expect(a).toEqual(b);
+    expect(a.length).toBeGreaterThan(0);
+    expect(a.includes(1)).toBe(true); // oracle_runtime_init
+    expect(a.includes(2)).toBe(true); // oracle_runtime_reset
+    expect(a.includes(3)).toBe(true); // oracle_runtime_step
+    expect(a.includes(17)).toBe(true); // real WL_AGENT.ClipMove
+  });
 });

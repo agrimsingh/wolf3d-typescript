@@ -20,6 +20,8 @@
     "test:property:ci": "FAST_CHECK_NUM_RUNS=10000 vitest run test/property",
     "verify": "pnpm verify:assets && pnpm wasm:verify:compat && pnpm wasm:build && pnpm typecheck && pnpm test:property:local",
     "manifest:extract": "tsx scripts/manifest/extract-wolfsrc-symbols.ts",
+    "runtime:manifest:extract": "pnpm wasm:build && tsx scripts/runtime/extract-runtime-manifest.ts",
+    "runtime:manifest:verify": "pnpm runtime:manifest:extract && tsx scripts/runtime/verify-runtime-manifest.ts",
     "assets:fetch": "bash scripts/assets/fetch-wl1.sh",
     "assets:validate": "tsx scripts/assets/validate-wl1.ts",
     "verify:assets": "pnpm assets:validate"

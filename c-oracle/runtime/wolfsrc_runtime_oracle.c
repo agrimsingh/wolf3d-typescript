@@ -29,6 +29,41 @@ typedef struct runtime_state_s {
 static runtime_state_t g_state;
 static runtime_state_t g_boot_state;
 
+enum runtime_trace_symbol_e {
+  TRACE_ORACLE_RUNTIME_INIT = 1,
+  TRACE_ORACLE_RUNTIME_RESET = 2,
+  TRACE_ORACLE_RUNTIME_STEP = 3,
+  TRACE_ORACLE_RUNTIME_SNAPSHOT_HASH = 4,
+  TRACE_ORACLE_RUNTIME_RENDER_FRAME_HASH = 5,
+  TRACE_ORACLE_RUNTIME_SET_STATE = 6,
+  TRACE_ORACLE_RUNTIME_GET_MAP_LO = 7,
+  TRACE_ORACLE_RUNTIME_GET_MAP_HI = 8,
+  TRACE_ORACLE_RUNTIME_GET_XQ8 = 9,
+  TRACE_ORACLE_RUNTIME_GET_YQ8 = 10,
+  TRACE_ORACLE_RUNTIME_GET_ANGLE_DEG = 11,
+  TRACE_ORACLE_RUNTIME_GET_HEALTH = 12,
+  TRACE_ORACLE_RUNTIME_GET_AMMO = 13,
+  TRACE_ORACLE_RUNTIME_GET_COOLDOWN = 14,
+  TRACE_ORACLE_RUNTIME_GET_FLAGS = 15,
+  TRACE_ORACLE_RUNTIME_GET_TICK = 16,
+  TRACE_REAL_WL_AGENT_CLIP_MOVE_APPLY = 17,
+};
+
+#define TRACE_SYMBOL_MAX 32
+static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
+static int32_t g_trace_count = 0;
+
+static void trace_hit(int32_t symbol_id) {
+  if (symbol_id <= 0 || symbol_id >= TRACE_SYMBOL_MAX) {
+    return;
+  }
+  if (g_trace_seen[symbol_id]) {
+    return;
+  }
+  g_trace_seen[symbol_id] = 1;
+  g_trace_count++;
+}
+
 static uint32_t fnv1a_u32(uint32_t hash, uint32_t value) {
   hash ^= value;
   hash *= 16777619u;
@@ -107,6 +142,7 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   int32_t dy = (int32_t)(sin(rad) * forward + sin(sr) * strafe);
   int32_t xq16 = state->xq8 << 8;
   int32_t yq16 = state->yq8 << 8;
+  trace_hit(TRACE_REAL_WL_AGENT_CLIP_MOVE_APPLY);
   real_wl_agent_clip_move_apply(
     &xq16,
     &yq16,
@@ -159,6 +195,7 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_init(
   int32_t start_health,
   int32_t start_ammo
 ) {
+  trace_hit(TRACE_ORACLE_RUNTIME_INIT);
   g_state.map_lo = map_lo;
   g_state.map_hi = map_hi;
   g_state.xq8 = start_xq8;
@@ -175,10 +212,12 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_init(
 }
 
 EMSCRIPTEN_KEEPALIVE void oracle_runtime_reset(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_RESET);
   g_state = g_boot_state;
 }
 
 EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_step(int32_t input_mask, int32_t tics, int32_t rng) {
+  trace_hit(TRACE_ORACLE_RUNTIME_STEP);
   int32_t loops = clamp_i32(tics, 0, 32);
   for (int32_t i = 0; i < loops; i++) {
     int32_t step_rng = rng ^ (i * 1103515245);
@@ -188,10 +227,12 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_step(int32_t input_mask, int32_t ti
 }
 
 EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_snapshot_hash(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_SNAPSHOT_HASH);
   return runtime_snapshot_hash(&g_state);
 }
 
 EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_render_frame_hash(int32_t view_width, int32_t view_height) {
+  trace_hit(TRACE_ORACLE_RUNTIME_RENDER_FRAME_HASH);
   uint32_t h = runtime_snapshot_hash(&g_state);
   h = fnv1a_u32(h, (uint32_t)view_width);
   h = fnv1a_u32(h, (uint32_t)view_height);
@@ -211,6 +252,7 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_set_state(
   int32_t flags,
   int32_t tick
 ) {
+  trace_hit(TRACE_ORACLE_RUNTIME_SET_STATE);
   g_state.map_lo = map_lo;
   g_state.map_hi = map_hi;
   g_state.xq8 = xq8;
@@ -224,13 +266,79 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_set_state(
   return 1;
 }
 
-EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_get_map_lo(void) { return g_state.map_lo; }
-EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_get_map_hi(void) { return g_state.map_hi; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_xq8(void) { return g_state.xq8; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_yq8(void) { return g_state.yq8; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_angle_deg(void) { return g_state.angle_deg; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_health(void) { return g_state.health; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_ammo(void) { return g_state.ammo; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_cooldown(void) { return g_state.cooldown; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_flags(void) { return g_state.flags; }
-EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_tick(void) { return g_state.tick; }
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_get_map_lo(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_MAP_LO);
+  return g_state.map_lo;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_get_map_hi(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_MAP_HI);
+  return g_state.map_hi;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_xq8(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_XQ8);
+  return g_state.xq8;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_yq8(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_YQ8);
+  return g_state.yq8;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_angle_deg(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_ANGLE_DEG);
+  return g_state.angle_deg;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_health(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_HEALTH);
+  return g_state.health;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_ammo(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_AMMO);
+  return g_state.ammo;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_cooldown(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_COOLDOWN);
+  return g_state.cooldown;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_flags(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_FLAGS);
+  return g_state.flags;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_tick(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_GET_TICK);
+  return g_state.tick;
+}
+
+EMSCRIPTEN_KEEPALIVE void oracle_runtime_trace_reset(void) {
+  memset(g_trace_seen, 0, sizeof(g_trace_seen));
+  g_trace_count = 0;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_trace_count(void) {
+  return g_trace_count;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_trace_symbol_id_at(int32_t index) {
+  int32_t seen = 0;
+  int32_t id;
+  if (index < 0 || index >= g_trace_count) {
+    return -1;
+  }
+  for (id = 1; id < TRACE_SYMBOL_MAX; id++) {
+    if (!g_trace_seen[id]) {
+      continue;
+    }
+    if (seen == index) {
+      return id;
+    }
+    seen++;
+  }
+  return -1;
+}

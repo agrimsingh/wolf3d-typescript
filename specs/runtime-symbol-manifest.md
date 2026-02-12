@@ -4,27 +4,45 @@ Authoritative symbol checklist for full runtime-complete WL1 parity.
 
 ## Status
 
-- Current state: `unfrozen`
+- Current state: `frozen`
 - Source of truth: deterministic oracle symbol trace outputs from Phase R2
-- Refresh command: `pnpm runtime:manifest:extract` (to be added)
+- Trace scenarios: 10 (WL1 asset-backed)
+- Deterministic menu-trace digest: `3960187756`
+- Refresh command: `pnpm runtime:manifest:extract`
 
 ## Buckets
 
 ### required-runtime
 
-Symbols exercised by deterministic WL1 runtime traces and required for full completion.
+Symbols exercised by deterministic runtime trace scenarios.
 
 | File | Function | Status | Notes |
 | :--- | :--- | :--- | :--- |
-| _pending_ | _pending_ | `todo` | Generated in Phase R2 |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_init | `todo` | runtime bootstrap entrypoint |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_reset | `todo` | restores boot snapshot |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_step | `todo` | runtime tick loop entrypoint |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_snapshot_hash | `todo` | snapshot hash API |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_frame_hash | `todo` | frame-hash API |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_set_state | `todo` | deserialize/state restore API |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_map_lo | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_map_hi | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_xq8 | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_yq8 | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_angle_deg | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_health | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_ammo | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_cooldown | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_flags | `todo` | snapshot readout |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_tick | `todo` | snapshot readout |
+| WL_AGENT.C | ClipMove | `todo` | called via real_wl_agent_clip_move_apply shim |
 
 ### excluded-non-runtime
 
-Symbols not hit by WL1 runtime traces. Excluded from mandatory function-level parity, but retained as documented exclusions.
+Symbols known to the runtime trace map but not hit by current deterministic trace scenarios.
 
 | File | Function | Reason |
 | :--- | :--- | :--- |
-| _pending_ | _pending_ | _pending_ |
+| _none_ | _none_ | all traced symbols are currently required-runtime |
 
 ## Rules
 
