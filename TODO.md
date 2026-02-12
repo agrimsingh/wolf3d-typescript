@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K10` active)  
+**Status:** In Progress (`K11` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -125,13 +125,13 @@
 
 ## K10: TS Parity Wave E (Menu/Text/Input/Intermission/Audio SFX)
 
-- [ ] Port menu/text/input/intermission behavior and mapped SFX audio-state behavior.
-- [ ] Keep BGM explicitly disabled/stubbed for now.
-- [ ] Gate: menu/input/audio parity suites
-- [ ] Gate: deterministic progression traces
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k10: wl6 menu-text-input-sfx parity`)
+- [x] Port menu/text/input/intermission behavior and mapped SFX audio-state behavior.
+- [x] Keep BGM explicitly disabled/stubbed for now.
+- [x] Gate: menu/input/audio parity suites
+- [x] Gate: deterministic progression traces
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k10: wl6 menu-text-input-sfx parity`)
 
 ## K11: Production Runtime Swap + Oracle Isolation
 

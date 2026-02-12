@@ -6,7 +6,7 @@ Track the remaining gap between the current browser runtime and a gameplay-compl
 
 ## Current Reality (2026-02-12)
 
-Progress checkpoint: `K0..K9` are complete; `K10` (menu/text/input/intermission/audio-state parity) is now active.
+Progress checkpoint: `K0..K10` are complete; `K11` (production runtime swap + oracle isolation) is now active.
 
 1. Runtime currently boots and renders in browser, but the experience still exposes prototype-era behavior and presentation shortcuts.
 2. The app has existing WL1-centric file/contract paths that must be generalized for WL6 canonical runtime ingestion.

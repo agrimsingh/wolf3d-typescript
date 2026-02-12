@@ -1,0 +1,41 @@
+{
+  "phase": "K10",
+  "timestamp": "2026-02-12",
+  "gates": {
+    "menuTextAudioLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/phase7.menu-text.test.ts test/property/phase8.audio.test.ts test/property/runtime.menu-progression.test.ts",
+      "status": "pass"
+    },
+    "menuTextAudioCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/phase7.menu-text.test.ts test/property/phase8.audio.test.ts test/property/runtime.menu-progression.test.ts",
+      "status": "pass"
+    },
+    "runtimeLifecycleLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/runtime.lifecycle.test.ts",
+      "status": "pass"
+    },
+    "runtimeLifecycleCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/runtime.lifecycle.test.ts",
+      "status": "pass"
+    }
+  },
+  "agentBrowser": {
+    "session": "k10",
+    "artifact": "artifacts/agent-browser/k10/progression-flow-check.json",
+    "checks": {
+      "titleToMenuToPlaying": true,
+      "intermissionReached": true,
+      "nextLevelReached": true
+    },
+    "screenshots": [
+      "artifacts/agent-browser/k10/title.png",
+      "artifacts/agent-browser/k10/menu.png",
+      "artifacts/agent-browser/k10/intermission.png",
+      "artifacts/agent-browser/k10/next-level.png"
+    ]
+  },
+  "audioScope": {
+    "sfxStateParity": "enabled",
+    "bgm": "intentionally disabled/stubbed"
+  }
+}
