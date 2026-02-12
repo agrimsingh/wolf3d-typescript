@@ -6,17 +6,21 @@ Track the remaining gap between the current browser runtime and a gameplay-compl
 
 ## Current Reality (2026-02-12)
 
-Progress checkpoint: `K0..K12` are complete; WL6 runtime parity freeze and merge closure are complete.
+Progress checkpoint: No phase is currently complete as a runtime-faithful guarantee.
 
-1. Production browser path uses pure TypeScript runtime (`TsRuntimePort`) with oracle isolated to property/parity harnesses.
-2. WL6 canonical map/runtime assets and deterministic modern presentation mapping are locked and validated.
-3. Runtime symbol classification and manifest are generated with zero unclassified symbols.
-4. Deterministic checkpoint and full-episode lock artifacts are regenerated and verified for WL6 (60-map set).
-5. Browser acceptance traces are captured per phase, including K12 progression (`title -> menu -> playing -> intermission -> next level`).
+1. Runtime is currently in mixed behavior mode: production browser flow is partially driven by synthetic fixtures and legacy 8x8 map-wall assumptions.
+2. WL6 canonical map/runtime assets are mostly present, but map/door/actor runtime parity remains incomplete in gameplay paths.
+3. Runtime symbol classification and manifests exist, but runtime-faithful evidence for every required behavior transition is not complete.
+4. Deterministic checkpoint/full-episode parity artifacts exist, but they are not yet proven as a strict gate for complete gameplay.
+5. Browser acceptance traces are present from earlier experimental passes, but replay coverage does not yet prove full episode parity under live WL6 behavior.
 
 ## Primary Gaps To Close
 
-1. None for the defined WL6 K-track scope; remaining work is future enhancement outside this runbook.
+1. Remove synthetic scenario fixtures from the production path and wire deterministic full-world startup.
+2. Complete map/window replacement with full-map parity state and collision surfaces.
+3. Finish strict parity for movement/combat/enemies/doors/intermission/audio with WL6 source traces.
+4. Finish one-shot P0–P12 execution and attach clean evidence for each green gate.
+5. Validate full-episode completion parity and lock final merge evidence.
 
 ## Done Criteria (WL6 Track)
 

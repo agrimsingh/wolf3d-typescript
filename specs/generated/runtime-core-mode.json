@@ -1,5 +1,6 @@
 {
   "phase": "K12",
   "mode": "real",
-  "notes": "K12 parity freeze complete: production runtime remains pure TypeScript with oracle isolated to tests and WL6 lock artifacts updated."
+  "notes": "one-shot autolaunch",
+  "updatedAt": "2026-02-12T21:29:36.012Z"
 }
