@@ -3,6 +3,8 @@ import { TsRuntimePort } from '../runtime/tsRuntime';
 import { NullRuntimeAudioAdapter, type RuntimeAudioAdapter } from './runtimeAudio';
 
 const TIC_MS = 1000 / 70;
+const INTERMISSION_MS = 800;
+const FLAG_LEVEL_COMPLETE = 1 << 22;
 
 export interface RuntimeScenario {
   id: string;
@@ -13,7 +15,7 @@ export interface RuntimeScenario {
   steps: RuntimeInput[];
 }
 
-export type RuntimeAppMode = 'loading' | 'menu' | 'playing' | 'error';
+export type RuntimeAppMode = 'loading' | 'title' | 'menu' | 'playing' | 'intermission' | 'error';
 
 export interface RuntimeAppState {
   mode: RuntimeAppMode;
@@ -24,6 +26,8 @@ export interface RuntimeAppState {
   snapshot: RuntimeSnapshot | null;
   framebuffer: RuntimeFramebufferView | null;
   frameHash: number;
+  intermissionRemainingMs: number;
+  completedScenarioIndex: number;
 }
 
 interface RuntimeControllerOptions {
@@ -47,6 +51,8 @@ export class RuntimeAppController {
     snapshot: null,
     framebuffer: null,
     frameHash: 0,
+    intermissionRemainingMs: 0,
+    completedScenarioIndex: -1,
   };
 
   private lastFrameAtMs = 0;
@@ -102,6 +108,8 @@ export class RuntimeAppController {
       snapshot: this.state.snapshot,
       framebuffer: this.state.framebuffer,
       frameHash: this.state.frameHash >>> 0,
+      intermissionRemainingMs: this.state.intermissionRemainingMs | 0,
+      completedScenarioIndex: this.state.completedScenarioIndex | 0,
     };
   }
 
@@ -116,6 +124,8 @@ export class RuntimeAppController {
       snapshot: null,
       framebuffer: null,
       frameHash: 0,
+      intermissionRemainingMs: 0,
+      completedScenarioIndex: -1,
     };
 
     try {
@@ -125,13 +135,15 @@ export class RuntimeAppController {
       }
       this.state = {
         ...this.state,
-        mode: 'menu',
+        mode: 'title',
         scenarios,
         selectedScenarioIndex: 0,
         currentScenario: null,
         snapshot: null,
         framebuffer: null,
         frameHash: 0,
+        intermissionRemainingMs: 0,
+        completedScenarioIndex: -1,
       };
     } catch (error) {
       this.state = {
@@ -202,12 +214,15 @@ export class RuntimeAppController {
       snapshot,
       framebuffer,
       frameHash: framebuffer.indexedHash >>> 0,
+      intermissionRemainingMs: 0,
+      completedScenarioIndex: -1,
     };
     this.tickAccumulatorMs = 0;
     this.lastFrameAtMs = 0;
     this.rngState = scenario.seed | 0;
     this.mouseTurnAccumulator = 0;
     this.latchedInputMask = 0;
+    this.audio.onUiEvent('game-start');
   }
 
   async startSelectedScenario(): Promise<void> {
@@ -221,6 +236,22 @@ export class RuntimeAppController {
     }
     const nextIndex = (this.state.selectedScenarioIndex + 1) % total;
     await this.startScenario(nextIndex);
+    this.audio.onUiEvent('next-level');
+  }
+
+  private enterIntermission(): void {
+    if (this.state.mode !== 'playing' || !this.state.currentScenario) {
+      return;
+    }
+    this.state = {
+      ...this.state,
+      mode: 'intermission',
+      completedScenarioIndex: this.state.currentScenario.mapIndex | 0,
+      intermissionRemainingMs: INTERMISSION_MS,
+    };
+    this.lastFrameAtMs = 0;
+    this.tickAccumulatorMs = 0;
+    this.audio.onUiEvent('intermission');
   }
 
   returnToMenu(): void {
@@ -232,6 +263,8 @@ export class RuntimeAppController {
       snapshot: null,
       framebuffer: null,
       frameHash: 0,
+      intermissionRemainingMs: 0,
+      completedScenarioIndex: -1,
     };
     this.lastFrameAtMs = 0;
     this.tickAccumulatorMs = 0;
@@ -244,21 +277,49 @@ export class RuntimeAppController {
     this.latchedInputMask |= this.keyCodeToMask(code);
     this.audio.unlock();
 
+    if (this.state.mode === 'title') {
+      if (code === 'Enter' || code === 'Space') {
+        this.state = {
+          ...this.state,
+          mode: 'menu',
+          intermissionRemainingMs: 0,
+          completedScenarioIndex: -1,
+        };
+        this.audio.onUiEvent('title-enter');
+      }
+      return;
+    }
+
     if (this.state.mode === 'menu') {
       if (code === 'ArrowUp') {
         const total = this.state.scenarios.length;
         if (total > 0) {
           const selectedScenarioIndex = (this.state.selectedScenarioIndex + total - 1) % total;
           this.state = { ...this.state, selectedScenarioIndex };
+          this.audio.onUiEvent('menu-move');
         }
       } else if (code === 'ArrowDown') {
         const total = this.state.scenarios.length;
         if (total > 0) {
           const selectedScenarioIndex = (this.state.selectedScenarioIndex + 1) % total;
           this.state = { ...this.state, selectedScenarioIndex };
+          this.audio.onUiEvent('menu-move');
         }
       } else if (code === 'Enter') {
+        this.audio.onUiEvent('menu-select');
         void this.startSelectedScenario();
+      }
+      return;
+    }
+
+    if (this.state.mode === 'intermission') {
+      if (code === 'Enter' || code === 'Space') {
+        this.state = {
+          ...this.state,
+          intermissionRemainingMs: 0,
+        };
+      } else if (code === 'Escape') {
+        this.returnToMenu();
       }
       return;
     }
@@ -267,7 +328,7 @@ export class RuntimeAppController {
       if (code === 'Escape') {
         this.returnToMenu();
       } else if (code === 'KeyN') {
-        void this.startNextScenario();
+        this.enterIntermission();
       }
     }
   }
@@ -289,6 +350,29 @@ export class RuntimeAppController {
   }
 
   tick(nowMs: number): void {
+    if (this.state.mode === 'intermission') {
+      if (this.lastFrameAtMs === 0) {
+        this.lastFrameAtMs = nowMs;
+        return;
+      }
+      const deltaMs = Math.max(0, Math.min(200, nowMs - this.lastFrameAtMs));
+      this.lastFrameAtMs = nowMs;
+      const nextRemaining = Math.max(0, (this.state.intermissionRemainingMs | 0) - deltaMs) | 0;
+      this.state = {
+        ...this.state,
+        intermissionRemainingMs: nextRemaining,
+      };
+      if (nextRemaining <= 0) {
+        this.state = {
+          ...this.state,
+          mode: 'loading',
+          intermissionRemainingMs: 0,
+        };
+        void this.startNextScenario();
+      }
+      return;
+    }
+
     if (this.state.mode !== 'playing' || !this.state.currentScenario || !this.state.snapshot) {
       return;
     }
@@ -332,7 +416,17 @@ export class RuntimeAppController {
         snapshot: nextSnapshot,
         frameHash: step.frameHash >>> 0,
       };
+
+      if (((nextSnapshot.flags | 0) & FLAG_LEVEL_COMPLETE) !== 0) {
+        this.enterIntermission();
+        break;
+      }
+
       pendingTics -= tics;
+    }
+
+    if (this.state.mode !== 'playing') {
+      return;
     }
 
     const framebuffer = this.runtime.framebuffer(true);

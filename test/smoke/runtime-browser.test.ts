@@ -59,7 +59,7 @@ describe('runtime browser smoke', () => {
     }
   });
 
-  it('boots to menu with decoded scenarios', async () => {
+  it('boots to title with decoded scenarios', async () => {
     const controller = new RuntimeAppController({
       runtime: new TsRuntimePort(),
       audio: new NullRuntimeAudioAdapter(),
@@ -69,13 +69,13 @@ describe('runtime browser smoke', () => {
 
     await controller.boot();
     const state = controller.getState();
-    expect(state.mode).toBe('menu');
+    expect(state.mode).toBe('title');
     expect(state.scenarios.length).toBe(2);
     expect(state.selectedScenarioIndex).toBe(0);
     expect(state.currentScenario).toBeNull();
   });
 
-  it('menu -> new game -> playing tick updates snapshot/frame', async () => {
+  it('title -> control panel -> new game -> playing tick updates snapshot/frame', async () => {
     const controller = new RuntimeAppController({
       runtime: new TsRuntimePort(),
       audio: new NullRuntimeAudioAdapter(),
@@ -84,6 +84,8 @@ describe('runtime browser smoke', () => {
     controllers.push(controller);
 
     await controller.boot();
+    controller.onKeyDown('Enter');
+    expect(controller.getState().mode).toBe('menu');
     controller.onKeyDown('Enter');
     await waitUntil(() => controller.getState().mode === 'playing');
 
@@ -103,7 +105,7 @@ describe('runtime browser smoke', () => {
     expect(controller.getState().frameHash >>> 0).toBeGreaterThan(0);
   });
 
-  it('supports deterministic level transition to next scenario', async () => {
+  it('supports deterministic intermission transition to next scenario', async () => {
     const controller = new RuntimeAppController({
       runtime: new TsRuntimePort(),
       audio: new NullRuntimeAudioAdapter(),
@@ -117,7 +119,14 @@ describe('runtime browser smoke', () => {
     expect(controller.getState().currentScenario?.mapIndex).toBe(0);
 
     controller.onKeyDown('KeyN');
-    await waitUntil(() => controller.getState().currentScenario?.mapIndex === 1);
+    expect(controller.getState().mode).toBe('intermission');
+
+    controller.tick(1000);
+    controller.tick(1250);
+    controller.tick(1500);
+    controller.tick(1700);
+    controller.tick(2000);
+    await waitUntil(() => controller.getState().currentScenario?.mapIndex === 1, 3000);
     expect(controller.getState().mode).toBe('playing');
     expect(controller.getState().currentScenario?.mapIndex).toBe(1);
   });

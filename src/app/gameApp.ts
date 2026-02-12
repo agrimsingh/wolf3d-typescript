@@ -194,6 +194,20 @@ export class WolfApp {
     this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 18, HEIGHT / 2 + 16);
   }
 
+  private drawTitleFrame(): void {
+    this.ctx.fillStyle = '#040814';
+    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    this.ctx.fillStyle = '#f7f1d1';
+    this.ctx.font = '18px monospace';
+    this.ctx.fillText('Wolf3D TS Runtime', 58, 82);
+    this.ctx.fillStyle = '#ffb703';
+    this.ctx.font = '10px monospace';
+    this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 46, 98);
+    this.ctx.fillStyle = '#d6dfef';
+    this.ctx.font = '12px monospace';
+    this.ctx.fillText('Press Enter to open Control Panel', 52, 128);
+  }
+
   private drawMenuFrame(): void {
     const state = this.controller.getState();
 
@@ -201,13 +215,13 @@ export class WolfApp {
     this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.font = '14px monospace';
-    this.ctx.fillText('Wolf3D TS Runtime Menu', 18, 24);
+    this.ctx.fillText('Wolf3D TS Control Panel', 18, 24);
     this.ctx.fillStyle = '#ffb703';
     this.ctx.font = '10px monospace';
     this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 18, 34);
     this.ctx.font = '10px monospace';
     this.ctx.fillStyle = '#d6dfef';
-    this.ctx.fillText('Arrow keys: select map  Enter: start  N: next level  Esc: menu', 18, 48);
+    this.ctx.fillText('Arrow keys: select map  Enter: New Game', 18, 48);
 
     let y = 70;
     for (let i = 0; i < state.scenarios.length; i++) {
@@ -218,6 +232,25 @@ export class WolfApp {
       this.ctx.fillText(`${marker} [${scenario.mapIndex}] ${scenario.mapName}`, 20, y);
       y += 12;
     }
+  }
+
+  private drawIntermissionFrame(): void {
+    const state = this.controller.getState();
+    const nextScenario = state.scenarios[(state.selectedScenarioIndex + 1) % Math.max(1, state.scenarios.length)];
+    const remaining = Math.max(0, Math.ceil((state.intermissionRemainingMs | 0) / 1000));
+
+    this.ctx.fillStyle = '#0b060f';
+    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    this.ctx.fillStyle = '#f9e6c1';
+    this.ctx.font = '16px monospace';
+    this.ctx.fillText('Intermission', 102, 62);
+    this.ctx.fillStyle = '#d6dfef';
+    this.ctx.font = '11px monospace';
+    this.ctx.fillText(`Completed map: ${state.completedScenarioIndex}`, 62, 92);
+    if (nextScenario) {
+      this.ctx.fillText(`Next map: [${nextScenario.mapIndex}] ${nextScenario.mapName}`, 42, 112);
+    }
+    this.ctx.fillText(`Continuing in ${remaining}s (Enter to skip)`, 46, 142);
   }
 
   private drawErrorFrame(): void {
@@ -360,8 +393,14 @@ export class WolfApp {
       case 'menu':
         this.drawMenuFrame();
         break;
+      case 'title':
+        this.drawTitleFrame();
+        break;
       case 'playing':
         this.drawPlayingFrame();
+        break;
+      case 'intermission':
+        this.drawIntermissionFrame();
         break;
       case 'error':
         this.drawErrorFrame();

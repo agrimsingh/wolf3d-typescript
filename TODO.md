@@ -110,13 +110,13 @@
 
 ## G9: TS Port Wave E (Menu/Text/Input/Intermission/Audio State)
 
-- [ ] Port gameplay-complete menu/text/input/intermission/audio behavior-state.
-- [ ] Include loading/new game/episode progression paths.
-- [ ] Gate: menu/input/audio parity suites
-- [ ] Gate: deterministic menu and progression traces
-- [ ] Gate: agent-browser `title -> control panel -> new game -> in-game -> intermission -> next level`
-- [ ] Tests green
-- [ ] Phase commit pushed (`g9: menu-text-input-audio gameplay parity`)
+- [x] Port gameplay-complete menu/text/input/intermission/audio behavior-state.
+- [x] Include loading/new game/episode progression paths.
+- [x] Gate: menu/input/audio parity suites
+- [x] Gate: deterministic menu and progression traces
+- [x] Gate: agent-browser `title -> control panel -> new game -> in-game -> intermission -> next level`
+- [x] Tests green
+- [x] Phase commit pushed (`g9: menu-text-input-audio gameplay parity`)
 
 ## G10: Production Runtime Swap + Oracle Isolation
 

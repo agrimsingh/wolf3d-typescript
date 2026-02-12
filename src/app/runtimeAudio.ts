@@ -1,8 +1,17 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
 
+export type RuntimeUiEvent =
+  | 'title-enter'
+  | 'menu-move'
+  | 'menu-select'
+  | 'game-start'
+  | 'intermission'
+  | 'next-level';
+
 export interface RuntimeAudioAdapter {
   unlock(): void;
   onStep(previous: RuntimeSnapshot, next: RuntimeSnapshot, inputMask: number): void;
+  onUiEvent(event: RuntimeUiEvent): void;
   shutdown(): Promise<void> | void;
 }
 
@@ -12,6 +21,10 @@ export class NullRuntimeAudioAdapter implements RuntimeAudioAdapter {
   }
 
   onStep(_previous: RuntimeSnapshot, _next: RuntimeSnapshot, _inputMask: number): void {
+    // no-op
+  }
+
+  onUiEvent(_event: RuntimeUiEvent): void {
     // no-op
   }
 
@@ -85,6 +98,31 @@ export class WebAudioRuntimeAdapter implements RuntimeAudioAdapter {
     }
     if (tookDamage) {
       this.beep(180, 70, 0.035);
+    }
+  }
+
+  onUiEvent(event: RuntimeUiEvent): void {
+    switch (event) {
+      case 'title-enter':
+        this.beep(390, 60, 0.02);
+        break;
+      case 'menu-move':
+        this.beep(540, 25, 0.012);
+        break;
+      case 'menu-select':
+        this.beep(690, 45, 0.02);
+        break;
+      case 'game-start':
+        this.beep(820, 65, 0.022);
+        break;
+      case 'intermission':
+        this.beep(320, 80, 0.02);
+        break;
+      case 'next-level':
+        this.beep(960, 55, 0.02);
+        break;
+      default:
+        break;
     }
   }
 
