@@ -118,6 +118,16 @@ Symbols exercised by deterministic runtime trace scenarios.
 | ID_CA.C | SetupMapFile | `done` | called via oracle_id_ca_setup_map_file_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_CA.C | CacheMap | `done` | called via oracle_id_ca_cache_map_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_GAME.C | SetupGameLevel | `done` | called via oracle_wl_game_setup_game_level_hash from runtime map probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_MM.C | MM_GetPtr | `done` | called via oracle_id_mm_mm_get_ptr_hash from runtime memory probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_MM.C | MM_FreePtr | `done` | called via oracle_id_mm_mm_free_ptr_hash from runtime memory probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_MM.C | MM_SetPurge | `done` | called via oracle_id_mm_mm_set_purge_hash from runtime memory probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_MM.C | MM_SetLock | `done` | called via oracle_id_mm_mm_set_lock_hash from runtime memory probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_MM.C | MM_SortMem | `done` | called via oracle_id_mm_mm_sort_mem_hash from runtime memory probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_PM.C | PM_CheckMainMem | `done` | called via oracle_id_pm_pm_check_main_mem_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_PM.C | PM_GetPageAddress | `done` | called via oracle_id_pm_pm_get_page_address_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_PM.C | PM_GetPage | `done` | called via oracle_id_pm_pm_get_page_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_PM.C | PM_NextFrame | `done` | called via oracle_id_pm_pm_next_frame_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_PM.C | PM_Reset | `done` | called via oracle_id_pm_pm_reset_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

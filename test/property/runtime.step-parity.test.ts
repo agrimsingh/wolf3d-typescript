@@ -285,6 +285,16 @@ describe('runtime step parity', () => {
     expect(a.includes(98)).toBe(true); // ID_CA.SetupMapFile
     expect(a.includes(99)).toBe(true); // ID_CA.CacheMap
     expect(a.includes(100)).toBe(true); // WL_GAME.SetupGameLevel
+    expect(a.includes(101)).toBe(true); // ID_MM.MM_GetPtr
+    expect(a.includes(102)).toBe(true); // ID_MM.MM_FreePtr
+    expect(a.includes(103)).toBe(true); // ID_MM.MM_SetPurge
+    expect(a.includes(104)).toBe(true); // ID_MM.MM_SetLock
+    expect(a.includes(105)).toBe(true); // ID_MM.MM_SortMem
+    expect(a.includes(106)).toBe(true); // ID_PM.PM_CheckMainMem
+    expect(a.includes(107)).toBe(true); // ID_PM.PM_GetPageAddress
+    expect(a.includes(108)).toBe(true); // ID_PM.PM_GetPage
+    expect(a.includes(109)).toBe(true); // ID_PM.PM_NextFrame
+    expect(a.includes(110)).toBe(true); // ID_PM.PM_Reset
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

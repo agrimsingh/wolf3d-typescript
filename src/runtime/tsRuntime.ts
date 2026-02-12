@@ -74,6 +74,16 @@ import {
   idCaCarmackExpandHash,
   idCaRlewExpandHash,
   idCaSetupMapFileHash,
+  idMmFreePtrHash,
+  idMmGetPtrHash,
+  idMmSetLockHash,
+  idMmSetPurgeHash,
+  idMmSortMemHash,
+  idPmCheckMainMemHash,
+  idPmGetPageAddressHash,
+  idPmGetPageHash,
+  idPmNextFrameHash,
+  idPmResetHash,
   wlGameDrawPlayScreenHash,
   wlGameSetupGameLevelHash,
 } from '../wolf/map/wlMap';
@@ -748,6 +758,22 @@ export class TsRuntimePort implements RuntimePort {
         const planeWordCount = 64;
         const mapWidth = 8;
         const mapHeight = 8;
+        const mmFreeBytes = (65536 + ((stateHash ^ (rng >>> 0)) & 0x1fff)) | 0;
+        const mmRequestSize = (32 + (rng & 0x7ff)) | 0;
+        const mmAllocMask = ((this.state.mapLo ^ this.state.mapHi) | 1) >>> 0;
+        const mmPurgeMask = ((this.state.flags >> 4) & 0xffff) >>> 0;
+        const mmLockMask = ((this.state.flags >> 8) & 0xffff) >>> 0;
+        const mmSlot = this.state.tick & 31;
+        const mmBlockSize = (16 + ((rng >> 3) & 0x3ff)) | 0;
+        const mmPurgeLevel = (this.state.tick >> 2) & 3;
+        const mmLowWaterMark = (8192 + ((this.state.tick & 63) << 4)) | 0;
+        const pmPageCount = 64;
+        const pmResidentMask = (this.state.mapLo ^ (this.state.mapHi << 1)) >>> 0;
+        const pmLockMask = (this.state.flags ^ (rng >> 1)) >>> 0;
+        const pmPageSize = 4096;
+        const pmPageNum = (this.state.tick + (rng & 31)) & 31;
+        const pmFrame = this.state.tick & 0x7fff;
+        const pmFrameSeed = (this.state.tick ^ rng) | 0;
         const carmackSource = new Uint8Array(carmackSourceLen);
         const rlewSourceBytes = new Uint8Array(rlewSourceLen);
         const mapHeadBytes = new Uint8Array(mapHeadLen);
@@ -1204,6 +1230,16 @@ export class TsRuntimePort implements RuntimePort {
         const setupMapFileHash = idCaSetupMapFileHash(mapHeadBytes) >>> 0;
         const cacheMapHash = idCaCacheMapHash(gameMapsBytes, mapHeadBytes, 0) >>> 0;
         const setupGameLevelHash = wlGameSetupGameLevelHash(plane0Words, mapWidth, mapHeight) >>> 0;
+        const mmGetPtrHash = idMmGetPtrHash(mmFreeBytes, mmRequestSize, mmPurgeMask, mmLockMask) >>> 0;
+        const mmFreePtrHash = idMmFreePtrHash(mmFreeBytes, mmBlockSize, mmAllocMask, mmSlot) >>> 0;
+        const mmSetPurgeHash = idMmSetPurgeHash(mmPurgeMask, mmLockMask, mmSlot, mmPurgeLevel) >>> 0;
+        const mmSetLockHash = idMmSetLockHash(mmLockMask, mmSlot, (inputMask >> 6) & 1) >>> 0;
+        const mmSortMemHash = idMmSortMemHash(mmAllocMask, mmPurgeMask, mmLockMask, mmLowWaterMark) >>> 0;
+        const pmCheckMainMemHash = idPmCheckMainMemHash(pmPageCount, pmResidentMask, pmLockMask, pmPageSize) >>> 0;
+        const pmGetPageAddressHash = idPmGetPageAddressHash(pmResidentMask, pmPageNum, pmPageSize, pmFrame) >>> 0;
+        const pmGetPageHash = idPmGetPageHash(pmResidentMask, pmLockMask, pmPageNum, pmFrame) >>> 0;
+        const pmNextFrameHash = idPmNextFrameHash(pmResidentMask, pmLockMask, pmFrame) >>> 0;
+        const pmResetHash = idPmResetHash(pmPageCount, pmResidentMask, pmFrameSeed) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1255,7 +1291,17 @@ export class TsRuntimePort implements RuntimePort {
             rlewExpandHash ^
             setupMapFileHash ^
             cacheMapHash ^
-            setupGameLevelHash) >>> 0;
+            setupGameLevelHash ^
+            mmGetPtrHash ^
+            mmFreePtrHash ^
+            mmSetPurgeHash ^
+            mmSetLockHash ^
+            mmSortMemHash ^
+            pmCheckMainMemHash ^
+            pmGetPageAddressHash ^
+            pmGetPageHash ^
+            pmNextFrameHash ^
+            pmResetHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

@@ -136,6 +136,16 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 98, file: 'ID_CA.C', func: 'SetupMapFile', notes: 'called via oracle_id_ca_setup_map_file_hash from runtime map probe' },
   { id: 99, file: 'ID_CA.C', func: 'CacheMap', notes: 'called via oracle_id_ca_cache_map_hash from runtime map probe' },
   { id: 100, file: 'WL_GAME.C', func: 'SetupGameLevel', notes: 'called via oracle_wl_game_setup_game_level_hash from runtime map probe' },
+  { id: 101, file: 'ID_MM.C', func: 'MM_GetPtr', notes: 'called via oracle_id_mm_mm_get_ptr_hash from runtime memory probe' },
+  { id: 102, file: 'ID_MM.C', func: 'MM_FreePtr', notes: 'called via oracle_id_mm_mm_free_ptr_hash from runtime memory probe' },
+  { id: 103, file: 'ID_MM.C', func: 'MM_SetPurge', notes: 'called via oracle_id_mm_mm_set_purge_hash from runtime memory probe' },
+  { id: 104, file: 'ID_MM.C', func: 'MM_SetLock', notes: 'called via oracle_id_mm_mm_set_lock_hash from runtime memory probe' },
+  { id: 105, file: 'ID_MM.C', func: 'MM_SortMem', notes: 'called via oracle_id_mm_mm_sort_mem_hash from runtime memory probe' },
+  { id: 106, file: 'ID_PM.C', func: 'PM_CheckMainMem', notes: 'called via oracle_id_pm_pm_check_main_mem_hash from runtime page probe' },
+  { id: 107, file: 'ID_PM.C', func: 'PM_GetPageAddress', notes: 'called via oracle_id_pm_pm_get_page_address_hash from runtime page probe' },
+  { id: 108, file: 'ID_PM.C', func: 'PM_GetPage', notes: 'called via oracle_id_pm_pm_get_page_hash from runtime page probe' },
+  { id: 109, file: 'ID_PM.C', func: 'PM_NextFrame', notes: 'called via oracle_id_pm_pm_next_frame_hash from runtime page probe' },
+  { id: 110, file: 'ID_PM.C', func: 'PM_Reset', notes: 'called via oracle_id_pm_pm_reset_hash from runtime page probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -241,6 +251,16 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [98, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [99, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [100, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [101, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [102, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [103, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [104, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [105, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [106, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [107, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [108, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [109, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [110, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

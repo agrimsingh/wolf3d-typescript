@@ -30,6 +30,25 @@ static uint32_t fnv1a_u32(uint32_t hash, uint32_t value) {
   return hash;
 }
 
+static uint32_t popcount32(uint32_t value) {
+  uint32_t count = 0u;
+  while (value) {
+    count += value & 1u;
+    value >>= 1;
+  }
+  return count;
+}
+
+static int32_t clamp_s32_i64(int64_t value) {
+  if (value > 2147483647LL) {
+    return 2147483647;
+  }
+  if (value < -2147483648LL) {
+    return -2147483648LL;
+  }
+  return (int32_t)value;
+}
+
 static uint16_t read_u16_le(const uint8_t *bytes, int len, int offset) {
   if (!bytes || offset < 0 || offset + 1 >= len) {
     return 0u;
@@ -472,5 +491,242 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_wl_game_draw_play_screen_hash(
     hash = fnv1a_u32(hash, hud_ops[i]);
   }
 
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_mm_mm_get_ptr_hash(
+  int32_t free_bytes,
+  int32_t request_size,
+  uint32_t purge_mask,
+  uint32_t lock_mask
+) {
+  int32_t request = request_size < 0 ? 0 : request_size;
+  int32_t remaining = clamp_s32_i64((int64_t)free_bytes - (int64_t)request);
+  int32_t granted = remaining >= 0 ? 1 : 0;
+  if (remaining < 0) {
+    remaining = -1;
+  }
+  uint32_t slot = (uint32_t)((request ^ (free_bytes >> 3) ^ (int32_t)purge_mask ^ ((int32_t)lock_mask << 1)) & 31);
+  uint32_t new_lock_mask = lock_mask | (1u << slot);
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)request);
+  hash = fnv1a_u32(hash, (uint32_t)remaining);
+  hash = fnv1a_u32(hash, (uint32_t)granted);
+  hash = fnv1a_u32(hash, slot);
+  hash = fnv1a_u32(hash, purge_mask);
+  hash = fnv1a_u32(hash, lock_mask);
+  hash = fnv1a_u32(hash, new_lock_mask);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_mm_mm_free_ptr_hash(
+  int32_t free_bytes,
+  int32_t block_size,
+  uint32_t alloc_mask,
+  int32_t slot
+) {
+  uint32_t idx = (uint32_t)(slot & 31);
+  uint32_t bit = 1u << idx;
+  int32_t size = block_size < 0 ? 0 : block_size;
+  int32_t released = (alloc_mask & bit) ? size : 0;
+  int32_t next_free_bytes = clamp_s32_i64((int64_t)free_bytes + (int64_t)released);
+  uint32_t next_alloc_mask = alloc_mask & ~bit;
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)free_bytes);
+  hash = fnv1a_u32(hash, (uint32_t)size);
+  hash = fnv1a_u32(hash, alloc_mask);
+  hash = fnv1a_u32(hash, idx);
+  hash = fnv1a_u32(hash, (uint32_t)released);
+  hash = fnv1a_u32(hash, (uint32_t)next_free_bytes);
+  hash = fnv1a_u32(hash, next_alloc_mask);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_mm_mm_set_purge_hash(
+  uint32_t purge_mask,
+  uint32_t lock_mask,
+  int32_t slot,
+  int32_t purge_level
+) {
+  uint32_t idx = (uint32_t)(slot & 31);
+  uint32_t bit = 1u << idx;
+  int32_t locked = (lock_mask & bit) ? 1 : 0;
+  int32_t purgeable = purge_level > 0 ? 1 : 0;
+  uint32_t next_purge_mask = purge_mask;
+  if (!locked) {
+    next_purge_mask = (purge_mask & ~bit) | ((uint32_t)purgeable << idx);
+  }
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, purge_mask);
+  hash = fnv1a_u32(hash, lock_mask);
+  hash = fnv1a_u32(hash, idx);
+  hash = fnv1a_u32(hash, (uint32_t)purge_level);
+  hash = fnv1a_u32(hash, (uint32_t)locked);
+  hash = fnv1a_u32(hash, next_purge_mask);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_mm_mm_set_lock_hash(
+  uint32_t lock_mask,
+  int32_t slot,
+  int32_t locked
+) {
+  uint32_t idx = (uint32_t)(slot & 31);
+  uint32_t bit = 1u << idx;
+  uint32_t next_lock_mask = locked ? (lock_mask | bit) : (lock_mask & ~bit);
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, lock_mask);
+  hash = fnv1a_u32(hash, idx);
+  hash = fnv1a_u32(hash, (uint32_t)(locked ? 1 : 0));
+  hash = fnv1a_u32(hash, next_lock_mask);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_mm_mm_sort_mem_hash(
+  uint32_t alloc_mask,
+  uint32_t purge_mask,
+  uint32_t lock_mask,
+  int32_t low_water_mark
+) {
+  uint32_t movable = alloc_mask & purge_mask & ~lock_mask;
+  uint32_t moved_blocks = popcount32(movable);
+  int32_t compacted_water_mark = clamp_s32_i64((int64_t)low_water_mark + (int64_t)(moved_blocks * 256u));
+  if (compacted_water_mark < 0) {
+    compacted_water_mark = 0;
+  }
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, alloc_mask);
+  hash = fnv1a_u32(hash, purge_mask);
+  hash = fnv1a_u32(hash, lock_mask);
+  hash = fnv1a_u32(hash, movable);
+  hash = fnv1a_u32(hash, moved_blocks);
+  hash = fnv1a_u32(hash, (uint32_t)compacted_water_mark);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_pm_pm_check_main_mem_hash(
+  int32_t page_count,
+  uint32_t resident_mask,
+  uint32_t lock_mask,
+  int32_t page_size
+) {
+  int32_t total_pages = page_count < 0 ? 0 : page_count;
+  int32_t resident_pages = (int32_t)popcount32(resident_mask);
+  int32_t locked_pages = (int32_t)popcount32(lock_mask & resident_mask);
+  int32_t free_pages = total_pages - resident_pages;
+  if (free_pages < 0) {
+    free_pages = 0;
+  }
+  int32_t size = page_size < 0 ? 0 : page_size;
+  int32_t free_bytes = clamp_s32_i64((int64_t)free_pages * (int64_t)size);
+  int32_t pressure = locked_pages > free_pages ? 1 : 0;
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)total_pages);
+  hash = fnv1a_u32(hash, resident_mask);
+  hash = fnv1a_u32(hash, lock_mask);
+  hash = fnv1a_u32(hash, (uint32_t)resident_pages);
+  hash = fnv1a_u32(hash, (uint32_t)locked_pages);
+  hash = fnv1a_u32(hash, (uint32_t)free_bytes);
+  hash = fnv1a_u32(hash, (uint32_t)pressure);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_pm_pm_get_page_address_hash(
+  uint32_t resident_mask,
+  int32_t page_num,
+  int32_t page_size,
+  int32_t frame
+) {
+  uint32_t idx = (uint32_t)(page_num & 31);
+  uint32_t bit = 1u << idx;
+  int32_t resident = (resident_mask & bit) ? 1 : 0;
+  int32_t size = page_size < 0 ? 0 : page_size;
+  int32_t address = resident ? clamp_s32_i64(((int64_t)frame + (int64_t)idx) * (int64_t)size) : -1;
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, resident_mask);
+  hash = fnv1a_u32(hash, idx);
+  hash = fnv1a_u32(hash, (uint32_t)size);
+  hash = fnv1a_u32(hash, (uint32_t)frame);
+  hash = fnv1a_u32(hash, (uint32_t)resident);
+  hash = fnv1a_u32(hash, (uint32_t)address);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_pm_pm_get_page_hash(
+  uint32_t resident_mask,
+  uint32_t lock_mask,
+  int32_t page_num,
+  int32_t frame
+) {
+  uint32_t idx = (uint32_t)(page_num & 31);
+  uint32_t bit = 1u << idx;
+  int32_t was_resident = (resident_mask & bit) ? 1 : 0;
+  int32_t locked = (lock_mask & bit) ? 1 : 0;
+  uint32_t next_resident_mask = resident_mask;
+  int32_t loaded = 0;
+  if (!was_resident && !locked) {
+    next_resident_mask |= bit;
+    loaded = 1;
+  }
+  int32_t frame_slot = (frame + (int32_t)idx) & 31;
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, resident_mask);
+  hash = fnv1a_u32(hash, lock_mask);
+  hash = fnv1a_u32(hash, idx);
+  hash = fnv1a_u32(hash, (uint32_t)was_resident);
+  hash = fnv1a_u32(hash, (uint32_t)locked);
+  hash = fnv1a_u32(hash, (uint32_t)loaded);
+  hash = fnv1a_u32(hash, (uint32_t)frame_slot);
+  hash = fnv1a_u32(hash, next_resident_mask);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_pm_pm_next_frame_hash(
+  uint32_t resident_mask,
+  uint32_t lock_mask,
+  int32_t frame
+) {
+  int32_t next_frame = (frame + 1) & 0x7fff;
+  int32_t resident_pages = (int32_t)popcount32(resident_mask);
+  int32_t locked_pages = (int32_t)popcount32(lock_mask & resident_mask);
+  int32_t thrash_budget = resident_pages - locked_pages;
+  if (thrash_budget < 0) {
+    thrash_budget = 0;
+  }
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, resident_mask);
+  hash = fnv1a_u32(hash, lock_mask);
+  hash = fnv1a_u32(hash, (uint32_t)frame);
+  hash = fnv1a_u32(hash, (uint32_t)next_frame);
+  hash = fnv1a_u32(hash, (uint32_t)thrash_budget);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_pm_pm_reset_hash(
+  int32_t page_count,
+  uint32_t preload_mask,
+  int32_t frame_seed
+) {
+  int32_t clamped_pages = page_count < 0 ? 0 : (page_count > 32 ? 32 : page_count);
+  uint32_t active_mask = clamped_pages == 32 ? 0xffffffffu : ((1u << clamped_pages) - 1u);
+  uint32_t resident_mask = preload_mask & active_mask;
+  int32_t next_frame = frame_seed & 0x7fff;
+  int32_t warm_pages = (int32_t)popcount32(resident_mask);
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)clamped_pages);
+  hash = fnv1a_u32(hash, preload_mask);
+  hash = fnv1a_u32(hash, resident_mask);
+  hash = fnv1a_u32(hash, (uint32_t)warm_pages);
+  hash = fnv1a_u32(hash, (uint32_t)next_frame);
   return hash;
 }

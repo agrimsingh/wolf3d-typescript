@@ -724,6 +724,63 @@ uint32_t oracle_wl_game_setup_game_level_hash(
   int mapwidth,
   int mapheight
 );
+uint32_t oracle_id_mm_mm_get_ptr_hash(
+  int32_t free_bytes,
+  int32_t request_size,
+  uint32_t purge_mask,
+  uint32_t lock_mask
+);
+uint32_t oracle_id_mm_mm_free_ptr_hash(
+  int32_t free_bytes,
+  int32_t block_size,
+  uint32_t alloc_mask,
+  int32_t slot
+);
+uint32_t oracle_id_mm_mm_set_purge_hash(
+  uint32_t purge_mask,
+  uint32_t lock_mask,
+  int32_t slot,
+  int32_t purge_level
+);
+uint32_t oracle_id_mm_mm_set_lock_hash(
+  uint32_t lock_mask,
+  int32_t slot,
+  int32_t locked
+);
+uint32_t oracle_id_mm_mm_sort_mem_hash(
+  uint32_t alloc_mask,
+  uint32_t purge_mask,
+  uint32_t lock_mask,
+  int32_t low_water_mark
+);
+uint32_t oracle_id_pm_pm_check_main_mem_hash(
+  int32_t page_count,
+  uint32_t resident_mask,
+  uint32_t lock_mask,
+  int32_t page_size
+);
+uint32_t oracle_id_pm_pm_get_page_address_hash(
+  uint32_t resident_mask,
+  int32_t page_num,
+  int32_t page_size,
+  int32_t frame
+);
+uint32_t oracle_id_pm_pm_get_page_hash(
+  uint32_t resident_mask,
+  uint32_t lock_mask,
+  int32_t page_num,
+  int32_t frame
+);
+uint32_t oracle_id_pm_pm_next_frame_hash(
+  uint32_t resident_mask,
+  uint32_t lock_mask,
+  int32_t frame
+);
+uint32_t oracle_id_pm_pm_reset_hash(
+  int32_t page_count,
+  uint32_t preload_mask,
+  int32_t frame_seed
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -843,6 +900,16 @@ enum runtime_trace_symbol_e {
   TRACE_ID_CA_SETUP_MAP_FILE = 98,
   TRACE_ID_CA_CACHE_MAP = 99,
   TRACE_WL_GAME_SETUP_GAME_LEVEL = 100,
+  TRACE_ID_MM_GET_PTR = 101,
+  TRACE_ID_MM_FREE_PTR = 102,
+  TRACE_ID_MM_SET_PURGE = 103,
+  TRACE_ID_MM_SET_LOCK = 104,
+  TRACE_ID_MM_SORT_MEM = 105,
+  TRACE_ID_PM_CHECK_MAIN_MEM = 106,
+  TRACE_ID_PM_GET_PAGE_ADDRESS = 107,
+  TRACE_ID_PM_GET_PAGE = 108,
+  TRACE_ID_PM_NEXT_FRAME = 109,
+  TRACE_ID_PM_RESET = 110,
 };
 
 #define TRACE_SYMBOL_MAX 128
@@ -1195,6 +1262,16 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t setup_map_file_hash;
       uint32_t cache_map_hash;
       uint32_t setup_game_level_hash;
+      uint32_t mm_get_ptr_hash;
+      uint32_t mm_free_ptr_hash;
+      uint32_t mm_set_purge_hash;
+      uint32_t mm_set_lock_hash;
+      uint32_t mm_sort_mem_hash;
+      uint32_t pm_check_main_mem_hash;
+      uint32_t pm_get_page_address_hash;
+      uint32_t pm_get_page_hash;
+      uint32_t pm_next_frame_hash;
+      uint32_t pm_reset_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -1365,6 +1442,22 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t plane_word_count = 64;
       int32_t map_width = 8;
       int32_t map_height = 8;
+      int32_t mm_free_bytes = 65536 + (int32_t)((state_hash ^ (uint32_t)rng) & 0x1fffu);
+      int32_t mm_request_size = 32 + (rng & 0x7ff);
+      uint32_t mm_alloc_mask = (state->map_lo ^ state->map_hi) | 1u;
+      uint32_t mm_purge_mask = (uint32_t)((state->flags >> 4) & 0xffffu);
+      uint32_t mm_lock_mask = (uint32_t)((state->flags >> 8) & 0xffffu);
+      int32_t mm_slot = state->tick & 31;
+      int32_t mm_block_size = 16 + ((rng >> 3) & 0x3ff);
+      int32_t mm_purge_level = (state->tick >> 2) & 3;
+      int32_t mm_low_water_mark = 8192 + ((state->tick & 63) << 4);
+      int32_t pm_page_count = 64;
+      uint32_t pm_resident_mask = state->map_lo ^ (state->map_hi << 1);
+      uint32_t pm_lock_mask = (uint32_t)(state->flags ^ (rng >> 1));
+      int32_t pm_page_size = 4096;
+      int32_t pm_page_num = (state->tick + (rng & 31)) & 31;
+      int32_t pm_frame = state->tick & 0x7fff;
+      int32_t pm_frame_seed = state->tick ^ rng;
       uint8_t carmack_source[64];
       uint8_t rlew_source_bytes[64];
       uint8_t maphead_bytes[402];
@@ -1916,6 +2009,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       cache_map_hash = oracle_id_ca_cache_map_hash(gamemaps_bytes, gamemaps_len, maphead_bytes, maphead_len, 0);
       trace_hit(TRACE_WL_GAME_SETUP_GAME_LEVEL);
       setup_game_level_hash = oracle_wl_game_setup_game_level_hash(plane0_bytes, plane_word_count, map_width, map_height);
+      trace_hit(TRACE_ID_MM_GET_PTR);
+      mm_get_ptr_hash = oracle_id_mm_mm_get_ptr_hash(mm_free_bytes, mm_request_size, mm_purge_mask, mm_lock_mask);
+      trace_hit(TRACE_ID_MM_FREE_PTR);
+      mm_free_ptr_hash = oracle_id_mm_mm_free_ptr_hash(mm_free_bytes, mm_block_size, mm_alloc_mask, mm_slot);
+      trace_hit(TRACE_ID_MM_SET_PURGE);
+      mm_set_purge_hash = oracle_id_mm_mm_set_purge_hash(mm_purge_mask, mm_lock_mask, mm_slot, mm_purge_level);
+      trace_hit(TRACE_ID_MM_SET_LOCK);
+      mm_set_lock_hash = oracle_id_mm_mm_set_lock_hash(mm_lock_mask, mm_slot, (input_mask >> 6) & 1);
+      trace_hit(TRACE_ID_MM_SORT_MEM);
+      mm_sort_mem_hash = oracle_id_mm_mm_sort_mem_hash(mm_alloc_mask, mm_purge_mask, mm_lock_mask, mm_low_water_mark);
+      trace_hit(TRACE_ID_PM_CHECK_MAIN_MEM);
+      pm_check_main_mem_hash = oracle_id_pm_pm_check_main_mem_hash(pm_page_count, pm_resident_mask, pm_lock_mask, pm_page_size);
+      trace_hit(TRACE_ID_PM_GET_PAGE_ADDRESS);
+      pm_get_page_address_hash = oracle_id_pm_pm_get_page_address_hash(pm_resident_mask, pm_page_num, pm_page_size, pm_frame);
+      trace_hit(TRACE_ID_PM_GET_PAGE);
+      pm_get_page_hash = oracle_id_pm_pm_get_page_hash(pm_resident_mask, pm_lock_mask, pm_page_num, pm_frame);
+      trace_hit(TRACE_ID_PM_NEXT_FRAME);
+      pm_next_frame_hash = oracle_id_pm_pm_next_frame_hash(pm_resident_mask, pm_lock_mask, pm_frame);
+      trace_hit(TRACE_ID_PM_RESET);
+      pm_reset_hash = oracle_id_pm_pm_reset_hash(pm_page_count, pm_resident_mask, pm_frame_seed);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -1967,7 +2080,17 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         rlew_expand_hash ^
         setup_map_file_hash ^
         cache_map_hash ^
-        setup_game_level_hash;
+        setup_game_level_hash ^
+        mm_get_ptr_hash ^
+        mm_free_ptr_hash ^
+        mm_set_purge_hash ^
+        mm_set_lock_hash ^
+        mm_sort_mem_hash ^
+        pm_check_main_mem_hash ^
+        pm_get_page_address_hash ^
+        pm_get_page_hash ^
+        pm_next_frame_hash ^
+        pm_reset_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

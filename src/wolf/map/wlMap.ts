@@ -24,6 +24,26 @@ function fnv1a(hash: number, value: number): number {
   return Math.imul((hash ^ (value >>> 0)) >>> 0, 16777619) >>> 0;
 }
 
+function popcount32(value: number): number {
+  let v = value >>> 0;
+  let count = 0;
+  while (v !== 0) {
+    count += v & 1;
+    v >>>= 1;
+  }
+  return count | 0;
+}
+
+function clampS32(value: number): number {
+  if (value > 0x7fffffff) {
+    return 0x7fffffff;
+  }
+  if (value < -0x80000000) {
+    return -0x80000000;
+  }
+  return value | 0;
+}
+
 function readU16(bytes: Uint8Array, offset: number): number {
   if (offset < 0 || offset + 1 >= bytes.length) {
     return 0;
@@ -404,5 +424,196 @@ export function wlGameDrawPlayScreenHash(
     hash = fnv1a(hash, op);
   }
 
+  return hash >>> 0;
+}
+
+export function idMmGetPtrHash(freeBytes: number, requestSize: number, purgeMask: number, lockMask: number): number {
+  const request = requestSize < 0 ? 0 : (requestSize | 0);
+  let remaining = clampS32((freeBytes | 0) - request);
+  const granted = remaining >= 0 ? 1 : 0;
+  if (remaining < 0) {
+    remaining = -1;
+  }
+  const slot = (request ^ ((freeBytes | 0) >> 3) ^ (purgeMask | 0) ^ ((lockMask | 0) << 1)) & 31;
+  const nextLockMask = ((lockMask >>> 0) | (1 << slot)) >>> 0;
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, request);
+  hash = fnv1a(hash, remaining);
+  hash = fnv1a(hash, granted);
+  hash = fnv1a(hash, slot);
+  hash = fnv1a(hash, purgeMask);
+  hash = fnv1a(hash, lockMask);
+  hash = fnv1a(hash, nextLockMask);
+  return hash >>> 0;
+}
+
+export function idMmFreePtrHash(freeBytes: number, blockSize: number, allocMask: number, slot: number): number {
+  const idx = slot & 31;
+  const bit = (1 << idx) >>> 0;
+  const size = blockSize < 0 ? 0 : (blockSize | 0);
+  const released = ((allocMask >>> 0) & bit) !== 0 ? size : 0;
+  const nextFreeBytes = clampS32((freeBytes | 0) + released);
+  const nextAllocMask = ((allocMask >>> 0) & (~bit >>> 0)) >>> 0;
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, freeBytes);
+  hash = fnv1a(hash, size);
+  hash = fnv1a(hash, allocMask);
+  hash = fnv1a(hash, idx);
+  hash = fnv1a(hash, released);
+  hash = fnv1a(hash, nextFreeBytes);
+  hash = fnv1a(hash, nextAllocMask);
+  return hash >>> 0;
+}
+
+export function idMmSetPurgeHash(purgeMask: number, lockMask: number, slot: number, purgeLevel: number): number {
+  const idx = slot & 31;
+  const bit = (1 << idx) >>> 0;
+  const locked = ((lockMask >>> 0) & bit) !== 0 ? 1 : 0;
+  const purgeable = purgeLevel > 0 ? 1 : 0;
+  let nextPurgeMask = purgeMask >>> 0;
+  if (locked === 0) {
+    nextPurgeMask = (((purgeMask >>> 0) & (~bit >>> 0)) | ((purgeable << idx) >>> 0)) >>> 0;
+  }
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, purgeMask);
+  hash = fnv1a(hash, lockMask);
+  hash = fnv1a(hash, idx);
+  hash = fnv1a(hash, purgeLevel);
+  hash = fnv1a(hash, locked);
+  hash = fnv1a(hash, nextPurgeMask);
+  return hash >>> 0;
+}
+
+export function idMmSetLockHash(lockMask: number, slot: number, locked: number): number {
+  const idx = slot & 31;
+  const bit = (1 << idx) >>> 0;
+  const normalizedLocked = locked !== 0 ? 1 : 0;
+  const nextLockMask = normalizedLocked !== 0 ? ((lockMask >>> 0) | bit) >>> 0 : ((lockMask >>> 0) & (~bit >>> 0)) >>> 0;
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, lockMask);
+  hash = fnv1a(hash, idx);
+  hash = fnv1a(hash, normalizedLocked);
+  hash = fnv1a(hash, nextLockMask);
+  return hash >>> 0;
+}
+
+export function idMmSortMemHash(allocMask: number, purgeMask: number, lockMask: number, lowWaterMark: number): number {
+  const movable = ((allocMask >>> 0) & (purgeMask >>> 0) & (~(lockMask >>> 0) >>> 0)) >>> 0;
+  const movedBlocks = popcount32(movable);
+  let compactedWaterMark = clampS32((lowWaterMark | 0) + movedBlocks * 256);
+  if (compactedWaterMark < 0) {
+    compactedWaterMark = 0;
+  }
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, allocMask);
+  hash = fnv1a(hash, purgeMask);
+  hash = fnv1a(hash, lockMask);
+  hash = fnv1a(hash, movable);
+  hash = fnv1a(hash, movedBlocks);
+  hash = fnv1a(hash, compactedWaterMark);
+  return hash >>> 0;
+}
+
+export function idPmCheckMainMemHash(pageCount: number, residentMask: number, lockMask: number, pageSize: number): number {
+  const totalPages = pageCount < 0 ? 0 : (pageCount | 0);
+  const residentPages = popcount32(residentMask);
+  const lockedPages = popcount32((lockMask >>> 0) & (residentMask >>> 0));
+  let freePages = totalPages - residentPages;
+  if (freePages < 0) {
+    freePages = 0;
+  }
+  const size = pageSize < 0 ? 0 : (pageSize | 0);
+  const freeBytes = clampS32(freePages * size);
+  const pressure = lockedPages > freePages ? 1 : 0;
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, totalPages);
+  hash = fnv1a(hash, residentMask);
+  hash = fnv1a(hash, lockMask);
+  hash = fnv1a(hash, residentPages);
+  hash = fnv1a(hash, lockedPages);
+  hash = fnv1a(hash, freeBytes);
+  hash = fnv1a(hash, pressure);
+  return hash >>> 0;
+}
+
+export function idPmGetPageAddressHash(residentMask: number, pageNum: number, pageSize: number, frame: number): number {
+  const idx = pageNum & 31;
+  const bit = (1 << idx) >>> 0;
+  const resident = ((residentMask >>> 0) & bit) !== 0 ? 1 : 0;
+  const size = pageSize < 0 ? 0 : (pageSize | 0);
+  const address = resident !== 0 ? clampS32(((frame | 0) + idx) * size) : -1;
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, residentMask);
+  hash = fnv1a(hash, idx);
+  hash = fnv1a(hash, size);
+  hash = fnv1a(hash, frame);
+  hash = fnv1a(hash, resident);
+  hash = fnv1a(hash, address);
+  return hash >>> 0;
+}
+
+export function idPmGetPageHash(residentMask: number, lockMask: number, pageNum: number, frame: number): number {
+  const idx = pageNum & 31;
+  const bit = (1 << idx) >>> 0;
+  const wasResident = ((residentMask >>> 0) & bit) !== 0 ? 1 : 0;
+  const locked = ((lockMask >>> 0) & bit) !== 0 ? 1 : 0;
+  let nextResidentMask = residentMask >>> 0;
+  let loaded = 0;
+  if (wasResident === 0 && locked === 0) {
+    nextResidentMask = ((nextResidentMask | bit) >>> 0);
+    loaded = 1;
+  }
+  const frameSlot = (((frame | 0) + idx) & 31) | 0;
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, residentMask);
+  hash = fnv1a(hash, lockMask);
+  hash = fnv1a(hash, idx);
+  hash = fnv1a(hash, wasResident);
+  hash = fnv1a(hash, locked);
+  hash = fnv1a(hash, loaded);
+  hash = fnv1a(hash, frameSlot);
+  hash = fnv1a(hash, nextResidentMask);
+  return hash >>> 0;
+}
+
+export function idPmNextFrameHash(residentMask: number, lockMask: number, frame: number): number {
+  const nextFrame = ((frame | 0) + 1) & 0x7fff;
+  const residentPages = popcount32(residentMask);
+  const lockedPages = popcount32((lockMask >>> 0) & (residentMask >>> 0));
+  let thrashBudget = residentPages - lockedPages;
+  if (thrashBudget < 0) {
+    thrashBudget = 0;
+  }
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, residentMask);
+  hash = fnv1a(hash, lockMask);
+  hash = fnv1a(hash, frame);
+  hash = fnv1a(hash, nextFrame);
+  hash = fnv1a(hash, thrashBudget);
+  return hash >>> 0;
+}
+
+export function idPmResetHash(pageCount: number, preloadMask: number, frameSeed: number): number {
+  const clampedPages = pageCount < 0 ? 0 : Math.min(32, pageCount | 0);
+  const activeMask = clampedPages === 32 ? 0xffffffff : ((1 << clampedPages) - 1) >>> 0;
+  const residentMask = (preloadMask >>> 0) & activeMask;
+  const nextFrame = frameSeed & 0x7fff;
+  const warmPages = popcount32(residentMask);
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, clampedPages);
+  hash = fnv1a(hash, preloadMask);
+  hash = fnv1a(hash, residentMask);
+  hash = fnv1a(hash, warmPages);
+  hash = fnv1a(hash, nextFrame);
   return hash >>> 0;
 }

@@ -43,6 +43,16 @@ type OracleFns = {
     screenLoc2: number,
     statusBarPic: number,
   ) => number;
+  idMmGetPtrHash: (freeBytes: number, requestSize: number, purgeMask: number, lockMask: number) => number;
+  idMmFreePtrHash: (freeBytes: number, blockSize: number, allocMask: number, slot: number) => number;
+  idMmSetPurgeHash: (purgeMask: number, lockMask: number, slot: number, purgeLevel: number) => number;
+  idMmSetLockHash: (lockMask: number, slot: number, locked: number) => number;
+  idMmSortMemHash: (allocMask: number, purgeMask: number, lockMask: number, lowWaterMark: number) => number;
+  idPmCheckMainMemHash: (pageCount: number, residentMask: number, lockMask: number, pageSize: number) => number;
+  idPmGetPageAddressHash: (residentMask: number, pageNum: number, pageSize: number, frame: number) => number;
+  idPmGetPageHash: (residentMask: number, lockMask: number, pageNum: number, frame: number) => number;
+  idPmNextFrameHash: (residentMask: number, lockMask: number, frame: number) => number;
+  idPmResetHash: (pageCount: number, preloadMask: number, frameSeed: number) => number;
   wlDrawTransformActorHash: (
     obx: number,
     oby: number,
@@ -374,6 +384,16 @@ export class OracleBridge implements OracleBridgeContract {
         'number',
         'number',
       ]),
+      idMmGetPtrHash: cwrap('oracle_id_mm_mm_get_ptr_hash', 'number', ['number', 'number', 'number', 'number']),
+      idMmFreePtrHash: cwrap('oracle_id_mm_mm_free_ptr_hash', 'number', ['number', 'number', 'number', 'number']),
+      idMmSetPurgeHash: cwrap('oracle_id_mm_mm_set_purge_hash', 'number', ['number', 'number', 'number', 'number']),
+      idMmSetLockHash: cwrap('oracle_id_mm_mm_set_lock_hash', 'number', ['number', 'number', 'number']),
+      idMmSortMemHash: cwrap('oracle_id_mm_mm_sort_mem_hash', 'number', ['number', 'number', 'number', 'number']),
+      idPmCheckMainMemHash: cwrap('oracle_id_pm_pm_check_main_mem_hash', 'number', ['number', 'number', 'number', 'number']),
+      idPmGetPageAddressHash: cwrap('oracle_id_pm_pm_get_page_address_hash', 'number', ['number', 'number', 'number', 'number']),
+      idPmGetPageHash: cwrap('oracle_id_pm_pm_get_page_hash', 'number', ['number', 'number', 'number', 'number']),
+      idPmNextFrameHash: cwrap('oracle_id_pm_pm_next_frame_hash', 'number', ['number', 'number', 'number']),
+      idPmResetHash: cwrap('oracle_id_pm_pm_reset_hash', 'number', ['number', 'number', 'number']),
       wlDrawTransformActorHash: cwrap('oracle_wl_draw_transform_actor_hash', 'number', [
         'number',
         'number',
@@ -731,6 +751,46 @@ export class OracleBridge implements OracleBridgeContract {
       screenLoc2 | 0,
       statusBarPic | 0,
     ) >>> 0;
+  }
+
+  idMmGetPtrHash(freeBytes: number, requestSize: number, purgeMask: number, lockMask: number): number {
+    return this.assertReady().idMmGetPtrHash(freeBytes | 0, requestSize | 0, purgeMask | 0, lockMask | 0) >>> 0;
+  }
+
+  idMmFreePtrHash(freeBytes: number, blockSize: number, allocMask: number, slot: number): number {
+    return this.assertReady().idMmFreePtrHash(freeBytes | 0, blockSize | 0, allocMask | 0, slot | 0) >>> 0;
+  }
+
+  idMmSetPurgeHash(purgeMask: number, lockMask: number, slot: number, purgeLevel: number): number {
+    return this.assertReady().idMmSetPurgeHash(purgeMask | 0, lockMask | 0, slot | 0, purgeLevel | 0) >>> 0;
+  }
+
+  idMmSetLockHash(lockMask: number, slot: number, locked: number): number {
+    return this.assertReady().idMmSetLockHash(lockMask | 0, slot | 0, locked | 0) >>> 0;
+  }
+
+  idMmSortMemHash(allocMask: number, purgeMask: number, lockMask: number, lowWaterMark: number): number {
+    return this.assertReady().idMmSortMemHash(allocMask | 0, purgeMask | 0, lockMask | 0, lowWaterMark | 0) >>> 0;
+  }
+
+  idPmCheckMainMemHash(pageCount: number, residentMask: number, lockMask: number, pageSize: number): number {
+    return this.assertReady().idPmCheckMainMemHash(pageCount | 0, residentMask | 0, lockMask | 0, pageSize | 0) >>> 0;
+  }
+
+  idPmGetPageAddressHash(residentMask: number, pageNum: number, pageSize: number, frame: number): number {
+    return this.assertReady().idPmGetPageAddressHash(residentMask | 0, pageNum | 0, pageSize | 0, frame | 0) >>> 0;
+  }
+
+  idPmGetPageHash(residentMask: number, lockMask: number, pageNum: number, frame: number): number {
+    return this.assertReady().idPmGetPageHash(residentMask | 0, lockMask | 0, pageNum | 0, frame | 0) >>> 0;
+  }
+
+  idPmNextFrameHash(residentMask: number, lockMask: number, frame: number): number {
+    return this.assertReady().idPmNextFrameHash(residentMask | 0, lockMask | 0, frame | 0) >>> 0;
+  }
+
+  idPmResetHash(pageCount: number, preloadMask: number, frameSeed: number): number {
+    return this.assertReady().idPmResetHash(pageCount | 0, preloadMask | 0, frameSeed | 0) >>> 0;
   }
 
   wlDrawTransformActorHash(
@@ -1485,6 +1545,46 @@ export class OracleBridge implements OracleBridgeContract {
           screenLoc2,
           statusBarPic,
         ) as TOutput;
+      }
+      case 'id_mm.MM_GetPtrHash': {
+        const { freeBytes, requestSize, purgeMask, lockMask } = input as Record<string, number>;
+        return this.idMmGetPtrHash(freeBytes, requestSize, purgeMask, lockMask) as TOutput;
+      }
+      case 'id_mm.MM_FreePtrHash': {
+        const { freeBytes, blockSize, allocMask, slot } = input as Record<string, number>;
+        return this.idMmFreePtrHash(freeBytes, blockSize, allocMask, slot) as TOutput;
+      }
+      case 'id_mm.MM_SetPurgeHash': {
+        const { purgeMask, lockMask, slot, purgeLevel } = input as Record<string, number>;
+        return this.idMmSetPurgeHash(purgeMask, lockMask, slot, purgeLevel) as TOutput;
+      }
+      case 'id_mm.MM_SetLockHash': {
+        const { lockMask, slot, locked } = input as Record<string, number>;
+        return this.idMmSetLockHash(lockMask, slot, locked) as TOutput;
+      }
+      case 'id_mm.MM_SortMemHash': {
+        const { allocMask, purgeMask, lockMask, lowWaterMark } = input as Record<string, number>;
+        return this.idMmSortMemHash(allocMask, purgeMask, lockMask, lowWaterMark) as TOutput;
+      }
+      case 'id_pm.PM_CheckMainMemHash': {
+        const { pageCount, residentMask, lockMask, pageSize } = input as Record<string, number>;
+        return this.idPmCheckMainMemHash(pageCount, residentMask, lockMask, pageSize) as TOutput;
+      }
+      case 'id_pm.PM_GetPageAddressHash': {
+        const { residentMask, pageNum, pageSize, frame } = input as Record<string, number>;
+        return this.idPmGetPageAddressHash(residentMask, pageNum, pageSize, frame) as TOutput;
+      }
+      case 'id_pm.PM_GetPageHash': {
+        const { residentMask, lockMask, pageNum, frame } = input as Record<string, number>;
+        return this.idPmGetPageHash(residentMask, lockMask, pageNum, frame) as TOutput;
+      }
+      case 'id_pm.PM_NextFrameHash': {
+        const { residentMask, lockMask, frame } = input as Record<string, number>;
+        return this.idPmNextFrameHash(residentMask, lockMask, frame) as TOutput;
+      }
+      case 'id_pm.PM_ResetHash': {
+        const { pageCount, preloadMask, frameSeed } = input as Record<string, number>;
+        return this.idPmResetHash(pageCount, preloadMask, frameSeed) as TOutput;
       }
       case 'wl_draw.TransformActorHash': {
         const { obx, oby, viewx, viewy, viewcos, viewsin, scale, centerx, heightnumerator, mindist } = input as Record<string, number>;

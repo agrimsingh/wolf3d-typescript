@@ -10,6 +10,16 @@ import {
   idCaCarmackExpandHash,
   idCaRlewExpandHash,
   idCaSetupMapFileHash,
+  idMmFreePtrHash,
+  idMmGetPtrHash,
+  idMmSetLockHash,
+  idMmSetPurgeHash,
+  idMmSortMemHash,
+  idPmCheckMainMemHash,
+  idPmGetPageAddressHash,
+  idPmGetPageHash,
+  idPmNextFrameHash,
+  idPmResetHash,
   wlGameDrawPlayScreenHash,
   wlGameSetupGameLevelHash,
 } from '../../src/wolf/map/wlMap';
@@ -260,6 +270,76 @@ describe('phase 2 real WOLFSRC map/cache parity', () => {
           (viewWidth, viewHeight, bufferOfs, s0, s1, s2, statusBarPic) => {
             expect(wlGameDrawPlayScreenHash(viewWidth, viewHeight, bufferOfs, s0, s1, s2, statusBarPic) >>> 0).toBe(
               oracle.wlGameDrawPlayScreenHash(viewWidth, viewHeight, bufferOfs, s0, s1, s2, statusBarPic) >>> 0,
+            );
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('ID_MM memory manager hash helpers match oracle', () => {
+    withReplay('phase2.id_mm.memory', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: 0, max: 0xffffffff }),
+          fc.integer({ min: 0, max: 0xffffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -256, max: 256 }),
+          (freeBytes, requestSize, purgeMask, lockMask, blockSize, slot) => {
+            const mmGetPtr = idMmGetPtrHash(freeBytes, requestSize, purgeMask, lockMask) >>> 0;
+            const mmGetPtrOracle = oracle.idMmGetPtrHash(freeBytes, requestSize, purgeMask, lockMask) >>> 0;
+            expect(mmGetPtr).toBe(mmGetPtrOracle);
+
+            const mmFreePtr = idMmFreePtrHash(freeBytes, blockSize, purgeMask, slot) >>> 0;
+            const mmFreePtrOracle = oracle.idMmFreePtrHash(freeBytes, blockSize, purgeMask, slot) >>> 0;
+            expect(mmFreePtr).toBe(mmFreePtrOracle);
+
+            const mmSetPurge = idMmSetPurgeHash(purgeMask, lockMask, slot, requestSize & 3) >>> 0;
+            const mmSetPurgeOracle = oracle.idMmSetPurgeHash(purgeMask, lockMask, slot, requestSize & 3) >>> 0;
+            expect(mmSetPurge).toBe(mmSetPurgeOracle);
+
+            const mmSetLock = idMmSetLockHash(lockMask, slot, requestSize & 1) >>> 0;
+            const mmSetLockOracle = oracle.idMmSetLockHash(lockMask, slot, requestSize & 1) >>> 0;
+            expect(mmSetLock).toBe(mmSetLockOracle);
+
+            const mmSortMem = idMmSortMemHash(purgeMask, lockMask, requestSize, blockSize) >>> 0;
+            const mmSortMemOracle = oracle.idMmSortMemHash(purgeMask, lockMask, requestSize, blockSize) >>> 0;
+            expect(mmSortMem).toBe(mmSortMemOracle);
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('ID_PM page manager hash helpers match oracle', () => {
+    withReplay('phase2.id_pm.page', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: 0, max: 0xffffffff }),
+          fc.integer({ min: 0, max: 0xffffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -256, max: 256 }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          (pageCount, residentMask, lockMask, pageSize, pageNum, frame) => {
+            expect(idPmCheckMainMemHash(pageCount, residentMask, lockMask, pageSize) >>> 0).toBe(
+              oracle.idPmCheckMainMemHash(pageCount, residentMask, lockMask, pageSize) >>> 0,
+            );
+            expect(idPmGetPageAddressHash(residentMask, pageNum, pageSize, frame) >>> 0).toBe(
+              oracle.idPmGetPageAddressHash(residentMask, pageNum, pageSize, frame) >>> 0,
+            );
+            expect(idPmGetPageHash(residentMask, lockMask, pageNum, frame) >>> 0).toBe(
+              oracle.idPmGetPageHash(residentMask, lockMask, pageNum, frame) >>> 0,
+            );
+            expect(idPmNextFrameHash(residentMask, lockMask, frame) >>> 0).toBe(
+              oracle.idPmNextFrameHash(residentMask, lockMask, frame) >>> 0,
+            );
+            expect(idPmResetHash(pageCount, residentMask, frame) >>> 0).toBe(
+              oracle.idPmResetHash(pageCount, residentMask, frame) >>> 0,
             );
           },
         ),
