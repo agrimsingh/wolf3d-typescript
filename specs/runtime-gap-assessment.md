@@ -8,7 +8,7 @@ Document the concrete gaps between current synthetic runtime behavior and full r
 
 1. The browser app boots/renders and supports menu/start flow, but runtime gameplay core is still synthetic (`src/runtime/tsRuntime.ts`) rather than real WOLFSRC runtime logic.
 2. Runtime parity currently validates wrapper-level runtime APIs and checkpoint artifacts, not full runtime-reachable symbol coverage.
-3. Runtime symbol manifest is not yet backed by full inventory-wide classification evidence (`568` total symbols).
+3. Full inventory-wide symbol classification now exists (`specs/generated/wolfsrc-runtime-classification.json`, `568` symbols), but evidence is still derived from synthetic-runtime trace scenarios and must be revalidated after real runtime core replacement.
 4. CI failed remotely because WOLFSRC preparation referenced a local absolute path; deterministic vendored source flow is required.
 5. The oracle runtime driver (`c-oracle/runtime/wolfsrc_runtime_oracle.c`) still includes synthetic step/state logic and needs replacement with real runtime driver behavior.
 

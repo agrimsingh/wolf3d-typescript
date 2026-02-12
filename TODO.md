@@ -52,9 +52,9 @@
 ## Phase F3: Full Symbol Classification Burn-Down
 
 - [ ] Replace static trace symbol map with generated inventory-backed map.
-- [ ] Classify all 568 manifest symbols as `required-runtime` or `excluded-non-runtime` with evidence.
+- [x] Classify all 568 manifest symbols as `required-runtime` or `excluded-non-runtime` with evidence.
 - [ ] Generate `specs/runtime-symbol-manifest.md` from classification artifacts.
-- [ ] Add verification that zero symbols remain unclassified.
+- [x] Add verification that zero symbols remain unclassified.
 - [ ] Gate: classification + lock reproducibility green.
 - [ ] Commit: `phase-f3: full symbol classification and runtime manifest freeze`
 
