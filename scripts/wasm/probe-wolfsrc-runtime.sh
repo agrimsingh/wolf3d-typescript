@@ -6,6 +6,7 @@ EMSDK_ENV="$ROOT_DIR/.tools/emsdk/emsdk_env.sh"
 PREPARE_SCRIPT="$ROOT_DIR/scripts/wasm/prepare-wolfsrc.sh"
 SRC_DIR="${WOLF3D_SANITIZED_SRC_DIR:-$ROOT_DIR/c-oracle/wolfsrc-sanitized}"
 COMPAT_DIR="$ROOT_DIR/c-oracle/compat/include"
+COMPAT_OVERLAY_DIR="$ROOT_DIR/.build/compat-include"
 OUT_DIR="$ROOT_DIR/artifacts/wolfsrc-compat"
 
 if [[ -f "$EMSDK_ENV" ]]; then
@@ -29,6 +30,27 @@ if [[ ! -d "$SRC_DIR" ]]; then
   echo "Set WOLF3D_SRC_DIR and run scripts/wasm/prepare-wolfsrc.sh first." >&2
   exit 1
 fi
+
+prepare_compat_overlay() {
+  rm -rf "$COMPAT_OVERLAY_DIR"
+  mkdir -p "$COMPAT_OVERLAY_DIR"
+  rsync -a "$COMPAT_DIR/" "$COMPAT_OVERLAY_DIR/"
+
+  while IFS= read -r -d '' file; do
+    local dir base lower
+    dir="$(dirname "$file")"
+    base="$(basename "$file")"
+    lower="$(printf '%s' "$base" | tr 'A-Z' 'a-z')"
+    if [[ "$base" == "$lower" ]]; then
+      continue
+    fi
+    if [[ ! -e "$dir/$lower" ]]; then
+      cp "$file" "$dir/$lower"
+    fi
+  done < <(find "$COMPAT_OVERLAY_DIR" -type f -print0)
+}
+
+prepare_compat_overlay
 
 mkdir -p "$OUT_DIR"
 
@@ -67,9 +89,9 @@ COMMON_FLAGS=(
   -Wno-unknown-pragmas
   -Wno-error=implicit-function-declaration
   -Wno-error=implicit-int
-  -I"$COMPAT_DIR"
+  -I"$COMPAT_OVERLAY_DIR"
   -I"$SRC_DIR"
-  -include "$COMPAT_DIR/wolfsrc_compat.h"
+  -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h"
   -DWL1
   -DWOLF3D
 )
@@ -88,7 +110,7 @@ done
   echo "WOLFSRC Runtime Compile Probe"
   echo "Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
   echo "Source: $SRC_DIR"
-  echo "Compat include: $COMPAT_DIR"
+  echo "Compat include: $COMPAT_OVERLAY_DIR"
   echo
   echo "Passed: $(wc -l < "$PASS_LIST" | tr -d ' ')"
   cat "$PASS_LIST"

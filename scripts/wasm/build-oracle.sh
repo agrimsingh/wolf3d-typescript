@@ -6,6 +6,7 @@ EMSDK_ENV="$ROOT_DIR/.tools/emsdk/emsdk_env.sh"
 PREPARE_WOLFSRC="$ROOT_DIR/scripts/wasm/prepare-wolfsrc.sh"
 SANITIZED_WOLFSRC="$ROOT_DIR/c-oracle/wolfsrc-sanitized"
 COMPAT_DIR="$ROOT_DIR/c-oracle/compat/include"
+COMPAT_OVERLAY_DIR="$ROOT_DIR/.build/compat-include"
 
 if [[ -f "$EMSDK_ENV" ]]; then
   # shellcheck disable=SC1090
@@ -22,6 +23,25 @@ mkdir -p "$OUT_DIR"
 BUILD_DIR="$ROOT_DIR/.build/oracle"
 mkdir -p "$BUILD_DIR"
 
+prepare_compat_overlay() {
+  rm -rf "$COMPAT_OVERLAY_DIR"
+  mkdir -p "$COMPAT_OVERLAY_DIR"
+  rsync -a "$COMPAT_DIR/" "$COMPAT_OVERLAY_DIR/"
+
+  while IFS= read -r -d '' file; do
+    local dir base lower
+    dir="$(dirname "$file")"
+    base="$(basename "$file")"
+    lower="$(printf '%s' "$base" | tr 'A-Z' 'a-z')"
+    if [[ "$base" == "$lower" ]]; then
+      continue
+    fi
+    if [[ ! -e "$dir/$lower" ]]; then
+      cp "$file" "$dir/$lower"
+    fi
+  done < <(find "$COMPAT_OVERLAY_DIR" -type f -print0)
+}
+
 if [[ ! -d "$SANITIZED_WOLFSRC" ]]; then
   bash "$PREPARE_WOLFSRC" >/dev/null
 fi
@@ -36,23 +56,25 @@ if [[ ! -f "$SANITIZED_WOLFSRC/WL_AGENT.C" ]]; then
   exit 1
 fi
 
+prepare_compat_overlay
+
 emcc -x c -std=gnu89 -ffunction-sections -fdata-sections -Wno-unknown-pragmas \
-  -I"$COMPAT_DIR" -I"$SANITIZED_WOLFSRC" \
-  -include "$COMPAT_DIR/wolfsrc_compat.h" \
+  -I"$COMPAT_OVERLAY_DIR" -I"$SANITIZED_WOLFSRC" \
+  -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h" \
   -DWL1 -DWOLF3D -Dmenuitems=menuitems_wl_state -DTakeDamage=TakeDamage_stub \
   -c "$SANITIZED_WOLFSRC/WL_STATE.C" \
   -o "$BUILD_DIR/WL_STATE.real.o"
 
 emcc -x c -std=gnu89 -ffunction-sections -fdata-sections -Wno-unknown-pragmas \
-  -I"$COMPAT_DIR" -I"$SANITIZED_WOLFSRC" \
-  -include "$COMPAT_DIR/wolfsrc_compat.h" \
+  -I"$COMPAT_OVERLAY_DIR" -I"$SANITIZED_WOLFSRC" \
+  -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h" \
   -DWL1 -DWOLF3D -Dmenuitems=menuitems_wl_agent \
   -c "$SANITIZED_WOLFSRC/WL_AGENT.C" \
   -o "$BUILD_DIR/WL_AGENT.real.o"
 
 emcc -x c -std=gnu89 -ffunction-sections -fdata-sections -Wno-unknown-pragmas \
-  -I"$COMPAT_DIR" -I"$SANITIZED_WOLFSRC" \
-  -include "$COMPAT_DIR/wolfsrc_compat.h" \
+  -I"$COMPAT_OVERLAY_DIR" -I"$SANITIZED_WOLFSRC" \
+  -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h" \
   -DWL1 -DWOLF3D \
   -c "$ROOT_DIR/c-oracle/wolfsrc_real_state_bridge.c" \
   -o "$BUILD_DIR/wolfsrc_real_state_bridge.o"
