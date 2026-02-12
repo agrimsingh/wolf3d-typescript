@@ -290,7 +290,7 @@ export class WolfApp {
       const camera = x / WIDTH - 0.5;
       const rayAngle = angleRad + camera * FOV;
       const dirX = Math.cos(rayAngle);
-      const dirY = Math.sin(rayAngle);
+      const dirY = -Math.sin(rayAngle);
       const hit = castRay(mapLo, mapHi, posX, posY, dirX, dirY);
       const safeDist = hit ? hit.distance : 1000;
       const wallHeight = Math.min(HEIGHT, Math.max(2, (HEIGHT / Math.max(0.001, safeDist)) | 0));
@@ -399,7 +399,7 @@ export class WolfApp {
     this.ctx.lineWidth = 1;
     this.ctx.beginPath();
     this.ctx.moveTo(clampedPx, clampedPy);
-    this.ctx.lineTo(clampedPx + Math.cos(dir) * 7, clampedPy + Math.sin(dir) * 7);
+    this.ctx.lineTo(clampedPx + Math.cos(dir) * 7, clampedPy - Math.sin(dir) * 7);
     this.ctx.stroke();
   }
 
