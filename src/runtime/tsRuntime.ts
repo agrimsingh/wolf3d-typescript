@@ -2555,7 +2555,8 @@ export class TsRuntimePort implements RuntimePort {
         if (texture) {
           const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
           const sampleX = hit.texX & 63;
-          indexed[y * FRAME_WIDTH + x] = texture[(ty * 64 + sampleX) & 4095] ?? wallIndex;
+          // VSWAP wall textures are column-major (x-major).
+          indexed[y * FRAME_WIDTH + x] = texture[(sampleX * 64 + ty) & 4095] ?? wallIndex;
         } else {
           indexed[y * FRAME_WIDTH + x] = wallIndex;
         }
