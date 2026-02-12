@@ -643,6 +643,61 @@ int32_t oracle_audio_reduce_packed(
   int32_t event_kind,
   int32_t sound_id
 );
+uint32_t oracle_wl_state_select_chase_dir_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_state_move_obj_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+int32_t oracle_wl_state_check_line(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+int32_t oracle_wl_state_check_sight(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_real_wl_agent_clip_move_hash(
+  int32_t x,
+  int32_t y,
+  int32_t xmove,
+  int32_t ymove,
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t noclip
+);
 uint32_t oracle_wl_main_build_tables_hash(void);
 uint32_t oracle_wl_main_calc_projection_hash(
   int32_t viewwidth,
@@ -1270,6 +1325,11 @@ enum runtime_trace_symbol_e {
   TRACE_ORACLE_MENU_REDUCE_PACKED = 158,
   TRACE_ORACLE_MEASURE_TEXT_PACKED = 159,
   TRACE_ORACLE_AUDIO_REDUCE_PACKED = 160,
+  TRACE_WL_STATE_CHECK_LINE = 161,
+  TRACE_WL_STATE_CHECK_SIGHT = 162,
+  TRACE_WL_STATE_MOVE_OBJ_HASH = 163,
+  TRACE_WL_STATE_SELECT_CHASE_DIR_HASH = 164,
+  TRACE_REAL_WL_AGENT_CLIP_MOVE_HASH = 165,
 };
 
 #define TRACE_SYMBOL_MAX 192
@@ -1682,6 +1742,11 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t menu_reduce_packed_value;
       int32_t measure_text_packed_value;
       int32_t audio_reduce_packed_value;
+      int32_t wl_state_check_line_value;
+      int32_t wl_state_check_sight_value;
+      uint32_t wl_state_move_obj_hash_value;
+      uint32_t wl_state_select_chase_dir_hash_value;
+      uint32_t real_agent_clip_move_hash_value;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -2591,6 +2656,52 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       measure_text_packed_value = oracle_measure_text_packed(text_len, vh_max_width / vh_font_width);
       trace_hit(TRACE_ORACLE_AUDIO_REDUCE_PACKED);
       audio_reduce_packed_value = oracle_audio_reduce_packed(current_sound_mode, current_music_mode, sound_mode, menu_action, sound_id);
+      trace_hit(TRACE_WL_STATE_CHECK_LINE);
+      wl_state_check_line_value = oracle_wl_state_check_line(ai_ax, ai_ay, player_x, player_y, state->map_lo, state->map_hi);
+      trace_hit(TRACE_WL_STATE_CHECK_SIGHT);
+      wl_state_check_sight_value = oracle_wl_state_check_sight(ai_ax, ai_ay, player_x, player_y, state->map_lo, state->map_hi);
+      trace_hit(TRACE_WL_STATE_MOVE_OBJ_HASH);
+      wl_state_move_obj_hash_value = oracle_wl_state_move_obj_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_STATE_SELECT_CHASE_DIR_HASH);
+      wl_state_select_chase_dir_hash_value = oracle_wl_state_select_chase_dir_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_REAL_WL_AGENT_CLIP_MOVE_HASH);
+      real_agent_clip_move_hash_value = oracle_real_wl_agent_clip_move_hash(
+        state->xq8 << 8,
+        state->yq8 << 8,
+        strafe << 8,
+        forward << 8,
+        state->map_lo,
+        state->map_hi,
+        0
+      );
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -2702,7 +2813,12 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         (uint32_t)game_event_hash_value ^
         (uint32_t)menu_reduce_packed_value ^
         (uint32_t)measure_text_packed_value ^
-        (uint32_t)audio_reduce_packed_value;
+        (uint32_t)audio_reduce_packed_value ^
+        (uint32_t)wl_state_check_line_value ^
+        (uint32_t)wl_state_check_sight_value ^
+        wl_state_move_obj_hash_value ^
+        wl_state_select_chase_dir_hash_value ^
+        real_agent_clip_move_hash_value;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

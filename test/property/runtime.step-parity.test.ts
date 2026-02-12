@@ -345,6 +345,11 @@ describe('runtime step parity', () => {
     expect(a.includes(158)).toBe(true); // wolf_oracle.menu_reduce_packed
     expect(a.includes(159)).toBe(true); // wolf_oracle.measure_text_packed
     expect(a.includes(160)).toBe(true); // wolf_oracle.audio_reduce_packed
+    expect(a.includes(161)).toBe(true); // WL_STATE.CheckLine (core probe)
+    expect(a.includes(162)).toBe(true); // WL_STATE.CheckSight (core probe)
+    expect(a.includes(163)).toBe(true); // WL_STATE.MoveObj (core probe)
+    expect(a.includes(164)).toBe(true); // WL_STATE.SelectChaseDir (core probe)
+    expect(a.includes(165)).toBe(true); // WL_AGENT.ClipMove (core probe)
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

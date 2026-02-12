@@ -21,7 +21,11 @@ import {
   wlAct2TPathHash,
   wlAct2TProjectileHash,
   wlAct2TShootHash,
+  wlStateCheckLine,
+  wlStateCheckSight,
   wlStateDamageActorHash,
+  wlStateMoveObjHash,
+  wlStateSelectChaseDirHash,
   wlStateFirstSightingHash,
   wlStateSelectDodgeDirHash,
   wlStateSightPlayerHash,
@@ -43,7 +47,7 @@ import {
   wlInterLevelCompletedHash,
   wlInterVictoryHash,
 } from '../wolf/game/wlGameState';
-import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
+import { wlAgentRealClipMoveHash, wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 import {
   idInReadControlHash,
   idInUserInput,
@@ -1627,6 +1631,47 @@ export class TsRuntimePort implements RuntimePort {
         const menuReducePackedValue = probeMenuReducePacked(menuScreen, menuCursor, menuAction, menuItems) | 0;
         const measureTextPackedValue = probeMeasureTextPacked(textLen, (vhMaxWidth / vhFontWidth) | 0) | 0;
         const audioReducePackedValue = probeAudioReducePacked(currentSoundMode, currentMusicMode, soundMode, menuAction, soundId) | 0;
+        const wlStateCheckLineValue = wlStateCheckLine(aiAx, aiAy, playerXQ16, playerYQ16, this.state.mapLo | 0, this.state.mapHi | 0) | 0;
+        const wlStateCheckSightValue = wlStateCheckSight(aiAx, aiAy, playerXQ16, playerYQ16, this.state.mapLo | 0, this.state.mapHi | 0) | 0;
+        const wlStateMoveObjHashValue = wlStateMoveObjHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
+        const wlStateSelectChaseDirHashValue = wlStateSelectChaseDirHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
+        const wlAgentRealClipMoveHashValue = wlAgentRealClipMoveHash(
+          this.state.xQ8 << 8,
+          this.state.yQ8 << 8,
+          strafe << 8,
+          forward << 8,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          0,
+        ) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1738,7 +1783,12 @@ export class TsRuntimePort implements RuntimePort {
             (gameEventHashValue >>> 0) ^
             (menuReducePackedValue >>> 0) ^
             (measureTextPackedValue >>> 0) ^
-            (audioReducePackedValue >>> 0)) >>> 0;
+            (audioReducePackedValue >>> 0) ^
+            (wlStateCheckLineValue >>> 0) ^
+            (wlStateCheckSightValue >>> 0) ^
+            wlStateMoveObjHashValue ^
+            wlStateSelectChaseDirHashValue ^
+            wlAgentRealClipMoveHashValue) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

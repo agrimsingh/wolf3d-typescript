@@ -178,6 +178,11 @@ Symbols exercised by deterministic runtime trace scenarios.
 | c-oracle/wolf_oracle.c | oracle_menu_reduce_packed | `done` | called via oracle_menu_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | c-oracle/wolf_oracle.c | oracle_measure_text_packed | `done` | called via oracle_measure_text_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | c-oracle/wolf_oracle.c | oracle_audio_reduce_packed | `done` | called via oracle_audio_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | CheckLine | `done` | called via oracle_wl_state_check_line from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | CheckSight | `done` | called via oracle_wl_state_check_sight from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | MoveObj | `done` | called via oracle_wl_state_move_obj_hash from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | SelectChaseDir | `done` | called via oracle_wl_state_select_chase_dir_hash from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | ClipMove | `done` | called via oracle_real_wl_agent_clip_move_hash from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 
