@@ -174,9 +174,9 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
     int32_t blocked = 0;
     int32_t facing = ((state->angle_deg % 360) + 360) % 360;
     if (facing < 45 || facing >= 315) tx += 1;
-    else if (facing < 135) ty += 1;
+    else if (facing < 135) ty -= 1;
     else if (facing < 225) tx -= 1;
-    else ty -= 1;
+    else ty += 1;
     {
       int32_t target_xq16 = ((tx << 8) + 128) << 8;
       int32_t target_yq16 = ((ty << 8) + 128) << 8;

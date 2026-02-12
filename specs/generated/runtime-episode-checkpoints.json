@@ -14,7 +14,7 @@
     8,
     9
   ],
-  "episodeDigest": 3392003809,
+  "episodeDigest": 534843553,
   "maps": [
     {
       "id": "wl1-map-0",
@@ -22,8 +22,8 @@
       "mapName": "Wolf1 Map1",
       "seedHex": "0x9a6ae682",
       "stepCount": 64,
-      "traceHash": 3342897777,
-      "mapDigest": 2080458584,
+      "traceHash": 4048864305,
+      "mapDigest": 331332504,
       "finalSnapshotHash": 3634649581,
       "finalFrameHash": 2018854131,
       "finalTick": 221
@@ -34,8 +34,8 @@
       "mapName": "Wolf1 Map2",
       "seedHex": "0x968c47cf",
       "stepCount": 64,
-      "traceHash": 647313733,
-      "mapDigest": 315567606,
+      "traceHash": 116285765,
+      "mapDigest": 4047129782,
       "finalSnapshotHash": 3057322191,
       "finalFrameHash": 1514256540,
       "finalTick": 241
@@ -46,8 +46,8 @@
       "mapName": "Wolf1 Map3",
       "seedHex": "0x932fa408",
       "stepCount": 64,
-      "traceHash": 3990961927,
-      "mapDigest": 1333482360,
+      "traceHash": 2921107015,
+      "mapDigest": 4130667384,
       "finalSnapshotHash": 3346289864,
       "finalFrameHash": 953301720,
       "finalTick": 197
@@ -58,10 +58,10 @@
       "mapName": "Wolf1 Map4",
       "seedHex": "0x8f410555",
       "stepCount": 64,
-      "traceHash": 407135462,
-      "mapDigest": 1825883850,
-      "finalSnapshotHash": 2871773235,
-      "finalFrameHash": 3837576337,
+      "traceHash": 3480542630,
+      "mapDigest": 1331053194,
+      "finalSnapshotHash": 2323421843,
+      "finalFrameHash": 381912753,
       "finalTick": 210
     },
     {
@@ -94,10 +94,10 @@
       "mapName": "Wolf1 Map7",
       "seedHex": "0x80b82324",
       "stepCount": 64,
-      "traceHash": 3353094873,
-      "mapDigest": 1082432600,
-      "finalSnapshotHash": 4209945071,
-      "finalFrameHash": 1804761365,
+      "traceHash": 37403929,
+      "mapDigest": 3879278040,
+      "finalSnapshotHash": 1441350799,
+      "finalFrameHash": 3072475637,
       "finalTick": 229
     },
     {
@@ -130,8 +130,8 @@
       "mapName": "Wolf1 Secret",
       "seedHex": "0xb59f41f7",
       "stepCount": 64,
-      "traceHash": 4078355889,
-      "mapDigest": 3861214918,
+      "traceHash": 2202332081,
+      "mapDigest": 2627481542,
       "finalSnapshotHash": 2302028480,
       "finalFrameHash": 548351091,
       "finalTick": 185

@@ -292,9 +292,9 @@ export class TsRuntimePort implements RuntimePort {
       let ty = this.state.yQ8 >> 8;
       const facing = ((this.state.angleDeg % 360) + 360) % 360;
       if (facing < 45 || facing >= 315) tx += 1;
-      else if (facing < 135) ty += 1;
+      else if (facing < 135) ty -= 1;
       else if (facing < 225) tx -= 1;
-      else ty -= 1;
+      else ty += 1;
       const targetXQ16 = (((tx << 8) + 128) << 8) | 0;
       const targetYQ16 = (((ty << 8) + 128) << 8) | 0;
       if (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) === 0) {
