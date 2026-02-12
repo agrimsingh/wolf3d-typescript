@@ -19,6 +19,7 @@ export interface Wl1AssetMetadata {
   variant: 'WL1';
   validatedAt: string;
   fileSizes: Record<string, number>;
+  checksums?: Record<string, string>;
 }
 
 export interface ChunkIndexEntry {
@@ -42,7 +43,24 @@ export interface DecodedMapPlane {
 export interface DecodedMapLevel {
   levelIndex: number;
   name: string;
+  width: number;
+  height: number;
+  playerStartTileX: number;
+  playerStartTileY: number;
+  playerStartAngleDeg: number;
   planes: [DecodedMapPlane, DecodedMapPlane, DecodedMapPlane];
+}
+
+export interface Wl1VswapIndexMetadata {
+  chunkCount: number;
+  spriteStart: number;
+  soundStart: number;
+  wallTextureChunks: number;
+}
+
+export interface Wl1AudioIndexMetadata {
+  chunkCount: number;
+  offsets: Uint32Array;
 }
 
 export interface BinaryChunk {

@@ -39,6 +39,16 @@ export interface LevelMap {
 - `rlewExpand(source: Uint16Array, expectedWords: number, rlewTag: number): Uint16Array`
 - `cacheMap(mapIndex: number): LevelMap`
 - `parseLevelGeometry(level: LevelMap): ParsedLevel`
+- `buildWl1RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario): Wl1RuntimeScenario[]`
+
+## Deterministic Trace Seed Policy
+
+- Scenario seed is derived from canonical map metadata and player spawn:
+  - map index
+  - map name bytes
+  - canonical start position (Q8)
+- Runtime traces must not use random 8x8 map window sampling.
+- Player start is extracted from object-plane start tiles (`19..22`) with WOLFSRC-consistent angle mapping.
 
 ## Property Test Requirements
 

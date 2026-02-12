@@ -85,6 +85,10 @@ export interface RuntimeCoreSnapshotState {
   tick: number;
   mapLo: number;
   mapHi: number;
+  mapIndex?: number;
+  mapName?: string;
+  mapWidth?: number;
+  mapHeight?: number;
   player: RuntimePlayerSnapshot;
   score: number;
   lives: number;
@@ -98,6 +102,9 @@ export interface RuntimeCoreNormalizedSnapshot {
   tick: number;
   mapLo: number;
   mapHi: number;
+  mapIndex: number;
+  mapWidth: number;
+  mapHeight: number;
   player: RuntimePlayerSnapshot;
   score: number;
   lives: number;
@@ -131,6 +138,9 @@ export function normalizeRuntimeCoreSnapshot(snapshot: RuntimeCoreSnapshotState)
     tick: snapshot.tick | 0,
     mapLo: snapshot.mapLo >>> 0,
     mapHi: snapshot.mapHi >>> 0,
+    mapIndex: snapshot.mapIndex ?? -1,
+    mapWidth: snapshot.mapWidth ?? 64,
+    mapHeight: snapshot.mapHeight ?? 64,
     player: {
       xQ8: snapshot.player.xQ8 | 0,
       yQ8: snapshot.player.yQ8 | 0,
@@ -146,4 +156,29 @@ export function normalizeRuntimeCoreSnapshot(snapshot: RuntimeCoreSnapshotState)
     actorsHash: actorsHash >>> 0,
     menuMode: snapshot.menu.mode | 0,
   };
+}
+
+export function serializeNormalizedRuntimeSnapshot(snapshot: RuntimeCoreNormalizedSnapshot): string {
+  return JSON.stringify({
+    tick: snapshot.tick | 0,
+    mapLo: snapshot.mapLo >>> 0,
+    mapHi: snapshot.mapHi >>> 0,
+    mapIndex: snapshot.mapIndex | 0,
+    mapWidth: snapshot.mapWidth | 0,
+    mapHeight: snapshot.mapHeight | 0,
+    player: {
+      xQ8: snapshot.player.xQ8 | 0,
+      yQ8: snapshot.player.yQ8 | 0,
+      angleDeg: snapshot.player.angleDeg | 0,
+      health: snapshot.player.health | 0,
+      ammo: snapshot.player.ammo | 0,
+      flags: snapshot.player.flags | 0,
+    },
+    score: snapshot.score | 0,
+    lives: snapshot.lives | 0,
+    keys: snapshot.keys | 0,
+    doorsHash: snapshot.doorsHash >>> 0,
+    actorsHash: snapshot.actorsHash >>> 0,
+    menuMode: snapshot.menuMode | 0,
+  });
 }

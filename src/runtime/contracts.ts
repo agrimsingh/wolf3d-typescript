@@ -1,11 +1,28 @@
 export interface RuntimeConfig {
   mapLo: number;
   mapHi: number;
+  mapIndex?: number;
+  mapName?: string;
+  mapWidth?: number;
+  mapHeight?: number;
+  plane0?: Uint16Array;
+  plane1?: Uint16Array;
+  playerStartTileX?: number;
+  playerStartTileY?: number;
+  playerStartAngleDeg?: number;
   startXQ8: number;
   startYQ8: number;
   startAngleDeg: number;
   startHealth: number;
   startAmmo: number;
+}
+
+export interface RuntimeBootParams {
+  variant: 'WL1';
+  episode: number;
+  mapIndex: number;
+  difficulty: number;
+  seed: number;
 }
 
 export interface RuntimeFrameInput {
@@ -67,6 +84,11 @@ export interface RuntimeStepResult {
   snapshotHash: number;
   frameHash: number;
   tick: number;
+}
+
+export interface RuntimeSaveBlob {
+  version: number;
+  bytes: Uint8Array;
 }
 
 export interface RuntimePort {

@@ -182,6 +182,21 @@ export interface OracleTraceRecord {
   symbolIds: number[];
 }
 
+export interface OracleTraceDiff {
+  tic: number;
+  field: 'snapshotHash' | 'frameHash' | 'symbolIds';
+  oracleValue: number | number[];
+  tsValue: number | number[];
+}
+
+export interface ParityEvidenceRef {
+  phase: string;
+  testPath: string;
+  runId?: string;
+  seed?: number;
+  artifactPath?: string;
+}
+
 export interface OracleCall<TInput, TOutput> {
   fn: OracleFunctionId;
   input: TInput;

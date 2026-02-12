@@ -24,13 +24,13 @@
 
 ## R1: Real WL1 Data Pipeline
 
-- [ ] Implement canonical map-plane decode + runtime boot extraction from WL1 assets.
-- [ ] Remove 8x8 sampled map-bit runtime boot assumptions.
-- [ ] Define deterministic trace seed policy for real gameplay traces.
-- [ ] Gate: `pnpm test:property:local -- test/property/phase2.map-loading.test.ts`
-- [ ] Gate: `pnpm test:property:ci -- test/property/phase2.map-loading.test.ts`
-- [ ] Gate: `pnpm verify:assets`
-- [ ] Tests green
+- [x] Implement canonical map-plane decode + runtime boot extraction from WL1 assets.
+- [x] Remove 8x8 sampled map-bit runtime boot assumptions.
+- [x] Define deterministic trace seed policy for real gameplay traces.
+- [x] Gate: `pnpm test:property:local -- test/property/phase2.map-loading.test.ts`
+- [x] Gate: `pnpm test:property:ci -- test/property/phase2.map-loading.test.ts`
+- [x] Gate: `pnpm verify:assets`
+- [x] Tests green
 - [ ] Phase commit pushed (`r1: wl1 data pipeline parity`)
 
 ## R2: Real C Runtime Oracle Driver
