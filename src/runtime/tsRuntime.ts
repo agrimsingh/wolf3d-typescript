@@ -306,13 +306,29 @@ export class TsRuntimePort implements RuntimePort {
     this.state.xQ8 = xQ16 >> 8;
     this.state.yQ8 = yQ16 >> 8;
 
-    if ((inputMask & (1 << 6)) !== 0 && this.state.cooldown <= 0 && this.state.ammo > 0) {
-      this.state.ammo--;
-      this.state.cooldown = 8;
-      this.state.flags |= 0x10;
-    } else {
-      this.state.cooldown = clampI32(this.state.cooldown - 1, 0, 255);
-      this.state.flags &= ~0x10;
+    {
+      const firePressed = (inputMask & (1 << 6)) !== 0;
+      const fireHeld = (this.state.flags & 0x80) !== 0;
+      let firedThisTick = false;
+
+      if (firePressed && !fireHeld && this.state.cooldown <= 0 && this.state.ammo > 0) {
+        this.state.ammo--;
+        this.state.cooldown = 8;
+        this.state.flags |= 0x10;
+        firedThisTick = true;
+      } else {
+        this.state.flags &= ~0x10;
+      }
+
+      if (!firedThisTick) {
+        this.state.cooldown = clampI32(this.state.cooldown - 1, 0, 255);
+      }
+
+      if (firePressed) {
+        this.state.flags |= 0x80;
+      } else {
+        this.state.flags &= ~0x80;
+      }
     }
 
     if ((inputMask & (1 << 7)) !== 0) {

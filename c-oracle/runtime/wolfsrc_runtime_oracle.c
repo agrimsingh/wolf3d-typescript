@@ -167,13 +167,29 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   state->xq8 = xq16 >> 8;
   state->yq8 = yq16 >> 8;
 
-  if ((input_mask & (1 << 6)) && state->cooldown <= 0 && state->ammo > 0) {
-    state->ammo--;
-    state->cooldown = 8;
-    state->flags |= 0x10;
-  } else {
-    state->cooldown = clamp_i32(state->cooldown - 1, 0, 255);
-    state->flags &= ~0x10;
+  {
+    int32_t fire_pressed = (input_mask & (1 << 6)) ? 1 : 0;
+    int32_t fire_held = (state->flags & 0x80) ? 1 : 0;
+    int32_t fired_this_tick = 0;
+
+    if (fire_pressed && !fire_held && state->cooldown <= 0 && state->ammo > 0) {
+      state->ammo--;
+      state->cooldown = 8;
+      state->flags |= 0x10;
+      fired_this_tick = 1;
+    } else {
+      state->flags &= ~0x10;
+    }
+
+    if (!fired_this_tick) {
+      state->cooldown = clamp_i32(state->cooldown - 1, 0, 255);
+    }
+
+    if (fire_pressed) {
+      state->flags |= 0x80;
+    } else {
+      state->flags &= ~0x80;
+    }
   }
 
   if (input_mask & (1 << 7)) {
