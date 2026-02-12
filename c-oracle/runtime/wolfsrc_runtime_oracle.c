@@ -12,6 +12,12 @@ void real_wl_agent_clip_move_apply(
   uint32_t map_hi,
   int32_t noclip_enabled
 );
+int32_t oracle_real_wl_agent_try_move(
+  int32_t x,
+  int32_t y,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -47,6 +53,7 @@ enum runtime_trace_symbol_e {
   TRACE_ORACLE_RUNTIME_GET_FLAGS = 15,
   TRACE_ORACLE_RUNTIME_GET_TICK = 16,
   TRACE_REAL_WL_AGENT_CLIP_MOVE_APPLY = 17,
+  TRACE_REAL_WL_AGENT_TRY_MOVE = 18,
 };
 
 #define TRACE_SYMBOL_MAX 32
@@ -74,36 +81,6 @@ static int32_t clamp_i32(int32_t v, int32_t minv, int32_t maxv) {
   if (v < minv) return minv;
   if (v > maxv) return maxv;
   return v;
-}
-
-static int wall_at(uint32_t lo, uint32_t hi, int x, int y) {
-  if (x < 0 || x >= 8 || y < 0 || y >= 8) {
-    return 1;
-  }
-  int bit = y * 8 + x;
-  if (bit < 32) {
-    return (lo & (1u << bit)) != 0;
-  }
-  return (hi & (1u << (bit - 32))) != 0;
-}
-
-static void clip_move(uint32_t lo, uint32_t hi, int32_t *xq8, int32_t *yq8, int32_t dxq8, int32_t dyq8) {
-  int32_t ox = *xq8;
-  int32_t oy = *yq8;
-  int32_t nx = ox + dxq8;
-  int32_t ny = oy + dyq8;
-
-  if (wall_at(lo, hi, nx >> 8, ny >> 8)) {
-    if (!wall_at(lo, hi, nx >> 8, oy >> 8)) {
-      *xq8 = nx;
-    }
-    if (!wall_at(lo, hi, ox >> 8, ny >> 8)) {
-      *yq8 = ny;
-    }
-  } else {
-    *xq8 = nx;
-    *yq8 = ny;
-  }
 }
 
 static uint32_t runtime_snapshot_hash(const runtime_state_t *state) {
@@ -167,13 +144,22 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   if (input_mask & (1 << 7)) {
     int32_t tx = state->xq8 >> 8;
     int32_t ty = state->yq8 >> 8;
+    int32_t blocked = 0;
     int32_t facing = ((state->angle_deg % 360) + 360) % 360;
     if (facing < 45 || facing >= 315) tx += 1;
     else if (facing < 135) ty += 1;
     else if (facing < 225) tx -= 1;
     else ty -= 1;
-    if (wall_at(state->map_lo, state->map_hi, tx, ty)) {
+    {
+      int32_t target_xq16 = ((tx << 8) + 128) << 8;
+      int32_t target_yq16 = ((ty << 8) + 128) << 8;
+      trace_hit(TRACE_REAL_WL_AGENT_TRY_MOVE);
+      blocked = oracle_real_wl_agent_try_move(target_xq16, target_yq16, state->map_lo, state->map_hi) ? 0 : 1;
+    }
+    if (blocked) {
       state->flags |= 0x20;
+    } else {
+      state->flags &= ~0x20;
     }
   } else {
     state->flags &= ~0x20;

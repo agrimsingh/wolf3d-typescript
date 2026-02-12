@@ -53,6 +53,7 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 15, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_get_flags', notes: 'snapshot readout' },
   { id: 16, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_get_tick', notes: 'snapshot readout' },
   { id: 17, file: 'WL_AGENT.C', func: 'ClipMove', notes: 'called via real_wl_agent_clip_move_apply shim' },
+  { id: 18, file: 'WL_AGENT.C', func: 'TryMove', notes: 'called via oracle_real_wl_agent_try_move shim' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -75,6 +76,7 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [15, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [16, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [17, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [18, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

@@ -8,7 +8,7 @@ import type {
   RuntimeSnapshot,
   RuntimeStepResult,
 } from './contracts';
-import { wlAgentRealClipMoveQ16 } from '../wolf/player/wlAgentReal';
+import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
 
@@ -20,17 +20,6 @@ function fnv1a(hash: number, value: number): number {
 
 function clampI32(v: number, minv: number, maxv: number): number {
   return Math.max(minv, Math.min(maxv, v | 0)) | 0;
-}
-
-function wallAt(lo: number, hi: number, x: number, y: number): boolean {
-  if (x < 0 || x >= 8 || y < 0 || y >= 8) {
-    return true;
-  }
-  const bit = y * 8 + x;
-  if (bit < 32) {
-    return ((lo >>> bit) & 1) === 1;
-  }
-  return ((hi >>> (bit - 32)) & 1) === 1;
 }
 
 type State = {
@@ -45,25 +34,6 @@ type State = {
   flags: number;
   tick: number;
 };
-
-function clipMove(state: State, dxQ8: number, dyQ8: number): void {
-  const ox = state.xQ8 | 0;
-  const oy = state.yQ8 | 0;
-  const nx = (ox + (dxQ8 | 0)) | 0;
-  const ny = (oy + (dyQ8 | 0)) | 0;
-
-  if (wallAt(state.mapLo >>> 0, state.mapHi >>> 0, nx >> 8, ny >> 8)) {
-    if (!wallAt(state.mapLo >>> 0, state.mapHi >>> 0, nx >> 8, oy >> 8)) {
-      state.xQ8 = nx;
-    }
-    if (!wallAt(state.mapLo >>> 0, state.mapHi >>> 0, ox >> 8, ny >> 8)) {
-      state.yQ8 = ny;
-    }
-  } else {
-    state.xQ8 = nx;
-    state.yQ8 = ny;
-  }
-}
 
 function snapshotHash(state: State): number {
   let h = 2166136261 >>> 0;
@@ -249,8 +219,12 @@ export class TsRuntimePort implements RuntimePort {
       else if (facing < 135) ty += 1;
       else if (facing < 225) tx -= 1;
       else ty -= 1;
-      if (wallAt(this.state.mapLo, this.state.mapHi, tx, ty)) {
+      const targetXQ16 = (((tx << 8) + 128) << 8) | 0;
+      const targetYQ16 = (((ty << 8) + 128) << 8) | 0;
+      if (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) === 0) {
         this.state.flags |= 0x20;
+      } else {
+        this.state.flags &= ~0x20;
       }
     } else {
       this.state.flags &= ~0x20;

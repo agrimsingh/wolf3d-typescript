@@ -203,6 +203,7 @@ describe('runtime step parity', () => {
     expect(a.includes(2)).toBe(true); // oracle_runtime_reset
     expect(a.includes(3)).toBe(true); // oracle_runtime_step
     expect(a.includes(17)).toBe(true); // real WL_AGENT.ClipMove
+    expect(a.includes(18)).toBe(true); // real WL_AGENT.TryMove
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

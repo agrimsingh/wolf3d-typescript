@@ -2,7 +2,7 @@
   "phase": "R5",
   "stepsPerScenario": 64,
   "scenarioCount": 10,
-  "checkpointDigest": 1566426645,
+  "checkpointDigest": 1510940821,
   "checkpoints": [
     {
       "id": "wl1-map-0",
@@ -10,8 +10,8 @@
       "mapName": "Wolf1 Map1",
       "seedHex": "0x9a6ae682",
       "stepCount": 64,
-      "traceHash": 712646594,
-      "stepDigest": 111337348,
+      "traceHash": 3120880002,
+      "stepDigest": 3907164100,
       "finalSnapshotHash": 1995695172,
       "finalFrameHash": 649092594,
       "finalTick": 221
@@ -22,8 +22,8 @@
       "mapName": "Wolf1 Map2",
       "seedHex": "0x968c47cf",
       "stepCount": 64,
-      "traceHash": 1116778406,
-      "stepDigest": 331792474,
+      "traceHash": 1109014950,
+      "stepDigest": 4191805658,
       "finalSnapshotHash": 3602814335,
       "finalFrameHash": 468679217,
       "finalTick": 241
@@ -34,8 +34,8 @@
       "mapName": "Wolf1 Map3",
       "seedHex": "0x932fa408",
       "stepCount": 64,
-      "traceHash": 2237736101,
-      "stepDigest": 1750819660,
+      "traceHash": 1182847269,
+      "stepDigest": 3085789324,
       "finalSnapshotHash": 3859007527,
       "finalFrameHash": 2741030785,
       "finalTick": 197
@@ -46,10 +46,10 @@
       "mapName": "Wolf1 Map4",
       "seedHex": "0x8f410555",
       "stepCount": 64,
-      "traceHash": 3336472596,
-      "stepDigest": 2297168154,
-      "finalSnapshotHash": 469273180,
-      "finalFrameHash": 1647624242,
+      "traceHash": 1232974228,
+      "stepDigest": 689712922,
+      "finalSnapshotHash": 3695592572,
+      "finalFrameHash": 160544018,
       "finalTick": 210
     },
     {
@@ -58,8 +58,8 @@
       "mapName": "Wolf1 Map5",
       "seedHex": "0x8be3659e",
       "stepCount": 64,
-      "traceHash": 2989602691,
-      "stepDigest": 422232860,
+      "traceHash": 108512323,
+      "stepDigest": 789608220,
       "finalSnapshotHash": 3325509912,
       "finalFrameHash": 278875882,
       "finalTick": 214
@@ -70,8 +70,8 @@
       "mapName": "Wolf1 Map6",
       "seedHex": "0x8406c2db",
       "stepCount": 64,
-      "traceHash": 1346702557,
-      "stepDigest": 339200934,
+      "traceHash": 310531741,
+      "stepDigest": 2764659622,
       "finalSnapshotHash": 1996033186,
       "finalFrameHash": 871096897,
       "finalTick": 255
@@ -82,8 +82,8 @@
       "mapName": "Wolf1 Map7",
       "seedHex": "0x80b82324",
       "stepCount": 64,
-      "traceHash": 2156316762,
-      "stepDigest": 1870552640,
+      "traceHash": 1766810906,
+      "stepDigest": 3444334016,
       "finalSnapshotHash": 1881324710,
       "finalFrameHash": 259601058,
       "finalTick": 229
