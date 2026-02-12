@@ -288,6 +288,102 @@ uint32_t oracle_id_sd_sd_stop_sound_hash(
   int32_t current_sound,
   int32_t current_priority
 );
+uint32_t oracle_id_ca_cal_setup_audio_file_hash(
+  int32_t audiohed_len,
+  int32_t audiot_len,
+  int32_t start
+);
+uint32_t oracle_id_ca_ca_cache_audio_chunk_hash(
+  int32_t chunk_num,
+  int32_t offset,
+  int32_t next_offset,
+  int32_t audiot_len,
+  int32_t cache_mask
+);
+uint32_t oracle_id_us_1_us_print_hash(
+  int32_t cursor_x,
+  int32_t cursor_y,
+  int32_t text_len,
+  int32_t color,
+  int32_t font_width
+);
+uint32_t oracle_id_us_1_us_cprint_hash(
+  int32_t window_x,
+  int32_t window_w,
+  int32_t text_len,
+  int32_t align,
+  int32_t font_width
+);
+uint32_t oracle_id_us_1_us_draw_window_hash(
+  int32_t x,
+  int32_t y,
+  int32_t w,
+  int32_t h,
+  int32_t frame_color,
+  int32_t fill_color
+);
+uint32_t oracle_wl_menu_us_control_panel_hash(
+  int32_t screen,
+  int32_t cursor,
+  int32_t input_mask,
+  int32_t menu_items
+);
+uint32_t oracle_wl_menu_draw_main_menu_hash(
+  int32_t selected,
+  int32_t enabled_mask,
+  int32_t episode
+);
+uint32_t oracle_wl_menu_draw_menu_hash(
+  int32_t menu_id,
+  int32_t cursor,
+  int32_t item_count,
+  int32_t disabled_mask,
+  int32_t scroll
+);
+uint32_t oracle_wl_menu_cp_new_game_hash(
+  int32_t difficulty,
+  int32_t episode,
+  int32_t start_level,
+  int32_t weapon
+);
+uint32_t oracle_wl_menu_cp_view_scores_hash(
+  int32_t top0,
+  int32_t top1,
+  int32_t top2,
+  int32_t top3,
+  int32_t top4,
+  int32_t new_score
+);
+uint32_t oracle_wl_menu_cp_sound_hash(
+  int32_t sound_mode,
+  int32_t music_mode,
+  int32_t digi_mode,
+  int32_t action
+);
+uint32_t oracle_wl_menu_cp_control_hash(
+  int32_t mouse_enabled,
+  int32_t joystick_enabled,
+  int32_t sensitivity,
+  int32_t action
+);
+uint32_t oracle_wl_menu_message_hash(
+  int32_t message_len,
+  int32_t wait_for_ack,
+  int32_t input_mask,
+  int32_t rng
+);
+uint32_t oracle_wl_text_help_screens_hash(
+  int32_t page,
+  int32_t total_pages,
+  int32_t input_mask,
+  int32_t rng
+);
+uint32_t oracle_wl_text_end_text_hash(
+  int32_t text_len,
+  int32_t scroll_pos,
+  int32_t speed,
+  int32_t input_mask
+);
 uint32_t oracle_wl_state_first_sighting_hash(
   int32_t ax,
   int32_t ay,
@@ -506,9 +602,24 @@ enum runtime_trace_symbol_e {
   TRACE_ID_SD_SET_MUSIC_MODE = 61,
   TRACE_ID_SD_PLAY_SOUND = 62,
   TRACE_ID_SD_STOP_SOUND = 63,
+  TRACE_ID_CA_CAL_SETUP_AUDIO_FILE = 64,
+  TRACE_ID_CA_CACHE_AUDIO_CHUNK = 65,
+  TRACE_ID_US_1_US_PRINT = 66,
+  TRACE_ID_US_1_US_CPRINT = 67,
+  TRACE_ID_US_1_US_DRAW_WINDOW = 68,
+  TRACE_WL_MENU_US_CONTROL_PANEL = 69,
+  TRACE_WL_MENU_DRAW_MAIN_MENU = 70,
+  TRACE_WL_MENU_DRAW_MENU = 71,
+  TRACE_WL_MENU_CP_NEW_GAME = 72,
+  TRACE_WL_MENU_CP_VIEW_SCORES = 73,
+  TRACE_WL_MENU_CP_SOUND = 74,
+  TRACE_WL_MENU_CP_CONTROL = 75,
+  TRACE_WL_MENU_MESSAGE = 76,
+  TRACE_WL_TEXT_HELP_SCREENS = 77,
+  TRACE_WL_TEXT_END_TEXT = 78,
 };
 
-#define TRACE_SYMBOL_MAX 64
+#define TRACE_SYMBOL_MAX 96
 static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
 static int32_t g_trace_count = 0;
 
@@ -802,6 +913,21 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t set_music_mode_hash;
       uint32_t play_sound_hash;
       uint32_t stop_sound_hash;
+      uint32_t setup_audio_file_hash;
+      uint32_t cache_audio_chunk_hash;
+      uint32_t us_print_hash;
+      uint32_t us_cprint_hash;
+      uint32_t us_draw_window_hash;
+      uint32_t menu_control_panel_hash;
+      uint32_t menu_draw_main_hash;
+      uint32_t menu_draw_hash;
+      uint32_t menu_new_game_hash;
+      uint32_t menu_view_scores_hash;
+      uint32_t menu_sound_hash;
+      uint32_t menu_control_hash;
+      uint32_t menu_message_hash;
+      uint32_t text_help_hash;
+      uint32_t text_end_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -874,6 +1000,43 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t current_music_mode = (state->flags >> 2) & 3;
       int32_t play_priority = ((rng >> 4) & 15) - 8;
       int32_t current_priority = ((rng >> 8) & 15) - 8;
+      int32_t audiohed_len = 4096 + ((state->tick & 0xff) << 2);
+      int32_t audiot_len = 16384 + (rng & 0x3fff);
+      int32_t audio_start = state->tick & 31;
+      int32_t audio_chunk_num = state->tick & 127;
+      int32_t audio_offset = rng & 0x1fff;
+      int32_t audio_next_offset = audio_offset + (((rng >> 8) & 0x1ff) + 1);
+      int32_t audio_cache_mask = state->flags;
+      int32_t text_len = ((rng >> 9) & 63) + 1;
+      int32_t font_width = 8 + (state->tick & 3);
+      int32_t cursor_x = (state->xq8 >> 4) & 255;
+      int32_t cursor_y = (state->yq8 >> 4) & 191;
+      int32_t color = state->tick & 15;
+      int32_t window_x = (state->xq8 >> 5) & 127;
+      int32_t window_w = 40 + ((rng >> 12) & 127);
+      int32_t align = state->tick & 1;
+      int32_t window_h = 20 + ((state->tick >> 1) & 63);
+      int32_t menu_screen = state->tick & 7;
+      int32_t menu_cursor = (state->flags >> 4) & 7;
+      int32_t menu_items = 8;
+      int32_t enabled_mask = rng & 0xff;
+      int32_t menu_id = (state->tick >> 2) & 7;
+      int32_t item_count = 6 + (state->tick & 3);
+      int32_t disabled_mask = (rng >> 3) & 0xff;
+      int32_t scroll = (state->tick >> 1) & 15;
+      int32_t difficulty = (state->tick >> 2) & 3;
+      int32_t episode = (state->tick >> 4) & 3;
+      int32_t start_level = state->tick & 9;
+      int32_t mouse_enabled = (state->flags >> 12) & 1;
+      int32_t joystick_enabled = (state->flags >> 13) & 1;
+      int32_t sensitivity = (rng >> 5) & 0x1f;
+      int32_t menu_action = state->tick & 3;
+      int32_t message_len = 16 + (text_len & 31);
+      int32_t wait_for_ack = (state->tick >> 3) & 1;
+      int32_t help_page = state->tick & 7;
+      int32_t help_total_pages = 8;
+      int32_t text_scroll_pos = (state->tick * 3) & 0x3ff;
+      int32_t text_speed = ((rng >> 6) & 7) + 1;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -1143,6 +1306,42 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       play_sound_hash = oracle_id_sd_sd_play_sound_hash(sound_mode, sound_id, play_priority, current_priority, channel_busy);
       trace_hit(TRACE_ID_SD_STOP_SOUND);
       stop_sound_hash = oracle_id_sd_sd_stop_sound_hash(channel_busy, sound_id, current_priority);
+      trace_hit(TRACE_ID_CA_CAL_SETUP_AUDIO_FILE);
+      setup_audio_file_hash = oracle_id_ca_cal_setup_audio_file_hash(audiohed_len, audiot_len, audio_start);
+      trace_hit(TRACE_ID_CA_CACHE_AUDIO_CHUNK);
+      cache_audio_chunk_hash = oracle_id_ca_ca_cache_audio_chunk_hash(
+        audio_chunk_num,
+        audio_offset,
+        audio_next_offset,
+        audiot_len,
+        audio_cache_mask
+      );
+      trace_hit(TRACE_ID_US_1_US_PRINT);
+      us_print_hash = oracle_id_us_1_us_print_hash(cursor_x, cursor_y, text_len, color, font_width);
+      trace_hit(TRACE_ID_US_1_US_CPRINT);
+      us_cprint_hash = oracle_id_us_1_us_cprint_hash(window_x, window_w, text_len, align, font_width);
+      trace_hit(TRACE_ID_US_1_US_DRAW_WINDOW);
+      us_draw_window_hash = oracle_id_us_1_us_draw_window_hash(window_x, cursor_y, window_w, window_h, color, color ^ 15);
+      trace_hit(TRACE_WL_MENU_US_CONTROL_PANEL);
+      menu_control_panel_hash = oracle_wl_menu_us_control_panel_hash(menu_screen, menu_cursor, input_mask, menu_items);
+      trace_hit(TRACE_WL_MENU_DRAW_MAIN_MENU);
+      menu_draw_main_hash = oracle_wl_menu_draw_main_menu_hash(menu_cursor, enabled_mask, episode);
+      trace_hit(TRACE_WL_MENU_DRAW_MENU);
+      menu_draw_hash = oracle_wl_menu_draw_menu_hash(menu_id, menu_cursor, item_count, disabled_mask, scroll);
+      trace_hit(TRACE_WL_MENU_CP_NEW_GAME);
+      menu_new_game_hash = oracle_wl_menu_cp_new_game_hash(difficulty, episode, start_level, weapon_state);
+      trace_hit(TRACE_WL_MENU_CP_VIEW_SCORES);
+      menu_view_scores_hash = oracle_wl_menu_cp_view_scores_hash(score0, score1, score2, score3, score4, (int32_t)(play_loop_hash & 0xffffu));
+      trace_hit(TRACE_WL_MENU_CP_SOUND);
+      menu_sound_hash = oracle_wl_menu_cp_sound_hash(current_sound_mode, current_music_mode, sound_mode, menu_action);
+      trace_hit(TRACE_WL_MENU_CP_CONTROL);
+      menu_control_hash = oracle_wl_menu_cp_control_hash(mouse_enabled, joystick_enabled, sensitivity, menu_action);
+      trace_hit(TRACE_WL_MENU_MESSAGE);
+      menu_message_hash = oracle_wl_menu_message_hash(message_len, wait_for_ack, input_mask, rng);
+      trace_hit(TRACE_WL_TEXT_HELP_SCREENS);
+      text_help_hash = oracle_wl_text_help_screens_hash(help_page, help_total_pages, input_mask, rng);
+      trace_hit(TRACE_WL_TEXT_END_TEXT);
+      text_end_hash = oracle_wl_text_end_text_hash(message_len, text_scroll_pos, text_speed, input_mask);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -1157,7 +1356,22 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         set_sound_mode_hash ^
         set_music_mode_hash ^
         play_sound_hash ^
-        stop_sound_hash;
+        stop_sound_hash ^
+        setup_audio_file_hash ^
+        cache_audio_chunk_hash ^
+        us_print_hash ^
+        us_cprint_hash ^
+        us_draw_window_hash ^
+        menu_control_panel_hash ^
+        menu_draw_main_hash ^
+        menu_draw_hash ^
+        menu_new_game_hash ^
+        menu_view_scores_hash ^
+        menu_sound_hash ^
+        menu_control_hash ^
+        menu_message_hash ^
+        text_help_hash ^
+        text_end_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

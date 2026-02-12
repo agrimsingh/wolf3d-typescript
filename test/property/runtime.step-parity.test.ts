@@ -248,6 +248,21 @@ describe('runtime step parity', () => {
     expect(a.includes(61)).toBe(true); // ID_SD.SD_SetMusicMode
     expect(a.includes(62)).toBe(true); // ID_SD.SD_PlaySound
     expect(a.includes(63)).toBe(true); // ID_SD.SD_StopSound
+    expect(a.includes(64)).toBe(true); // ID_CA.CAL_SetupAudioFile
+    expect(a.includes(65)).toBe(true); // ID_CA.CA_CacheAudioChunk
+    expect(a.includes(66)).toBe(true); // ID_US_1.US_Print
+    expect(a.includes(67)).toBe(true); // ID_US_1.US_CPrint
+    expect(a.includes(68)).toBe(true); // ID_US_1.US_DrawWindow
+    expect(a.includes(69)).toBe(true); // WL_MENU.US_ControlPanel
+    expect(a.includes(70)).toBe(true); // WL_MENU.DrawMainMenu
+    expect(a.includes(71)).toBe(true); // WL_MENU.DrawMenu
+    expect(a.includes(72)).toBe(true); // WL_MENU.CP_NewGame
+    expect(a.includes(73)).toBe(true); // WL_MENU.CP_ViewScores
+    expect(a.includes(74)).toBe(true); // WL_MENU.CP_Sound
+    expect(a.includes(75)).toBe(true); // WL_MENU.CP_Control
+    expect(a.includes(76)).toBe(true); // WL_MENU.Message
+    expect(a.includes(77)).toBe(true); // WL_TEXT.HelpScreens
+    expect(a.includes(78)).toBe(true); // WL_TEXT.EndText
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

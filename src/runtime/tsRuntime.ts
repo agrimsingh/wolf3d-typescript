@@ -53,6 +53,8 @@ import {
 } from '../wolf/player/wlPlayer';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
 import {
+  idCaCacheAudioChunkHash,
+  idCaCalSetupAudioFileHash,
   idSdPlaySoundHash,
   idSdSetMusicModeHash,
   idSdSetSoundModeHash,
@@ -61,6 +63,21 @@ import {
   wlGameSetSoundLocHash,
   wlGameUpdateSoundLocHash,
 } from '../wolf/audio/wlAudio';
+import {
+  idUs1UsCPrintHash,
+  idUs1UsDrawWindowHash,
+  idUs1UsPrintHash,
+  wlMenuCpControlHash,
+  wlMenuCpNewGameHash,
+  wlMenuCpSoundHash,
+  wlMenuCpViewScoresHash,
+  wlMenuDrawMainMenuHash,
+  wlMenuDrawMenuHash,
+  wlMenuMessageHash,
+  wlMenuUsControlPanelHash,
+  wlTextEndTextHash,
+  wlTextHelpScreensHash,
+} from '../wolf/menu/wlMenuText';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
 
@@ -608,6 +625,43 @@ export class TsRuntimePort implements RuntimePort {
         const currentMusicMode = (this.state.flags >> 2) & 3;
         const playPriority = ((rng >> 4) & 15) - 8;
         const currentPriority = ((rng >> 8) & 15) - 8;
+        const audiohedLen = 4096 + ((this.state.tick & 0xff) << 2);
+        const audiotLen = 16384 + (rng & 0x3fff);
+        const audioStart = this.state.tick & 31;
+        const audioChunkNum = this.state.tick & 127;
+        const audioOffset = rng & 0x1fff;
+        const audioNextOffset = audioOffset + (((rng >> 8) & 0x1ff) + 1);
+        const audioCacheMask = this.state.flags | 0;
+        const textLen = ((rng >> 9) & 63) + 1;
+        const fontWidth = 8 + (this.state.tick & 3);
+        const cursorX = (this.state.xQ8 >> 4) & 255;
+        const cursorY = (this.state.yQ8 >> 4) & 191;
+        const color = this.state.tick & 15;
+        const windowX = (this.state.xQ8 >> 5) & 127;
+        const windowW = 40 + ((rng >> 12) & 127);
+        const align = this.state.tick & 1;
+        const windowH = 20 + ((this.state.tick >> 1) & 63);
+        const menuScreen = this.state.tick & 7;
+        const menuCursor = (this.state.flags >> 4) & 7;
+        const menuItems = 8;
+        const enabledMask = rng & 0xff;
+        const menuId = (this.state.tick >> 2) & 7;
+        const itemCount = 6 + (this.state.tick & 3);
+        const disabledMask = (rng >> 3) & 0xff;
+        const scroll = (this.state.tick >> 1) & 15;
+        const difficulty = (this.state.tick >> 2) & 3;
+        const episode = (this.state.tick >> 4) & 3;
+        const startLevel = this.state.tick & 9;
+        const mouseEnabled = (this.state.flags >> 12) & 1;
+        const joystickEnabled = (this.state.flags >> 13) & 1;
+        const sensitivity = (rng >> 5) & 0x1f;
+        const menuAction = this.state.tick & 3;
+        const messageLen = 16 + (textLen & 31);
+        const waitForAck = (this.state.tick >> 3) & 1;
+        const helpPage = this.state.tick & 7;
+        const helpTotalPages = 8;
+        const textScrollPos = (this.state.tick * 3) & 0x3ff;
+        const textSpeed = ((rng >> 6) & 7) + 1;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -834,6 +888,23 @@ export class TsRuntimePort implements RuntimePort {
         const setMusicModeHash = idSdSetMusicModeHash(currentMusicMode, requestedMusicMode, hasDevice) >>> 0;
         const playSoundHash = idSdPlaySoundHash(soundMode, soundId, playPriority, currentPriority, channelBusy) >>> 0;
         const stopSoundHash = idSdStopSoundHash(channelBusy, soundId, currentPriority) >>> 0;
+        const setupAudioFileHash = idCaCalSetupAudioFileHash(audiohedLen, audiotLen, audioStart) >>> 0;
+        const cacheAudioChunkHash =
+          idCaCacheAudioChunkHash(audioChunkNum, audioOffset, audioNextOffset, audiotLen, audioCacheMask) >>> 0;
+        const usPrintHash = idUs1UsPrintHash(cursorX, cursorY, textLen, color, fontWidth) >>> 0;
+        const usCPrintHash = idUs1UsCPrintHash(windowX, windowW, textLen, align, fontWidth) >>> 0;
+        const usDrawWindowHash = idUs1UsDrawWindowHash(windowX, cursorY, windowW, windowH, color, color ^ 15) >>> 0;
+        const menuControlPanelHash = wlMenuUsControlPanelHash(menuScreen, menuCursor, inputMask | 0, menuItems) >>> 0;
+        const menuDrawMainHash = wlMenuDrawMainMenuHash(menuCursor, enabledMask, episode) >>> 0;
+        const menuDrawHash = wlMenuDrawMenuHash(menuId, menuCursor, itemCount, disabledMask, scroll) >>> 0;
+        const menuNewGameHash = wlMenuCpNewGameHash(difficulty, episode, startLevel, weaponState) >>> 0;
+        const menuViewScoresHash =
+          wlMenuCpViewScoresHash(score0, score1, score2, score3, score4, playLoopHash & 0xffff) >>> 0;
+        const menuSoundHash = wlMenuCpSoundHash(currentSoundMode, currentMusicMode, soundMode, menuAction) >>> 0;
+        const menuControlHash = wlMenuCpControlHash(mouseEnabled, joystickEnabled, sensitivity, menuAction) >>> 0;
+        const menuMessageHash = wlMenuMessageHash(messageLen, waitForAck, inputMask | 0, rng | 0) >>> 0;
+        const textHelpHash = wlTextHelpScreensHash(helpPage, helpTotalPages, inputMask | 0, rng | 0) >>> 0;
+        const textEndHash = wlTextEndTextHash(messageLen, textScrollPos, textSpeed, inputMask | 0) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -848,7 +919,22 @@ export class TsRuntimePort implements RuntimePort {
             setSoundModeHash ^
             setMusicModeHash ^
             playSoundHash ^
-            stopSoundHash) >>> 0;
+            stopSoundHash ^
+            setupAudioFileHash ^
+            cacheAudioChunkHash ^
+            usPrintHash ^
+            usCPrintHash ^
+            usDrawWindowHash ^
+            menuControlPanelHash ^
+            menuDrawMainHash ^
+            menuDrawHash ^
+            menuNewGameHash ^
+            menuViewScoresHash ^
+            menuSoundHash ^
+            menuControlHash ^
+            menuMessageHash ^
+            textHelpHash ^
+            textEndHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

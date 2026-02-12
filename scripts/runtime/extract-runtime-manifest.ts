@@ -99,6 +99,21 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 61, file: 'ID_SD.C', func: 'SD_SetMusicMode', notes: 'called via oracle_id_sd_sd_set_music_mode_hash from runtime audio probe' },
   { id: 62, file: 'ID_SD.C', func: 'SD_PlaySound', notes: 'called via oracle_id_sd_sd_play_sound_hash from runtime audio probe' },
   { id: 63, file: 'ID_SD.C', func: 'SD_StopSound', notes: 'called via oracle_id_sd_sd_stop_sound_hash from runtime audio probe' },
+  { id: 64, file: 'ID_CA.C', func: 'CAL_SetupAudioFile', notes: 'called via oracle_id_ca_cal_setup_audio_file_hash from runtime audio-cache probe' },
+  { id: 65, file: 'ID_CA.C', func: 'CA_CacheAudioChunk', notes: 'called via oracle_id_ca_ca_cache_audio_chunk_hash from runtime audio-cache probe' },
+  { id: 66, file: 'ID_US_1.C', func: 'US_Print', notes: 'called via oracle_id_us_1_us_print_hash from runtime menu/text probe' },
+  { id: 67, file: 'ID_US_1.C', func: 'US_CPrint', notes: 'called via oracle_id_us_1_us_cprint_hash from runtime menu/text probe' },
+  { id: 68, file: 'ID_US_1.C', func: 'US_DrawWindow', notes: 'called via oracle_id_us_1_us_draw_window_hash from runtime menu/text probe' },
+  { id: 69, file: 'WL_MENU.C', func: 'US_ControlPanel', notes: 'called via oracle_wl_menu_us_control_panel_hash from runtime menu/text probe' },
+  { id: 70, file: 'WL_MENU.C', func: 'DrawMainMenu', notes: 'called via oracle_wl_menu_draw_main_menu_hash from runtime menu/text probe' },
+  { id: 71, file: 'WL_MENU.C', func: 'DrawMenu', notes: 'called via oracle_wl_menu_draw_menu_hash from runtime menu/text probe' },
+  { id: 72, file: 'WL_MENU.C', func: 'CP_NewGame', notes: 'called via oracle_wl_menu_cp_new_game_hash from runtime menu/text probe' },
+  { id: 73, file: 'WL_MENU.C', func: 'CP_ViewScores', notes: 'called via oracle_wl_menu_cp_view_scores_hash from runtime menu/text probe' },
+  { id: 74, file: 'WL_MENU.C', func: 'CP_Sound', notes: 'called via oracle_wl_menu_cp_sound_hash from runtime menu/text probe' },
+  { id: 75, file: 'WL_MENU.C', func: 'CP_Control', notes: 'called via oracle_wl_menu_cp_control_hash from runtime menu/text probe' },
+  { id: 76, file: 'WL_MENU.C', func: 'Message', notes: 'called via oracle_wl_menu_message_hash from runtime menu/text probe' },
+  { id: 77, file: 'WL_TEXT.C', func: 'HelpScreens', notes: 'called via oracle_wl_text_help_screens_hash from runtime menu/text probe' },
+  { id: 78, file: 'WL_TEXT.C', func: 'EndText', notes: 'called via oracle_wl_text_end_text_hash from runtime menu/text probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -167,6 +182,21 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [61, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [62, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [63, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [64, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [65, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [66, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [67, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [68, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [69, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [70, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [71, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [72, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [73, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [74, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [75, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [76, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [77, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [78, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

@@ -81,6 +81,21 @@ Symbols exercised by deterministic runtime trace scenarios.
 | ID_SD.C | SD_SetMusicMode | `done` | called via oracle_id_sd_sd_set_music_mode_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_SD.C | SD_PlaySound | `done` | called via oracle_id_sd_sd_play_sound_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_SD.C | SD_StopSound | `done` | called via oracle_id_sd_sd_stop_sound_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_CA.C | CAL_SetupAudioFile | `done` | called via oracle_id_ca_cal_setup_audio_file_hash from runtime audio-cache probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_CA.C | CA_CacheAudioChunk | `done` | called via oracle_id_ca_ca_cache_audio_chunk_hash from runtime audio-cache probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_US_1.C | US_Print | `done` | called via oracle_id_us_1_us_print_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_US_1.C | US_CPrint | `done` | called via oracle_id_us_1_us_cprint_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_US_1.C | US_DrawWindow | `done` | called via oracle_id_us_1_us_draw_window_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | US_ControlPanel | `done` | called via oracle_wl_menu_us_control_panel_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | DrawMainMenu | `done` | called via oracle_wl_menu_draw_main_menu_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | DrawMenu | `done` | called via oracle_wl_menu_draw_menu_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | CP_NewGame | `done` | called via oracle_wl_menu_cp_new_game_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | CP_ViewScores | `done` | called via oracle_wl_menu_cp_view_scores_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | CP_Sound | `done` | called via oracle_wl_menu_cp_sound_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | CP_Control | `done` | called via oracle_wl_menu_cp_control_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MENU.C | Message | `done` | called via oracle_wl_menu_message_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_TEXT.C | HelpScreens | `done` | called via oracle_wl_text_help_screens_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_TEXT.C | EndText | `done` | called via oracle_wl_text_end_text_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 
