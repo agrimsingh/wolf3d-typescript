@@ -201,6 +201,11 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 163, file: 'WL_STATE.C', func: 'MoveObj', notes: 'called via oracle_wl_state_move_obj_hash from runtime core probe' },
   { id: 164, file: 'WL_STATE.C', func: 'SelectChaseDir', notes: 'called via oracle_wl_state_select_chase_dir_hash from runtime core probe' },
   { id: 165, file: 'WL_AGENT.C', func: 'ClipMove', notes: 'called via oracle_real_wl_agent_clip_move_hash from runtime core probe' },
+  { id: 166, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_state_size', notes: 'binary state save-size API' },
+  { id: 167, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_save_state', notes: 'binary state save API' },
+  { id: 168, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_load_state', notes: 'binary state load API' },
+  { id: 169, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_framebuffer_size', notes: 'indexed framebuffer size API' },
+  { id: 170, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_render_indexed_frame', notes: 'indexed framebuffer render API' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -371,6 +376,11 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [163, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [164, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [165, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [166, { status: 'done', parity: 'test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic' }],
+  [167, { status: 'done', parity: 'test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic' }],
+  [168, { status: 'done', parity: 'test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic' }],
+  [169, { status: 'done', parity: 'test/property/runtime.lifecycle.test.ts:framebuffer raw payload remains deterministic and parity-equal' }],
+  [170, { status: 'done', parity: 'test/property/runtime.lifecycle.test.ts:framebuffer raw payload remains deterministic and parity-equal' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {
@@ -743,6 +753,9 @@ async function main(): Promise<void> {
       }
       const blob = oracle.serialize();
       oracle.deserialize(blob);
+      const runtimeBlob = oracle.saveState();
+      oracle.loadState(runtimeBlob);
+      oracle.framebuffer(true);
       oracle.snapshot();
       for (const id of oracle.traceSymbolIds()) {
         allHits.add(id);

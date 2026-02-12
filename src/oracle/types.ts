@@ -154,6 +154,11 @@ export type OracleRuntimeExportId =
   | 'oracle_runtime_get_cooldown'
   | 'oracle_runtime_get_flags'
   | 'oracle_runtime_get_tick'
+  | 'oracle_runtime_state_size'
+  | 'oracle_runtime_save_state'
+  | 'oracle_runtime_load_state'
+  | 'oracle_runtime_framebuffer_size'
+  | 'oracle_runtime_render_indexed_frame'
   | 'oracle_runtime_trace_reset'
   | 'oracle_runtime_trace_count'
   | 'oracle_runtime_trace_symbol_id_at';

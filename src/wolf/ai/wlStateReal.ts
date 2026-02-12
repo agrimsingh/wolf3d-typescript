@@ -202,6 +202,39 @@ export function wlStateRealMoveObjHash(
   obclass: number,
   tics: number,
 ): number {
+  const out = wlStateRealMoveObjApply(
+    obx,
+    oby,
+    dir,
+    playerx,
+    playery,
+    areaConnected,
+    distance,
+    move,
+    obclass,
+    tics,
+  );
+
+  let h = 2166136261 >>> 0;
+  h = fnv1a(h, out.x);
+  h = fnv1a(h, out.y);
+  h = fnv1a(h, out.distance);
+  h = fnv1a(h, out.takeDamageCalls);
+  return h >>> 0;
+}
+
+export function wlStateRealMoveObjApply(
+  obx: number,
+  oby: number,
+  dir: number,
+  playerx: number,
+  playery: number,
+  areaConnected: number,
+  distance: number,
+  move: number,
+  obclass: number,
+  tics: number,
+): { x: number; y: number; distance: number; takeDamageCalls: number } {
   let x = obx | 0;
   let y = oby | 0;
   let dist = distance | 0;
@@ -294,12 +327,12 @@ export function wlStateRealMoveObjHash(
     dist = (dist - step) | 0;
   }
 
-  let h = 2166136261 >>> 0;
-  h = fnv1a(h, x);
-  h = fnv1a(h, y);
-  h = fnv1a(h, dist);
-  h = fnv1a(h, takeDamageCalls);
-  return h >>> 0;
+  return {
+    x: x | 0,
+    y: y | 0,
+    distance: dist | 0,
+    takeDamageCalls: takeDamageCalls | 0,
+  };
 }
 
 export function wlStateRealSelectChaseDirHash(
@@ -311,6 +344,35 @@ export function wlStateRealSelectChaseDirHash(
   playerTileX: number,
   playerTileY: number,
 ): number {
+  const out = wlStateRealSelectChaseDirApply(
+    obTileX,
+    obTileY,
+    dir,
+    obclass,
+    flags,
+    playerTileX,
+    playerTileY,
+  );
+
+  let h = 2166136261 >>> 0;
+  h = fnv1a(h, out.dir);
+  h = fnv1a(h, out.tileX);
+  h = fnv1a(h, out.tileY);
+  h = fnv1a(h, out.distance);
+  h = fnv1a(h, out.areaNumber);
+  h = fnv1a(h, out.flags8);
+  return h >>> 0;
+}
+
+export function wlStateRealSelectChaseDirApply(
+  obTileX: number,
+  obTileY: number,
+  dir: number,
+  obclass: number,
+  flags: number,
+  playerTileX: number,
+  playerTileY: number,
+): { dir: number; tileX: number; tileY: number; distance: number; areaNumber: number; flags8: number } {
   let tilex = obTileX | 0;
   let tiley = obTileY | 0;
   let curDir = (((dir | 0) % 9) + 9) % 9;
@@ -365,6 +427,15 @@ export function wlStateRealSelectChaseDirHash(
     return true;
   };
 
+  const finish = (): { dir: number; tileX: number; tileY: number; distance: number; areaNumber: number; flags8: number } => ({
+    dir: curDir | 0,
+    tileX: tilex | 0,
+    tileY: tiley | 0,
+    distance: distance | 0,
+    areaNumber: areaNumber | 0,
+    flags8: flags8 | 0,
+  });
+
   const deltax = (playerX - tilex) | 0;
   const deltay = (playerY - tiley) | 0;
   let d1 = DIR_NODIR;
@@ -387,42 +458,21 @@ export function wlStateRealSelectChaseDirHash(
   if (d1 !== DIR_NODIR) {
     curDir = d1;
     if (tryWalk(curDir)) {
-      let h = 2166136261 >>> 0;
-      h = fnv1a(h, curDir);
-      h = fnv1a(h, tilex);
-      h = fnv1a(h, tiley);
-      h = fnv1a(h, distance);
-      h = fnv1a(h, areaNumber);
-      h = fnv1a(h, flags8);
-      return h >>> 0;
+      return finish();
     }
   }
 
   if (d2 !== DIR_NODIR) {
     curDir = d2;
     if (tryWalk(curDir)) {
-      let h = 2166136261 >>> 0;
-      h = fnv1a(h, curDir);
-      h = fnv1a(h, tilex);
-      h = fnv1a(h, tiley);
-      h = fnv1a(h, distance);
-      h = fnv1a(h, areaNumber);
-      h = fnv1a(h, flags8);
-      return h >>> 0;
+      return finish();
     }
   }
 
   if (olddir !== DIR_NODIR) {
     curDir = olddir;
     if (tryWalk(curDir)) {
-      let h = 2166136261 >>> 0;
-      h = fnv1a(h, curDir);
-      h = fnv1a(h, tilex);
-      h = fnv1a(h, tiley);
-      h = fnv1a(h, distance);
-      h = fnv1a(h, areaNumber);
-      h = fnv1a(h, flags8);
-      return h >>> 0;
+      return finish();
     }
   }
 
@@ -430,14 +480,7 @@ export function wlStateRealSelectChaseDirHash(
     if (tdir !== turnaround) {
       curDir = tdir;
       if (tryWalk(curDir)) {
-        let h = 2166136261 >>> 0;
-        h = fnv1a(h, curDir);
-        h = fnv1a(h, tilex);
-        h = fnv1a(h, tiley);
-        h = fnv1a(h, distance);
-        h = fnv1a(h, areaNumber);
-        h = fnv1a(h, flags8);
-        return h >>> 0;
+        return finish();
       }
     }
   }
@@ -445,24 +488,10 @@ export function wlStateRealSelectChaseDirHash(
   if (turnaround !== DIR_NODIR) {
     curDir = turnaround;
     if (curDir !== DIR_NODIR && tryWalk(curDir)) {
-      let h = 2166136261 >>> 0;
-      h = fnv1a(h, curDir);
-      h = fnv1a(h, tilex);
-      h = fnv1a(h, tiley);
-      h = fnv1a(h, distance);
-      h = fnv1a(h, areaNumber);
-      h = fnv1a(h, flags8);
-      return h >>> 0;
+      return finish();
     }
   }
 
   curDir = DIR_NODIR;
-  let h = 2166136261 >>> 0;
-  h = fnv1a(h, curDir);
-  h = fnv1a(h, tilex);
-  h = fnv1a(h, tiley);
-  h = fnv1a(h, distance);
-  h = fnv1a(h, areaNumber);
-  h = fnv1a(h, flags8);
-  return h >>> 0;
+  return finish();
 }

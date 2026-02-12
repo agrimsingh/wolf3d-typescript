@@ -115,6 +115,15 @@ describe('runtime required symbols parity', () => {
             tsRuntime.deserialize(oracleBlob);
             expectSnapshotsEqual(oracle.snapshot(), tsRuntime.snapshot());
 
+            // runtime binary save/load path
+            const oracleSaved = oracle.saveState();
+            const tsSaved = tsRuntime.saveState();
+            oracle.step({ inputMask: 0x21, tics: 2, rng: 0x10203040 });
+            tsRuntime.step({ inputMask: 0x21, tics: 2, rng: 0x10203040 });
+            oracle.loadState(oracleSaved);
+            tsRuntime.loadState(tsSaved);
+            expectSnapshotsEqual(oracle.snapshot(), tsRuntime.snapshot());
+
             // reset path
             const forceMove: RuntimeInput = { inputMask: 0x03, tics: 3, rng: 0x12345678 };
             oracle.step(forceMove);

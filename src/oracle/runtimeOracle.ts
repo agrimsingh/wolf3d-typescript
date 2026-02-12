@@ -38,6 +38,11 @@ type RuntimeFns = {
   getCooldown: () => number;
   getFlags: () => number;
   getTick: () => number;
+  stateSize: () => number;
+  saveState: (ptr: number, len: number) => number;
+  loadState: (ptr: number, len: number) => number;
+  framebufferSize: () => number;
+  renderIndexedFrame: (ptr: number, len: number) => number;
   traceReset: () => void;
   traceCount: () => number;
   traceSymbolIdAt: (index: number) => number;
@@ -162,6 +167,11 @@ export class WolfsrcOraclePort implements RuntimePort {
         getCooldown: cwrap('oracle_runtime_get_cooldown', 'number', []),
         getFlags: cwrap('oracle_runtime_get_flags', 'number', []),
         getTick: cwrap('oracle_runtime_get_tick', 'number', []),
+        stateSize: cwrap('oracle_runtime_state_size', 'number', []),
+        saveState: cwrap('oracle_runtime_save_state', 'number', ['number', 'number']),
+        loadState: cwrap('oracle_runtime_load_state', 'number', ['number', 'number']),
+        framebufferSize: cwrap('oracle_runtime_framebuffer_size', 'number', []),
+        renderIndexedFrame: cwrap('oracle_runtime_render_indexed_frame', 'number', ['number', 'number']),
         traceReset: cwrap('oracle_runtime_trace_reset', null, []),
         traceCount: cwrap('oracle_runtime_trace_count', 'number', []),
         traceSymbolIdAt: cwrap('oracle_runtime_trace_symbol_id_at', 'number', ['number']),
@@ -230,17 +240,53 @@ export class WolfsrcOraclePort implements RuntimePort {
 
   framebuffer(includeRaw = false): RuntimeFramebufferView {
     const snapshot = this.snapshot();
-    const indexedHash = this.renderHash(320, 200) >>> 0;
+    const fns = this.assertReady();
+    let indexedHash = this.renderHash(320, 200) >>> 0;
+    let indexedBuffer: Uint8Array | undefined;
+    if (includeRaw && this.module) {
+      const bufferSize = fns.framebufferSize() | 0;
+      if (bufferSize > 0) {
+        const ptr = this.module._malloc(bufferSize);
+        if (ptr) {
+          try {
+            indexedHash = fns.renderIndexedFrame(ptr, bufferSize) >>> 0;
+            indexedBuffer = new Uint8Array(this.module.HEAPU8.slice(ptr, ptr + bufferSize));
+          } finally {
+            this.module._free(ptr);
+          }
+        }
+      }
+    }
     return {
       width: 320,
       height: 200,
       indexedHash,
-      indexedBuffer: includeRaw ? buildIndexedBuffer(indexedHash, snapshot.tick | 0) : undefined,
+      indexedBuffer: includeRaw ? indexedBuffer ?? buildIndexedBuffer(indexedHash, snapshot.tick | 0) : undefined,
     };
   }
 
   saveState(): Uint8Array {
-    return this.serialize();
+    const fns = this.assertReady();
+    if (!this.module) {
+      return this.serialize();
+    }
+    const bytes = fns.stateSize() | 0;
+    if (bytes <= 0) {
+      return this.serialize();
+    }
+    const ptr = this.module._malloc(bytes);
+    if (!ptr) {
+      return this.serialize();
+    }
+    try {
+      const ok = fns.saveState(ptr, bytes) | 0;
+      if (!ok) {
+        return this.serialize();
+      }
+      return new Uint8Array(this.module.HEAPU8.slice(ptr, ptr + bytes));
+    } finally {
+      this.module._free(ptr);
+    }
   }
 
   serialize(): Uint8Array {
@@ -266,6 +312,26 @@ export class WolfsrcOraclePort implements RuntimePort {
   }
 
   loadState(data: Uint8Array): void {
+    const fns = this.assertReady();
+    if (!this.module) {
+      this.deserialize(data);
+      return;
+    }
+    const expectedBytes = fns.stateSize() | 0;
+    if (expectedBytes > 0 && data.length === expectedBytes) {
+      const ptr = this.module._malloc(expectedBytes);
+      if (ptr) {
+        try {
+          this.module.HEAPU8.set(data, ptr);
+          const ok = fns.loadState(ptr, expectedBytes) | 0;
+          if (ok) {
+            return;
+          }
+        } finally {
+          this.module._free(ptr);
+        }
+      }
+    }
     this.deserialize(data);
   }
 

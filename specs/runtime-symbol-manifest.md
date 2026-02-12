@@ -183,6 +183,11 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_STATE.C | MoveObj | `done` | called via oracle_wl_state_move_obj_hash from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_STATE.C | SelectChaseDir | `done` | called via oracle_wl_state_select_chase_dir_hash from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | ClipMove | `done` | called via oracle_real_wl_agent_clip_move_hash from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_state_size | `done` | binary state save-size API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_save_state | `done` | binary state save API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_load_state | `done` | binary state load API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_framebuffer_size | `done` | indexed framebuffer size API; parity: test/property/runtime.lifecycle.test.ts:framebuffer raw payload remains deterministic and parity-equal |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_indexed_frame | `done` | indexed framebuffer render API; parity: test/property/runtime.lifecycle.test.ts:framebuffer raw payload remains deterministic and parity-equal |
 
 ### excluded-non-runtime
 

@@ -41,13 +41,19 @@
 
 ## Phase F2: Real Runtime Oracle Driver
 
-- [ ] Replace synthetic runtime oracle core logic in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
+- [x] Replace synthetic runtime oracle core logic in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
   - Progress (2026-02-12): runtime step now routes movement/use blocking through real `WL_AGENT` shims (`TryMove` + `ControlMovement`) instead of local tile-wall helpers.
-- [ ] Add bridge/shim APIs for real boot/tick/snapshot/framebuffer/save-load.
-- [ ] Export updated runtime bridge in WASM and update `src/oracle/runtimeOracle.ts`.
-- [ ] Add oracle determinism tests for repeated identical traces.
-- [ ] Gate: oracle-only determinism suite green.
-- [ ] Commit: `phase-f2: real wolfsrc runtime oracle driver`
+  - Progress (2026-02-12): runtime step now derives chase/damage flags and per-tic damage application from real `WL_STATE`/`WL_AGENT` apply outputs (`MoveObj`, `SelectChaseDir`, `TakeDamage`) rather than hash-bit or RNG-driven toggles.
+  - Progress (2026-02-12): probe/hash wrappers remain for runtime symbol coverage, but runtime gameplay mutations are no longer driven by probe hash bits.
+- [x] Add bridge/shim APIs for real boot/tick/snapshot/framebuffer/save-load.
+  - Progress (2026-02-12): added binary runtime state save/load and indexed framebuffer APIs in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
+- [x] Export updated runtime bridge in WASM and update `src/oracle/runtimeOracle.ts`.
+  - Progress (2026-02-12): `scripts/wasm/build-oracle.sh` exports new runtime functions and `WolfsrcOraclePort` now uses them.
+- [x] Add oracle determinism tests for repeated identical traces.
+  - Progress (2026-02-12): deterministic parity covered in `test/property/runtime.step-parity.test.ts` and `test/property/runtime.lifecycle.test.ts`.
+- [x] Gate: oracle-only determinism suite green.
+  - Evidence (2026-02-12): `pnpm runtime:parity:test` passed with all runtime suites green.
+- [x] Commit: `phase-f2: real wolfsrc runtime oracle driver`
 
 ## Phase F3: Full Symbol Classification Burn-Down
 

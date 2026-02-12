@@ -400,7 +400,7 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_agent_clip_move_hash(
   return h;
 }
 
-EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_state_move_obj_hash(
+void real_wl_state_move_obj_apply(
   int32_t obx,
   int32_t oby,
   int32_t dir,
@@ -410,9 +410,12 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_state_move_obj_hash(
   int32_t distance,
   int32_t move,
   int32_t obclass,
-  int32_t tics_value
+  int32_t tics_value,
+  int32_t *out_x,
+  int32_t *out_y,
+  int32_t *out_distance,
+  int32_t *out_take_damage_calls
 ) {
-  uint32_t h = 2166136261u;
   int i;
 
   for (i = 0; i < NUMAREAS; i++) {
@@ -435,24 +438,75 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_state_move_obj_hash(
   g_take_damage_stub_calls = 0;
 
   MoveObj(&objlist[1], (long)move);
+  if (out_x) {
+    *out_x = objlist[1].x;
+  }
+  if (out_y) {
+    *out_y = objlist[1].y;
+  }
+  if (out_distance) {
+    *out_distance = objlist[1].distance;
+  }
+  if (out_take_damage_calls) {
+    *out_take_damage_calls = g_take_damage_stub_calls;
+  }
+}
 
-  h = fnv1a_u32(h, (uint32_t)objlist[1].x);
-  h = fnv1a_u32(h, (uint32_t)objlist[1].y);
-  h = fnv1a_u32(h, (uint32_t)objlist[1].distance);
-  h = fnv1a_u32(h, (uint32_t)g_take_damage_stub_calls);
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_state_move_obj_hash(
+  int32_t obx,
+  int32_t oby,
+  int32_t dir,
+  int32_t playerx,
+  int32_t playery,
+  int32_t area_connected,
+  int32_t distance,
+  int32_t move,
+  int32_t obclass,
+  int32_t tics_value
+) {
+  uint32_t h = 2166136261u;
+  int32_t out_x = 0;
+  int32_t out_y = 0;
+  int32_t out_distance = 0;
+  int32_t out_take_damage_calls = 0;
+  real_wl_state_move_obj_apply(
+    obx,
+    oby,
+    dir,
+    playerx,
+    playery,
+    area_connected,
+    distance,
+    move,
+    obclass,
+    tics_value,
+    &out_x,
+    &out_y,
+    &out_distance,
+    &out_take_damage_calls
+  );
+  h = fnv1a_u32(h, (uint32_t)out_x);
+  h = fnv1a_u32(h, (uint32_t)out_y);
+  h = fnv1a_u32(h, (uint32_t)out_distance);
+  h = fnv1a_u32(h, (uint32_t)out_take_damage_calls);
   return h;
 }
 
-EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_state_select_chase_dir_hash(
+void real_wl_state_select_chase_dir_apply(
   int32_t ob_tilex,
   int32_t ob_tiley,
   int32_t dir,
   int32_t obclass,
   int32_t flags,
   int32_t player_tilex,
-  int32_t player_tiley
+  int32_t player_tiley,
+  int32_t *out_dir,
+  int32_t *out_tilex,
+  int32_t *out_tiley,
+  int32_t *out_distance,
+  int32_t *out_areanumber,
+  int32_t *out_flags8
 ) {
-  uint32_t h = 2166136261u;
 
   setup_state_world_empty();
 
@@ -469,12 +523,62 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_state_select_chase_dir_hash(
   objlist[1].areanumber = 0;
 
   SelectChaseDir(&objlist[1]);
+  if (out_dir) {
+    *out_dir = (int32_t)objlist[1].dir;
+  }
+  if (out_tilex) {
+    *out_tilex = (int32_t)objlist[1].tilex;
+  }
+  if (out_tiley) {
+    *out_tiley = (int32_t)objlist[1].tiley;
+  }
+  if (out_distance) {
+    *out_distance = (int32_t)objlist[1].distance;
+  }
+  if (out_areanumber) {
+    *out_areanumber = (int32_t)objlist[1].areanumber;
+  }
+  if (out_flags8) {
+    *out_flags8 = (int32_t)((uint8_t)objlist[1].flags);
+  }
+}
 
-  h = fnv1a_u32(h, (uint32_t)objlist[1].dir);
-  h = fnv1a_u32(h, (uint32_t)objlist[1].tilex);
-  h = fnv1a_u32(h, (uint32_t)objlist[1].tiley);
-  h = fnv1a_u32(h, (uint32_t)objlist[1].distance);
-  h = fnv1a_u32(h, (uint32_t)objlist[1].areanumber);
-  h = fnv1a_u32(h, (uint32_t)objlist[1].flags);
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_real_wl_state_select_chase_dir_hash(
+  int32_t ob_tilex,
+  int32_t ob_tiley,
+  int32_t dir,
+  int32_t obclass,
+  int32_t flags,
+  int32_t player_tilex,
+  int32_t player_tiley
+) {
+  uint32_t h = 2166136261u;
+  int32_t out_dir = 0;
+  int32_t out_tilex = 0;
+  int32_t out_tiley = 0;
+  int32_t out_distance = 0;
+  int32_t out_areanumber = 0;
+  int32_t out_flags8 = 0;
+  real_wl_state_select_chase_dir_apply(
+    ob_tilex,
+    ob_tiley,
+    dir,
+    obclass,
+    flags,
+    player_tilex,
+    player_tiley,
+    &out_dir,
+    &out_tilex,
+    &out_tiley,
+    &out_distance,
+    &out_areanumber,
+    &out_flags8
+  );
+  h = fnv1a_u32(h, (uint32_t)out_dir);
+  h = fnv1a_u32(h, (uint32_t)out_tilex);
+  h = fnv1a_u32(h, (uint32_t)out_tiley);
+  h = fnv1a_u32(h, (uint32_t)out_distance);
+  h = fnv1a_u32(h, (uint32_t)out_areanumber);
+  h = fnv1a_u32(h, (uint32_t)out_flags8);
   return h;
 }

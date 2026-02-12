@@ -11,7 +11,9 @@ import type {
 import {
   wlStateRealCheckLine,
   wlStateRealCheckSight,
+  wlStateRealMoveObjApply,
   wlStateRealMoveObjHash,
+  wlStateRealSelectChaseDirApply,
   wlStateRealSelectChaseDirHash,
 } from '../wolf/ai/wlStateReal';
 import {
@@ -669,6 +671,7 @@ export class TsRuntimePort implements RuntimePort {
     let forward = 0;
     let strafe = 0;
     let turn = 0;
+    let pendingDamageCalls = 0;
 
     if (inputMask & (1 << 0)) forward += 32;
     if (inputMask & (1 << 1)) forward -= 32;
@@ -830,6 +833,27 @@ export class TsRuntimePort implements RuntimePort {
         const obTileY = ((this.state.yQ8 >> 8) & 0x1f) + 2;
         const playerTileX = ((this.state.xQ8 >> 8) & 0x1f) + 3;
         const playerTileY = ((this.state.yQ8 >> 8) & 0x1f) + 3;
+        const moveOut = wlStateRealMoveObjApply(
+          chaseObx,
+          chaseOby,
+          chaseDir,
+          playerXQ16,
+          playerYQ16,
+          chaseConnected,
+          chaseDistance,
+          chaseMove,
+          chaseObclass,
+          chaseTics,
+        );
+        const chaseOut = wlStateRealSelectChaseDirApply(
+          obTileX,
+          obTileY,
+          chaseDir,
+          chaseObclass,
+          this.state.flags | 0,
+          playerTileX,
+          playerTileY,
+        );
         const moveHash = wlStateRealMoveObjHash(
           chaseObx,
           chaseOby,
@@ -851,13 +875,17 @@ export class TsRuntimePort implements RuntimePort {
           playerTileX,
           playerTileY,
         ) >>> 0;
+        void moveHash;
+        void chaseHash;
 
-        if ((moveHash & 1) !== 0) {
+        pendingDamageCalls = clampI32(moveOut.takeDamageCalls | 0, 0, 8);
+
+        if ((moveOut.takeDamageCalls | 0) > 0 || (moveOut.distance | 0) <= 0) {
           this.state.flags |= 0x800;
         } else {
           this.state.flags &= ~0x800;
         }
-        if ((chaseHash & 1) !== 0) {
+        if ((((chaseOut.dir | 0) !== (chaseDir | 0) && (chaseOut.dir | 0) !== 8) || (chaseOut.distance | 0) > 0)) {
           this.state.flags |= 0x1000;
         } else {
           this.state.flags &= ~0x1000;
@@ -1790,129 +1818,15 @@ export class TsRuntimePort implements RuntimePort {
             wlStateSelectChaseDirHashValue ^
             wlAgentRealClipMoveHashValue) >>> 0;
 
-        if ((playLoopHash & 1) !== 0) {
-          this.state.flags |= 0x2000;
-        } else {
-          this.state.flags &= ~0x2000;
-        }
-        if ((gameLoopHash & 1) !== 0) {
-          this.state.flags |= 0x4000;
-        } else {
-          this.state.flags &= ~0x4000;
-        }
-        if ((scoreHash & 1) !== 0) {
-          this.state.flags |= 0x8000;
-        } else {
-          this.state.flags &= ~0x8000;
-        }
-        if ((firstSightingHash & 1) !== 0) {
-          this.state.flags |= 0x10000;
-        } else {
-          this.state.flags &= ~0x10000;
-        }
-        if ((sightPlayerHash & 1) !== 0) {
-          this.state.flags |= 0x20000;
-        } else {
-          this.state.flags &= ~0x20000;
-        }
-        if ((tChaseHash & 1) !== 0) {
-          this.state.flags |= 0x40000;
-        } else {
-          this.state.flags &= ~0x40000;
-        }
-        if ((tPathHash & 1) !== 0) {
-          this.state.flags |= 0x80000;
-        } else {
-          this.state.flags &= ~0x80000;
-        }
-        if ((tShootHash & 1) !== 0) {
-          this.state.flags |= 0x100000;
-        } else {
-          this.state.flags &= ~0x100000;
-        }
-        if ((tBiteHash & 1) !== 0) {
-          this.state.flags |= 0x200000;
-        } else {
-          this.state.flags &= ~0x200000;
-        }
-        if ((tDogChaseHash & 1) !== 0) {
-          this.state.flags |= 0x400000;
-        } else {
-          this.state.flags &= ~0x400000;
-        }
-        if ((tProjectileHash & 1) !== 0) {
-          this.state.flags |= 0x800000;
-        } else {
-          this.state.flags &= ~0x800000;
-        }
-        if ((openDoorHash & 1) !== 0) {
-          this.state.flags |= 0x1000000;
-        } else {
-          this.state.flags &= ~0x1000000;
-        }
-        if ((closeDoorHash & 1) !== 0) {
-          this.state.flags |= 0x2000000;
-        } else {
-          this.state.flags &= ~0x2000000;
-        }
-        if ((operateDoorHash & 1) !== 0) {
-          this.state.flags |= 0x4000000;
-        } else {
-          this.state.flags &= ~0x4000000;
-        }
-        if ((moveDoorsHash & 1) !== 0) {
-          this.state.flags |= 0x8000000;
-        } else {
-          this.state.flags &= ~0x8000000;
-        }
-        if ((bonusHash & 1) !== 0) {
-          this.state.flags |= 0x10000000;
-        } else {
-          this.state.flags &= ~0x10000000;
-        }
-        if ((ammoHash & 1) !== 0) {
-          this.state.flags |= 0x20000000;
-        } else {
-          this.state.flags &= ~0x20000000;
-        }
-        if ((pointsHash & 1) !== 0) {
-          this.state.flags |= 0x40000000;
-        } else {
-          this.state.flags &= ~0x40000000;
-        }
-        if ((healHash & 1) !== 0) {
-          this.state.flags = (this.state.flags | 0x80000000) | 0;
-        } else {
-          this.state.flags = (this.state.flags & ~0x80000000) | 0;
-        }
-        if ((cmdFireHash & 1) !== 0) {
-          this.state.flags |= 0x1;
-        } else {
-          this.state.flags &= ~0x1;
-        }
-        if ((cmdUseHash & 1) !== 0) {
-          this.state.flags |= 0x2;
-        } else {
-          this.state.flags &= ~0x2;
-        }
-        if ((tPlayerHash & 1) !== 0) {
-          this.state.flags |= 0x4;
-        } else {
-          this.state.flags &= ~0x4;
-        }
-        if ((thrustHash & 1) !== 0) {
-          this.state.flags |= 0x8;
-        } else {
-          this.state.flags &= ~0x8;
-        }
-        this.state.flags ^= runtimeProbeMix & 0;
+        // Keep probe hash computation for trace coverage, but do not drive runtime state from hash bits.
+        void runtimeProbeMix;
       }
     }
 
-    if (((rng | 0) & 0x1f) === 0 && this.state.health > 0) {
+    if ((pendingDamageCalls | 0) > 0 && this.state.health > 0) {
       const damage = wlAgentTakeDamageStep(
         this.state.health,
-        1,
+        pendingDamageCalls | 0,
         2, // gd_medium
         false,
         false,

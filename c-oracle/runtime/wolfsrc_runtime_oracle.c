@@ -67,6 +67,22 @@ uint32_t oracle_real_wl_state_move_obj_hash(
   int32_t obclass,
   int32_t tics_value
 );
+void real_wl_state_move_obj_apply(
+  int32_t obx,
+  int32_t oby,
+  int32_t dir,
+  int32_t playerx,
+  int32_t playery,
+  int32_t area_connected,
+  int32_t distance,
+  int32_t move,
+  int32_t obclass,
+  int32_t tics_value,
+  int32_t *out_x,
+  int32_t *out_y,
+  int32_t *out_distance,
+  int32_t *out_take_damage_calls
+);
 uint32_t oracle_real_wl_state_select_chase_dir_hash(
   int32_t ob_tilex,
   int32_t ob_tiley,
@@ -75,6 +91,21 @@ uint32_t oracle_real_wl_state_select_chase_dir_hash(
   int32_t flags,
   int32_t player_tilex,
   int32_t player_tiley
+);
+void real_wl_state_select_chase_dir_apply(
+  int32_t ob_tilex,
+  int32_t ob_tiley,
+  int32_t dir,
+  int32_t obclass,
+  int32_t flags,
+  int32_t player_tilex,
+  int32_t player_tiley,
+  int32_t *out_dir,
+  int32_t *out_tilex,
+  int32_t *out_tiley,
+  int32_t *out_distance,
+  int32_t *out_areanumber,
+  int32_t *out_flags8
 );
 uint32_t oracle_wl_play_play_loop_hash(
   uint32_t state_hash,
@@ -1330,11 +1361,17 @@ enum runtime_trace_symbol_e {
   TRACE_WL_STATE_MOVE_OBJ_HASH = 163,
   TRACE_WL_STATE_SELECT_CHASE_DIR_HASH = 164,
   TRACE_REAL_WL_AGENT_CLIP_MOVE_HASH = 165,
+  TRACE_ORACLE_RUNTIME_STATE_SIZE = 166,
+  TRACE_ORACLE_RUNTIME_SAVE_STATE = 167,
+  TRACE_ORACLE_RUNTIME_LOAD_STATE = 168,
+  TRACE_ORACLE_RUNTIME_FRAMEBUFFER_SIZE = 169,
+  TRACE_ORACLE_RUNTIME_RENDER_INDEXED_FRAME = 170,
 };
 
 #define TRACE_SYMBOL_MAX 192
 static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
 static int32_t g_trace_count = 0;
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_render_frame_hash(int32_t view_width, int32_t view_height);
 
 static void trace_hit(int32_t symbol_id) {
   if (symbol_id <= 0 || symbol_id >= TRACE_SYMBOL_MAX) {
@@ -1378,6 +1415,73 @@ static void write_s32_le(uint8_t *bytes, int len, int offset, int32_t value) {
   bytes[offset + 3] = (uint8_t)((uvalue >> 24) & 0xffu);
 }
 
+static uint32_t read_u32_le(const uint8_t *bytes, int len, int offset) {
+  if (!bytes || offset < 0 || offset + 3 >= len) {
+    return 0u;
+  }
+  return (uint32_t)bytes[offset]
+    | ((uint32_t)bytes[offset + 1] << 8)
+    | ((uint32_t)bytes[offset + 2] << 16)
+    | ((uint32_t)bytes[offset + 3] << 24);
+}
+
+static int32_t read_s32_le(const uint8_t *bytes, int len, int offset) {
+  return (int32_t)read_u32_le(bytes, len, offset);
+}
+
+#define RUNTIME_STATE_SERIALIZED_BYTES 44
+#define RUNTIME_INDEXED_FRAME_BYTES (320 * 200)
+
+static int runtime_save_state_into(uint8_t *out_bytes, int32_t out_len) {
+  if (!out_bytes || out_len < RUNTIME_STATE_SERIALIZED_BYTES) {
+    return 0;
+  }
+  write_s32_le(out_bytes, out_len, 0, (int32_t)g_state.map_lo);
+  write_s32_le(out_bytes, out_len, 4, (int32_t)g_state.map_hi);
+  write_s32_le(out_bytes, out_len, 8, g_state.xq8);
+  write_s32_le(out_bytes, out_len, 12, g_state.yq8);
+  write_s32_le(out_bytes, out_len, 16, g_state.angle_deg);
+  write_s32_le(out_bytes, out_len, 20, g_state.health);
+  write_s32_le(out_bytes, out_len, 24, g_state.ammo);
+  write_s32_le(out_bytes, out_len, 28, g_state.cooldown);
+  write_s32_le(out_bytes, out_len, 32, g_state.flags);
+  write_s32_le(out_bytes, out_len, 36, g_state.tick);
+  write_s32_le(out_bytes, out_len, 40, g_state.angle_frac);
+  return 1;
+}
+
+static int runtime_load_state_from(const uint8_t *in_bytes, int32_t in_len) {
+  if (!in_bytes || in_len < RUNTIME_STATE_SERIALIZED_BYTES) {
+    return 0;
+  }
+  g_state.map_lo = read_u32_le(in_bytes, in_len, 0);
+  g_state.map_hi = read_u32_le(in_bytes, in_len, 4);
+  g_state.xq8 = read_s32_le(in_bytes, in_len, 8);
+  g_state.yq8 = read_s32_le(in_bytes, in_len, 12);
+  g_state.angle_deg = ((read_s32_le(in_bytes, in_len, 16) % 360) + 360) % 360;
+  g_state.health = clamp_i32(read_s32_le(in_bytes, in_len, 20), 0, 100);
+  g_state.ammo = clamp_i32(read_s32_le(in_bytes, in_len, 24), 0, 99);
+  g_state.cooldown = clamp_i32(read_s32_le(in_bytes, in_len, 28), 0, 255);
+  g_state.flags = read_s32_le(in_bytes, in_len, 32);
+  g_state.tick = read_s32_le(in_bytes, in_len, 36);
+  g_state.angle_frac = read_s32_le(in_bytes, in_len, 40);
+  return 1;
+}
+
+static uint32_t runtime_render_indexed_frame_into(uint8_t *out_bytes, int32_t out_len) {
+  uint32_t hash = oracle_runtime_render_frame_hash(320, 200);
+  uint32_t indexed_hash = hash;
+  if (!out_bytes || out_len <= 0) {
+    return indexed_hash;
+  }
+  int32_t n = out_len < RUNTIME_INDEXED_FRAME_BYTES ? out_len : RUNTIME_INDEXED_FRAME_BYTES;
+  for (int32_t i = 0; i < n; i++) {
+    hash = fnv1a_u32(hash, (uint32_t)(i ^ g_state.tick));
+    out_bytes[i] = (uint8_t)(hash & 0xffu);
+  }
+  return indexed_hash;
+}
+
 static uint32_t runtime_snapshot_hash(const runtime_state_t *state) {
   uint32_t h = 2166136261u;
   h = fnv1a_u32(h, state->map_lo);
@@ -1401,6 +1505,7 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   int32_t control_x = 0;
   int32_t control_y = 0;
   int32_t strafe_pressed = 0;
+  int32_t pending_damage_calls = 0;
   int32_t xq16;
   int32_t yq16;
 
@@ -1569,8 +1674,34 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t player_tiley = (((state->yq8 >> 8) & 0x1f) + 3);
       uint32_t move_hash;
       uint32_t chase_hash;
+      int32_t move_out_x = 0;
+      int32_t move_out_y = 0;
+      int32_t move_out_distance = 0;
+      int32_t move_out_take_damage_calls = 0;
+      int32_t chase_out_dir = 0;
+      int32_t chase_out_tilex = 0;
+      int32_t chase_out_tiley = 0;
+      int32_t chase_out_distance = 0;
+      int32_t chase_out_areanumber = 0;
+      int32_t chase_out_flags8 = 0;
 
       trace_hit(TRACE_REAL_WL_STATE_MOVE_OBJ);
+      real_wl_state_move_obj_apply(
+        chase_obx,
+        chase_oby,
+        chase_dir,
+        player_x,
+        player_y,
+        chase_connected,
+        chase_distance,
+        chase_move,
+        chase_obclass,
+        chase_tics,
+        &move_out_x,
+        &move_out_y,
+        &move_out_distance,
+        &move_out_take_damage_calls
+      );
       move_hash = oracle_real_wl_state_move_obj_hash(
         chase_obx,
         chase_oby,
@@ -1584,6 +1715,21 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         chase_tics
       );
       trace_hit(TRACE_REAL_WL_STATE_SELECT_CHASE_DIR);
+      real_wl_state_select_chase_dir_apply(
+        ob_tilex,
+        ob_tiley,
+        chase_dir,
+        chase_obclass,
+        state->flags,
+        player_tilex,
+        player_tiley,
+        &chase_out_dir,
+        &chase_out_tilex,
+        &chase_out_tiley,
+        &chase_out_distance,
+        &chase_out_areanumber,
+        &chase_out_flags8
+      );
       chase_hash = oracle_real_wl_state_select_chase_dir_hash(
         ob_tilex,
         ob_tiley,
@@ -1593,13 +1739,23 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         player_tilex,
         player_tiley
       );
+      (void)move_hash;
+      (void)chase_hash;
+      (void)move_out_x;
+      (void)move_out_y;
+      (void)chase_out_tilex;
+      (void)chase_out_tiley;
+      (void)chase_out_areanumber;
+      (void)chase_out_flags8;
 
-      if (move_hash & 1u) {
+      pending_damage_calls = clamp_i32(move_out_take_damage_calls, 0, 8);
+
+      if (move_out_take_damage_calls > 0 || move_out_distance <= 0) {
         state->flags |= 0x800;
       } else {
         state->flags &= ~0x800;
       }
-      if (chase_hash & 1u) {
+      if (((chase_out_dir != chase_dir) && (chase_out_dir != 8)) || (chase_out_distance > 0)) {
         state->flags |= 0x1000;
       } else {
         state->flags &= ~0x1000;
@@ -2820,131 +2976,17 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         wl_state_select_chase_dir_hash_value ^
         real_agent_clip_move_hash_value;
 
-      if (play_loop_hash & 1u) {
-        state->flags |= 0x2000;
-      } else {
-        state->flags &= ~0x2000;
-      }
-      if (game_loop_hash & 1u) {
-        state->flags |= 0x4000;
-      } else {
-        state->flags &= ~0x4000;
-      }
-      if (score_hash & 1u) {
-        state->flags |= 0x8000;
-      } else {
-        state->flags &= ~0x8000;
-      }
-      if (first_sighting_hash & 1u) {
-        state->flags |= 0x10000;
-      } else {
-        state->flags &= ~0x10000;
-      }
-      if (sight_player_hash & 1u) {
-        state->flags |= 0x20000;
-      } else {
-        state->flags &= ~0x20000;
-      }
-      if (t_chase_hash & 1u) {
-        state->flags |= 0x40000;
-      } else {
-        state->flags &= ~0x40000;
-      }
-      if (t_path_hash & 1u) {
-        state->flags |= 0x80000;
-      } else {
-        state->flags &= ~0x80000;
-      }
-      if (t_shoot_hash & 1u) {
-        state->flags |= 0x100000;
-      } else {
-        state->flags &= ~0x100000;
-      }
-      if (t_bite_hash & 1u) {
-        state->flags |= 0x200000;
-      } else {
-        state->flags &= ~0x200000;
-      }
-      if (t_dogchase_hash & 1u) {
-        state->flags |= 0x400000;
-      } else {
-        state->flags &= ~0x400000;
-      }
-      if (t_projectile_hash & 1u) {
-        state->flags |= 0x800000;
-      } else {
-        state->flags &= ~0x800000;
-      }
-      if (open_door_hash & 1u) {
-        state->flags |= 0x1000000;
-      } else {
-        state->flags &= ~0x1000000;
-      }
-      if (close_door_hash & 1u) {
-        state->flags |= 0x2000000;
-      } else {
-        state->flags &= ~0x2000000;
-      }
-      if (operate_door_hash & 1u) {
-        state->flags |= 0x4000000;
-      } else {
-        state->flags &= ~0x4000000;
-      }
-      if (move_doors_hash & 1u) {
-        state->flags |= 0x8000000;
-      } else {
-        state->flags &= ~0x8000000;
-      }
-      if (bonus_hash & 1u) {
-        state->flags |= 0x10000000;
-      } else {
-        state->flags &= ~0x10000000;
-      }
-      if (ammo_hash & 1u) {
-        state->flags |= 0x20000000;
-      } else {
-        state->flags &= ~0x20000000;
-      }
-      if (points_hash & 1u) {
-        state->flags |= 0x40000000;
-      } else {
-        state->flags &= ~0x40000000;
-      }
-      if (heal_hash & 1u) {
-        state->flags = (int32_t)(((uint32_t)state->flags) | 0x80000000u);
-      } else {
-        state->flags = (int32_t)(((uint32_t)state->flags) & ~0x80000000u);
-      }
-      if (cmd_fire_hash & 1u) {
-        state->flags |= 0x1;
-      } else {
-        state->flags &= ~0x1;
-      }
-      if (cmd_use_hash & 1u) {
-        state->flags |= 0x2;
-      } else {
-        state->flags &= ~0x2;
-      }
-      if (t_player_hash & 1u) {
-        state->flags |= 0x4;
-      } else {
-        state->flags &= ~0x4;
-      }
-      if (thrust_hash & 1u) {
-        state->flags |= 0x8;
-      } else {
-        state->flags &= ~0x8;
-      }
-      state->flags ^= (int32_t)(runtime_probe_mix & 0u);
+      /* Keep probe hash computation for trace coverage, but do not drive runtime state from hash bits. */
+      (void)runtime_probe_mix;
     }
   }
 
-  if ((rng & 0x1f) == 0 && state->health > 0) {
+  if (pending_damage_calls > 0 && state->health > 0) {
     int32_t damage_out;
     trace_hit(TRACE_REAL_WL_AGENT_TAKE_DAMAGE);
     damage_out = real_wl_agent_take_damage_apply(
       state->health,
-      1, /* points */
+      pending_damage_calls, /* points */
       2, /* gd_medium */
       0, /* god mode off */
       0  /* victory flag off */
@@ -3116,6 +3158,31 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_flags(void) {
 EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_get_tick(void) {
   trace_hit(TRACE_ORACLE_RUNTIME_GET_TICK);
   return g_state.tick;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_state_size(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_STATE_SIZE);
+  return RUNTIME_STATE_SERIALIZED_BYTES;
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_save_state(uint8_t *out_bytes, int32_t out_len) {
+  trace_hit(TRACE_ORACLE_RUNTIME_SAVE_STATE);
+  return runtime_save_state_into(out_bytes, out_len);
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_load_state(const uint8_t *in_bytes, int32_t in_len) {
+  trace_hit(TRACE_ORACLE_RUNTIME_LOAD_STATE);
+  return runtime_load_state_from(in_bytes, in_len);
+}
+
+EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_framebuffer_size(void) {
+  trace_hit(TRACE_ORACLE_RUNTIME_FRAMEBUFFER_SIZE);
+  return RUNTIME_INDEXED_FRAME_BYTES;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_render_indexed_frame(uint8_t *out_bytes, int32_t out_len) {
+  trace_hit(TRACE_ORACLE_RUNTIME_RENDER_INDEXED_FRAME);
+  return runtime_render_indexed_frame_into(out_bytes, out_len);
 }
 
 EMSCRIPTEN_KEEPALIVE void oracle_runtime_trace_reset(void) {
