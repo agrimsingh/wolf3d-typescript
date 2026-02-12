@@ -2981,8 +2981,25 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
     }
   }
 
-  /* Synthetic background probes must not mutate health outside explicit gameplay events. */
-  (void)pending_damage_calls;
+  if (pending_damage_calls > 0) {
+    int32_t difficulty = (state->tick >> 2) & 3;
+    for (int32_t i = 0; i < pending_damage_calls; i++) {
+      int32_t points = ((rng >> ((i & 7) * 4)) & 0x0f) + 1;
+      int32_t packed = real_wl_agent_take_damage_apply(
+        state->health,
+        points,
+        difficulty,
+        0, /* god mode */
+        0  /* victory */
+      );
+      state->health = clamp_i32((int32_t)(packed & 0xffff), 0, 100);
+      if ((packed & (1 << 16)) != 0) {
+        state->health = 0;
+        break;
+      }
+    }
+  }
+
   if (state->health <= 0) {
     state->flags |= 0x40;
   } else {

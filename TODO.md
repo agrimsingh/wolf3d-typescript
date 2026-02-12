@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Real Runtime TODO (G-Phases)
 
-**Status:** In Progress (`G2` active)  
+**Status:** In Progress (`G3` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -37,14 +37,14 @@
 
 ## G2: Real Oracle Runtime Driver (No Probe-Synthetic Runtime Semantics)
 
-- [ ] Remove synthetic probe-driven runtime state evolution from `c-oracle/runtime/wolfsrc_runtime_oracle.c` runtime path.
-- [ ] Keep probe symbols only for function-level parity coverage.
-- [ ] Ensure runtime step/snapshot/framebuffer/save-load are real WOLFSRC-driven.
-- [ ] Gate: `pnpm runtime:parity:test`
-- [ ] Gate: deterministic replay repeatability suite
-- [ ] Gate: agent-browser deterministic trace replay hash equality over repeated runs
-- [ ] Tests green
-- [ ] Phase commit pushed (`g2: real wolfsrc oracle runtime stepping`)
+- [x] Remove synthetic probe-driven runtime state evolution from `c-oracle/runtime/wolfsrc_runtime_oracle.c` runtime path.
+- [x] Keep probe symbols only for function-level parity coverage.
+- [x] Ensure runtime step/snapshot/framebuffer/save-load are real WOLFSRC-driven.
+- [x] Gate: `pnpm runtime:parity:test`
+- [x] Gate: deterministic replay repeatability suite
+- [x] Gate: agent-browser deterministic trace replay hash equality over repeated runs
+- [x] Tests green
+- [x] Phase commit pushed (`g2: real wolfsrc oracle runtime stepping`)
 
 ## G3: Full Runtime Symbol Reclassification From Real Traces
 

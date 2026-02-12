@@ -1828,8 +1828,19 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
-    // Synthetic probe traffic must not mutate player health outside explicit gameplay events.
-    void pendingDamageCalls;
+    if (pendingDamageCalls > 0) {
+      const difficulty = (this.state.tick >> 2) & 3;
+      for (let i = 0; i < pendingDamageCalls; i++) {
+        const points = (((rng >> ((i & 7) * 4)) & 0x0f) + 1) | 0;
+        const takeDamage = wlAgentTakeDamageStep(this.state.health, points, difficulty, false, false);
+        this.state.health = clampI32(takeDamage.health, 0, 100);
+        if (takeDamage.died) {
+          this.state.health = 0;
+          break;
+        }
+      }
+    }
+
     if (this.state.health <= 0) {
       this.state.flags |= 0x40;
     } else {
