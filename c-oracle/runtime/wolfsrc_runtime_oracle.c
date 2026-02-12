@@ -915,6 +915,65 @@ uint32_t oracle_id_vl_vl_clear_video_hash(
   int32_t pages,
   int32_t bufferofs
 );
+uint32_t oracle_id_vh_vw_draw_prop_string_hash(
+  int32_t text_len,
+  int32_t x,
+  int32_t y,
+  int32_t max_width,
+  int32_t font_width
+);
+uint32_t oracle_id_vh_vw_draw_color_prop_string_hash(
+  int32_t text_len,
+  int32_t x,
+  int32_t y,
+  int32_t color,
+  int32_t max_width
+);
+uint32_t oracle_id_vh_vw_measure_mprop_string_hash(
+  int32_t text_len,
+  int32_t font_width,
+  int32_t spacing,
+  int32_t max_width
+);
+uint32_t oracle_id_vh_vwb_draw_tile8_hash(
+  int32_t x,
+  int32_t y,
+  int32_t tile,
+  int32_t screenofs
+);
+uint32_t oracle_id_vh_vwb_draw_tile8m_hash(
+  int32_t x,
+  int32_t y,
+  int32_t tile,
+  int32_t screenofs,
+  int32_t mask
+);
+uint32_t oracle_id_vl_vl_set_color_hash(
+  int32_t index,
+  int32_t color,
+  int32_t palette_seed
+);
+uint32_t oracle_id_vl_vl_get_color_hash(
+  int32_t index,
+  int32_t palette_seed
+);
+uint32_t oracle_id_vl_vl_set_palette_hash(
+  int32_t start,
+  int32_t count,
+  int32_t palette_seed,
+  int32_t flags
+);
+uint32_t oracle_id_vl_vl_get_palette_hash(
+  int32_t start,
+  int32_t count,
+  int32_t palette_seed
+);
+uint32_t oracle_id_vl_vl_fill_palette_hash(
+  int32_t red,
+  int32_t green,
+  int32_t blue,
+  int32_t count
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -1064,6 +1123,16 @@ enum runtime_trace_symbol_e {
   TRACE_ID_VL_VL_MASKED_TO_SCREEN = 128,
   TRACE_ID_VL_VL_MEM_TO_LATCH = 129,
   TRACE_ID_VL_VL_CLEAR_VIDEO = 130,
+  TRACE_ID_VH_VW_DRAW_PROP_STRING = 131,
+  TRACE_ID_VH_VW_DRAW_COLOR_PROP_STRING = 132,
+  TRACE_ID_VH_VW_MEASURE_MPROP_STRING = 133,
+  TRACE_ID_VH_VWB_DRAW_TILE8 = 134,
+  TRACE_ID_VH_VWB_DRAW_TILE8M = 135,
+  TRACE_ID_VL_VL_SET_COLOR = 136,
+  TRACE_ID_VL_VL_GET_COLOR = 137,
+  TRACE_ID_VL_VL_SET_PALETTE = 138,
+  TRACE_ID_VL_VL_GET_PALETTE = 139,
+  TRACE_ID_VL_VL_FILL_PALETTE = 140,
 };
 
 #define TRACE_SYMBOL_MAX 192
@@ -1446,6 +1515,16 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t vl_masked_to_screen_hash;
       uint32_t vl_mem_to_latch_hash;
       uint32_t vl_clear_video_hash;
+      uint32_t vh_draw_prop_string2_hash;
+      uint32_t vh_draw_color_prop_string_hash;
+      uint32_t vh_measure_mprop_string_hash;
+      uint32_t vh_draw_tile8_hash;
+      uint32_t vh_draw_tile8m_hash;
+      uint32_t vl_set_color_hash;
+      uint32_t vl_get_color_hash;
+      uint32_t vl_set_palette_hash;
+      uint32_t vl_get_palette_hash;
+      uint32_t vl_fill_palette_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -1655,6 +1734,13 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t vh_draw_prop_max_width = 160 + ((rng >> 4) & 127);
       int32_t vl_vlin_height = 8 + ((rng >> 11) & 63);
       int32_t vl_pages = ((state->tick >> 3) & 3) + 1;
+      int32_t vh_tile = (rng >> 6) & 255;
+      int32_t vl_palette_start = state->tick & 31;
+      int32_t vl_palette_count = 32 + ((rng >> 9) & 31);
+      int32_t vl_palette_flags = state->flags;
+      int32_t vl_red = (rng >> 2) & 255;
+      int32_t vl_green = (rng >> 10) & 255;
+      int32_t vl_blue = (rng >> 18) & 255;
       uint8_t carmack_source[64];
       uint8_t rlew_source_bytes[64];
       uint8_t maphead_bytes[402];
@@ -2266,6 +2352,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       vl_mem_to_latch_hash = oracle_id_vl_vl_mem_to_latch_hash(vl_src_len, vh_bar_w, vh_bar_h, vl_dest);
       trace_hit(TRACE_ID_VL_VL_CLEAR_VIDEO);
       vl_clear_video_hash = oracle_id_vl_vl_clear_video_hash(vh_color, vl_line_width, vl_pages, vh_bufferofs);
+      trace_hit(TRACE_ID_VH_VW_DRAW_PROP_STRING);
+      vh_draw_prop_string2_hash = oracle_id_vh_vw_draw_prop_string_hash(text_len, vh_pic_x, vh_pic_y, vh_draw_prop_max_width, vh_font_width);
+      trace_hit(TRACE_ID_VH_VW_DRAW_COLOR_PROP_STRING);
+      vh_draw_color_prop_string_hash = oracle_id_vh_vw_draw_color_prop_string_hash(text_len, vh_pic_x, vh_pic_y, vh_color, vh_draw_prop_max_width);
+      trace_hit(TRACE_ID_VH_VW_MEASURE_MPROP_STRING);
+      vh_measure_mprop_string_hash = oracle_id_vh_vw_measure_mprop_string_hash(text_len, vh_font_width, vh_spacing, vh_max_width);
+      trace_hit(TRACE_ID_VH_VWB_DRAW_TILE8);
+      vh_draw_tile8_hash = oracle_id_vh_vwb_draw_tile8_hash(vh_pic_x, vh_pic_y, vh_tile, vh_screenofs);
+      trace_hit(TRACE_ID_VH_VWB_DRAW_TILE8M);
+      vh_draw_tile8m_hash = oracle_id_vh_vwb_draw_tile8m_hash(vh_pic_x, vh_pic_y, vh_tile, vh_screenofs, vl_mask);
+      trace_hit(TRACE_ID_VL_VL_SET_COLOR);
+      vl_set_color_hash = oracle_id_vl_vl_set_color_hash(vl_palette_start, vh_color, vl_palette_seed);
+      trace_hit(TRACE_ID_VL_VL_GET_COLOR);
+      vl_get_color_hash = oracle_id_vl_vl_get_color_hash(vl_palette_start, vl_palette_seed);
+      trace_hit(TRACE_ID_VL_VL_SET_PALETTE);
+      vl_set_palette_hash = oracle_id_vl_vl_set_palette_hash(vl_palette_start, vl_palette_count, vl_palette_seed, vl_palette_flags);
+      trace_hit(TRACE_ID_VL_VL_GET_PALETTE);
+      vl_get_palette_hash = oracle_id_vl_vl_get_palette_hash(vl_palette_start, vl_palette_count, vl_palette_seed);
+      trace_hit(TRACE_ID_VL_VL_FILL_PALETTE);
+      vl_fill_palette_hash = oracle_id_vl_vl_fill_palette_hash(vl_red, vl_green, vl_blue, vl_palette_count);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -2347,7 +2453,17 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         vl_screen_to_screen_hash ^
         vl_masked_to_screen_hash ^
         vl_mem_to_latch_hash ^
-        vl_clear_video_hash;
+        vl_clear_video_hash ^
+        vh_draw_prop_string2_hash ^
+        vh_draw_color_prop_string_hash ^
+        vh_measure_mprop_string_hash ^
+        vh_draw_tile8_hash ^
+        vh_draw_tile8m_hash ^
+        vl_set_color_hash ^
+        vl_get_color_hash ^
+        vl_set_palette_hash ^
+        vl_get_palette_hash ^
+        vl_fill_palette_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

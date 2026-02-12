@@ -890,6 +890,137 @@ export function idVlVlClearVideoHash(color: number, linewidth: number, pages: nu
   return hash >>> 0;
 }
 
+export function idVhVwDrawPropStringHash(textLen: number, x: number, y: number, maxWidth: number, fontWidth: number): number {
+  const len = textLen < 0 ? 0 : (textLen | 0);
+  const fw = fontWidth < 1 ? 1 : (fontWidth | 0);
+  let width = clampS32(len * fw);
+  if ((maxWidth | 0) > 0 && width > (maxWidth | 0)) {
+    width = maxWidth | 0;
+  }
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, len);
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, maxWidth);
+  hash = fnv1a(hash, fw);
+  hash = fnv1a(hash, width);
+  return hash >>> 0;
+}
+
+export function idVhVwDrawColorPropStringHash(textLen: number, x: number, y: number, color: number, maxWidth: number): number {
+  const len = textLen < 0 ? 0 : (textLen | 0);
+  let drawn = len;
+  if ((maxWidth | 0) > 0 && drawn > (maxWidth | 0)) {
+    drawn = maxWidth | 0;
+  }
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, len);
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, color);
+  hash = fnv1a(hash, maxWidth);
+  hash = fnv1a(hash, drawn);
+  return hash >>> 0;
+}
+
+export function idVhVwMeasureMPropStringHash(textLen: number, fontWidth: number, spacing: number, maxWidth: number): number {
+  const len = textLen < 0 ? 0 : (textLen | 0);
+  const fw = fontWidth < 1 ? 1 : (fontWidth | 0);
+  const sp = spacing < 0 ? 0 : (spacing | 0);
+  let width = clampS32(len * (fw + sp + 1));
+  let clipped = 0;
+  if ((maxWidth | 0) > 0 && width > (maxWidth | 0)) {
+    width = maxWidth | 0;
+    clipped = 1;
+  }
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, len);
+  hash = fnv1a(hash, fw);
+  hash = fnv1a(hash, sp);
+  hash = fnv1a(hash, width);
+  hash = fnv1a(hash, clipped);
+  return hash >>> 0;
+}
+
+export function idVhVwbDrawTile8Hash(x: number, y: number, tile: number, screenofs: number): number {
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, tile);
+  hash = fnv1a(hash, screenofs);
+  return hash >>> 0;
+}
+
+export function idVhVwbDrawTile8MHash(x: number, y: number, tile: number, screenofs: number, mask: number): number {
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, tile);
+  hash = fnv1a(hash, screenofs);
+  hash = fnv1a(hash, mask);
+  return hash >>> 0;
+}
+
+export function idVlVlSetColorHash(index: number, color: number, paletteSeed: number): number {
+  const idx = index & 0xff;
+  const out = color & 0xff;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, idx);
+  hash = fnv1a(hash, out);
+  hash = fnv1a(hash, paletteSeed);
+  return hash >>> 0;
+}
+
+export function idVlVlGetColorHash(index: number, paletteSeed: number): number {
+  const idx = index & 0xff;
+  const out = (Math.imul(idx, 37) + (paletteSeed | 0)) & 0xff;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, idx);
+  hash = fnv1a(hash, paletteSeed);
+  hash = fnv1a(hash, out);
+  return hash >>> 0;
+}
+
+export function idVlVlSetPaletteHash(start: number, count: number, paletteSeed: number, flags: number): number {
+  const s = start < 0 ? 0 : (start | 0);
+  const c = count < 0 ? 0 : (count | 0);
+  const span = Math.imul(c, 3) | 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, s);
+  hash = fnv1a(hash, c);
+  hash = fnv1a(hash, paletteSeed);
+  hash = fnv1a(hash, flags);
+  hash = fnv1a(hash, span);
+  return hash >>> 0;
+}
+
+export function idVlVlGetPaletteHash(start: number, count: number, paletteSeed: number): number {
+  const s = start < 0 ? 0 : (start | 0);
+  const c = count < 0 ? 0 : (count | 0);
+  const digest = (Math.imul(c, 17) + (paletteSeed | 0)) & 0xffff;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, s);
+  hash = fnv1a(hash, c);
+  hash = fnv1a(hash, paletteSeed);
+  hash = fnv1a(hash, digest);
+  return hash >>> 0;
+}
+
+export function idVlVlFillPaletteHash(red: number, green: number, blue: number, count: number): number {
+  const r = red & 0xff;
+  const g = green & 0xff;
+  const b = blue & 0xff;
+  const c = count < 0 ? 0 : (count | 0);
+  const rgb = (r | (g << 8) | (b << 16)) >>> 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, r);
+  hash = fnv1a(hash, g);
+  hash = fnv1a(hash, b);
+  hash = fnv1a(hash, c);
+  hash = fnv1a(hash, rgb);
+  return hash >>> 0;
+}
+
 export const wlRaycastConstants = {
   actorsize: ACTORSIZE,
   tileglobal: TILEGLOBAL,

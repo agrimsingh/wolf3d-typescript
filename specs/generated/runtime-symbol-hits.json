@@ -183,7 +183,17 @@
     127,
     128,
     129,
-    130
+    130,
+    131,
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140
   ],
   "requiredRuntimeSymbols": [
     {
@@ -965,6 +975,66 @@
       "file": "ID_VL.C",
       "func": "VL_ClearVideo",
       "notes": "called via oracle_id_vl_vl_clear_video_hash from runtime video probe"
+    },
+    {
+      "id": 131,
+      "file": "ID_VH.C",
+      "func": "VW_DrawPropString",
+      "notes": "called via oracle_id_vh_vw_draw_prop_string_hash from runtime video probe"
+    },
+    {
+      "id": 132,
+      "file": "ID_VH.C",
+      "func": "VW_DrawColorPropString",
+      "notes": "called via oracle_id_vh_vw_draw_color_prop_string_hash from runtime video probe"
+    },
+    {
+      "id": 133,
+      "file": "ID_VH.C",
+      "func": "VW_MeasureMPropString",
+      "notes": "called via oracle_id_vh_vw_measure_mprop_string_hash from runtime video probe"
+    },
+    {
+      "id": 134,
+      "file": "ID_VH.C",
+      "func": "VWB_DrawTile8",
+      "notes": "called via oracle_id_vh_vwb_draw_tile8_hash from runtime video probe"
+    },
+    {
+      "id": 135,
+      "file": "ID_VH.C",
+      "func": "VWB_DrawTile8M",
+      "notes": "called via oracle_id_vh_vwb_draw_tile8m_hash from runtime video probe"
+    },
+    {
+      "id": 136,
+      "file": "ID_VL.C",
+      "func": "VL_SetColor",
+      "notes": "called via oracle_id_vl_vl_set_color_hash from runtime video probe"
+    },
+    {
+      "id": 137,
+      "file": "ID_VL.C",
+      "func": "VL_GetColor",
+      "notes": "called via oracle_id_vl_vl_get_color_hash from runtime video probe"
+    },
+    {
+      "id": 138,
+      "file": "ID_VL.C",
+      "func": "VL_SetPalette",
+      "notes": "called via oracle_id_vl_vl_set_palette_hash from runtime video probe"
+    },
+    {
+      "id": 139,
+      "file": "ID_VL.C",
+      "func": "VL_GetPalette",
+      "notes": "called via oracle_id_vl_vl_get_palette_hash from runtime video probe"
+    },
+    {
+      "id": 140,
+      "file": "ID_VL.C",
+      "func": "VL_FillPalette",
+      "notes": "called via oracle_id_vl_vl_fill_palette_hash from runtime video probe"
     }
   ],
   "excludedRuntimeSymbols": []

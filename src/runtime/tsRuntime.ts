@@ -57,10 +57,15 @@ import {
   wlPlayPlayLoopHash,
 } from '../wolf/player/wlPlayer';
 import {
+  idVhVwDrawColorPropStringHash,
+  idVhVwDrawPropStringHash,
+  idVhVwMeasureMPropStringHash,
   idVhVwMeasurePropStringHash,
   idVhVwbBarHash,
   idVhVwbDrawPicHash,
   idVhVwbDrawPropStringHash,
+  idVhVwbDrawTile8Hash,
+  idVhVwbDrawTile8MHash,
   idVhVwbHlinHash,
   idVhVwbPlotHash,
   idVhVwbVlinHash,
@@ -69,12 +74,17 @@ import {
   idVlVlClearVideoHash,
   idVlVlFadeInHash,
   idVlVlFadeOutHash,
+  idVlVlFillPaletteHash,
+  idVlVlGetColorHash,
+  idVlVlGetPaletteHash,
   idVlVlHlinHash,
   idVlVlLatchToScreenHash,
   idVlVlMaskedToScreenHash,
   idVlVlMemToLatchHash,
   idVlVlMemToScreenHash,
   idVlVlPlotHash,
+  idVlVlSetColorHash,
+  idVlVlSetPaletteHash,
   idVlVlScreenToScreenHash,
   idVlVlVlinHash,
   wlDrawCalcHeight,
@@ -817,6 +827,13 @@ export class TsRuntimePort implements RuntimePort {
         const vhDrawPropMaxWidth = 160 + ((rng >> 4) & 127);
         const vlVlinHeight = 8 + ((rng >> 11) & 63);
         const vlPages = ((this.state.tick >> 3) & 3) + 1;
+        const vhTile = (rng >> 6) & 255;
+        const vlPaletteStart = this.state.tick & 31;
+        const vlPaletteCount = 32 + ((rng >> 9) & 31);
+        const vlPaletteFlags = this.state.flags | 0;
+        const vlRed = (rng >> 2) & 255;
+        const vlGreen = (rng >> 10) & 255;
+        const vlBlue = (rng >> 18) & 255;
         const carmackSource = new Uint8Array(carmackSourceLen);
         const rlewSourceBytes = new Uint8Array(rlewSourceLen);
         const mapHeadBytes = new Uint8Array(mapHeadLen);
@@ -1303,6 +1320,16 @@ export class TsRuntimePort implements RuntimePort {
         const vlMaskedToScreenHash = idVlVlMaskedToScreenHash(vhPicNum, vhBarW, vhBarH, vhPicX, vhPicY, vlMask) >>> 0;
         const vlMemToLatchHash = idVlVlMemToLatchHash(vlSrcLen, vhBarW, vhBarH, vlDest) >>> 0;
         const vlClearVideoHash = idVlVlClearVideoHash(vhColor, vlLineWidth, vlPages, vhBufferOfs) >>> 0;
+        const vhDrawPropString2Hash = idVhVwDrawPropStringHash(textLen, vhPicX, vhPicY, vhDrawPropMaxWidth, vhFontWidth) >>> 0;
+        const vhDrawColorPropStringHash = idVhVwDrawColorPropStringHash(textLen, vhPicX, vhPicY, vhColor, vhDrawPropMaxWidth) >>> 0;
+        const vhMeasureMPropStringHash = idVhVwMeasureMPropStringHash(textLen, vhFontWidth, vhSpacing, vhMaxWidth) >>> 0;
+        const vhDrawTile8Hash = idVhVwbDrawTile8Hash(vhPicX, vhPicY, vhTile, vhScreenOfs) >>> 0;
+        const vhDrawTile8mHash = idVhVwbDrawTile8MHash(vhPicX, vhPicY, vhTile, vhScreenOfs, vlMask) >>> 0;
+        const vlSetColorHash = idVlVlSetColorHash(vlPaletteStart, vhColor, vlPaletteSeed) >>> 0;
+        const vlGetColorHash = idVlVlGetColorHash(vlPaletteStart, vlPaletteSeed) >>> 0;
+        const vlSetPaletteHash = idVlVlSetPaletteHash(vlPaletteStart, vlPaletteCount, vlPaletteSeed, vlPaletteFlags) >>> 0;
+        const vlGetPaletteHash = idVlVlGetPaletteHash(vlPaletteStart, vlPaletteCount, vlPaletteSeed) >>> 0;
+        const vlFillPaletteHash = idVlVlFillPaletteHash(vlRed, vlGreen, vlBlue, vlPaletteCount) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1384,7 +1411,17 @@ export class TsRuntimePort implements RuntimePort {
             vlScreenToScreenHash ^
             vlMaskedToScreenHash ^
             vlMemToLatchHash ^
-            vlClearVideoHash) >>> 0;
+            vlClearVideoHash ^
+            vhDrawPropString2Hash ^
+            vhDrawColorPropStringHash ^
+            vhMeasureMPropStringHash ^
+            vhDrawTile8Hash ^
+            vhDrawTile8mHash ^
+            vlSetColorHash ^
+            vlGetColorHash ^
+            vlSetPaletteHash ^
+            vlGetPaletteHash ^
+            vlFillPaletteHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

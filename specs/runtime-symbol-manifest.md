@@ -148,6 +148,16 @@ Symbols exercised by deterministic runtime trace scenarios.
 | ID_VL.C | VL_MaskedToScreen | `done` | called via oracle_id_vl_vl_masked_to_screen_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_VL.C | VL_MemToLatch | `done` | called via oracle_id_vl_vl_mem_to_latch_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_VL.C | VL_ClearVideo | `done` | called via oracle_id_vl_vl_clear_video_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VW_DrawPropString | `done` | called via oracle_id_vh_vw_draw_prop_string_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VW_DrawColorPropString | `done` | called via oracle_id_vh_vw_draw_color_prop_string_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VW_MeasureMPropString | `done` | called via oracle_id_vh_vw_measure_mprop_string_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VWB_DrawTile8 | `done` | called via oracle_id_vh_vwb_draw_tile8_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VWB_DrawTile8M | `done` | called via oracle_id_vh_vwb_draw_tile8m_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_SetColor | `done` | called via oracle_id_vl_vl_set_color_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_GetColor | `done` | called via oracle_id_vl_vl_get_color_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_SetPalette | `done` | called via oracle_id_vl_vl_set_palette_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_GetPalette | `done` | called via oracle_id_vl_vl_get_palette_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_FillPalette | `done` | called via oracle_id_vl_vl_fill_palette_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

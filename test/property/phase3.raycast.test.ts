@@ -5,9 +5,14 @@ import { getNumRuns, getSeed } from './config';
 import { withReplay } from './replay';
 import {
   idVhVwMeasurePropStringHash,
+  idVhVwDrawColorPropStringHash,
+  idVhVwDrawPropStringHash,
+  idVhVwMeasureMPropStringHash,
   idVhVwbBarHash,
   idVhVwbDrawPicHash,
   idVhVwbDrawPropStringHash,
+  idVhVwbDrawTile8Hash,
+  idVhVwbDrawTile8MHash,
   idVhVwbHlinHash,
   idVhVwbPlotHash,
   idVhVwbVlinHash,
@@ -16,12 +21,17 @@ import {
   idVlVlClearVideoHash,
   idVlVlFadeInHash,
   idVlVlFadeOutHash,
+  idVlVlFillPaletteHash,
+  idVlVlGetColorHash,
+  idVlVlGetPaletteHash,
   idVlVlHlinHash,
   idVlVlLatchToScreenHash,
   idVlVlMaskedToScreenHash,
   idVlVlMemToLatchHash,
   idVlVlMemToScreenHash,
   idVlVlPlotHash,
+  idVlVlSetColorHash,
+  idVlVlSetPaletteHash,
   idVlVlScreenToScreenHash,
   idVlVlVlinHash,
   wlDrawCalcHeight,
@@ -554,6 +564,36 @@ describe('phase 3 real WOLFSRC raycasting parity', () => {
             );
             expect(idVlVlClearVideoHash(a, b, c, d) >>> 0).toBe(
               oracle.idVlVlClearVideoHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVwDrawPropStringHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhVwDrawPropStringHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVhVwDrawColorPropStringHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhVwDrawColorPropStringHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVhVwMeasureMPropStringHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhVwMeasureMPropStringHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVwbDrawTile8Hash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhVwbDrawTile8Hash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVwbDrawTile8MHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhVwbDrawTile8MHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVlVlSetColorHash(a, b, c) >>> 0).toBe(
+              oracle.idVlVlSetColorHash(a, b, c) >>> 0,
+            );
+            expect(idVlVlGetColorHash(a, b) >>> 0).toBe(
+              oracle.idVlVlGetColorHash(a, b) >>> 0,
+            );
+            expect(idVlVlSetPaletteHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVlVlSetPaletteHash(a, b, c, d) >>> 0,
+            );
+            expect(idVlVlGetPaletteHash(a, b, c) >>> 0).toBe(
+              oracle.idVlVlGetPaletteHash(a, b, c) >>> 0,
+            );
+            expect(idVlVlFillPaletteHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVlVlFillPaletteHash(a, b, c, d) >>> 0,
             );
           },
         ),

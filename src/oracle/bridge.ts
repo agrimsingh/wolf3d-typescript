@@ -73,6 +73,16 @@ type OracleFns = {
   idVlVlMaskedToScreenHash: (source: number, width: number, height: number, x: number, y: number, mask: number) => number;
   idVlVlMemToLatchHash: (sourceLen: number, width: number, height: number, dest: number) => number;
   idVlVlClearVideoHash: (color: number, linewidth: number, pages: number, bufferofs: number) => number;
+  idVhVwDrawPropStringHash: (textLen: number, x: number, y: number, maxWidth: number, fontWidth: number) => number;
+  idVhVwDrawColorPropStringHash: (textLen: number, x: number, y: number, color: number, maxWidth: number) => number;
+  idVhVwMeasureMPropStringHash: (textLen: number, fontWidth: number, spacing: number, maxWidth: number) => number;
+  idVhVwbDrawTile8Hash: (x: number, y: number, tile: number, screenofs: number) => number;
+  idVhVwbDrawTile8MHash: (x: number, y: number, tile: number, screenofs: number, mask: number) => number;
+  idVlVlSetColorHash: (index: number, color: number, paletteSeed: number) => number;
+  idVlVlGetColorHash: (index: number, paletteSeed: number) => number;
+  idVlVlSetPaletteHash: (start: number, count: number, paletteSeed: number, flags: number) => number;
+  idVlVlGetPaletteHash: (start: number, count: number, paletteSeed: number) => number;
+  idVlVlFillPaletteHash: (red: number, green: number, blue: number, count: number) => number;
   wlDrawTransformActorHash: (
     obx: number,
     oby: number,
@@ -434,6 +444,16 @@ export class OracleBridge implements OracleBridgeContract {
       idVlVlMaskedToScreenHash: cwrap('oracle_id_vl_vl_masked_to_screen_hash', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
       idVlVlMemToLatchHash: cwrap('oracle_id_vl_vl_mem_to_latch_hash', 'number', ['number', 'number', 'number', 'number']),
       idVlVlClearVideoHash: cwrap('oracle_id_vl_vl_clear_video_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVhVwDrawPropStringHash: cwrap('oracle_id_vh_vw_draw_prop_string_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idVhVwDrawColorPropStringHash: cwrap('oracle_id_vh_vw_draw_color_prop_string_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idVhVwMeasureMPropStringHash: cwrap('oracle_id_vh_vw_measure_mprop_string_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVhVwbDrawTile8Hash: cwrap('oracle_id_vh_vwb_draw_tile8_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVhVwbDrawTile8MHash: cwrap('oracle_id_vh_vwb_draw_tile8m_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idVlVlSetColorHash: cwrap('oracle_id_vl_vl_set_color_hash', 'number', ['number', 'number', 'number']),
+      idVlVlGetColorHash: cwrap('oracle_id_vl_vl_get_color_hash', 'number', ['number', 'number']),
+      idVlVlSetPaletteHash: cwrap('oracle_id_vl_vl_set_palette_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVlVlGetPaletteHash: cwrap('oracle_id_vl_vl_get_palette_hash', 'number', ['number', 'number', 'number']),
+      idVlVlFillPaletteHash: cwrap('oracle_id_vl_vl_fill_palette_hash', 'number', ['number', 'number', 'number', 'number']),
       wlDrawTransformActorHash: cwrap('oracle_wl_draw_transform_actor_hash', 'number', [
         'number',
         'number',
@@ -911,6 +931,46 @@ export class OracleBridge implements OracleBridgeContract {
 
   idVlVlClearVideoHash(color: number, linewidth: number, pages: number, bufferofs: number): number {
     return this.assertReady().idVlVlClearVideoHash(color | 0, linewidth | 0, pages | 0, bufferofs | 0) >>> 0;
+  }
+
+  idVhVwDrawPropStringHash(textLen: number, x: number, y: number, maxWidth: number, fontWidth: number): number {
+    return this.assertReady().idVhVwDrawPropStringHash(textLen | 0, x | 0, y | 0, maxWidth | 0, fontWidth | 0) >>> 0;
+  }
+
+  idVhVwDrawColorPropStringHash(textLen: number, x: number, y: number, color: number, maxWidth: number): number {
+    return this.assertReady().idVhVwDrawColorPropStringHash(textLen | 0, x | 0, y | 0, color | 0, maxWidth | 0) >>> 0;
+  }
+
+  idVhVwMeasureMPropStringHash(textLen: number, fontWidth: number, spacing: number, maxWidth: number): number {
+    return this.assertReady().idVhVwMeasureMPropStringHash(textLen | 0, fontWidth | 0, spacing | 0, maxWidth | 0) >>> 0;
+  }
+
+  idVhVwbDrawTile8Hash(x: number, y: number, tile: number, screenofs: number): number {
+    return this.assertReady().idVhVwbDrawTile8Hash(x | 0, y | 0, tile | 0, screenofs | 0) >>> 0;
+  }
+
+  idVhVwbDrawTile8MHash(x: number, y: number, tile: number, screenofs: number, mask: number): number {
+    return this.assertReady().idVhVwbDrawTile8MHash(x | 0, y | 0, tile | 0, screenofs | 0, mask | 0) >>> 0;
+  }
+
+  idVlVlSetColorHash(index: number, color: number, paletteSeed: number): number {
+    return this.assertReady().idVlVlSetColorHash(index | 0, color | 0, paletteSeed | 0) >>> 0;
+  }
+
+  idVlVlGetColorHash(index: number, paletteSeed: number): number {
+    return this.assertReady().idVlVlGetColorHash(index | 0, paletteSeed | 0) >>> 0;
+  }
+
+  idVlVlSetPaletteHash(start: number, count: number, paletteSeed: number, flags: number): number {
+    return this.assertReady().idVlVlSetPaletteHash(start | 0, count | 0, paletteSeed | 0, flags | 0) >>> 0;
+  }
+
+  idVlVlGetPaletteHash(start: number, count: number, paletteSeed: number): number {
+    return this.assertReady().idVlVlGetPaletteHash(start | 0, count | 0, paletteSeed | 0) >>> 0;
+  }
+
+  idVlVlFillPaletteHash(red: number, green: number, blue: number, count: number): number {
+    return this.assertReady().idVlVlFillPaletteHash(red | 0, green | 0, blue | 0, count | 0) >>> 0;
   }
 
   wlDrawTransformActorHash(
@@ -1785,6 +1845,46 @@ export class OracleBridge implements OracleBridgeContract {
       case 'id_vl.VL_ClearVideoHash': {
         const { color, linewidth, pages, bufferofs } = input as Record<string, number>;
         return this.idVlVlClearVideoHash(color, linewidth, pages, bufferofs) as TOutput;
+      }
+      case 'id_vh.VW_DrawPropStringHash': {
+        const { textLen, x, y, maxWidth, fontWidth } = input as Record<string, number>;
+        return this.idVhVwDrawPropStringHash(textLen, x, y, maxWidth, fontWidth) as TOutput;
+      }
+      case 'id_vh.VW_DrawColorPropStringHash': {
+        const { textLen, x, y, color, maxWidth } = input as Record<string, number>;
+        return this.idVhVwDrawColorPropStringHash(textLen, x, y, color, maxWidth) as TOutput;
+      }
+      case 'id_vh.VW_MeasureMPropStringHash': {
+        const { textLen, fontWidth, spacing, maxWidth } = input as Record<string, number>;
+        return this.idVhVwMeasureMPropStringHash(textLen, fontWidth, spacing, maxWidth) as TOutput;
+      }
+      case 'id_vh.VWB_DrawTile8Hash': {
+        const { x, y, tile, screenofs } = input as Record<string, number>;
+        return this.idVhVwbDrawTile8Hash(x, y, tile, screenofs) as TOutput;
+      }
+      case 'id_vh.VWB_DrawTile8MHash': {
+        const { x, y, tile, screenofs, mask } = input as Record<string, number>;
+        return this.idVhVwbDrawTile8MHash(x, y, tile, screenofs, mask) as TOutput;
+      }
+      case 'id_vl.VL_SetColorHash': {
+        const { index, color, paletteSeed } = input as Record<string, number>;
+        return this.idVlVlSetColorHash(index, color, paletteSeed) as TOutput;
+      }
+      case 'id_vl.VL_GetColorHash': {
+        const { index, paletteSeed } = input as Record<string, number>;
+        return this.idVlVlGetColorHash(index, paletteSeed) as TOutput;
+      }
+      case 'id_vl.VL_SetPaletteHash': {
+        const { start, count, paletteSeed, flags } = input as Record<string, number>;
+        return this.idVlVlSetPaletteHash(start, count, paletteSeed, flags) as TOutput;
+      }
+      case 'id_vl.VL_GetPaletteHash': {
+        const { start, count, paletteSeed } = input as Record<string, number>;
+        return this.idVlVlGetPaletteHash(start, count, paletteSeed) as TOutput;
+      }
+      case 'id_vl.VL_FillPaletteHash': {
+        const { red, green, blue, count } = input as Record<string, number>;
+        return this.idVlVlFillPaletteHash(red, green, blue, count) as TOutput;
       }
       case 'wl_draw.TransformActorHash': {
         const { obx, oby, viewx, viewy, viewcos, viewsin, scale, centerx, heightnumerator, mindist } = input as Record<string, number>;
