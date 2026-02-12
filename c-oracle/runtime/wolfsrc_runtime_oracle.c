@@ -154,6 +154,41 @@ uint32_t oracle_wl_agent_heal_self_hash(
   int32_t max_health,
   int32_t amount
 );
+uint32_t oracle_wl_agent_cmd_fire_hash(
+  int32_t ammo,
+  int32_t weapon_state,
+  int32_t cooldown,
+  int32_t button_fire
+);
+uint32_t oracle_wl_agent_cmd_use_hash(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t xq8,
+  int32_t yq8,
+  int32_t angle_deg,
+  int32_t use_pressed
+);
+uint32_t oracle_wl_agent_t_player_hash(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t xq8,
+  int32_t yq8,
+  int32_t angle_deg,
+  int32_t health,
+  int32_t ammo,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t input_mask,
+  int32_t rng
+);
+uint32_t oracle_wl_agent_thrust_hash(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t xq8,
+  int32_t yq8,
+  int32_t angle_deg,
+  int32_t speed_q8
+);
 uint32_t oracle_wl_state_first_sighting_hash(
   int32_t ax,
   int32_t ay,
@@ -354,9 +389,13 @@ enum runtime_trace_symbol_e {
   TRACE_WL_AGENT_GIVE_AMMO = 43,
   TRACE_WL_AGENT_GIVE_POINTS = 44,
   TRACE_WL_AGENT_HEAL_SELF = 45,
+  TRACE_WL_AGENT_CMD_FIRE = 46,
+  TRACE_WL_AGENT_CMD_USE = 47,
+  TRACE_WL_AGENT_T_PLAYER = 48,
+  TRACE_WL_AGENT_THRUST = 49,
 };
 
-#define TRACE_SYMBOL_MAX 48
+#define TRACE_SYMBOL_MAX 64
 static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
 static int32_t g_trace_count = 0;
 
@@ -632,6 +671,10 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t ammo_hash;
       uint32_t points_hash;
       uint32_t heal_hash;
+      uint32_t cmd_fire_hash;
+      uint32_t cmd_use_hash;
+      uint32_t t_player_hash;
+      uint32_t thrust_hash;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
       int32_t ai_dir = (state->angle_deg / 90) & 3;
@@ -660,6 +703,10 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t points_value = (int32_t)((state_hash >> 5) & 0x3fffu) + 100;
       int32_t next_extra = 20000 + ((state->tick & 3) * 20000);
       int32_t heal_amount = ((rng >> 1) & 7) + 1;
+      int32_t weapon_state = (state->flags & 0x10) ? 1 : 0;
+      int32_t button_fire = (input_mask & (1 << 6)) ? 1 : 0;
+      int32_t use_pressed = (input_mask & (1 << 7)) ? 1 : 0;
+      int32_t thrust_speed_q8 = ((rng >> 4) & 0xff) + 32;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -833,6 +880,40 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       points_hash = oracle_wl_agent_give_points_hash(bonus_score, bonus_lives, next_extra, points_value);
       trace_hit(TRACE_WL_AGENT_HEAL_SELF);
       heal_hash = oracle_wl_agent_heal_self_hash(state->health, 100, heal_amount);
+      trace_hit(TRACE_WL_AGENT_CMD_FIRE);
+      cmd_fire_hash = oracle_wl_agent_cmd_fire_hash(state->ammo, weapon_state, state->cooldown, button_fire);
+      trace_hit(TRACE_WL_AGENT_CMD_USE);
+      cmd_use_hash = oracle_wl_agent_cmd_use_hash(
+        state->map_lo,
+        state->map_hi,
+        state->xq8,
+        state->yq8,
+        state->angle_deg,
+        use_pressed
+      );
+      trace_hit(TRACE_WL_AGENT_T_PLAYER);
+      t_player_hash = oracle_wl_agent_t_player_hash(
+        state->map_lo,
+        state->map_hi,
+        state->xq8,
+        state->yq8,
+        state->angle_deg,
+        state->health,
+        state->ammo,
+        state->cooldown,
+        state->flags,
+        input_mask,
+        rng
+      );
+      trace_hit(TRACE_WL_AGENT_THRUST);
+      thrust_hash = oracle_wl_agent_thrust_hash(
+        state->map_lo,
+        state->map_hi,
+        state->xq8,
+        state->yq8,
+        state->angle_deg,
+        thrust_speed_q8
+      );
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
@@ -928,6 +1009,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->flags = (int32_t)(((uint32_t)state->flags) | 0x80000000u);
       } else {
         state->flags = (int32_t)(((uint32_t)state->flags) & ~0x80000000u);
+      }
+      if (cmd_fire_hash & 1u) {
+        state->flags |= 0x1;
+      } else {
+        state->flags &= ~0x1;
+      }
+      if (cmd_use_hash & 1u) {
+        state->flags |= 0x2;
+      } else {
+        state->flags &= ~0x2;
+      }
+      if (t_player_hash & 1u) {
+        state->flags |= 0x4;
+      } else {
+        state->flags &= ~0x4;
+      }
+      if (thrust_hash & 1u) {
+        state->flags |= 0x8;
+      } else {
+        state->flags &= ~0x8;
       }
     }
   }

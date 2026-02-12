@@ -98,7 +98,11 @@
     42,
     43,
     44,
-    45
+    45,
+    46,
+    47,
+    48,
+    49
   ],
   "requiredRuntimeSymbols": [
     {
@@ -370,6 +374,30 @@
       "file": "WL_AGENT.C",
       "func": "HealSelf",
       "notes": "called via oracle_wl_agent_heal_self_hash from runtime bonus probe"
+    },
+    {
+      "id": 46,
+      "file": "WL_AGENT.C",
+      "func": "Cmd_Fire",
+      "notes": "called via oracle_wl_agent_cmd_fire_hash from runtime player probe"
+    },
+    {
+      "id": 47,
+      "file": "WL_AGENT.C",
+      "func": "Cmd_Use",
+      "notes": "called via oracle_wl_agent_cmd_use_hash from runtime player probe"
+    },
+    {
+      "id": 48,
+      "file": "WL_AGENT.C",
+      "func": "T_Player",
+      "notes": "called via oracle_wl_agent_t_player_hash from runtime player probe"
+    },
+    {
+      "id": 49,
+      "file": "WL_AGENT.C",
+      "func": "Thrust",
+      "notes": "called via oracle_wl_agent_thrust_hash from runtime player probe"
     }
   ],
   "excludedRuntimeSymbols": []

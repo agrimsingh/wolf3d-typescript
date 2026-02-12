@@ -81,6 +81,10 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 43, file: 'WL_AGENT.C', func: 'GiveAmmo', notes: 'called via oracle_wl_agent_give_ammo_hash from runtime bonus probe' },
   { id: 44, file: 'WL_AGENT.C', func: 'GivePoints', notes: 'called via oracle_wl_agent_give_points_hash from runtime bonus probe' },
   { id: 45, file: 'WL_AGENT.C', func: 'HealSelf', notes: 'called via oracle_wl_agent_heal_self_hash from runtime bonus probe' },
+  { id: 46, file: 'WL_AGENT.C', func: 'Cmd_Fire', notes: 'called via oracle_wl_agent_cmd_fire_hash from runtime player probe' },
+  { id: 47, file: 'WL_AGENT.C', func: 'Cmd_Use', notes: 'called via oracle_wl_agent_cmd_use_hash from runtime player probe' },
+  { id: 48, file: 'WL_AGENT.C', func: 'T_Player', notes: 'called via oracle_wl_agent_t_player_hash from runtime player probe' },
+  { id: 49, file: 'WL_AGENT.C', func: 'Thrust', notes: 'called via oracle_wl_agent_thrust_hash from runtime player probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -131,6 +135,10 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [43, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [44, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [45, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [46, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [47, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [48, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [49, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

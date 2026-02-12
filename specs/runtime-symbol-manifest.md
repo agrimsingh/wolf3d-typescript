@@ -63,6 +63,10 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_AGENT.C | GiveAmmo | `done` | called via oracle_wl_agent_give_ammo_hash from runtime bonus probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | GivePoints | `done` | called via oracle_wl_agent_give_points_hash from runtime bonus probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | HealSelf | `done` | called via oracle_wl_agent_heal_self_hash from runtime bonus probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | Cmd_Fire | `done` | called via oracle_wl_agent_cmd_fire_hash from runtime player probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | Cmd_Use | `done` | called via oracle_wl_agent_cmd_use_hash from runtime player probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | T_Player | `done` | called via oracle_wl_agent_t_player_hash from runtime player probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | Thrust | `done` | called via oracle_wl_agent_thrust_hash from runtime player probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

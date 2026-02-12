@@ -37,7 +37,7 @@ import {
   wlInterCheckHighScoreHash,
 } from '../wolf/game/wlGameState';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
-import { wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
+import { wlAgentCmdFireHash, wlAgentCmdUseHash, wlAgentTPlayerHash, wlAgentThrustHash, wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
@@ -543,6 +543,10 @@ export class TsRuntimePort implements RuntimePort {
         const pointsValue = (((stateHash >>> 5) & 0x3fff) + 100) | 0;
         const nextExtra = (20000 + ((this.state.tick & 3) * 20000)) | 0;
         const healAmount = ((rng >> 1) & 7) + 1;
+        const weaponState = (this.state.flags & 0x10) !== 0 ? 1 : 0;
+        const buttonFire = (inputMask & (1 << 6)) !== 0 ? 1 : 0;
+        const usePressed = (inputMask & (1 << 7)) !== 0 ? 1 : 0;
+        const thrustSpeedQ8 = ((rng >> 4) & 0xff) + 32;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -691,6 +695,36 @@ export class TsRuntimePort implements RuntimePort {
         const ammoHash = wlAgentGiveAmmoHash(this.state.ammo | 0, 99, ammoAmount, ammoWeaponOwned) >>> 0;
         const pointsHash = wlAgentGivePointsHash(bonusScore, bonusLives, nextExtra, pointsValue) >>> 0;
         const healHash = wlAgentHealSelfHash(this.state.health | 0, 100, healAmount) >>> 0;
+        const cmdFireHash = wlAgentCmdFireHash(this.state.ammo | 0, weaponState, this.state.cooldown | 0, buttonFire) >>> 0;
+        const cmdUseHash = wlAgentCmdUseHash(
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+          this.state.angleDeg | 0,
+          usePressed,
+        ) >>> 0;
+        const tPlayerHash = wlAgentTPlayerHash(
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+          this.state.angleDeg | 0,
+          this.state.health | 0,
+          this.state.ammo | 0,
+          this.state.cooldown | 0,
+          this.state.flags | 0,
+          inputMask | 0,
+          rng | 0,
+        ) >>> 0;
+        const thrustHash = wlAgentThrustHash(
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+          this.state.angleDeg | 0,
+          thrustSpeedQ8,
+        ) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
@@ -786,6 +820,26 @@ export class TsRuntimePort implements RuntimePort {
           this.state.flags = (this.state.flags | 0x80000000) | 0;
         } else {
           this.state.flags = (this.state.flags & ~0x80000000) | 0;
+        }
+        if ((cmdFireHash & 1) !== 0) {
+          this.state.flags |= 0x1;
+        } else {
+          this.state.flags &= ~0x1;
+        }
+        if ((cmdUseHash & 1) !== 0) {
+          this.state.flags |= 0x2;
+        } else {
+          this.state.flags &= ~0x2;
+        }
+        if ((tPlayerHash & 1) !== 0) {
+          this.state.flags |= 0x4;
+        } else {
+          this.state.flags &= ~0x4;
+        }
+        if ((thrustHash & 1) !== 0) {
+          this.state.flags |= 0x8;
+        } else {
+          this.state.flags &= ~0x8;
         }
       }
     }
