@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Real Runtime TODO (G-Phases)
 
-**Status:** In Progress (`G3` active)  
+**Status:** In Progress (`G4` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -48,15 +48,15 @@
 
 ## G3: Full Runtime Symbol Reclassification From Real Traces
 
-- [ ] Regenerate runtime hits using real menu/gameplay/progression traces.
-- [ ] Rebuild `specs/runtime-symbol-manifest.md` from generated artifacts.
-- [ ] Enforce zero unclassified symbols.
-- [ ] Gate: `pnpm runtime:manifest:extract`
-- [ ] Gate: `pnpm runtime:classification:verify`
-- [ ] Gate: `pnpm runtime:manifest:verify`
-- [ ] Gate: agent-browser trace capture includes menu -> new game -> combat -> exit
-- [ ] Tests green
-- [ ] Phase commit pushed (`g3: runtime symbol classification from real traces`)
+- [x] Regenerate runtime hits using real menu/gameplay/progression traces.
+- [x] Rebuild `specs/runtime-symbol-manifest.md` from generated artifacts.
+- [x] Enforce zero unclassified symbols.
+- [x] Gate: `pnpm runtime:manifest:extract`
+- [x] Gate: `pnpm runtime:classification:verify`
+- [x] Gate: `pnpm runtime:manifest:verify`
+- [x] Gate: agent-browser trace capture includes menu -> new game -> combat -> exit
+- [x] Tests green
+- [x] Phase commit pushed (`g3: runtime symbol classification from real traces`)
 
 ## G4: Replace 8x8 Runtime World Model With Full Map/World State
 
