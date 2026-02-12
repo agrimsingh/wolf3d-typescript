@@ -55,6 +55,8 @@ Rules:
 - Run runtime parity harness tests: `pnpm runtime:parity:test`
 - Generate deterministic runtime tick/frame checkpoints: `pnpm runtime:checkpoints:generate`
 - Verify runtime checkpoint lock: `pnpm runtime:checkpoints:verify`
+- Generate deterministic WL1 episode checkpoints: `pnpm runtime:episode:generate`
+- Verify WL1 episode checkpoint lock: `pnpm runtime:episode:verify`
 - Run browser-runtime smoke suite: `pnpm runtime:browser:smoke`
 - Verify required-runtime symbol parity coverage + no-fallback policy: `pnpm runtime:required:verify`
 - Replay runtime repro artifact: `pnpm runtime:replay <artifact.json>`

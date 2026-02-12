@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R7 in progress (end-to-end WL1 parity acceptance)
+**Status:** Phase R8 in progress (CI hardening + release gates)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -92,10 +92,13 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 
 ## Phase R7: End-to-End WL1 Episode Parity Acceptance
 
-- [ ] Build deterministic traces for all WL1 maps.
-- [ ] Validate full episode parity checkpoints (state + frame hashes).
-- [ ] Gate: all-map + full-episode acceptance green.
-- [ ] Commit: `phase-r7: full wl1 episode parity acceptance`
+- [x] Build deterministic traces for all WL1 maps.
+: Added all-map episode artifact pipeline (`scripts/runtime/runtime-episode.ts`, `scripts/runtime/generate-runtime-episode.ts`, `scripts/runtime/verify-runtime-episode.ts`) and frozen artifacts (`specs/generated/runtime-episode-checkpoints.json`, `specs/generated/runtime-episode-checkpoints-lock.json`).
+- [x] Validate full episode parity checkpoints (state + frame hashes).
+: Added deterministic acceptance tests `test/property/runtime.episode.test.ts` and verified contiguous map-order WL1 episode digest (`1566426645`) with per-map state/frame parity checkpoints.
+- [x] Gate: all-map + full-episode acceptance green.
+: Green on `pnpm runtime:episode:verify`, `pnpm verify`, and `pnpm test:property:ci`.
+- [x] Commit: `phase-r7: full wl1 episode parity acceptance`
 
 ## Phase R8: CI Hardening + Release Gating
 

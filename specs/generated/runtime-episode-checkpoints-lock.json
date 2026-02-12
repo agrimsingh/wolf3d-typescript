@@ -1,0 +1,140 @@
+{
+  "phase": "R7",
+  "stepsPerMap": 64,
+  "scenarioCount": 10,
+  "mapOrder": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "episodeDigest": 1566426645,
+  "maps": [
+    {
+      "id": "wl1-map-0",
+      "mapIndex": 0,
+      "mapName": "Wolf1 Map1",
+      "seedHex": "0x9a6ae682",
+      "stepCount": 64,
+      "traceHash": 712646594,
+      "mapDigest": 111337348,
+      "finalSnapshotHash": 1995695172,
+      "finalFrameHash": 649092594,
+      "finalTick": 221
+    },
+    {
+      "id": "wl1-map-1",
+      "mapIndex": 1,
+      "mapName": "Wolf1 Map2",
+      "seedHex": "0x968c47cf",
+      "stepCount": 64,
+      "traceHash": 1116778406,
+      "mapDigest": 331792474,
+      "finalSnapshotHash": 3602814335,
+      "finalFrameHash": 468679217,
+      "finalTick": 241
+    },
+    {
+      "id": "wl1-map-2",
+      "mapIndex": 2,
+      "mapName": "Wolf1 Map3",
+      "seedHex": "0x932fa408",
+      "stepCount": 64,
+      "traceHash": 2237736101,
+      "mapDigest": 1750819660,
+      "finalSnapshotHash": 3859007527,
+      "finalFrameHash": 2741030785,
+      "finalTick": 197
+    },
+    {
+      "id": "wl1-map-3",
+      "mapIndex": 3,
+      "mapName": "Wolf1 Map4",
+      "seedHex": "0x8f410555",
+      "stepCount": 64,
+      "traceHash": 3336472596,
+      "mapDigest": 2297168154,
+      "finalSnapshotHash": 469273180,
+      "finalFrameHash": 1647624242,
+      "finalTick": 210
+    },
+    {
+      "id": "wl1-map-4",
+      "mapIndex": 4,
+      "mapName": "Wolf1 Map5",
+      "seedHex": "0x8be3659e",
+      "stepCount": 64,
+      "traceHash": 2989602691,
+      "mapDigest": 422232860,
+      "finalSnapshotHash": 3325509912,
+      "finalFrameHash": 278875882,
+      "finalTick": 214
+    },
+    {
+      "id": "wl1-map-5",
+      "mapIndex": 5,
+      "mapName": "Wolf1 Map6",
+      "seedHex": "0x8406c2db",
+      "stepCount": 64,
+      "traceHash": 1346702557,
+      "mapDigest": 339200934,
+      "finalSnapshotHash": 1996033186,
+      "finalFrameHash": 871096897,
+      "finalTick": 255
+    },
+    {
+      "id": "wl1-map-6",
+      "mapIndex": 6,
+      "mapName": "Wolf1 Map7",
+      "seedHex": "0x80b82324",
+      "stepCount": 64,
+      "traceHash": 2156316762,
+      "mapDigest": 1870552640,
+      "finalSnapshotHash": 1881324710,
+      "finalFrameHash": 259601058,
+      "finalTick": 229
+    },
+    {
+      "id": "wl1-map-7",
+      "mapIndex": 7,
+      "mapName": "Wolf1 Map8",
+      "seedHex": "0xbcdb8061",
+      "stepCount": 64,
+      "traceHash": 4036047176,
+      "mapDigest": 2826783726,
+      "finalSnapshotHash": 1009367762,
+      "finalFrameHash": 1843081598,
+      "finalTick": 214
+    },
+    {
+      "id": "wl1-map-8",
+      "mapIndex": 8,
+      "mapName": "Wolf1 Boss",
+      "seedHex": "0xb97de0aa",
+      "stepCount": 64,
+      "traceHash": 1288310276,
+      "mapDigest": 4260998552,
+      "finalSnapshotHash": 201551799,
+      "finalFrameHash": 1304276341,
+      "finalTick": 211
+    },
+    {
+      "id": "wl1-map-9",
+      "mapIndex": 9,
+      "mapName": "Wolf1 Secret",
+      "seedHex": "0xb59f41f7",
+      "stepCount": 64,
+      "traceHash": 3670593898,
+      "mapDigest": 3744247362,
+      "finalSnapshotHash": 3918178565,
+      "finalFrameHash": 2862190455,
+      "finalTick": 185
+    }
+  ]
+}
