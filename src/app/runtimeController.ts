@@ -45,7 +45,34 @@ export class RuntimeAppController {
   private tickAccumulatorMs = 0;
   private rngState = 0x12345678;
   private mouseTurnAccumulator = 0;
+  private latchedInputMask = 0;
   private transitionToken = 0;
+
+  private keyCodeToMask(code: string): number {
+    switch (code) {
+      case 'KeyW':
+      case 'ArrowUp':
+        return 1 << 0;
+      case 'KeyS':
+      case 'ArrowDown':
+        return 1 << 1;
+      case 'ArrowLeft':
+        return 1 << 3;
+      case 'ArrowRight':
+        return 1 << 2;
+      case 'KeyA':
+        return 1 << 4;
+      case 'KeyD':
+        return 1 << 5;
+      case 'Space':
+        return 1 << 6;
+      case 'KeyE':
+      case 'Enter':
+        return 1 << 7;
+      default:
+        return 0;
+    }
+  }
 
   private reviveIfDead<T extends RuntimeSnapshot>(snapshot: T): T {
     if ((snapshot.health | 0) > 0) {
@@ -123,7 +150,8 @@ export class RuntimeAppController {
   }
 
   private buildInputMask(): number {
-    let inputMask = 0;
+    let inputMask = this.latchedInputMask | 0;
+    this.latchedInputMask = 0;
     const key = (code: string) => this.heldKeys.has(code);
 
     if (key('KeyW') || key('ArrowUp')) inputMask |= 1 << 0;
@@ -178,6 +206,7 @@ export class RuntimeAppController {
     this.lastFrameAtMs = 0;
     this.rngState = scenario.seed | 0;
     this.mouseTurnAccumulator = 0;
+    this.latchedInputMask = 0;
   }
 
   async startSelectedScenario(): Promise<void> {
@@ -206,10 +235,12 @@ export class RuntimeAppController {
     this.lastFrameAtMs = 0;
     this.tickAccumulatorMs = 0;
     this.mouseTurnAccumulator = 0;
+    this.latchedInputMask = 0;
   }
 
   onKeyDown(code: string): void {
     this.heldKeys.add(code);
+    this.latchedInputMask |= this.keyCodeToMask(code);
     this.audio.unlock();
 
     if (this.state.mode === 'menu') {

@@ -138,6 +138,7 @@ export class WolfApp {
     this.canvas = document.createElement('canvas');
     this.canvas.width = WIDTH;
     this.canvas.height = HEIGHT;
+    this.canvas.tabIndex = 0;
     container.appendChild(this.canvas);
 
     const ctx = this.canvas.getContext('2d');
@@ -183,6 +184,7 @@ export class WolfApp {
     });
 
     this.canvas.addEventListener('click', () => {
+      this.canvas.focus();
       if (this.controller.getState().mode === 'playing' && document.pointerLockElement !== this.canvas) {
         void this.canvas.requestPointerLock();
       }
@@ -278,7 +280,8 @@ export class WolfApp {
           if (tex) {
             const ty = ((((y - top) * TEXTURE_SIZE) / Math.max(1, wallHeight)) | 0) & (TEXTURE_SIZE - 1);
             // VSWAP wall chunks are laid out per-column; sample in column-major order.
-            const palIndex = tex[(hit.texX * TEXTURE_SIZE + ty) & (TEXTURE_SIZE * TEXTURE_SIZE - 1)] ?? 0;
+            const sampleX = (TEXTURE_SIZE - 1 - hit.texX) & (TEXTURE_SIZE - 1);
+            const palIndex = tex[(sampleX * TEXTURE_SIZE + ty) & (TEXTURE_SIZE * TEXTURE_SIZE - 1)] ?? 0;
             let [r, g, b] = paletteIndexToRgb(palIndex);
             if (hit.side === 1) {
               r = (r * 3) >> 2;
@@ -369,6 +372,10 @@ export class WolfApp {
 
   private loop(now: number): void {
     this.controller.tick(now);
+    const mode = this.controller.getState().mode;
+    if (mode === 'playing' && document.activeElement !== this.canvas) {
+      this.canvas.focus();
+    }
     (globalThis as { __wolfDebugState?: unknown }).__wolfDebugState = this.controller.getState();
     this.drawFrame();
     this.loopHandle = requestAnimationFrame((nextNow) => this.loop(nextNow));
