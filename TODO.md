@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Full Runtime Parity Plan
 
-**Status:** Active F-phase execution (F0..F8)  
+**Status:** Completed F-phase execution (F0..F8)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -15,7 +15,8 @@
 
 - Browser runtime path now defaults to oracle-backed runtime (`WolfsrcOraclePort`) with runtime framebuffer output.
 - `src/runtime/tsRuntime.ts` remains as a parity harness implementation and must continue matching oracle tests until full TS runtime replacement lands.
-- Remote CI bootstrap is now green with vendored WOLFSRC + emsdk setup (`parity-pr` run `21933009204` on 2026-02-12).
+- Remote CI gates are green with vendored WOLFSRC + pinned emsdk setup.
+- Runtime checkpoints and full-episode parity lock artifacts are stable and reproducible.
 
 ## Phase F0: Truth Reset + De-Sim Baseline
 
@@ -107,11 +108,21 @@
 
 ## Phase F8: Final Acceptance + Done Freeze
 
-- [ ] Freeze manifests/lock artifacts for final runtime-complete baseline.
-- [ ] Validate end-to-end WL1 done definition in browser.
-- [ ] Update docs/TODO with run ids and acceptance evidence.
-- [ ] Gate: all acceptance criteria green with clean tree.
-- [ ] Commit: `phase-f8: gameplay-complete wl1 runtime parity done`
+- [x] Freeze manifests/lock artifacts for final runtime-complete baseline.
+- [x] Validate end-to-end WL1 done definition in browser.
+- [x] Update docs/TODO with run ids and acceptance evidence.
+- [x] Gate: all acceptance criteria green with clean tree.
+  - Evidence (2026-02-12 local):
+    - `pnpm verify`
+    - `pnpm runtime:required:verify`
+    - `pnpm runtime:checkpoints:verify`
+    - `pnpm runtime:episode:verify`
+    - `pnpm test:smoke`
+    - `pnpm build`
+  - Evidence (2026-02-12 remote):
+    - `parity-pr` consecutive success runs: `21942569861`, `21942444879`, `21942313625`
+    - `parity-10k` consecutive success runs: `21942620377`, `21942620230`, `21935039117`
+- [x] Commit: `phase-f8: gameplay-complete wl1 runtime parity done`
 
 ## Global Rules
 

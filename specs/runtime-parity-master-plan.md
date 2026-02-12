@@ -1,8 +1,12 @@
 # Full WOLFSRC Runtime Parity Master Plan
 
+## Status
+
+Completed on 2026-02-12 (`F0..F8`).
+
 ## Summary
 
-The current runtime is parity-checked but still synthetic. The objective is a gameplay-complete WL1 browser port with deterministic TS-vs-C/WASM parity for all runtime-reachable WOLFSRC behavior.
+The runtime path is now oracle-backed and parity-locked for WL1 gameplay-complete behavior. The objective of this plan was deterministic TS-vs-C/WASM parity for all runtime-reachable WOLFSRC behavior.
 
 ## Locked Decisions
 
@@ -45,3 +49,10 @@ The current runtime is parity-checked but still synthetic. The objective is a ga
 ## Completion Definition
 
 The project is complete only when the browser runtime is gameplay-complete for WL1 and deterministic TS-vs-oracle parity gates pass for runtime-reachable behavior, including full-episode per-tic parity in CI.
+
+## Completion Evidence
+
+- Local acceptance gates green: `pnpm verify`, `pnpm runtime:required:verify`, `pnpm runtime:checkpoints:verify`, `pnpm runtime:episode:verify`, `pnpm test:smoke`, `pnpm build`.
+- Remote CI hardening gate green:
+  - `parity-pr` consecutive success: `21942569861`, `21942444879`, `21942313625`
+  - `parity-10k` consecutive success: `21942620377`, `21942620230`, `21935039117`

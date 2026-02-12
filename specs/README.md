@@ -7,7 +7,7 @@ Design documentation for the browser-based TypeScript port of Wolfenstein 3D, va
 - [runtime-parity-master-plan.md](./runtime-parity-master-plan.md): authoritative F-phase execution plan from synthetic runtime to gameplay-complete WL1 parity.
 - [runtime-gap-assessment.md](./runtime-gap-assessment.md): objective gap from current prototype parity to full WL1 runtime-complete parity.
 - [runtime-symbol-manifest.md](./runtime-symbol-manifest.md): authoritative runtime-path symbol checklist used for R-phase execution.
-- `generated/runtime-core-mode.json`: runtime core mode guard (`synthetic` until F5 replacement is complete).
+- `generated/runtime-core-mode.json`: runtime core mode guard (`real` in completed F5+ path).
 - `generated/runtime-symbol-hits.json`: deterministic trace artifact produced by `pnpm runtime:manifest:extract`.
 - `generated/runtime-symbol-lock.json`: frozen R2 lock consumed by `pnpm runtime:manifest:verify`.
 - `generated/wolfsrc-manifest.json`: full 568-symbol WOLFSRC inventory baseline.
@@ -61,7 +61,7 @@ Design documentation for the browser-based TypeScript port of Wolfenstein 3D, va
 | game-state.md | Draft | Phase 6 target. |
 | menu-text.md | Draft | Phase 7 target. |
 | audio.md | Draft | Phase 8 optional target. |
-| runtime-parity-master-plan.md | Active | Authoritative F-phase implementation plan. |
-| runtime-gap-assessment.md | Active | Baseline truth document for runtime-complete work. |
+| runtime-parity-master-plan.md | Completed | Authoritative F-phase implementation plan with final gate evidence. |
+| runtime-gap-assessment.md | Completed | Final gap-closure snapshot for runtime-complete WL1 parity track. |
 | runtime-symbol-manifest.md | Active | Runtime-path symbol tracker for full completion. |
 | wolfsrc-compatibility.md | Active | Compatibility bring-up and probe status for real-source compilation. |
