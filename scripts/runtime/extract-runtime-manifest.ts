@@ -30,6 +30,11 @@ type TraceScenario = {
   steps: RuntimeInput[];
 };
 
+type SymbolParityCoverage = {
+  status: 'done' | 'todo';
+  parity: string;
+};
+
 const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 1, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_init', notes: 'runtime bootstrap entrypoint' },
   { id: 2, file: 'runtime/wolfsrc_runtime_oracle.c', func: 'oracle_runtime_reset', notes: 'restores boot snapshot' },
@@ -51,6 +56,26 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
+
+const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
+  [1, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [2, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [3, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [4, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [5, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [6, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [7, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [8, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [9, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [10, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [11, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [12, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [13, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [14, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [15, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [16, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [17, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+]);
 
 function fnv1a(hash: number, value: number): number {
   return Math.imul((hash ^ (value >>> 0)) >>> 0, 16777619) >>> 0;
@@ -304,7 +329,12 @@ function formatManifest(
   excludedSymbols: TraceSymbol[],
 ): string {
   const requiredRows = requiredSymbols
-    .map((entry) => `| ${entry.file} | ${entry.func} | \`todo\` | ${entry.notes} |`)
+    .map((entry) => {
+      const coverage = SYMBOL_PARITY_COVERAGE.get(entry.id);
+      const status = coverage?.status ?? 'todo';
+      const notes = coverage ? `${entry.notes}; parity: ${coverage.parity}` : `${entry.notes}; parity: pending`;
+      return `| ${entry.file} | ${entry.func} | \`${status}\` | ${notes} |`;
+    })
     .join('\n');
   const excludedRows = excludedSymbols
     .map((entry) => `| ${entry.file} | ${entry.func} | not hit by deterministic runtime-trace harness |`)

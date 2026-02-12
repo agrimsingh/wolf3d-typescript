@@ -18,23 +18,23 @@ Symbols exercised by deterministic runtime trace scenarios.
 
 | File | Function | Status | Notes |
 | :--- | :--- | :--- | :--- |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_init | `todo` | runtime bootstrap entrypoint |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_reset | `todo` | restores boot snapshot |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_step | `todo` | runtime tick loop entrypoint |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_snapshot_hash | `todo` | snapshot hash API |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_frame_hash | `todo` | frame-hash API |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_set_state | `todo` | deserialize/state restore API |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_map_lo | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_map_hi | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_xq8 | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_yq8 | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_angle_deg | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_health | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_ammo | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_cooldown | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_flags | `todo` | snapshot readout |
-| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_tick | `todo` | snapshot readout |
-| WL_AGENT.C | ClipMove | `todo` | called via real_wl_agent_clip_move_apply shim |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_init | `done` | runtime bootstrap entrypoint; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_reset | `done` | restores boot snapshot; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_step | `done` | runtime tick loop entrypoint; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_snapshot_hash | `done` | snapshot hash API; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_frame_hash | `done` | frame-hash API; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_set_state | `done` | deserialize/state restore API; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_map_lo | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_map_hi | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_xq8 | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_yq8 | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_angle_deg | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_health | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_ammo | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_cooldown | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_flags | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_tick | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | ClipMove | `done` | called via real_wl_agent_clip_move_apply shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

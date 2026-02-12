@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R4 in progress (runtime-path function porting, manifest-driven)
+**Status:** Phase R5 in progress (tick + frame fidelity lock)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -58,11 +58,15 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 
 ## Phase R4: Runtime-Path Function Porting (Manifest-Driven)
 
-- [ ] Port runtime-path functions subsystem by subsystem.
-- [ ] For every function: TS port + property parity test + green local gate.
-- [ ] Enforce no prototype fallback in runtime execution path.
-- [ ] Gate: all required runtime symbols marked complete with parity tests.
-- [ ] Commit: `phase-r4: runtime-path symbol parity complete`
+- [x] Port runtime-path functions subsystem by subsystem.
+: Runtime-path APIs listed in `specs/runtime-symbol-manifest.md` are implemented in TS runtime + oracle port layers and exercised through shared parity harness.
+- [x] For every function: TS port + property parity test + green local gate.
+: Added required-runtime function parity suite (`test/property/runtime.required-symbols.test.ts`) and marked all required symbols `done` in the frozen manifest.
+- [x] Enforce no prototype fallback in runtime execution path.
+: Added guard script `scripts/runtime/verify-no-prototype-fallback.sh` and gate command `pnpm runtime:required:verify`.
+- [x] Gate: all required runtime symbols marked complete with parity tests.
+: Green on `pnpm runtime:required:verify`, `pnpm verify`, and `pnpm test:property:ci` (1k/10k property gates).
+- [x] Commit: `phase-r4: runtime-path symbol parity complete`
 
 ## Phase R5: Tick + Frame Fidelity Lock
 
