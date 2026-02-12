@@ -23,6 +23,8 @@
     "runtime:manifest:extract": "pnpm wasm:build && tsx scripts/runtime/extract-runtime-manifest.ts",
     "runtime:manifest:verify": "pnpm runtime:manifest:extract && tsx scripts/runtime/verify-runtime-manifest.ts",
     "runtime:parity:test": "pnpm wasm:build && vitest run test/property/runtime*.test.ts",
+    "runtime:checkpoints:generate": "pnpm wasm:build && tsx scripts/runtime/generate-runtime-checkpoints.ts",
+    "runtime:checkpoints:verify": "pnpm runtime:checkpoints:generate && tsx scripts/runtime/verify-runtime-checkpoints.ts",
     "runtime:required:verify": "pnpm runtime:manifest:verify && pnpm runtime:parity:test && tsx scripts/runtime/verify-required-symbol-parity.ts && bash scripts/runtime/verify-no-prototype-fallback.sh",
     "runtime:replay": "tsx scripts/runtime/replay-runtime-artifact.ts",
     "assets:fetch": "bash scripts/assets/fetch-wl1.sh",

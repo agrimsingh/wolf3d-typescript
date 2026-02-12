@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R5 in progress (tick + frame fidelity lock)
+**Status:** Phase R6 in progress (browser runtime integration)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -70,10 +70,13 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 
 ## Phase R5: Tick + Frame Fidelity Lock
 
-- [ ] Add checkpointed frame hashing from software framebuffer.
-- [ ] Run deterministic tick parity and frame-hash parity across map fixtures.
-- [ ] Gate: no drift on parity checkpoints.
-- [ ] Commit: `phase-r5: tick and frame hash parity locked`
+- [x] Add checkpointed frame hashing from software framebuffer.
+: Added deterministic runtime checkpoint generator + verifier (`scripts/runtime/runtime-checkpoints.ts`, `scripts/runtime/generate-runtime-checkpoints.ts`, `scripts/runtime/verify-runtime-checkpoints.ts`) and frozen lock artifacts (`specs/generated/runtime-checkpoints.json`, `specs/generated/runtime-checkpoints-lock.json`, digest `1566426645`).
+- [x] Run deterministic tick parity and frame-hash parity across map fixtures.
+: Added fixture parity suite (`test/property/runtime.checkpoints.test.ts`) over WL1 scenarios plus random fixture-prefix parity runs.
+- [x] Gate: no drift on parity checkpoints.
+: Green on `pnpm runtime:checkpoints:verify`, `pnpm verify`, and `pnpm test:property:ci` after parity fixes in `src/wolf/ai/wlStateReal.ts` (`CheckLine` unsigned intercept semantics and `spectreobj` enum value).
+- [x] Commit: `phase-r5: tick and frame hash parity locked`
 
 ## Phase R6: Browser Runtime Integration
 

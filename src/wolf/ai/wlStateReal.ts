@@ -15,7 +15,7 @@ const DIR_SOUTHEAST = 7;
 const DIR_NODIR = 8;
 
 const CLASS_GHOSTOBJ = 15;
-const CLASS_SPECTREOBJ = 22;
+const CLASS_SPECTREOBJ = 21;
 const TILE_GLOBAL = 1 << 16;
 
 const OPPOSITE_DIR = [DIR_WEST, DIR_SOUTHWEST, DIR_SOUTH, DIR_SOUTHEAST, DIR_EAST, DIR_NORTHEAST, DIR_NORTH, DIR_NORTHWEST, DIR_NODIR];
@@ -44,10 +44,10 @@ export function wlStateRealCheckLine(
   doorPosQ8: number,
 ): number {
   const tilemap = buildDoorMap(doorMask);
-  const doorPosition = new Int32Array(64);
+  const doorPosition = new Uint32Array(64);
   for (let i = 0; i < 8; i++) {
     if (((doorMask >>> i) & 1) === 1) {
-      doorPosition[i] = doorPosQ8 | 0;
+      doorPosition[i] = doorPosQ8 >>> 0;
     }
   }
 
@@ -94,8 +94,8 @@ export function wlStateRealCheckLine(
         }
 
         const door = value & ~0x80;
-        const intercept = yfrac - Math.trunc(ystep / 2);
-        if (intercept > (doorPosition[door] | 0)) {
+        const intercept = (yfrac - Math.trunc(ystep / 2)) >>> 0;
+        if (intercept > (doorPosition[door] >>> 0)) {
           return 0;
         }
       }
@@ -138,8 +138,8 @@ export function wlStateRealCheckLine(
         }
 
         const door = value & ~0x80;
-        const intercept = xfrac - Math.trunc(xstep / 2);
-        if (intercept > (doorPosition[door] | 0)) {
+        const intercept = (xfrac - Math.trunc(xstep / 2)) >>> 0;
+        if (intercept > (doorPosition[door] >>> 0)) {
           return 0;
         }
       }

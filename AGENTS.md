@@ -53,6 +53,8 @@ Rules:
 - Extract runtime trace symbol manifest: `pnpm runtime:manifest:extract`
 - Verify runtime symbol manifest lock: `pnpm runtime:manifest:verify`
 - Run runtime parity harness tests: `pnpm runtime:parity:test`
+- Generate deterministic runtime tick/frame checkpoints: `pnpm runtime:checkpoints:generate`
+- Verify runtime checkpoint lock: `pnpm runtime:checkpoints:verify`
 - Verify required-runtime symbol parity coverage + no-fallback policy: `pnpm runtime:required:verify`
 - Replay runtime repro artifact: `pnpm runtime:replay <artifact.json>`
 - Run local property tests (1k): `pnpm test:property:local`
