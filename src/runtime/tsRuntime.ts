@@ -2492,10 +2492,6 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
-    if (this.fullMap.enabled && this.state.health > 1 && (this.state.tick % 96) === 0) {
-      this.state.health = (this.state.health - 1) | 0;
-    }
-
     if (this.state.health <= 0) {
       this.state.flags |= 0x40;
     } else {

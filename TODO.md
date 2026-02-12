@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K8` active)  
+**Status:** In Progress (`K9` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -106,13 +106,13 @@
 
 ## K8: TS Parity Wave C (Player/Doors/Pushwalls/Game Loop)
 
-- [ ] Port player movement/use/fire/collision and door/pushwall loop transitions.
-- [ ] Remove synthetic countdown behavior from gameplay flow.
-- [ ] Gate: stateful property suites
-- [ ] Gate: deterministic interaction traces
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k8: wl6 player-doors-gameloop parity`)
+- [x] Port player movement/use/fire/collision and door/pushwall loop transitions.
+- [x] Remove synthetic countdown behavior from gameplay flow.
+- [x] Gate: stateful property suites
+- [x] Gate: deterministic interaction traces
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k8: wl6 player-doors-gameloop parity`)
 
 ## K9: TS Parity Wave D (Actors/AI/Combat)
 
