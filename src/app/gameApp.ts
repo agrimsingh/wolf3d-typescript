@@ -9,6 +9,7 @@ const MINIMAP_TILE_SIZE = 8;
 const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
 const AREATILE = 107;
+const BASELINE_STATUS_TEXT = 'Baseline: WL6 migration in progress (K0)';
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -385,6 +386,15 @@ export class WolfApp {
         this.drawErrorFrame();
         break;
     }
+    this.drawBaselineStatus();
+  }
+
+  private drawBaselineStatus(): void {
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    this.ctx.fillRect(4, HEIGHT - 22, 198, 16);
+    this.ctx.fillStyle = '#dce6ff';
+    this.ctx.font = '8px monospace';
+    this.ctx.fillText(BASELINE_STATUS_TEXT, 8, HEIGHT - 11);
   }
 
   private loop(now: number): void {
