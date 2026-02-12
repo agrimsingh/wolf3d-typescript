@@ -85,6 +85,11 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 47, file: 'WL_AGENT.C', func: 'Cmd_Use', notes: 'called via oracle_wl_agent_cmd_use_hash from runtime player probe' },
   { id: 48, file: 'WL_AGENT.C', func: 'T_Player', notes: 'called via oracle_wl_agent_t_player_hash from runtime player probe' },
   { id: 49, file: 'WL_AGENT.C', func: 'Thrust', notes: 'called via oracle_wl_agent_thrust_hash from runtime player probe' },
+  { id: 50, file: 'WL_ACT1.C', func: 'SpawnDoor', notes: 'called via oracle_wl_act1_spawn_door_hash from runtime game-state probe' },
+  { id: 51, file: 'WL_ACT1.C', func: 'PushWall', notes: 'called via oracle_wl_act1_push_wall_hash from runtime game-state probe' },
+  { id: 52, file: 'WL_AGENT.C', func: 'TakeDamage', notes: 'called via oracle_wl_agent_take_damage_hash from runtime game-state probe' },
+  { id: 53, file: 'WL_INTER.C', func: 'LevelCompleted', notes: 'called via oracle_wl_inter_level_completed_hash from runtime game-state probe' },
+  { id: 54, file: 'WL_INTER.C', func: 'Victory', notes: 'called via oracle_wl_inter_victory_hash from runtime game-state probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -139,6 +144,11 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [47, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [48, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [49, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [50, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [51, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [52, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [53, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [54, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

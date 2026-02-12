@@ -102,7 +102,12 @@
     46,
     47,
     48,
-    49
+    49,
+    50,
+    51,
+    52,
+    53,
+    54
   ],
   "requiredRuntimeSymbols": [
     {
@@ -398,6 +403,36 @@
       "file": "WL_AGENT.C",
       "func": "Thrust",
       "notes": "called via oracle_wl_agent_thrust_hash from runtime player probe"
+    },
+    {
+      "id": 50,
+      "file": "WL_ACT1.C",
+      "func": "SpawnDoor",
+      "notes": "called via oracle_wl_act1_spawn_door_hash from runtime game-state probe"
+    },
+    {
+      "id": 51,
+      "file": "WL_ACT1.C",
+      "func": "PushWall",
+      "notes": "called via oracle_wl_act1_push_wall_hash from runtime game-state probe"
+    },
+    {
+      "id": 52,
+      "file": "WL_AGENT.C",
+      "func": "TakeDamage",
+      "notes": "called via oracle_wl_agent_take_damage_hash from runtime game-state probe"
+    },
+    {
+      "id": 53,
+      "file": "WL_INTER.C",
+      "func": "LevelCompleted",
+      "notes": "called via oracle_wl_inter_level_completed_hash from runtime game-state probe"
+    },
+    {
+      "id": 54,
+      "file": "WL_INTER.C",
+      "func": "Victory",
+      "notes": "called via oracle_wl_inter_victory_hash from runtime game-state probe"
     }
   ],
   "excludedRuntimeSymbols": []

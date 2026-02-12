@@ -189,6 +189,49 @@ uint32_t oracle_wl_agent_thrust_hash(
   int32_t angle_deg,
   int32_t speed_q8
 );
+uint32_t oracle_wl_act1_spawn_door_hash(
+  int32_t door_mask,
+  int32_t door_state,
+  int32_t tile,
+  int32_t lock,
+  int32_t vertical
+);
+uint32_t oracle_wl_act1_push_wall_hash(
+  int32_t map_lo,
+  int32_t map_hi,
+  int32_t push_x,
+  int32_t push_y,
+  int32_t dir,
+  int32_t steps
+);
+uint32_t oracle_wl_agent_take_damage_hash(
+  int32_t health,
+  int32_t lives,
+  int32_t damage,
+  int32_t god_mode,
+  int32_t rng
+);
+uint32_t oracle_wl_inter_level_completed_hash(
+  int32_t score,
+  int32_t time_sec,
+  int32_t par_sec,
+  int32_t kills_found,
+  int32_t kills_total,
+  int32_t secrets_found,
+  int32_t secrets_total,
+  int32_t treasure_found,
+  int32_t treasure_total,
+  int32_t lives
+);
+uint32_t oracle_wl_inter_victory_hash(
+  int32_t total_score,
+  int32_t total_time,
+  int32_t total_kills,
+  int32_t total_secrets,
+  int32_t total_treasures,
+  int32_t episode,
+  int32_t difficulty
+);
 uint32_t oracle_wl_state_first_sighting_hash(
   int32_t ax,
   int32_t ay,
@@ -393,6 +436,11 @@ enum runtime_trace_symbol_e {
   TRACE_WL_AGENT_CMD_USE = 47,
   TRACE_WL_AGENT_T_PLAYER = 48,
   TRACE_WL_AGENT_THRUST = 49,
+  TRACE_WL_ACT1_SPAWN_DOOR = 50,
+  TRACE_WL_ACT1_PUSH_WALL = 51,
+  TRACE_WL_AGENT_TAKE_DAMAGE_HASH = 52,
+  TRACE_WL_INTER_LEVEL_COMPLETED = 53,
+  TRACE_WL_INTER_VICTORY = 54,
 };
 
 #define TRACE_SYMBOL_MAX 64
@@ -675,6 +723,12 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t cmd_use_hash;
       uint32_t t_player_hash;
       uint32_t thrust_hash;
+      uint32_t spawn_door_hash;
+      uint32_t push_wall_hash;
+      uint32_t take_damage_hash;
+      uint32_t level_completed_hash;
+      uint32_t victory_hash;
+      uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
       int32_t ai_dir = (state->angle_deg / 90) & 3;
@@ -707,6 +761,24 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t button_fire = (input_mask & (1 << 6)) ? 1 : 0;
       int32_t use_pressed = (input_mask & (1 << 7)) ? 1 : 0;
       int32_t thrust_speed_q8 = ((rng >> 4) & 0xff) + 32;
+      int32_t spawn_tile = state->tick & 31;
+      int32_t spawn_lock = (rng >> 3) & 7;
+      int32_t spawn_vertical = (state->tick >> 1) & 1;
+      int32_t push_x = clamp_i32((state->xq8 >> 8) & 7, 0, 7);
+      int32_t push_y = clamp_i32((state->yq8 >> 8) & 7, 0, 7);
+      int32_t push_dir = state->angle_deg / 90;
+      int32_t push_steps = (rng & 7) + 1;
+      int32_t damage_lives = clamp_i32(1 + ((state->flags >> 22) & 3), 0, 9);
+      int32_t damage_value = ((rng >> 2) & 15) + 1;
+      int32_t level_time = 60 + (state->tick & 255);
+      int32_t level_par = 90 + ((state->tick >> 1) & 255);
+      int32_t kills_found = (state->flags >> 9) & 63;
+      int32_t kills_total = 1 + ((state->tick + 63) & 63);
+      int32_t secrets_found = (state->flags >> 5) & 31;
+      int32_t secrets_total = 1 + ((state->tick + 31) & 31);
+      int32_t treasure_found = state->ammo & 31;
+      int32_t treasure_total = 1 + ((state->health + 31) & 31);
+      int32_t victory_time = (state->tick * 3) + 120;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -914,6 +986,36 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->angle_deg,
         thrust_speed_q8
       );
+      trace_hit(TRACE_WL_ACT1_SPAWN_DOOR);
+      spawn_door_hash = oracle_wl_act1_spawn_door_hash(door_mask, door_state, spawn_tile, spawn_lock, spawn_vertical);
+      trace_hit(TRACE_WL_ACT1_PUSH_WALL);
+      push_wall_hash = oracle_wl_act1_push_wall_hash(state->map_lo, state->map_hi, push_x, push_y, push_dir, push_steps);
+      trace_hit(TRACE_WL_AGENT_TAKE_DAMAGE_HASH);
+      take_damage_hash = oracle_wl_agent_take_damage_hash(state->health, damage_lives, damage_value, 0, rng);
+      trace_hit(TRACE_WL_INTER_LEVEL_COMPLETED);
+      level_completed_hash = oracle_wl_inter_level_completed_hash(
+        bonus_score,
+        level_time,
+        level_par,
+        kills_found,
+        kills_total,
+        secrets_found,
+        secrets_total,
+        treasure_found,
+        treasure_total,
+        damage_lives
+      );
+      trace_hit(TRACE_WL_INTER_VICTORY);
+      victory_hash = oracle_wl_inter_victory_hash(
+        bonus_score,
+        victory_time,
+        kills_found,
+        secrets_found,
+        treasure_found,
+        state->tick & 7,
+        (state->tick >> 3) & 3
+      );
+      runtime_probe_mix = spawn_door_hash ^ push_wall_hash ^ take_damage_hash ^ level_completed_hash ^ victory_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
@@ -1030,6 +1132,7 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       } else {
         state->flags &= ~0x8;
       }
+      state->flags ^= (int32_t)(runtime_probe_mix & 0u);
     }
   }
 

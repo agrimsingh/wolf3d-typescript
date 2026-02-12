@@ -67,6 +67,11 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_AGENT.C | Cmd_Use | `done` | called via oracle_wl_agent_cmd_use_hash from runtime player probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | T_Player | `done` | called via oracle_wl_agent_t_player_hash from runtime player probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | Thrust | `done` | called via oracle_wl_agent_thrust_hash from runtime player probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT1.C | SpawnDoor | `done` | called via oracle_wl_act1_spawn_door_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT1.C | PushWall | `done` | called via oracle_wl_act1_push_wall_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | TakeDamage | `done` | called via oracle_wl_agent_take_damage_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_INTER.C | LevelCompleted | `done` | called via oracle_wl_inter_level_completed_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_INTER.C | Victory | `done` | called via oracle_wl_inter_victory_hash from runtime game-state probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

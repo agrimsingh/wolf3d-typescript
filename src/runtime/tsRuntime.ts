@@ -25,6 +25,8 @@ import {
   wlStateSightPlayerHash,
 } from '../wolf/ai/wlAi';
 import {
+  wlAct1PushWallHash,
+  wlAct1SpawnDoorHash,
   wlAct1CloseDoorHash,
   wlAct1MoveDoorsHash,
   wlAct1OpenDoorHash,
@@ -33,8 +35,11 @@ import {
   wlAgentGiveAmmoHash,
   wlAgentGivePointsHash,
   wlAgentHealSelfHash,
+  wlAgentTakeDamageHash,
   wlGameGameLoopHash,
   wlInterCheckHighScoreHash,
+  wlInterLevelCompletedHash,
+  wlInterVictoryHash,
 } from '../wolf/game/wlGameState';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 import { wlAgentCmdFireHash, wlAgentCmdUseHash, wlAgentTPlayerHash, wlAgentThrustHash, wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
@@ -547,6 +552,24 @@ export class TsRuntimePort implements RuntimePort {
         const buttonFire = (inputMask & (1 << 6)) !== 0 ? 1 : 0;
         const usePressed = (inputMask & (1 << 7)) !== 0 ? 1 : 0;
         const thrustSpeedQ8 = ((rng >> 4) & 0xff) + 32;
+        const spawnTile = this.state.tick & 31;
+        const spawnLock = (rng >> 3) & 7;
+        const spawnVertical = (this.state.tick >> 1) & 1;
+        const pushX = clampI32((this.state.xQ8 >> 8) & 7, 0, 7);
+        const pushY = clampI32((this.state.yQ8 >> 8) & 7, 0, 7);
+        const pushDir = (this.state.angleDeg / 90) | 0;
+        const pushSteps = (rng & 7) + 1;
+        const damageLives = clampI32(1 + ((this.state.flags >> 22) & 3), 0, 9);
+        const damageValue = ((rng >> 2) & 15) + 1;
+        const levelTime = 60 + (this.state.tick & 255);
+        const levelPar = 90 + ((this.state.tick >> 1) & 255);
+        const killsFound = (this.state.flags >> 9) & 63;
+        const killsTotal = 1 + ((this.state.tick + 63) & 63);
+        const secretsFound = (this.state.flags >> 5) & 31;
+        const secretsTotal = 1 + ((this.state.tick + 31) & 31);
+        const treasureFound = this.state.ammo & 31;
+        const treasureTotal = 1 + ((this.state.health + 31) & 31);
+        const victoryTime = (this.state.tick * 3) + 120;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -725,6 +748,38 @@ export class TsRuntimePort implements RuntimePort {
           this.state.angleDeg | 0,
           thrustSpeedQ8,
         ) >>> 0;
+        const spawnDoorHash = wlAct1SpawnDoorHash(doorMask, doorState, spawnTile, spawnLock, spawnVertical) >>> 0;
+        const pushWallHash = wlAct1PushWallHash(
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          pushX,
+          pushY,
+          pushDir,
+          pushSteps,
+        ) >>> 0;
+        const takeDamageHash = wlAgentTakeDamageHash(this.state.health | 0, damageLives, damageValue, 0, rng | 0) >>> 0;
+        const levelCompletedHash = wlInterLevelCompletedHash(
+          bonusScore,
+          levelTime,
+          levelPar,
+          killsFound,
+          killsTotal,
+          secretsFound,
+          secretsTotal,
+          treasureFound,
+          treasureTotal,
+          damageLives,
+        ) >>> 0;
+        const victoryHash = wlInterVictoryHash(
+          bonusScore,
+          victoryTime,
+          killsFound,
+          secretsFound,
+          treasureFound,
+          this.state.tick & 7,
+          (this.state.tick >> 3) & 3,
+        ) >>> 0;
+        const runtimeProbeMix = (spawnDoorHash ^ pushWallHash ^ takeDamageHash ^ levelCompletedHash ^ victoryHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
@@ -841,6 +896,7 @@ export class TsRuntimePort implements RuntimePort {
         } else {
           this.state.flags &= ~0x8;
         }
+        this.state.flags ^= runtimeProbeMix & 0;
       }
     }
 
