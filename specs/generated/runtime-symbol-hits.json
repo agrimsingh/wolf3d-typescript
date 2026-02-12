@@ -143,7 +143,12 @@
     87,
     88,
     89,
-    90
+    90,
+    91,
+    92,
+    93,
+    94,
+    95
   ],
   "requiredRuntimeSymbols": [
     {
@@ -685,6 +690,36 @@
       "file": "WL_GAME.C",
       "func": "DrawPlayScreen",
       "notes": "called via oracle_wl_game_draw_play_screen_hash from runtime hud probe"
+    },
+    {
+      "id": 91,
+      "file": "WL_STATE.C",
+      "func": "SelectDodgeDir",
+      "notes": "called via oracle_wl_state_select_dodge_dir_hash from runtime ai probe"
+    },
+    {
+      "id": 92,
+      "file": "WL_STATE.C",
+      "func": "DamageActor",
+      "notes": "called via oracle_wl_state_damage_actor_hash from runtime ai probe"
+    },
+    {
+      "id": 93,
+      "file": "WL_AGENT.C",
+      "func": "TryMove",
+      "notes": "called via oracle_wl_agent_try_move_hash from runtime movement probe"
+    },
+    {
+      "id": 94,
+      "file": "WL_AGENT.C",
+      "func": "ClipMove",
+      "notes": "called via oracle_wl_agent_clip_move_hash from runtime movement probe"
+    },
+    {
+      "id": 95,
+      "file": "WL_AGENT.C",
+      "func": "ControlMovement",
+      "notes": "called via oracle_wl_agent_control_movement_hash from runtime movement probe"
     }
   ],
   "excludedRuntimeSymbols": []

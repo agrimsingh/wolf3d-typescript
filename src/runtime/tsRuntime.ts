@@ -21,7 +21,9 @@ import {
   wlAct2TPathHash,
   wlAct2TProjectileHash,
   wlAct2TShootHash,
+  wlStateDamageActorHash,
   wlStateFirstSightingHash,
+  wlStateSelectDodgeDirHash,
   wlStateSightPlayerHash,
 } from '../wolf/ai/wlAi';
 import {
@@ -45,10 +47,13 @@ import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAge
 import {
   idInReadControlHash,
   idInUserInput,
+  wlAgentClipMoveHash,
   wlAgentCmdFireHash,
   wlAgentCmdUseHash,
+  wlAgentControlMovementHash,
   wlAgentTPlayerHash,
   wlAgentThrustHash,
+  wlAgentTryMoveHash,
   wlPlayPlayLoopHash,
 } from '../wolf/player/wlPlayer';
 import {
@@ -1061,6 +1066,63 @@ export class TsRuntimePort implements RuntimePort {
           playScreenLoc2,
           playScreenStatusBarPic,
         ) >>> 0;
+        const selectDodgeDirHash = wlStateSelectDodgeDirHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
+        const damageActorHash = wlStateDamageActorHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          damageValue,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
+        const agentTryMoveHash = wlAgentTryMoveHash(
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+          strafe | 0,
+          forward | 0,
+        ) >>> 0;
+        const agentClipMoveHash = wlAgentClipMoveHash(
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+          strafe | 0,
+          forward | 0,
+        ) >>> 0;
+        const agentControlMovementHash = wlAgentControlMovementHash(
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+          this.state.angleDeg | 0,
+          forward | 0,
+          strafe | 0,
+          turn | 0,
+        ) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1102,7 +1164,12 @@ export class TsRuntimePort implements RuntimePort {
             setupScalingHash ^
             scaleShapeHash ^
             simpleScaleShapeHash ^
-            drawPlayScreenHash) >>> 0;
+            drawPlayScreenHash ^
+            selectDodgeDirHash ^
+            damageActorHash ^
+            agentTryMoveHash ^
+            agentClipMoveHash ^
+            agentControlMovementHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

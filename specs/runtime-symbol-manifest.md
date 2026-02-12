@@ -108,6 +108,11 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_SCALE.C | ScaleShape | `done` | called via oracle_wl_scale_scale_shape_hash from runtime scale probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_SCALE.C | SimpleScaleShape | `done` | called via oracle_wl_scale_simple_scale_shape_hash from runtime scale probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_GAME.C | DrawPlayScreen | `done` | called via oracle_wl_game_draw_play_screen_hash from runtime hud probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | SelectDodgeDir | `done` | called via oracle_wl_state_select_dodge_dir_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | DamageActor | `done` | called via oracle_wl_state_damage_actor_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | TryMove | `done` | called via oracle_wl_agent_try_move_hash from runtime movement probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | ClipMove | `done` | called via oracle_wl_agent_clip_move_hash from runtime movement probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | ControlMovement | `done` | called via oracle_wl_agent_control_movement_hash from runtime movement probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

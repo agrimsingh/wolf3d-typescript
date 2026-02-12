@@ -160,6 +160,32 @@ uint32_t oracle_wl_agent_cmd_fire_hash(
   int32_t cooldown,
   int32_t button_fire
 );
+uint32_t oracle_wl_agent_try_move_hash(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t xq8,
+  int32_t yq8,
+  int32_t dxq8,
+  int32_t dyq8
+);
+uint32_t oracle_wl_agent_clip_move_hash(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t xq8,
+  int32_t yq8,
+  int32_t dxq8,
+  int32_t dyq8
+);
+uint32_t oracle_wl_agent_control_movement_hash(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t xq8,
+  int32_t yq8,
+  int32_t angle_deg,
+  int32_t forward_q8,
+  int32_t strafe_q8,
+  int32_t turn_deg
+);
 uint32_t oracle_wl_agent_cmd_use_hash(
   uint32_t map_lo,
   uint32_t map_hi,
@@ -412,6 +438,37 @@ uint32_t oracle_wl_state_sight_player_hash(
   int32_t flags,
   int32_t rng,
   int32_t can_see_hint,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_state_select_dodge_dir_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_state_damage_actor_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  int32_t damage,
   uint32_t map_lo,
   uint32_t map_hi
 );
@@ -748,6 +805,11 @@ enum runtime_trace_symbol_e {
   TRACE_WL_SCALE_SCALE_SHAPE = 88,
   TRACE_WL_SCALE_SIMPLE_SCALE_SHAPE = 89,
   TRACE_WL_GAME_DRAW_PLAY_SCREEN = 90,
+  TRACE_WL_STATE_SELECT_DODGE_DIR = 91,
+  TRACE_WL_STATE_DAMAGE_ACTOR = 92,
+  TRACE_WL_AGENT_TRY_MOVE_HASH = 93,
+  TRACE_WL_AGENT_CLIP_MOVE_HASH = 94,
+  TRACE_WL_AGENT_CONTROL_MOVEMENT_HASH = 95,
 };
 
 #define TRACE_SYMBOL_MAX 96
@@ -1071,6 +1133,11 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t scale_shape_hash;
       uint32_t simple_scale_shape_hash;
       uint32_t draw_play_screen_hash;
+      uint32_t select_dodge_dir_hash;
+      uint32_t damage_actor_hash;
+      uint32_t agent_try_move_hash;
+      uint32_t agent_clip_move_hash;
+      uint32_t agent_control_movement_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -1648,6 +1715,68 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         play_screen_screenloc2,
         play_screen_statusbarpic
       );
+      trace_hit(TRACE_WL_STATE_SELECT_DODGE_DIR);
+      select_dodge_dir_hash = oracle_wl_state_select_dodge_dir_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_STATE_DAMAGE_ACTOR);
+      damage_actor_hash = oracle_wl_state_damage_actor_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        damage_value,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_AGENT_TRY_MOVE_HASH);
+      agent_try_move_hash = oracle_wl_agent_try_move_hash(
+        state->map_lo,
+        state->map_hi,
+        state->xq8,
+        state->yq8,
+        strafe,
+        forward
+      );
+      trace_hit(TRACE_WL_AGENT_CLIP_MOVE_HASH);
+      agent_clip_move_hash = oracle_wl_agent_clip_move_hash(
+        state->map_lo,
+        state->map_hi,
+        state->xq8,
+        state->yq8,
+        strafe,
+        forward
+      );
+      trace_hit(TRACE_WL_AGENT_CONTROL_MOVEMENT_HASH);
+      agent_control_movement_hash = oracle_wl_agent_control_movement_hash(
+        state->map_lo,
+        state->map_hi,
+        state->xq8,
+        state->yq8,
+        state->angle_deg,
+        forward,
+        strafe,
+        turn
+      );
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -1689,7 +1818,12 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         setup_scaling_hash ^
         scale_shape_hash ^
         simple_scale_shape_hash ^
-        draw_play_screen_hash;
+        draw_play_screen_hash ^
+        select_dodge_dir_hash ^
+        damage_actor_hash ^
+        agent_try_move_hash ^
+        agent_clip_move_hash ^
+        agent_control_movement_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
