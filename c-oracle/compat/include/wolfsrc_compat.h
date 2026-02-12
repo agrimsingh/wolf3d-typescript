@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <errno.h>
+#include <sys/stat.h>
 
 #ifndef far
 #define far
@@ -53,6 +54,15 @@
 #endif
 #ifndef O_TEXT
 #define O_TEXT 0
+#endif
+#ifndef S_IREAD
+#define S_IREAD S_IRUSR
+#endif
+#ifndef S_IWRITE
+#define S_IWRITE S_IWUSR
+#endif
+#ifndef S_IFREG
+#define S_IFREG 0100000
 #endif
 #ifndef MK_FP
 #define MK_FP(seg, ofs) ((void *)((uintptr_t)(ofs)))
