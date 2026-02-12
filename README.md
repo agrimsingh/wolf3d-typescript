@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Port (Oracle-Driven)
 
-This repository ports Wolfenstein 3D runtime behavior from the original C codebase in `/Users/agrim/Downloads/ai fun projects/wolf3d-master/WOLFSRC` to TypeScript that runs in the browser.
+This repository ports Wolfenstein 3D runtime behavior from the original C codebase (`WOLFSRC`) to TypeScript that runs in the browser.
 
 The implementation model is strict parity:
 
@@ -31,17 +31,17 @@ The implementation model is strict parity:
 ## Runtime Targets
 
 - Canonical runtime data: WL6 (`MAPHEAD.WL6`, `GAMEMAPS.WL6`, `VSWAP.WL6`) pinned by checksum.
-- Modern supplemental assets: `/Users/agrim/Downloads/wolf3d-assets.zip` via deterministic mapping manifests.
+- Modern supplemental assets: local `wolf3d-assets.zip` via deterministic mapping manifests.
 - Production runtime: pure TypeScript.
 - Oracle runtime: test-only reference.
 
 ## Repository Map
 
-- `/Users/agrim/Downloads/ai fun projects/wolf3d-typescript/src/`: runtime, renderer, app, oracle interfaces.
-- `/Users/agrim/Downloads/ai fun projects/wolf3d-typescript/specs/`: execution specs, parity strategy, manifests, generated locks.
-- `/Users/agrim/Downloads/ai fun projects/wolf3d-typescript/scripts/`: wasm prep/build, runtime verification, CI helpers.
-- `/Users/agrim/Downloads/ai fun projects/wolf3d-typescript/test/`: property tests, smoke tests, replay artifacts.
-- `/Users/agrim/Downloads/ai fun projects/wolf3d-typescript/assets/`: game assets and validation scripts.
+- [`src/`](./src): runtime, renderer, app, oracle interfaces.
+- [`specs/`](./specs): execution specs, parity strategy, manifests, generated locks.
+- [`scripts/`](./scripts): wasm prep/build, runtime verification, CI helpers.
+- [`test/`](./test): property tests, smoke tests, replay artifacts.
+- [`assets/`](./assets): game assets and validation scripts.
 
 ## Commands
 
@@ -57,7 +57,7 @@ The implementation model is strict parity:
 
 ## Immediate TODO Direction
 
-See `/Users/agrim/Downloads/ai fun projects/wolf3d-typescript/TODO.md` for the active K-phase state machine:
+See [`TODO.md`](./TODO.md) for the active K-phase state machine:
 
 - K0: baseline/reset + README/spec truthing.
 - K1-K12: WL6 source lock, asset mapping, parity waves, production swap, CI freeze, merge.
