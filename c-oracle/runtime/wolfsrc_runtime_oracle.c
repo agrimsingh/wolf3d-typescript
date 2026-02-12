@@ -255,6 +255,39 @@ uint32_t oracle_wl_game_play_sound_loc_global_hash(
   int32_t listener_y,
   int32_t channel_busy
 );
+uint32_t oracle_id_in_read_control_hash(
+  int32_t key_mask,
+  int32_t mouse_dx,
+  int32_t mouse_dy,
+  int32_t button_mask
+);
+int32_t oracle_id_in_user_input(
+  int32_t delay_tics,
+  int32_t input_mask,
+  int32_t rng
+);
+uint32_t oracle_id_sd_sd_set_sound_mode_hash(
+  int32_t current_mode,
+  int32_t requested_mode,
+  int32_t has_device
+);
+uint32_t oracle_id_sd_sd_set_music_mode_hash(
+  int32_t current_mode,
+  int32_t requested_mode,
+  int32_t has_device
+);
+uint32_t oracle_id_sd_sd_play_sound_hash(
+  int32_t sound_mode,
+  int32_t sound_id,
+  int32_t priority,
+  int32_t current_priority,
+  int32_t channel_busy
+);
+uint32_t oracle_id_sd_sd_stop_sound_hash(
+  int32_t channel_busy,
+  int32_t current_sound,
+  int32_t current_priority
+);
 uint32_t oracle_wl_state_first_sighting_hash(
   int32_t ax,
   int32_t ay,
@@ -467,6 +500,12 @@ enum runtime_trace_symbol_e {
   TRACE_WL_GAME_SET_SOUND_LOC = 55,
   TRACE_WL_GAME_UPDATE_SOUND_LOC = 56,
   TRACE_WL_GAME_PLAY_SOUND_LOC_GLOBAL = 57,
+  TRACE_ID_IN_READ_CONTROL = 58,
+  TRACE_ID_IN_USER_INPUT = 59,
+  TRACE_ID_SD_SET_SOUND_MODE = 60,
+  TRACE_ID_SD_SET_MUSIC_MODE = 61,
+  TRACE_ID_SD_PLAY_SOUND = 62,
+  TRACE_ID_SD_STOP_SOUND = 63,
 };
 
 #define TRACE_SYMBOL_MAX 64
@@ -757,6 +796,12 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t sound_loc_hash;
       uint32_t update_sound_loc_hash;
       uint32_t play_sound_loc_hash;
+      uint32_t read_control_hash;
+      int32_t user_input_value;
+      uint32_t set_sound_mode_hash;
+      uint32_t set_music_mode_hash;
+      uint32_t play_sound_hash;
+      uint32_t stop_sound_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -817,6 +862,18 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t sound_mode = state->tick & 3;
       int32_t sound_id = rng & 0xff;
       int32_t channel_busy = (state->flags & 0x10) ? 1 : 0;
+      int32_t key_mask = input_mask & 0xff;
+      int32_t mouse_dx = (rng & 63) - 32;
+      int32_t mouse_dy = ((rng >> 6) & 63) - 32;
+      int32_t button_mask = (input_mask >> 6) & 3;
+      int32_t delay_tics = (state->tick & 7) + 1;
+      int32_t has_device = 1;
+      int32_t requested_sound_mode = rng & 7;
+      int32_t requested_music_mode = (rng >> 3) & 7;
+      int32_t current_sound_mode = state->flags & 3;
+      int32_t current_music_mode = (state->flags >> 2) & 3;
+      int32_t play_priority = ((rng >> 4) & 15) - 8;
+      int32_t current_priority = ((rng >> 8) & 15) - 8;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -1074,6 +1131,18 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         listener_y,
         channel_busy
       );
+      trace_hit(TRACE_ID_IN_READ_CONTROL);
+      read_control_hash = oracle_id_in_read_control_hash(key_mask, mouse_dx, mouse_dy, button_mask);
+      trace_hit(TRACE_ID_IN_USER_INPUT);
+      user_input_value = oracle_id_in_user_input(delay_tics, input_mask, rng);
+      trace_hit(TRACE_ID_SD_SET_SOUND_MODE);
+      set_sound_mode_hash = oracle_id_sd_sd_set_sound_mode_hash(current_sound_mode, requested_sound_mode, has_device);
+      trace_hit(TRACE_ID_SD_SET_MUSIC_MODE);
+      set_music_mode_hash = oracle_id_sd_sd_set_music_mode_hash(current_music_mode, requested_music_mode, has_device);
+      trace_hit(TRACE_ID_SD_PLAY_SOUND);
+      play_sound_hash = oracle_id_sd_sd_play_sound_hash(sound_mode, sound_id, play_priority, current_priority, channel_busy);
+      trace_hit(TRACE_ID_SD_STOP_SOUND);
+      stop_sound_hash = oracle_id_sd_sd_stop_sound_hash(channel_busy, sound_id, current_priority);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -1082,7 +1151,13 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         victory_hash ^
         sound_loc_hash ^
         update_sound_loc_hash ^
-        play_sound_loc_hash;
+        play_sound_loc_hash ^
+        read_control_hash ^
+        ((uint32_t)user_input_value) ^
+        set_sound_mode_hash ^
+        set_music_mode_hash ^
+        play_sound_hash ^
+        stop_sound_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

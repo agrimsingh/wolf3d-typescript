@@ -93,6 +93,12 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 55, file: 'WL_GAME.C', func: 'SetSoundLoc', notes: 'called via oracle_wl_game_set_sound_loc_hash from runtime audio probe' },
   { id: 56, file: 'WL_GAME.C', func: 'UpdateSoundLoc', notes: 'called via oracle_wl_game_update_sound_loc_hash from runtime audio probe' },
   { id: 57, file: 'WL_GAME.C', func: 'PlaySoundLocGlobal', notes: 'called via oracle_wl_game_play_sound_loc_global_hash from runtime audio probe' },
+  { id: 58, file: 'ID_IN.C', func: 'IN_ReadControl', notes: 'called via oracle_id_in_read_control_hash from runtime input probe' },
+  { id: 59, file: 'ID_IN.C', func: 'IN_UserInput', notes: 'called via oracle_id_in_user_input from runtime input probe' },
+  { id: 60, file: 'ID_SD.C', func: 'SD_SetSoundMode', notes: 'called via oracle_id_sd_sd_set_sound_mode_hash from runtime audio probe' },
+  { id: 61, file: 'ID_SD.C', func: 'SD_SetMusicMode', notes: 'called via oracle_id_sd_sd_set_music_mode_hash from runtime audio probe' },
+  { id: 62, file: 'ID_SD.C', func: 'SD_PlaySound', notes: 'called via oracle_id_sd_sd_play_sound_hash from runtime audio probe' },
+  { id: 63, file: 'ID_SD.C', func: 'SD_StopSound', notes: 'called via oracle_id_sd_sd_stop_sound_hash from runtime audio probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -155,6 +161,12 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [55, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [56, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [57, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [58, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [59, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [60, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [61, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [62, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [63, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

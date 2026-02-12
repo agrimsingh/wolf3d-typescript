@@ -110,7 +110,13 @@
     54,
     55,
     56,
-    57
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
   ],
   "requiredRuntimeSymbols": [
     {
@@ -454,6 +460,42 @@
       "file": "WL_GAME.C",
       "func": "PlaySoundLocGlobal",
       "notes": "called via oracle_wl_game_play_sound_loc_global_hash from runtime audio probe"
+    },
+    {
+      "id": 58,
+      "file": "ID_IN.C",
+      "func": "IN_ReadControl",
+      "notes": "called via oracle_id_in_read_control_hash from runtime input probe"
+    },
+    {
+      "id": 59,
+      "file": "ID_IN.C",
+      "func": "IN_UserInput",
+      "notes": "called via oracle_id_in_user_input from runtime input probe"
+    },
+    {
+      "id": 60,
+      "file": "ID_SD.C",
+      "func": "SD_SetSoundMode",
+      "notes": "called via oracle_id_sd_sd_set_sound_mode_hash from runtime audio probe"
+    },
+    {
+      "id": 61,
+      "file": "ID_SD.C",
+      "func": "SD_SetMusicMode",
+      "notes": "called via oracle_id_sd_sd_set_music_mode_hash from runtime audio probe"
+    },
+    {
+      "id": 62,
+      "file": "ID_SD.C",
+      "func": "SD_PlaySound",
+      "notes": "called via oracle_id_sd_sd_play_sound_hash from runtime audio probe"
+    },
+    {
+      "id": 63,
+      "file": "ID_SD.C",
+      "func": "SD_StopSound",
+      "notes": "called via oracle_id_sd_sd_stop_sound_hash from runtime audio probe"
     }
   ],
   "excludedRuntimeSymbols": []

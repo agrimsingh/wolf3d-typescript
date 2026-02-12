@@ -75,6 +75,12 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_GAME.C | SetSoundLoc | `done` | called via oracle_wl_game_set_sound_loc_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_GAME.C | UpdateSoundLoc | `done` | called via oracle_wl_game_update_sound_loc_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_GAME.C | PlaySoundLocGlobal | `done` | called via oracle_wl_game_play_sound_loc_global_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_IN.C | IN_ReadControl | `done` | called via oracle_id_in_read_control_hash from runtime input probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_IN.C | IN_UserInput | `done` | called via oracle_id_in_user_input from runtime input probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_SD.C | SD_SetSoundMode | `done` | called via oracle_id_sd_sd_set_sound_mode_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_SD.C | SD_SetMusicMode | `done` | called via oracle_id_sd_sd_set_music_mode_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_SD.C | SD_PlaySound | `done` | called via oracle_id_sd_sd_play_sound_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_SD.C | SD_StopSound | `done` | called via oracle_id_sd_sd_stop_sound_hash from runtime audio probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

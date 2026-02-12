@@ -242,6 +242,12 @@ describe('runtime step parity', () => {
     expect(a.includes(55)).toBe(true); // WL_GAME.SetSoundLoc
     expect(a.includes(56)).toBe(true); // WL_GAME.UpdateSoundLoc
     expect(a.includes(57)).toBe(true); // WL_GAME.PlaySoundLocGlobal
+    expect(a.includes(58)).toBe(true); // ID_IN.IN_ReadControl
+    expect(a.includes(59)).toBe(true); // ID_IN.IN_UserInput
+    expect(a.includes(60)).toBe(true); // ID_SD.SD_SetSoundMode
+    expect(a.includes(61)).toBe(true); // ID_SD.SD_SetMusicMode
+    expect(a.includes(62)).toBe(true); // ID_SD.SD_PlaySound
+    expect(a.includes(63)).toBe(true); // ID_SD.SD_StopSound
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

@@ -42,9 +42,25 @@ import {
   wlInterVictoryHash,
 } from '../wolf/game/wlGameState';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
-import { wlAgentCmdFireHash, wlAgentCmdUseHash, wlAgentTPlayerHash, wlAgentThrustHash, wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
+import {
+  idInReadControlHash,
+  idInUserInput,
+  wlAgentCmdFireHash,
+  wlAgentCmdUseHash,
+  wlAgentTPlayerHash,
+  wlAgentThrustHash,
+  wlPlayPlayLoopHash,
+} from '../wolf/player/wlPlayer';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
-import { wlGamePlaySoundLocGlobalHash, wlGameSetSoundLocHash, wlGameUpdateSoundLocHash } from '../wolf/audio/wlAudio';
+import {
+  idSdPlaySoundHash,
+  idSdSetMusicModeHash,
+  idSdSetSoundModeHash,
+  idSdStopSoundHash,
+  wlGamePlaySoundLocGlobalHash,
+  wlGameSetSoundLocHash,
+  wlGameUpdateSoundLocHash,
+} from '../wolf/audio/wlAudio';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
 
@@ -580,6 +596,18 @@ export class TsRuntimePort implements RuntimePort {
         const soundMode = this.state.tick & 3;
         const soundId = rng & 0xff;
         const channelBusy = (this.state.flags & 0x10) !== 0 ? 1 : 0;
+        const keyMask = inputMask & 0xff;
+        const mouseDx = (rng & 63) - 32;
+        const mouseDy = ((rng >> 6) & 63) - 32;
+        const buttonMask = (inputMask >> 6) & 3;
+        const delayTics = (this.state.tick & 7) + 1;
+        const hasDevice = 1;
+        const requestedSoundMode = rng & 7;
+        const requestedMusicMode = (rng >> 3) & 7;
+        const currentSoundMode = this.state.flags & 3;
+        const currentMusicMode = (this.state.flags >> 2) & 3;
+        const playPriority = ((rng >> 4) & 15) - 8;
+        const currentPriority = ((rng >> 8) & 15) - 8;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -800,6 +828,12 @@ export class TsRuntimePort implements RuntimePort {
           listenerY,
           channelBusy,
         ) >>> 0;
+        const readControlHash = idInReadControlHash(keyMask, mouseDx, mouseDy, buttonMask) >>> 0;
+        const userInputValue = idInUserInput(delayTics, inputMask | 0, rng | 0) | 0;
+        const setSoundModeHash = idSdSetSoundModeHash(currentSoundMode, requestedSoundMode, hasDevice) >>> 0;
+        const setMusicModeHash = idSdSetMusicModeHash(currentMusicMode, requestedMusicMode, hasDevice) >>> 0;
+        const playSoundHash = idSdPlaySoundHash(soundMode, soundId, playPriority, currentPriority, channelBusy) >>> 0;
+        const stopSoundHash = idSdStopSoundHash(channelBusy, soundId, currentPriority) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -808,7 +842,13 @@ export class TsRuntimePort implements RuntimePort {
             victoryHash ^
             soundLocHash ^
             updateSoundLocHash ^
-            playSoundLocHash) >>> 0;
+            playSoundLocHash ^
+            readControlHash ^
+            (userInputValue >>> 0) ^
+            setSoundModeHash ^
+            setMusicModeHash ^
+            playSoundHash ^
+            stopSoundHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
