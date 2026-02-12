@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K5` active)  
+**Status:** In Progress (`K6` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -73,15 +73,15 @@
 
 ## K5: Symbol Classification Refresh (WL6)
 
-- [ ] Regenerate runtime hits/classification from real WL6 traces.
-- [ ] Rebuild `specs/runtime-symbol-manifest.md`.
-- [ ] Enforce zero unclassified symbols.
-- [ ] Gate: `pnpm runtime:manifest:extract`
-- [ ] Gate: `pnpm runtime:classification:verify`
-- [ ] Gate: `pnpm runtime:manifest:verify`
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k5: wl6 runtime symbol manifest freeze`)
+- [x] Regenerate runtime hits/classification from real WL6 traces.
+- [x] Rebuild `specs/runtime-symbol-manifest.md`.
+- [x] Enforce zero unclassified symbols.
+- [x] Gate: `pnpm runtime:manifest:extract`
+- [x] Gate: `pnpm runtime:classification:verify`
+- [x] Gate: `pnpm runtime:manifest:verify`
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k5: wl6 runtime symbol manifest freeze`)
 
 ## K6: TS Parity Wave A (Cache/Memory/Map)
 

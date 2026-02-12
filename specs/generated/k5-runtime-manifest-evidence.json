@@ -1,0 +1,22 @@
+{
+  "phase": "K5",
+  "timestamp": "2026-02-12",
+  "commands": [
+    "pnpm runtime:manifest:extract",
+    "pnpm runtime:classification:verify",
+    "pnpm runtime:manifest:verify"
+  ],
+  "results": {
+    "totalSymbols": 568,
+    "requiredRuntime": 130,
+    "excludedNonRuntime": 438,
+    "unclassified": 0,
+    "runtimeTraceHits": 169,
+    "manifestVerification": "pass"
+  },
+  "agentBrowser": {
+    "session": "k5",
+    "scriptedRunArtifact": "artifacts/agent-browser/k5/scripted-run.json",
+    "notes": "Scripted run reached intermission transition (`postNMode=intermission`) and rolled into next-load state."
+  }
+}
