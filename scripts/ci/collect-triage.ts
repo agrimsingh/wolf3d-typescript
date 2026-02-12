@@ -29,6 +29,33 @@ async function maybeReadJson(filePath: string): Promise<Record<string, unknown> 
   }
 }
 
+function asUint(value: unknown): number | null {
+  const n = Number(value);
+  if (!Number.isFinite(n)) {
+    return null;
+  }
+  return n >>> 0;
+}
+
+function formatDigestDiff(label: string, generated: Record<string, unknown> | null, lock: Record<string, unknown> | null, key: string): string {
+  const generatedDigest = asUint(generated?.[key]);
+  const lockDigest = asUint(lock?.[key]);
+  if (generatedDigest === null || lockDigest === null) {
+    return `- ${label}: n/a`;
+  }
+  const status = generatedDigest === lockDigest ? 'match' : 'drift';
+  return `- ${label}: generated=${generatedDigest} lock=${lockDigest} status=${status}`;
+}
+
+function describeRepro(record: Record<string, unknown>, fallbackPath: string): string {
+  const suite = String(record.suite ?? 'unknown');
+  const seed = Number(record.seed ?? NaN);
+  const path = String(record.path ?? '');
+  const seedText = Number.isFinite(seed) ? String(seed | 0) : 'n/a';
+  const pathText = path.trim().length > 0 ? path : 'n/a';
+  return `- ${fallbackPath} (suite=${suite}, seed=${seedText}, path=${pathText})`;
+}
+
 async function main(): Promise<void> {
   const root = process.cwd();
   const reproRoot = path.join(root, 'test', 'repro');
@@ -37,7 +64,9 @@ async function main(): Promise<void> {
 
   const reproFiles = await listJsonFiles(reproRoot);
   const runtimeEpisode = await maybeReadJson(path.join(root, 'specs', 'generated', 'runtime-episode-checkpoints.json'));
+  const runtimeEpisodeLock = await maybeReadJson(path.join(root, 'specs', 'generated', 'runtime-episode-checkpoints-lock.json'));
   const runtimeCheckpoints = await maybeReadJson(path.join(root, 'specs', 'generated', 'runtime-checkpoints.json'));
+  const runtimeCheckpointsLock = await maybeReadJson(path.join(root, 'specs', 'generated', 'runtime-checkpoints-lock.json'));
 
   const lines: string[] = [];
   lines.push('# CI Triage Summary');
@@ -49,15 +78,19 @@ async function main(): Promise<void> {
     lines.push('- none');
   } else {
     for (const file of reproFiles) {
-      lines.push(`- ${path.relative(root, file)}`);
+      const rel = path.relative(root, file);
+      const record = await maybeReadJson(file);
+      if (!record) {
+        lines.push(`- ${rel}`);
+        continue;
+      }
+      lines.push(describeRepro(record, rel));
     }
   }
   lines.push('');
-  lines.push('## Runtime Digests');
-  const episodeDigest = Number(runtimeEpisode?.episodeDigest ?? NaN);
-  const checkpointDigest = Number(runtimeCheckpoints?.checkpointDigest ?? NaN);
-  lines.push(`- runtime episode digest: ${Number.isFinite(episodeDigest) ? (episodeDigest >>> 0).toString() : 'n/a'}`);
-  lines.push(`- runtime checkpoint digest: ${Number.isFinite(checkpointDigest) ? (checkpointDigest >>> 0).toString() : 'n/a'}`);
+  lines.push('## Runtime Trace Diffs');
+  lines.push(formatDigestDiff('runtime episode digest', runtimeEpisode, runtimeEpisodeLock, 'episodeDigest'));
+  lines.push(formatDigestDiff('runtime checkpoint digest', runtimeCheckpoints, runtimeCheckpointsLock, 'checkpointDigest'));
   lines.push('');
 
   await mkdir(artifactsDir, { recursive: true });

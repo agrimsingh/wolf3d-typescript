@@ -94,13 +94,16 @@
 
 ## Phase F7: Remote CI Hardening + Release Gates
 
-- [ ] Enforce vendored-source + emsdk setup in `.github/workflows/parity-pr.yml`.
-- [ ] Enforce vendored-source + emsdk setup in `.github/workflows/parity-10k.yml`.
-- [ ] Keep PR 1k targeted parity + mandatory runtime e2e smoke parity.
-- [ ] Keep nightly/release 10k shards + episode parity + browser smoke/build.
-- [ ] Ensure triage artifacts include seed/path/repro + trace diffs.
-- [ ] Gate: 3 consecutive green runs for PR and nightly workflows.
-- [ ] Commit: `phase-f7: remote ci parity gates stabilized`
+- [x] Enforce vendored-source + emsdk setup in `.github/workflows/parity-pr.yml`.
+- [x] Enforce vendored-source + emsdk setup in `.github/workflows/parity-10k.yml`.
+- [x] Keep PR 1k targeted parity + mandatory runtime e2e smoke parity.
+- [x] Keep nightly/release 10k shards + episode parity + browser smoke/build.
+- [x] Ensure triage artifacts include seed/path/repro + trace diffs.
+- [x] Gate: 3 consecutive green runs for PR and nightly workflows.
+  - Evidence (2026-02-12):
+    - `parity-pr`: `21942569861`, `21942444879`, `21942313625` (all success)
+    - `parity-10k`: `21942620377`, `21942620230`, `21935039117` (all success)
+- [x] Commit: `phase-f7: remote ci parity gates stabilized`
 
 ## Phase F8: Final Acceptance + Done Freeze
 
