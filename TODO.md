@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime Parity TODO (R-Phases)
 
-**Status:** In Progress (`R0` active)  
+**Status:** In Progress (`R6` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -62,16 +62,16 @@
 - [x] Gate: local 1k + CI 10k parity for all R4 functions
 - [x] Gate: deterministic representative level-load trace parity
 - [x] Tests green
-- [ ] Phase commit pushed (`r4: map-memory-cache runtime parity`)
+- [x] Phase commit pushed (`r4: map-memory-cache runtime parity`)
 
 ## R5: TS Port Wave B (Renderer Core)
 
-- [ ] Port runtime-faithful renderer behavior from `WL_DRAW.C`, `WL_SCALE.C`, `ID_VH.C`, `ID_VL.C`.
-- [ ] Verify deterministic indexed framebuffer output semantics.
-- [ ] Gate: function-level parity suites green
-- [ ] Gate: per-tic exact indexed framebuffer parity on deterministic traces
-- [ ] Tests green
-- [ ] Phase commit pushed (`r5: renderer runtime parity`)
+- [x] Port runtime-faithful renderer behavior from `WL_DRAW.C`, `WL_SCALE.C`, `ID_VH.C`, `ID_VL.C`.
+- [x] Verify deterministic indexed framebuffer output semantics.
+- [x] Gate: function-level parity suites green
+- [x] Gate: per-tic exact indexed framebuffer parity on deterministic traces
+- [x] Tests green
+- [x] Phase commit pushed (`r5: renderer runtime parity`)
 
 ## R6: TS Port Wave C (Player, Doors, Game Loop)
 

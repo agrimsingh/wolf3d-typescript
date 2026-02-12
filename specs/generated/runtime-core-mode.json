@@ -1,5 +1,5 @@
 {
-  "phase": "R0",
+  "phase": "R5",
   "mode": "real",
-  "notes": "R-phase execution baseline: browser runtime defaults to WolfsrcOraclePort, but runtime behavior remains synthetic-harness and not gameplay-complete."
+  "notes": "R5 renderer parity gate is green; browser runtime still defaults to WolfsrcOraclePort while TS runtime parity waves continue."
 }
