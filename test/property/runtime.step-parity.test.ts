@@ -4,7 +4,14 @@ import { withReplay } from './replay';
 import { getNumRuns, getSeed } from './config';
 import { WolfsrcOraclePort } from '../../src/oracle/runtimeOracle';
 import { TsRuntimePort } from '../../src/runtime/tsRuntime';
-import type { RuntimeConfig } from '../../src/runtime/contracts';
+import type { RuntimeConfig, RuntimeInput } from '../../src/runtime/contracts';
+import {
+  assertRuntimeTraceParity,
+  captureRuntimeTrace,
+  RuntimeParityError,
+  type RuntimeParityScenario,
+} from '../../src/runtime/parityHarness';
+import { persistRuntimeRepro } from './runtimeRepro';
 
 function makeMapBits(seed: number): { lo: number; hi: number } {
   let lo = 0;
@@ -36,6 +43,57 @@ describe('runtime step parity', () => {
     await tsRuntime.shutdown();
   });
 
+  function buildScenario(
+    mapSeed: number,
+    startXQ8: number,
+    startYQ8: number,
+    startAngleDeg: number,
+    startHealth: number,
+    startAmmo: number,
+    steps: RuntimeInput[],
+  ): RuntimeParityScenario {
+    const map = makeMapBits(mapSeed >>> 0);
+    return {
+      id: `seed-${mapSeed >>> 0}`,
+      config: {
+        mapLo: map.lo,
+        mapHi: map.hi,
+        startXQ8,
+        startYQ8,
+        startAngleDeg,
+        startHealth,
+        startAmmo,
+      },
+      steps,
+    };
+  }
+
+  async function captureParityOrPersist(suite: string, scenario: RuntimeParityScenario): Promise<void> {
+    let oracleTrace;
+    let tsTrace;
+    try {
+      oracleTrace = await captureRuntimeTrace(oracle, scenario);
+      tsTrace = await captureRuntimeTrace(tsRuntime, scenario);
+      assertRuntimeTraceParity(scenario, oracleTrace, tsTrace);
+    } catch (error) {
+      const jsonError =
+        error instanceof RuntimeParityError
+          ? error.toJSON()
+          : {
+              error: error instanceof Error ? error.message : String(error),
+            };
+      persistRuntimeRepro({
+        suite,
+        timestamp: new Date().toISOString(),
+        scenario,
+        oracleTrace,
+        tsTrace,
+        error: jsonError,
+      });
+      throw error;
+    }
+  }
+
   it('step/replay parity matches between oracle and ts runtime', async () => {
     await withReplay('runtime.step-parity.sequence', async () => {
       await fc.assert(
@@ -55,39 +113,8 @@ describe('runtime step parity', () => {
             { minLength: 1, maxLength: 25 },
           ),
           async (mapSeed, startXQ8, startYQ8, startAngleDeg, startHealth, startAmmo, steps) => {
-            const map = makeMapBits(mapSeed >>> 0);
-            const config: RuntimeConfig = {
-              mapLo: map.lo,
-              mapHi: map.hi,
-              startXQ8,
-              startYQ8,
-              startAngleDeg,
-              startHealth,
-              startAmmo,
-            };
-
-            await oracle.init(config);
-            await tsRuntime.init(config);
-
-            for (const stepInput of steps) {
-              const oracleStep = oracle.step(stepInput);
-              const tsStep = tsRuntime.step(stepInput);
-              expect(tsStep.snapshotHash >>> 0).toBe(oracleStep.snapshotHash >>> 0);
-              expect(tsStep.frameHash >>> 0).toBe(oracleStep.frameHash >>> 0);
-              expect(tsStep.tick | 0).toBe(oracleStep.tick | 0);
-            }
-
-            const oracleSnap = oracle.snapshot();
-            const tsSnap = tsRuntime.snapshot();
-            expect(tsSnap.hash >>> 0).toBe(oracleSnap.hash >>> 0);
-            expect(tsSnap.xQ8 | 0).toBe(oracleSnap.xQ8 | 0);
-            expect(tsSnap.yQ8 | 0).toBe(oracleSnap.yQ8 | 0);
-            expect(tsSnap.angleDeg | 0).toBe(oracleSnap.angleDeg | 0);
-            expect(tsSnap.health | 0).toBe(oracleSnap.health | 0);
-            expect(tsSnap.ammo | 0).toBe(oracleSnap.ammo | 0);
-            expect(tsSnap.cooldown | 0).toBe(oracleSnap.cooldown | 0);
-            expect(tsSnap.flags | 0).toBe(oracleSnap.flags | 0);
-            expect(tsSnap.tick | 0).toBe(oracleSnap.tick | 0);
+            const scenario = buildScenario(mapSeed, startXQ8, startYQ8, startAngleDeg, startHealth, startAmmo, steps);
+            await captureParityOrPersist('runtime.step-parity.sequence', scenario);
           },
         ),
         { numRuns: getNumRuns(), seed: getSeed() },
@@ -114,21 +141,13 @@ describe('runtime step parity', () => {
             { minLength: 3, maxLength: 20 },
           ),
           async (mapSeed, startXQ8, startYQ8, startAngleDeg, startHealth, startAmmo, steps) => {
-            const map = makeMapBits(mapSeed >>> 0);
-            const config: RuntimeConfig = {
-              mapLo: map.lo,
-              mapHi: map.hi,
-              startXQ8,
-              startYQ8,
-              startAngleDeg,
-              startHealth,
-              startAmmo,
-            };
+            const scenario = buildScenario(mapSeed, startXQ8, startYQ8, startAngleDeg, startHealth, startAmmo, steps);
+            const config: RuntimeConfig = scenario.config;
 
             await oracle.init(config);
             await tsRuntime.init(config);
 
-            for (const stepInput of steps) {
+            for (const stepInput of scenario.steps) {
               oracle.step(stepInput);
               tsRuntime.step(stepInput);
             }
@@ -184,5 +203,49 @@ describe('runtime step parity', () => {
     expect(a.includes(2)).toBe(true); // oracle_runtime_reset
     expect(a.includes(3)).toBe(true); // oracle_runtime_step
     expect(a.includes(17)).toBe(true); // real WL_AGENT.ClipMove
+  });
+
+  it('oracle runtime is self-consistent across deterministic scenarios', async () => {
+    const scenarios: RuntimeParityScenario[] = [
+      buildScenario(0x1234abcd, 2 * 256, 2 * 256, 90, 80, 12, [
+        { inputMask: 0xbf, tics: 4, rng: 0x12345678 },
+        { inputMask: 0x33, tics: 2, rng: 0x87654321 },
+        { inputMask: 0xa5, tics: 5, rng: 0x13579bdf },
+      ]),
+      buildScenario(0xfeedface, 4 * 256, 3 * 256, -45, 65, 20, [
+        { inputMask: 0x41, tics: 6, rng: -12345 },
+        { inputMask: 0x9d, tics: 1, rng: 0x0badf00d },
+        { inputMask: 0x07, tics: 8, rng: 0x11223344 },
+      ]),
+    ];
+
+    for (const scenario of scenarios) {
+      const a = await captureRuntimeTrace(oracle, scenario);
+      const b = await captureRuntimeTrace(oracle, scenario);
+      assertRuntimeTraceParity(scenario, a, b);
+      expect(a.traceHash >>> 0).toBe(b.traceHash >>> 0);
+    }
+  });
+
+  it('ts runtime is self-consistent across deterministic scenarios', async () => {
+    const scenarios: RuntimeParityScenario[] = [
+      buildScenario(0x27182818, 2 * 256, 5 * 256, 180, 90, 8, [
+        { inputMask: 0xc0, tics: 2, rng: 3333 },
+        { inputMask: 0x12, tics: 7, rng: 4444 },
+        { inputMask: 0xee, tics: 3, rng: 5555 },
+      ]),
+      buildScenario(0x31415926, 5 * 256, 2 * 256, 270, 50, 15, [
+        { inputMask: 0x44, tics: 5, rng: 0x55aa55aa },
+        { inputMask: 0x18, tics: 4, rng: -999999 },
+        { inputMask: 0x80, tics: 2, rng: 0x7fffffff },
+      ]),
+    ];
+
+    for (const scenario of scenarios) {
+      const a = await captureRuntimeTrace(tsRuntime, scenario);
+      const b = await captureRuntimeTrace(tsRuntime, scenario);
+      assertRuntimeTraceParity(scenario, a, b);
+      expect(a.traceHash >>> 0).toBe(b.traceHash >>> 0);
+    }
   });
 });

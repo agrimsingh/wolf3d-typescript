@@ -8,6 +8,7 @@ Design documentation for the browser-based TypeScript port of Wolfenstein 3D, va
 - [runtime-symbol-manifest.md](./runtime-symbol-manifest.md): authoritative runtime-path symbol checklist used for R-phase execution.
 - `generated/runtime-symbol-hits.json`: deterministic trace artifact produced by `pnpm runtime:manifest:extract`.
 - `generated/runtime-symbol-lock.json`: frozen R2 lock consumed by `pnpm runtime:manifest:verify`.
+- Runtime parity harness implementation: `src/runtime/parityHarness.ts` and runtime repro tooling in `scripts/runtime/`.
 - [wolfsrc-compatibility.md](./wolfsrc-compatibility.md): R1 portability layer, sanitized source pipeline, and compile-blocker burn-down status.
 
 ## Core Systems

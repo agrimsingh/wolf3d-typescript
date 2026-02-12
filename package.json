@@ -22,6 +22,8 @@
     "manifest:extract": "tsx scripts/manifest/extract-wolfsrc-symbols.ts",
     "runtime:manifest:extract": "pnpm wasm:build && tsx scripts/runtime/extract-runtime-manifest.ts",
     "runtime:manifest:verify": "pnpm runtime:manifest:extract && tsx scripts/runtime/verify-runtime-manifest.ts",
+    "runtime:parity:test": "pnpm wasm:build && vitest run test/property/runtime.step-parity.test.ts",
+    "runtime:replay": "tsx scripts/runtime/replay-runtime-artifact.ts",
     "assets:fetch": "bash scripts/assets/fetch-wl1.sh",
     "assets:validate": "tsx scripts/assets/validate-wl1.ts",
     "verify:assets": "pnpm assets:validate"

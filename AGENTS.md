@@ -52,6 +52,8 @@ Rules:
 - Build C/WASM oracle: `pnpm wasm:build`
 - Extract runtime trace symbol manifest: `pnpm runtime:manifest:extract`
 - Verify runtime symbol manifest lock: `pnpm runtime:manifest:verify`
+- Run runtime parity harness tests: `pnpm runtime:parity:test`
+- Replay runtime repro artifact: `pnpm runtime:replay <artifact.json>`
 - Run local property tests (1k): `pnpm test:property:local`
 - Run CI property tests (10k): `pnpm test:property:ci`
 - Replay failing seed: `pnpm test:property -- --seed <seed>`

@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R3 in progress (deterministic runtime contracts + harness)
+**Status:** Phase R4 in progress (runtime-path function porting, manifest-driven)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -47,11 +47,14 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 
 ## Phase R3: Deterministic Runtime Contracts + Harness
 
-- [ ] Add `RuntimePort` contract for oracle and TS runtimes.
-- [ ] Build parity harness for step parity and frame parity.
-- [ ] Add deterministic replay tooling and artifact capture.
-- [ ] Gate: replay determinism and oracle self-consistency validated.
-- [ ] Commit: `phase-r3: deterministic runtime contracts + parity harness`
+- [x] Add `RuntimePort` contract for oracle and TS runtimes.
+- [x] Build parity harness for step parity and frame parity.
+: Added reusable runtime trace/parity harness in `src/runtime/parityHarness.ts`, with runtime property tests moved to harness-based comparisons for step/frame/snapshot parity.
+- [x] Add deterministic replay tooling and artifact capture.
+: Added runtime repro artifact writer (`test/property/runtimeRepro.ts`) and replay script (`pnpm runtime:replay <artifact.json>`).
+- [x] Gate: replay determinism and oracle self-consistency validated.
+: Green on `pnpm verify`, `pnpm test:property:ci`, `pnpm runtime:manifest:verify`, and `pnpm runtime:parity:test`; runtime suite now includes explicit oracle and TS self-consistency checks.
+- [x] Commit: `phase-r3: deterministic runtime contracts + parity harness`
 
 ## Phase R4: Runtime-Path Function Porting (Manifest-Driven)
 
