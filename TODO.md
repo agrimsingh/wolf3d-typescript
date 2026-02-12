@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K9` active)  
+**Status:** In Progress (`K10` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -116,12 +116,12 @@
 
 ## K9: TS Parity Wave D (Actors/AI/Combat)
 
-- [ ] Port actor state machines and combat side effects.
-- [ ] Gate: actor tick parity suites
-- [ ] Gate: deterministic combat traces
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k9: wl6 actors-ai-combat parity`)
+- [x] Port actor state machines and combat side effects.
+- [x] Gate: actor tick parity suites
+- [x] Gate: deterministic combat traces
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k9: wl6 actors-ai-combat parity`)
 
 ## K10: TS Parity Wave E (Menu/Text/Input/Intermission/Audio SFX)
 

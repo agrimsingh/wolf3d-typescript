@@ -1,0 +1,42 @@
+{
+  "phase": "K9",
+  "timestamp": "2026-02-12",
+  "gates": {
+    "actorsAiLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/phase4.actors-ai.test.ts",
+      "status": "pass"
+    },
+    "actorsAiCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/phase4.actors-ai.test.ts",
+      "status": "pass"
+    },
+    "actorCombatLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/runtime.actor-combat.test.ts",
+      "status": "pass"
+    },
+    "actorCombatCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/runtime.actor-combat.test.ts",
+      "status": "pass"
+    }
+  },
+  "agentBrowser": {
+    "session": "k9",
+    "artifact": "artifacts/agent-browser/k9/combat-trace-check.json",
+    "checks": {
+      "moved": true,
+      "fireInputSeen": true,
+      "attacked": true,
+      "enemyKilled": true,
+      "survived": true
+    },
+    "summary": {
+      "finalHealth": 63,
+      "finalTick": 310,
+      "flags": 3809152
+    },
+    "screenshots": [
+      "artifacts/agent-browser/k9/title.png",
+      "artifacts/agent-browser/k9/combat-view.png"
+    ]
+  }
+}
