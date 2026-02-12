@@ -1,5 +1,6 @@
 #ifndef WOLF_COMPAT_DOS_H
 #define WOLF_COMPAT_DOS_H
+
 #include <stdint.h>
 #include <string.h>
 
@@ -9,6 +10,7 @@ union REGS { WORDREGS x; BYTEREGS h; };
 
 typedef struct SREGS { uint16_t es, cs, ss, ds; } SREGS;
 typedef void (*interrupt_handler_t)(void);
+typedef int (*harderr_handler_t)(unsigned, int, int, int);
 
 static inline int int86(int int_no, union REGS *inregs, union REGS *outregs) {
   (void)int_no;
@@ -24,12 +26,20 @@ static inline int int86x(int int_no, union REGS *inregs, union REGS *outregs, st
   (void)sregs;
   return 0;
 }
-static inline void segread(struct SREGS *s) { if (s) { s->es = s->cs = s->ss = s->ds = 0; } }
+
+static inline void segread(struct SREGS *s) {
+  if (s) {
+    s->es = s->cs = s->ss = s->ds = 0;
+  }
+}
+
 static inline void geninterrupt(int int_no) { (void)int_no; }
+
 static inline interrupt_handler_t getvect(int int_no) {
   (void)int_no;
   return (interrupt_handler_t)0;
 }
+
 static inline void setvect(int int_no, interrupt_handler_t handler) {
   (void)int_no;
   (void)handler;
@@ -62,6 +72,44 @@ static inline unsigned _dos_gettime(struct dostime_t *timep) {
     memset(timep, 0, sizeof(*timep));
   }
   return 0;
+}
+
+static inline int inportb(unsigned port) {
+  (void)port;
+  return 0;
+}
+
+static inline void outportb(unsigned port, int value) {
+  (void)port;
+  (void)value;
+}
+
+static inline int peek(unsigned seg, unsigned off) {
+  (void)seg;
+  (void)off;
+  return 0;
+}
+
+static inline int peekb(unsigned seg, unsigned off) {
+  (void)seg;
+  (void)off;
+  return 0;
+}
+
+static inline void poke(unsigned seg, unsigned off, int value) {
+  (void)seg;
+  (void)off;
+  (void)value;
+}
+
+static inline void pokeb(unsigned seg, unsigned off, int value) {
+  (void)seg;
+  (void)off;
+  (void)value;
+}
+
+static inline void harderr(harderr_handler_t handler) {
+  (void)handler;
 }
 
 #endif

@@ -65,6 +65,8 @@ COMMON_FLAGS=(
   -std=gnu89
   -fsyntax-only
   -Wno-unknown-pragmas
+  -Wno-error=implicit-function-declaration
+  -Wno-error=implicit-int
   -I"$COMPAT_DIR"
   -I"$SRC_DIR"
   -include "$COMPAT_DIR/wolfsrc_compat.h"
