@@ -42,7 +42,7 @@
 ## Phase F2: Real Runtime Oracle Driver
 
 - [ ] Replace synthetic runtime oracle core logic in `c-oracle/runtime/wolfsrc_runtime_oracle.c`.
-  - Progress (2026-02-12): runtime step now routes movement/use blocking through real `WL_AGENT` shims (`ClipMove` + `TryMove`) instead of local tile-wall helpers.
+  - Progress (2026-02-12): runtime step now routes movement/use blocking through real `WL_AGENT` shims (`TryMove` + `ControlMovement`) instead of local tile-wall helpers.
 - [ ] Add bridge/shim APIs for real boot/tick/snapshot/framebuffer/save-load.
 - [ ] Export updated runtime bridge in WASM and update `src/oracle/runtimeOracle.ts`.
 - [ ] Add oracle determinism tests for repeated identical traces.

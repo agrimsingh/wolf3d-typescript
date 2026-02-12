@@ -6,6 +6,8 @@
 #include "WL_DEF.H"
 #undef menuitems
 
+#include <string.h>
+#include <math.h>
 #include <emscripten/emscripten.h>
 
 objtype objlist[MAXACTORS], *new, *obj, *player, *lastobj, *objfreelist;
@@ -16,9 +18,18 @@ byte tilemap[MAPSIZE][MAPSIZE];
 objtype *actorat[MAPSIZE][MAPSIZE];
 unsigned *mapsegs[MAPPLANES];
 static unsigned mapplane0[MAPSIZE * MAPSIZE];
+static unsigned mapplane1[MAPSIZE * MAPSIZE];
 unsigned doorposition[MAXDOORS], pwallstate;
 boolean areabyplayer[NUMAREAS];
 boolean noclip;
+gametype gamestate;
+exit_t playstate;
+boolean madenoise;
+boolean buttonheld[NUMBUTTONS];
+int controlx, controly;
+boolean buttonstate[NUMBUTTONS];
+fixed sintable[ANGLES + ANGLES / 4 + 1];
+fixed *costable = sintable + ANGLES / 4;
 
 unsigned tics;
 unsigned mapwidth, mapheight;
@@ -39,6 +50,7 @@ boolean SD_PlaySound(soundnames sound) {
 boolean SD_SoundPlaying(void) { return false; }
 int US_RndT(void) { return 0; }
 void OpenDoor(int door) { (void)door; }
+int SpawnBJVictory(void) { return 0; }
 void PlaceItemType(int itemtype, int tilex, int tiley) {
   (void)itemtype;
   (void)tilex;
@@ -51,6 +63,8 @@ boolean TryMove(objtype *ob);
 void ClipMove(objtype *ob, long xmove, long ymove);
 void MoveObj(objtype *ob, long move);
 void SelectChaseDir(objtype *ob);
+void ControlMovement(objtype *ob);
+extern int anglefrac;
 
 static int32_t g_take_damage_stub_calls;
 
@@ -64,6 +78,47 @@ static uint32_t fnv1a_u32(uint32_t hash, uint32_t value) {
   hash ^= value;
   hash *= 16777619u;
   return hash;
+}
+
+fixed FixedByFrac(fixed a, fixed b) {
+  int sign;
+  uint32_t ua;
+  uint32_t frac;
+  uint64_t prod;
+  int32_t out;
+
+  sign = ((a < 0) ? 1 : 0) ^ ((b < 0) ? 1 : 0);
+  ua = (a < 0) ? (uint32_t)(-(int64_t)a) : (uint32_t)a;
+  frac = ((uint32_t)b) & 0xffffu;
+  prod = (uint64_t)ua * (uint64_t)frac;
+  out = (int32_t)(prod >> 16);
+  return sign ? -out : out;
+}
+
+static void ensure_trig_tables(void) {
+  static int tables_ready;
+  double angle;
+  double anglestep;
+  const double pi = 3.141592657;
+  int i;
+
+  if (tables_ready) {
+    return;
+  }
+
+  angle = 0.0;
+  anglestep = pi / 2.0 / (double)ANGLEQUAD;
+  for (i = 0; i <= ANGLEQUAD; i++) {
+    int32_t value = (int32_t)(GLOBAL1 * sin(angle));
+    sintable[i] = value;
+    sintable[i + ANGLES] = value;
+    sintable[ANGLES / 2 - i] = value;
+    sintable[ANGLES - i] = value | 0x80000000u;
+    sintable[ANGLES / 2 + i] = value | 0x80000000u;
+    angle += anglestep;
+  }
+
+  tables_ready = 1;
 }
 
 static void setup_world(
@@ -153,8 +208,11 @@ static void setup_agent_world(uint32_t map_lo, uint32_t map_hi) {
   int y;
 
   for (x = 0; x < MAPSIZE; x++) {
+    farmapylookup[x] = (unsigned)(x * MAPSIZE);
     for (y = 0; y < MAPSIZE; y++) {
       actorat[x][y] = (objtype *)1;
+      mapplane0[x * MAPSIZE + y] = AREATILE;
+      mapplane1[x * MAPSIZE + y] = 0;
     }
   }
 
@@ -166,6 +224,8 @@ static void setup_agent_world(uint32_t map_lo, uint32_t map_hi) {
     }
   }
 
+  mapsegs[0] = mapplane0;
+  mapsegs[1] = mapplane1;
   mapwidth = 8;
   mapheight = 8;
 }
@@ -205,6 +265,50 @@ void real_wl_agent_clip_move_apply(
 
   *x_q16 = objlist[1].x;
   *y_q16 = objlist[1].y;
+}
+
+void real_wl_agent_control_movement_apply(
+  int32_t *x_q16,
+  int32_t *y_q16,
+  int32_t *angle_deg,
+  int32_t *angle_frac_io,
+  int32_t control_x,
+  int32_t control_y,
+  int32_t strafe_pressed,
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t victory_flag
+) {
+  int normalized_angle;
+
+  ensure_trig_tables();
+  setup_agent_world(map_lo, map_hi);
+  memset(&gamestate, 0, sizeof(gamestate));
+  memset(buttonheld, 0, sizeof(buttonheld));
+  memset(buttonstate, 0, sizeof(buttonstate));
+
+  gamestate.victoryflag = victory_flag ? true : false;
+  controlx = control_x;
+  controly = control_y;
+  buttonstate[bt_strafe] = strafe_pressed ? true : false;
+
+  player = &objlist[1];
+  player->x = *x_q16;
+  player->y = *y_q16;
+  player->tilex = (unsigned)(player->x >> TILESHIFT);
+  player->tiley = (unsigned)(player->y >> TILESHIFT);
+  normalized_angle = *angle_deg % ANGLES;
+  if (normalized_angle < 0) {
+    normalized_angle += ANGLES;
+  }
+  player->angle = normalized_angle;
+
+  anglefrac = *angle_frac_io;
+  ControlMovement(player);
+  *angle_frac_io = anglefrac;
+  *x_q16 = player->x;
+  *y_q16 = player->y;
+  *angle_deg = player->angle;
 }
 
 EMSCRIPTEN_KEEPALIVE int32_t oracle_real_wl_agent_try_move(

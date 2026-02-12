@@ -12,6 +12,18 @@ void real_wl_agent_clip_move_apply(
   uint32_t map_hi,
   int32_t noclip_enabled
 );
+void real_wl_agent_control_movement_apply(
+  int32_t *x_q16,
+  int32_t *y_q16,
+  int32_t *angle_deg,
+  int32_t *angle_frac_io,
+  int32_t control_x,
+  int32_t control_y,
+  int32_t strafe_pressed,
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t victory_flag
+);
 int32_t oracle_real_wl_agent_try_move(
   int32_t x,
   int32_t y,
@@ -30,6 +42,7 @@ typedef struct runtime_state_s {
   int32_t cooldown;
   int32_t flags;
   int32_t tick;
+  int32_t angle_frac;
 } runtime_state_t;
 
 static runtime_state_t g_state;
@@ -54,6 +67,7 @@ enum runtime_trace_symbol_e {
   TRACE_ORACLE_RUNTIME_GET_TICK = 16,
   TRACE_REAL_WL_AGENT_CLIP_MOVE_APPLY = 17,
   TRACE_REAL_WL_AGENT_TRY_MOVE = 18,
+  TRACE_REAL_WL_AGENT_CONTROL_MOVEMENT = 19,
 };
 
 #define TRACE_SYMBOL_MAX 32
@@ -95,6 +109,7 @@ static uint32_t runtime_snapshot_hash(const runtime_state_t *state) {
   h = fnv1a_u32(h, (uint32_t)state->cooldown);
   h = fnv1a_u32(h, (uint32_t)state->flags);
   h = fnv1a_u32(h, (uint32_t)state->tick);
+  h = fnv1a_u32(h, (uint32_t)state->angle_frac);
   return h;
 }
 
@@ -102,6 +117,11 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   int32_t forward = 0;
   int32_t strafe = 0;
   int32_t turn = 0;
+  int32_t control_x = 0;
+  int32_t control_y = 0;
+  int32_t strafe_pressed = 0;
+  int32_t xq16;
+  int32_t yq16;
 
   if (input_mask & (1 << 0)) forward += 32;
   if (input_mask & (1 << 1)) forward -= 32;
@@ -110,24 +130,31 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   if (input_mask & (1 << 4)) strafe -= 24;
   if (input_mask & (1 << 5)) strafe += 24;
 
-  state->angle_deg = (state->angle_deg + turn) % 360;
-  if (state->angle_deg < 0) state->angle_deg += 360;
+  strafe_pressed = (strafe != 0) ? 1 : 0;
+  if (strafe_pressed) {
+    if (strafe < 0) control_x += 24;
+    if (strafe > 0) control_x -= 24;
+  } else {
+    if (turn < 0) control_x -= 8 * 20;
+    if (turn > 0) control_x += 8 * 20;
+  }
+  if (forward > 0) control_y -= 32;
+  if (forward < 0) control_y += 32;
 
-  double rad = ((double)state->angle_deg) * (3.14159265358979323846 / 180.0);
-  double sr = ((double)(state->angle_deg + 90)) * (3.14159265358979323846 / 180.0);
-  int32_t dx = (int32_t)(cos(rad) * forward + cos(sr) * strafe);
-  int32_t dy = (int32_t)(sin(rad) * forward + sin(sr) * strafe);
-  int32_t xq16 = state->xq8 << 8;
-  int32_t yq16 = state->yq8 << 8;
-  trace_hit(TRACE_REAL_WL_AGENT_CLIP_MOVE_APPLY);
-  real_wl_agent_clip_move_apply(
+  xq16 = state->xq8 << 8;
+  yq16 = state->yq8 << 8;
+  trace_hit(TRACE_REAL_WL_AGENT_CONTROL_MOVEMENT);
+  real_wl_agent_control_movement_apply(
     &xq16,
     &yq16,
-    dx << 8,
-    dy << 8,
+    &state->angle_deg,
+    &state->angle_frac,
+    control_x,
+    control_y,
+    strafe_pressed,
     state->map_lo,
     state->map_hi,
-    0
+    0 /* victory flag */
   );
   state->xq8 = xq16 >> 8;
   state->yq8 = yq16 >> 8;
@@ -192,6 +219,7 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_init(
   g_state.cooldown = 0;
   g_state.flags = 0;
   g_state.tick = 0;
+  g_state.angle_frac = 0;
 
   g_boot_state = g_state;
   return 1;
@@ -249,6 +277,7 @@ EMSCRIPTEN_KEEPALIVE int32_t oracle_runtime_set_state(
   g_state.cooldown = clamp_i32(cooldown, 0, 255);
   g_state.flags = flags;
   g_state.tick = tick;
+  g_state.angle_frac = 0;
   return 1;
 }
 

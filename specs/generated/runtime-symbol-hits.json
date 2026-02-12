@@ -70,8 +70,8 @@
     14,
     15,
     16,
-    17,
-    18
+    18,
+    19
   ],
   "requiredRuntimeSymbols": [
     {
@@ -171,17 +171,24 @@
       "notes": "snapshot readout"
     },
     {
-      "id": 17,
-      "file": "WL_AGENT.C",
-      "func": "ClipMove",
-      "notes": "called via real_wl_agent_clip_move_apply shim"
-    },
-    {
       "id": 18,
       "file": "WL_AGENT.C",
       "func": "TryMove",
       "notes": "called via oracle_real_wl_agent_try_move shim"
+    },
+    {
+      "id": 19,
+      "file": "WL_AGENT.C",
+      "func": "ControlMovement",
+      "notes": "called via real_wl_agent_control_movement_apply shim"
     }
   ],
-  "excludedRuntimeSymbols": []
+  "excludedRuntimeSymbols": [
+    {
+      "id": 17,
+      "file": "WL_AGENT.C",
+      "func": "ClipMove",
+      "notes": "called via real_wl_agent_clip_move_apply shim"
+    }
+  ]
 }
