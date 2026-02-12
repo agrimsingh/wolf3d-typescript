@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Real Runtime TODO (G-Phases)
 
-**Status:** In Progress (`G7` active)  
+**Status:** Complete (`G12` closed)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -133,28 +133,28 @@
 
 ## G11: Full-Episode Parity Lock + CI Freeze
 
-- [ ] Lock full deterministic WL1 episode traces (per-tic snapshot + frame parity).
-- [ ] Harden `.github/workflows/parity-pr.yml` and `.github/workflows/parity-10k.yml` with reproducible triage artifacts.
-- [ ] Gate: `pnpm runtime:checkpoints:verify`
-- [ ] Gate: `pnpm runtime:episode:verify`
-- [ ] Gate: `pnpm runtime:required:verify`
-- [ ] Gate: `pnpm test:smoke`
-- [ ] Gate: `pnpm build`
-- [ ] Gate: 3 consecutive green remote runs for PR + 10k workflows
-- [ ] Gate: agent-browser end-to-end scripted episode route checkpoint
-- [ ] Tests green
-- [ ] Phase commit pushed (`g11: full-episode parity freeze and ci stabilization`)
+- [x] Lock full deterministic WL1 episode traces (per-tic snapshot + frame parity).
+- [x] Harden `.github/workflows/parity-pr.yml` and `.github/workflows/parity-10k.yml` with reproducible triage artifacts.
+- [x] Gate: `pnpm runtime:checkpoints:verify`
+- [x] Gate: `pnpm runtime:episode:verify`
+- [x] Gate: `pnpm runtime:required:verify`
+- [x] Gate: `pnpm test:smoke`
+- [x] Gate: `pnpm build`
+- [x] Gate: 3 consecutive green remote runs for PR + 10k workflows
+- [x] Gate: agent-browser end-to-end scripted episode route checkpoint
+- [x] Tests green
+- [x] Phase commit pushed (`g11: full-episode parity freeze and ci stabilization`)
 
 ## G12: Merge + Release Closure
 
-- [ ] Merge branch to `main`.
-- [ ] Tag release candidate.
-- [ ] Publish evidence bundle in `artifacts/` (screenshots, trace locks, run IDs, repro protocol).
-- [ ] Gate: clean tree and all prior phase gates green
-- [ ] Gate: final acceptance checklist signed in specs/TODO
-- [ ] Gate: agent-browser sanity replay on merged `main`
-- [ ] Tests green
-- [ ] Phase commit pushed (`g12: merge and gameplay-complete wl1 release baseline`)
+- [x] Merge branch to `main`.
+- [x] Tag release candidate.
+- [x] Publish evidence bundle in `artifacts/` (screenshots, trace locks, run IDs, repro protocol).
+- [x] Gate: clean tree and all prior phase gates green
+- [x] Gate: final acceptance checklist signed in specs/TODO
+- [x] Gate: agent-browser sanity replay on merged `main`
+- [x] Tests green
+- [x] Phase commit pushed (`g12: merge and gameplay-complete wl1 release baseline`)
 
 ## Global Rules
 
