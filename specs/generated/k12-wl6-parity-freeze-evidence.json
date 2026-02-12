@@ -48,6 +48,13 @@
     ]
   },
   "remoteCi": {
+    "postMergeParityPrRun": {
+      "runId": 21962877087,
+      "url": "https://github.com/agrimsingh/wolf3d-typescript/actions/runs/21962877087",
+      "headBranch": "main",
+      "headSha": "ff1bf6ff871fac35789d88fa625b8d8d5ff1e0ce",
+      "conclusion": "success"
+    },
     "parityPrConsecutiveGreen": [
       {
         "runId": 21960237208,
