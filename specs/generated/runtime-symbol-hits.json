@@ -82,7 +82,11 @@
     26,
     27,
     28,
-    29
+    29,
+    30,
+    31,
+    32,
+    33
   ],
   "requiredRuntimeSymbols": [
     {
@@ -258,6 +262,30 @@
       "file": "WL_INTER.C",
       "func": "CheckHighScore",
       "notes": "called via oracle_wl_inter_check_high_score_hash from runtime score probe"
+    },
+    {
+      "id": 30,
+      "file": "WL_STATE.C",
+      "func": "FirstSighting",
+      "notes": "called via oracle_wl_state_first_sighting_hash from runtime ai probe"
+    },
+    {
+      "id": 31,
+      "file": "WL_STATE.C",
+      "func": "SightPlayer",
+      "notes": "called via oracle_wl_state_sight_player_hash from runtime ai probe"
+    },
+    {
+      "id": 32,
+      "file": "WL_ACT2.C",
+      "func": "T_Chase",
+      "notes": "called via oracle_wl_act2_t_chase_hash from runtime ai probe"
+    },
+    {
+      "id": 33,
+      "file": "WL_ACT2.C",
+      "func": "T_Path",
+      "notes": "called via oracle_wl_act2_t_path_hash from runtime ai probe"
     }
   ],
   "excludedRuntimeSymbols": []

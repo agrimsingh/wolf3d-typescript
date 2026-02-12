@@ -47,6 +47,10 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_PLAY.C | PlayLoop | `done` | called via oracle_wl_play_play_loop_hash from runtime loop probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_GAME.C | GameLoop | `done` | called via oracle_wl_game_game_loop_hash from runtime loop probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_INTER.C | CheckHighScore | `done` | called via oracle_wl_inter_check_high_score_hash from runtime score probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | FirstSighting | `done` | called via oracle_wl_state_first_sighting_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_STATE.C | SightPlayer | `done` | called via oracle_wl_state_sight_player_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT2.C | T_Chase | `done` | called via oracle_wl_act2_t_chase_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT2.C | T_Path | `done` | called via oracle_wl_act2_t_path_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

@@ -99,6 +99,67 @@ uint32_t oracle_wl_inter_check_high_score_hash(
   int32_t s3,
   int32_t s4
 );
+uint32_t oracle_wl_state_first_sighting_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_state_sight_player_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  int32_t can_see_hint,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_act2_t_chase_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_act2_t_path_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
 uint32_t oracle_wl_draw_wall_refresh_hash(
   int32_t player_angle,
   int32_t player_x,
@@ -162,9 +223,13 @@ enum runtime_trace_symbol_e {
   TRACE_WL_PLAY_PLAY_LOOP = 27,
   TRACE_WL_GAME_GAME_LOOP = 28,
   TRACE_WL_INTER_CHECK_HIGH_SCORE = 29,
+  TRACE_WL_STATE_FIRST_SIGHTING = 30,
+  TRACE_WL_STATE_SIGHT_PLAYER = 31,
+  TRACE_WL_ACT2_T_CHASE = 32,
+  TRACE_WL_ACT2_T_PATH = 33,
 };
 
-#define TRACE_SYMBOL_MAX 32
+#define TRACE_SYMBOL_MAX 40
 static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
 static int32_t g_trace_count = 0;
 
@@ -424,6 +489,18 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t play_loop_hash;
       uint32_t game_loop_hash;
       uint32_t score_hash;
+      uint32_t first_sighting_hash;
+      uint32_t sight_player_hash;
+      uint32_t t_chase_hash;
+      uint32_t t_path_hash;
+      int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
+      int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
+      int32_t ai_dir = (state->angle_deg / 90) & 3;
+      int32_t ai_state = (state->flags >> 9) & 7;
+      int32_t ai_hp = clamp_i32(state->health + ((rng >> 5) & 7), 0, 100);
+      int32_t ai_speed = 0x100 + ((state->tick & 0x1f) << 3);
+      int32_t ai_cooldown = clamp_i32(state->cooldown, 0, 255);
+      int32_t ai_flags = state->flags;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -444,6 +521,71 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       );
       trace_hit(TRACE_WL_INTER_CHECK_HIGH_SCORE);
       score_hash = oracle_wl_inter_check_high_score_hash((int32_t)(play_loop_hash & 0xffffu), score0, score1, score2, score3, score4);
+      trace_hit(TRACE_WL_STATE_FIRST_SIGHTING);
+      first_sighting_hash = oracle_wl_state_first_sighting_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_STATE_SIGHT_PLAYER);
+      sight_player_hash = oracle_wl_state_sight_player_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        (state->flags & 0x400) ? 1 : 0,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_ACT2_T_CHASE);
+      t_chase_hash = oracle_wl_act2_t_chase_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_ACT2_T_PATH);
+      t_path_hash = oracle_wl_act2_t_path_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
@@ -459,6 +601,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->flags |= 0x8000;
       } else {
         state->flags &= ~0x8000;
+      }
+      if (first_sighting_hash & 1u) {
+        state->flags |= 0x10000;
+      } else {
+        state->flags &= ~0x10000;
+      }
+      if (sight_player_hash & 1u) {
+        state->flags |= 0x20000;
+      } else {
+        state->flags &= ~0x20000;
+      }
+      if (t_chase_hash & 1u) {
+        state->flags |= 0x40000;
+      } else {
+        state->flags &= ~0x40000;
+      }
+      if (t_path_hash & 1u) {
+        state->flags |= 0x80000;
+      } else {
+        state->flags &= ~0x80000;
       }
     }
   }
