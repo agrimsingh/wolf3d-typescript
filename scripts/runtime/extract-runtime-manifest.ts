@@ -186,6 +186,16 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 148, file: 'ID_VL.C', func: 'VL_SetVGAPlaneMode', notes: 'called via oracle_id_vl_vl_set_vga_plane_mode_hash from runtime video probe' },
   { id: 149, file: 'ID_VL.C', func: 'VL_SetTextMode', notes: 'called via oracle_id_vl_vl_set_text_mode_hash from runtime video probe' },
   { id: 150, file: 'ID_VL.C', func: 'VL_ColorBorder', notes: 'called via oracle_id_vl_vl_color_border_hash from runtime video probe' },
+  { id: 151, file: 'c-oracle/wolf_oracle.c', func: 'oracle_fixed_mul', notes: 'called via oracle_fixed_mul from runtime core probe' },
+  { id: 152, file: 'c-oracle/wolf_oracle.c', func: 'oracle_fixed_by_frac', notes: 'called via oracle_fixed_by_frac from runtime core probe' },
+  { id: 153, file: 'c-oracle/wolf_oracle.c', func: 'oracle_rlew_expand_checksum', notes: 'called via oracle_rlew_expand_checksum from runtime core probe' },
+  { id: 154, file: 'c-oracle/wolf_oracle.c', func: 'oracle_raycast_distance_q16', notes: 'called via oracle_raycast_distance_q16 from runtime core probe' },
+  { id: 155, file: 'c-oracle/wolf_oracle.c', func: 'oracle_actor_step_packed', notes: 'called via oracle_actor_step_packed from runtime core probe' },
+  { id: 156, file: 'c-oracle/wolf_oracle.c', func: 'oracle_player_move_packed', notes: 'called via oracle_player_move_packed from runtime core probe' },
+  { id: 157, file: 'c-oracle/wolf_oracle.c', func: 'oracle_game_event_hash', notes: 'called via oracle_game_event_hash from runtime core probe' },
+  { id: 158, file: 'c-oracle/wolf_oracle.c', func: 'oracle_menu_reduce_packed', notes: 'called via oracle_menu_reduce_packed from runtime core probe' },
+  { id: 159, file: 'c-oracle/wolf_oracle.c', func: 'oracle_measure_text_packed', notes: 'called via oracle_measure_text_packed from runtime core probe' },
+  { id: 160, file: 'c-oracle/wolf_oracle.c', func: 'oracle_audio_reduce_packed', notes: 'called via oracle_audio_reduce_packed from runtime core probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -341,6 +351,16 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [148, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [149, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [150, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [151, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [152, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [153, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [154, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [155, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [156, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [157, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [158, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [159, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [160, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

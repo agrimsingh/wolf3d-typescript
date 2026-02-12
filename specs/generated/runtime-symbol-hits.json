@@ -203,7 +203,17 @@
     147,
     148,
     149,
-    150
+    150,
+    151,
+    152,
+    153,
+    154,
+    155,
+    156,
+    157,
+    158,
+    159,
+    160
   ],
   "requiredRuntimeSymbols": [
     {
@@ -1105,6 +1115,66 @@
       "file": "ID_VL.C",
       "func": "VL_ColorBorder",
       "notes": "called via oracle_id_vl_vl_color_border_hash from runtime video probe"
+    },
+    {
+      "id": 151,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_fixed_mul",
+      "notes": "called via oracle_fixed_mul from runtime core probe"
+    },
+    {
+      "id": 152,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_fixed_by_frac",
+      "notes": "called via oracle_fixed_by_frac from runtime core probe"
+    },
+    {
+      "id": 153,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_rlew_expand_checksum",
+      "notes": "called via oracle_rlew_expand_checksum from runtime core probe"
+    },
+    {
+      "id": 154,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_raycast_distance_q16",
+      "notes": "called via oracle_raycast_distance_q16 from runtime core probe"
+    },
+    {
+      "id": 155,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_actor_step_packed",
+      "notes": "called via oracle_actor_step_packed from runtime core probe"
+    },
+    {
+      "id": 156,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_player_move_packed",
+      "notes": "called via oracle_player_move_packed from runtime core probe"
+    },
+    {
+      "id": 157,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_game_event_hash",
+      "notes": "called via oracle_game_event_hash from runtime core probe"
+    },
+    {
+      "id": 158,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_menu_reduce_packed",
+      "notes": "called via oracle_menu_reduce_packed from runtime core probe"
+    },
+    {
+      "id": 159,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_measure_text_packed",
+      "notes": "called via oracle_measure_text_packed from runtime core probe"
+    },
+    {
+      "id": 160,
+      "file": "c-oracle/wolf_oracle.c",
+      "func": "oracle_audio_reduce_packed",
+      "notes": "called via oracle_audio_reduce_packed from runtime core probe"
     }
   ],
   "excludedRuntimeSymbols": []

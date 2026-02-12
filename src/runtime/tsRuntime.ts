@@ -204,6 +204,244 @@ function fixedByFrac(a: number, b: number): number {
   return out;
 }
 
+function probeFixedMul(a: number, b: number): number {
+  return Number((BigInt(a | 0) * BigInt(b | 0)) >> 16n) | 0;
+}
+
+function probeFixedByFrac(a: number, b: number): number {
+  return probeFixedMul(a, b);
+}
+
+function probeWallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
+  if (x < 0 || x >= 8 || y < 0 || y >= 8) {
+    return true;
+  }
+  const bit = y * 8 + x;
+  if (bit < 32) {
+    return ((mapLo >>> bit) & 1) === 1;
+  }
+  return ((mapHi >>> (bit - 32)) & 1) === 1;
+}
+
+function probeRlewExpandChecksum(source: Uint16Array, tag: number, outLen: number): number {
+  let hash = 2166136261 >>> 0;
+  let src = 0;
+  let out = 0;
+
+  while (out < outLen && src < source.length) {
+    const value = source[src++]! & 0xffff;
+    if (value === (tag & 0xffff) && src + 1 < source.length) {
+      const count = source[src++]! & 0xffff;
+      const repeated = source[src++]! & 0xffff;
+      for (let i = 0; i < count && out < outLen; i++) {
+        hash = fnv1a(hash, repeated);
+        out++;
+      }
+    } else {
+      hash = fnv1a(hash, value);
+      out++;
+    }
+  }
+
+  hash = fnv1a(hash, out);
+  hash = fnv1a(hash, outLen);
+  return hash >>> 0;
+}
+
+function probeIsqrtU64(value: bigint): number {
+  if (value <= 0n) return 0;
+  let x = value;
+  let y = (x + 1n) >> 1n;
+  while (y < x) {
+    x = y;
+    y = (x + value / x) >> 1n;
+  }
+  return Number(x);
+}
+
+function probeRaycastDistanceQ16(
+  mapLo: number,
+  mapHi: number,
+  startXQ16: number,
+  startYQ16: number,
+  dirXQ16: number,
+  dirYQ16: number,
+  maxSteps: number,
+): number {
+  let x = startXQ16 | 0;
+  let y = startYQ16 | 0;
+
+  const magSq = BigInt(dirXQ16 | 0) * BigInt(dirXQ16 | 0) + BigInt(dirYQ16 | 0) * BigInt(dirYQ16 | 0);
+  const mag = probeIsqrtU64(magSq);
+  if (mag === 0) {
+    return -1;
+  }
+
+  for (let step = 1; step <= (maxSteps | 0); step++) {
+    x = (x + (dirXQ16 | 0)) | 0;
+    y = (y + (dirYQ16 | 0)) | 0;
+    if (probeWallAt(mapLo >>> 0, mapHi >>> 0, x >> 16, y >> 16)) {
+      return Math.imul(step, mag) | 0;
+    }
+  }
+
+  return -1;
+}
+
+function probeActorStepPacked(state: number, playerDistQ8: number, canSee: boolean, rng: number): number {
+  let next = state | 0;
+  const timer = ((rng | 0) & 0x0f) + 1;
+
+  if ((state | 0) === 0 && canSee) {
+    next = 2;
+  } else if ((state | 0) === 1 && canSee && (playerDistQ8 | 0) < (4 << 8)) {
+    next = 2;
+  } else if ((state | 0) === 2 && (playerDistQ8 | 0) < (1 << 8)) {
+    next = 3;
+  } else if ((state | 0) === 3 && (playerDistQ8 | 0) > (2 << 8)) {
+    next = canSee ? 2 : 1;
+  }
+
+  return (((next & 0x7) << 8) | (timer & 0xff)) | 0;
+}
+
+function probePlayerMovePacked(
+  mapLo: number,
+  mapHi: number,
+  xQ8: number,
+  yQ8: number,
+  dxQ8: number,
+  dyQ8: number,
+): number {
+  const originalX = xQ8 | 0;
+  const originalY = yQ8 | 0;
+  const nx = (xQ8 + dxQ8) | 0;
+  const ny = (yQ8 + dyQ8) | 0;
+
+  if (probeWallAt(mapLo >>> 0, mapHi >>> 0, nx >> 8, ny >> 8)) {
+    if (!probeWallAt(mapLo >>> 0, mapHi >>> 0, nx >> 8, originalY >> 8)) {
+      xQ8 = nx;
+    }
+    if (!probeWallAt(mapLo >>> 0, mapHi >>> 0, originalX >> 8, ny >> 8)) {
+      yQ8 = ny;
+    }
+  } else {
+    xQ8 = nx;
+    yQ8 = ny;
+  }
+
+  return ((((xQ8 & 0xffff) << 16) | (yQ8 & 0xffff)) | 0) as number;
+}
+
+function probeGameEventHash(
+  score: number,
+  lives: number,
+  health: number,
+  ammo: number,
+  eventKind: number,
+  value: number,
+): number {
+  switch (eventKind | 0) {
+    case 0:
+      score += value;
+      break;
+    case 1:
+      health += value;
+      break;
+    case 2:
+      health -= value;
+      break;
+    case 3:
+      ammo += value;
+      break;
+    case 4:
+      lives += value;
+      break;
+    default:
+      break;
+  }
+
+  health = Math.max(0, Math.min(100, health | 0));
+  ammo = Math.max(0, Math.min(99, ammo | 0));
+  lives = Math.max(0, Math.min(9, lives | 0));
+  score = Math.max(0, score | 0);
+
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, score);
+  hash = fnv1a(hash, lives);
+  hash = fnv1a(hash, health);
+  hash = fnv1a(hash, ammo);
+  return hash | 0;
+}
+
+function probeMenuReducePacked(screen: number, cursor: number, action: number, itemCount: number): number {
+  let s = screen | 0;
+  let c = cursor | 0;
+  const count = Math.max(1, itemCount | 0);
+
+  switch (action | 0) {
+    case 0:
+      c = (c + count - 1) % count;
+      break;
+    case 1:
+      c = (c + 1) % count;
+      break;
+    case 2:
+      s = c + 1;
+      c = 0;
+      break;
+    case 3:
+      s = 0;
+      c = 0;
+      break;
+    default:
+      break;
+  }
+
+  return (((s & 0xff) << 8) | (c & 0xff)) | 0;
+}
+
+function probeMeasureTextPacked(textLen: number, maxWidthChars: number): number {
+  if ((maxWidthChars | 0) <= 0) {
+    return 0;
+  }
+  const width = Math.min(textLen | 0, maxWidthChars | 0);
+  let lines = Math.floor((textLen | 0) / (maxWidthChars | 0));
+  if ((textLen | 0) % (maxWidthChars | 0) !== 0) {
+    lines++;
+  }
+  if (lines === 0) {
+    lines = 1;
+  }
+
+  return (((lines & 0xffff) << 16) | (width & 0xffff)) | 0;
+}
+
+function probeAudioReducePacked(soundMode: number, musicMode: number, digiMode: number, eventKind: number, soundId: number): number {
+  let playing = -1;
+
+  switch (eventKind | 0) {
+    case 0:
+      soundMode = soundId & 0x3;
+      break;
+    case 1:
+      musicMode = soundId & 0x3;
+      break;
+    case 2:
+      if ((soundMode | 0) !== 0 || (digiMode | 0) !== 0) {
+        playing = soundId & 0xff;
+      }
+      break;
+    case 3:
+      playing = -1;
+      break;
+    default:
+      break;
+  }
+
+  return (((soundMode & 0x3) << 18) | ((musicMode & 0x3) << 16) | ((digiMode & 0x3) << 14) | ((playing + 1) & 0x3fff)) | 0;
+}
+
 type State = {
   mapLo: number;
   mapHi: number;
@@ -1364,6 +1602,31 @@ export class TsRuntimePort implements RuntimePort {
         const vlSetVgaPlaneModeHash = idVlVlSetVgaPlaneModeHash(vlScreenWidth, vhUpdateHeight, vlVgaChain4) >>> 0;
         const vlSetTextModeHash = idVlVlSetTextModeHash(vlTextMode, vlTextRows, vlTextCols) >>> 0;
         const vlColorBorderHash = idVlVlColorBorderHash(vhColor, vlBorderTicks) >>> 0;
+        const fixedMulValue = probeFixedMul(fixedA, fixedB) | 0;
+        const fixedByFracCoreValue = probeFixedByFrac(fixedA, fixedB) | 0;
+        const rlewExpandChecksumHash = probeRlewExpandChecksum(rlewSourceWords, rlewTag, rlewExpandedLength >>> 1) >>> 0;
+        const raycastDistanceQ16Value = probeRaycastDistanceQ16(
+          this.state.mapLo >>> 0,
+          this.state.mapHi >>> 0,
+          rayViewX,
+          rayViewY,
+          rayViewCos,
+          rayViewSin,
+          16,
+        ) | 0;
+        const actorStepPackedValue = probeActorStepPacked(aiState & 3, (this.state.tick & 7) << 8, (this.state.flags & 0x400) !== 0, rng | 0) | 0;
+        const playerMovePackedValue = probePlayerMovePacked(
+          this.state.mapLo >>> 0,
+          this.state.mapHi >>> 0,
+          this.state.xQ8 | 0,
+          this.state.yQ8 | 0,
+          strafe | 0,
+          forward | 0,
+        ) | 0;
+        const gameEventHashValue = probeGameEventHash(bonusScore, bonusLives, bonusHealth, bonusAmmo, menuAction, bonusValue) | 0;
+        const menuReducePackedValue = probeMenuReducePacked(menuScreen, menuCursor, menuAction, menuItems) | 0;
+        const measureTextPackedValue = probeMeasureTextPacked(textLen, (vhMaxWidth / vhFontWidth) | 0) | 0;
+        const audioReducePackedValue = probeAudioReducePacked(currentSoundMode, currentMusicMode, soundMode, menuAction, soundId) | 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1465,7 +1728,17 @@ export class TsRuntimePort implements RuntimePort {
             vlSetSplitScreenHash ^
             vlSetVgaPlaneModeHash ^
             vlSetTextModeHash ^
-            vlColorBorderHash) >>> 0;
+            vlColorBorderHash ^
+            (fixedMulValue >>> 0) ^
+            (fixedByFracCoreValue >>> 0) ^
+            rlewExpandChecksumHash ^
+            (raycastDistanceQ16Value >>> 0) ^
+            (actorStepPackedValue >>> 0) ^
+            (playerMovePackedValue >>> 0) ^
+            (gameEventHashValue >>> 0) ^
+            (menuReducePackedValue >>> 0) ^
+            (measureTextPackedValue >>> 0) ^
+            (audioReducePackedValue >>> 0)) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

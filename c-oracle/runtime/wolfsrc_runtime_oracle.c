@@ -581,6 +581,68 @@ int32_t oracle_wl_draw_fixed_by_frac(
   int32_t a,
   int32_t b
 );
+int32_t oracle_fixed_mul(
+  int32_t a,
+  int32_t b
+);
+int32_t oracle_fixed_by_frac(
+  int32_t a,
+  int32_t b
+);
+uint32_t oracle_rlew_expand_checksum(
+  const uint16_t *src,
+  int src_len,
+  uint16_t tag,
+  int out_len
+);
+int32_t oracle_raycast_distance_q16(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t start_x_q16,
+  int32_t start_y_q16,
+  int32_t dir_x_q16,
+  int32_t dir_y_q16,
+  int32_t max_steps
+);
+int32_t oracle_actor_step_packed(
+  int32_t state,
+  int32_t player_dist_q8,
+  int32_t can_see,
+  int32_t rng
+);
+int32_t oracle_player_move_packed(
+  uint32_t map_lo,
+  uint32_t map_hi,
+  int32_t x_q8,
+  int32_t y_q8,
+  int32_t dx_q8,
+  int32_t dy_q8
+);
+int32_t oracle_game_event_hash(
+  int32_t score,
+  int32_t lives,
+  int32_t health,
+  int32_t ammo,
+  int32_t event_kind,
+  int32_t value
+);
+int32_t oracle_menu_reduce_packed(
+  int32_t screen,
+  int32_t cursor,
+  int32_t action,
+  int32_t item_count
+);
+int32_t oracle_measure_text_packed(
+  int32_t text_len,
+  int32_t max_width_chars
+);
+int32_t oracle_audio_reduce_packed(
+  int32_t sound_mode,
+  int32_t music_mode,
+  int32_t digi_mode,
+  int32_t event_kind,
+  int32_t sound_id
+);
 uint32_t oracle_wl_main_build_tables_hash(void);
 uint32_t oracle_wl_main_calc_projection_hash(
   int32_t viewwidth,
@@ -1198,6 +1260,16 @@ enum runtime_trace_symbol_e {
   TRACE_ID_VL_VL_SET_VGA_PLANE_MODE = 148,
   TRACE_ID_VL_VL_SET_TEXT_MODE = 149,
   TRACE_ID_VL_VL_COLOR_BORDER = 150,
+  TRACE_ORACLE_FIXED_MUL = 151,
+  TRACE_ORACLE_FIXED_BY_FRAC = 152,
+  TRACE_ORACLE_RLEW_EXPAND_CHECKSUM = 153,
+  TRACE_ORACLE_RAYCAST_DISTANCE_Q16 = 154,
+  TRACE_ORACLE_ACTOR_STEP_PACKED = 155,
+  TRACE_ORACLE_PLAYER_MOVE_PACKED = 156,
+  TRACE_ORACLE_GAME_EVENT_HASH = 157,
+  TRACE_ORACLE_MENU_REDUCE_PACKED = 158,
+  TRACE_ORACLE_MEASURE_TEXT_PACKED = 159,
+  TRACE_ORACLE_AUDIO_REDUCE_PACKED = 160,
 };
 
 #define TRACE_SYMBOL_MAX 192
@@ -1600,6 +1672,16 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t vl_set_vga_plane_mode_hash;
       uint32_t vl_set_text_mode_hash;
       uint32_t vl_color_border_hash;
+      int32_t fixed_mul_value;
+      int32_t fixed_by_frac_core_value;
+      uint32_t rlew_expand_checksum_hash;
+      int32_t raycast_distance_q16_value;
+      int32_t actor_step_packed_value;
+      int32_t player_move_packed_value;
+      int32_t game_event_hash_value;
+      int32_t menu_reduce_packed_value;
+      int32_t measure_text_packed_value;
+      int32_t audio_reduce_packed_value;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -2481,6 +2563,34 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       vl_set_text_mode_hash = oracle_id_vl_vl_set_text_mode_hash(vl_text_mode, vl_text_rows, vl_text_cols);
       trace_hit(TRACE_ID_VL_VL_COLOR_BORDER);
       vl_color_border_hash = oracle_id_vl_vl_color_border_hash(vh_color, vl_border_ticks);
+      trace_hit(TRACE_ORACLE_FIXED_MUL);
+      fixed_mul_value = oracle_fixed_mul(fixed_a, fixed_b);
+      trace_hit(TRACE_ORACLE_FIXED_BY_FRAC);
+      fixed_by_frac_core_value = oracle_fixed_by_frac(fixed_a, fixed_b);
+      trace_hit(TRACE_ORACLE_RLEW_EXPAND_CHECKSUM);
+      rlew_expand_checksum_hash = oracle_rlew_expand_checksum((const uint16_t *)rlew_source_bytes, rlew_source_len / 2, rlew_tag, rlew_expanded_length / 2);
+      trace_hit(TRACE_ORACLE_RAYCAST_DISTANCE_Q16);
+      raycast_distance_q16_value = oracle_raycast_distance_q16(
+        state->map_lo,
+        state->map_hi,
+        ray_viewx,
+        ray_viewy,
+        ray_viewcos,
+        ray_viewsin,
+        16
+      );
+      trace_hit(TRACE_ORACLE_ACTOR_STEP_PACKED);
+      actor_step_packed_value = oracle_actor_step_packed(ai_state & 3, (state->tick & 7) << 8, (state->flags & 0x400) ? 1 : 0, rng);
+      trace_hit(TRACE_ORACLE_PLAYER_MOVE_PACKED);
+      player_move_packed_value = oracle_player_move_packed(state->map_lo, state->map_hi, state->xq8, state->yq8, strafe, forward);
+      trace_hit(TRACE_ORACLE_GAME_EVENT_HASH);
+      game_event_hash_value = oracle_game_event_hash(bonus_score, bonus_lives, bonus_health, bonus_ammo, menu_action, bonus_value);
+      trace_hit(TRACE_ORACLE_MENU_REDUCE_PACKED);
+      menu_reduce_packed_value = oracle_menu_reduce_packed(menu_screen, menu_cursor, menu_action, menu_items);
+      trace_hit(TRACE_ORACLE_MEASURE_TEXT_PACKED);
+      measure_text_packed_value = oracle_measure_text_packed(text_len, vh_max_width / vh_font_width);
+      trace_hit(TRACE_ORACLE_AUDIO_REDUCE_PACKED);
+      audio_reduce_packed_value = oracle_audio_reduce_packed(current_sound_mode, current_music_mode, sound_mode, menu_action, sound_id);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -2582,7 +2692,17 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         vl_set_split_screen_hash ^
         vl_set_vga_plane_mode_hash ^
         vl_set_text_mode_hash ^
-        vl_color_border_hash;
+        vl_color_border_hash ^
+        (uint32_t)fixed_mul_value ^
+        (uint32_t)fixed_by_frac_core_value ^
+        rlew_expand_checksum_hash ^
+        (uint32_t)raycast_distance_q16_value ^
+        (uint32_t)actor_step_packed_value ^
+        (uint32_t)player_move_packed_value ^
+        (uint32_t)game_event_hash_value ^
+        (uint32_t)menu_reduce_packed_value ^
+        (uint32_t)measure_text_packed_value ^
+        (uint32_t)audio_reduce_packed_value;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

@@ -168,6 +168,16 @@ Symbols exercised by deterministic runtime trace scenarios.
 | ID_VL.C | VL_SetVGAPlaneMode | `done` | called via oracle_id_vl_vl_set_vga_plane_mode_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_VL.C | VL_SetTextMode | `done` | called via oracle_id_vl_vl_set_text_mode_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_VL.C | VL_ColorBorder | `done` | called via oracle_id_vl_vl_color_border_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_fixed_mul | `done` | called via oracle_fixed_mul from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_fixed_by_frac | `done` | called via oracle_fixed_by_frac from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_rlew_expand_checksum | `done` | called via oracle_rlew_expand_checksum from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_raycast_distance_q16 | `done` | called via oracle_raycast_distance_q16 from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_actor_step_packed | `done` | called via oracle_actor_step_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_player_move_packed | `done` | called via oracle_player_move_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_game_event_hash | `done` | called via oracle_game_event_hash from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_menu_reduce_packed | `done` | called via oracle_menu_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_measure_text_packed | `done` | called via oracle_measure_text_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| c-oracle/wolf_oracle.c | oracle_audio_reduce_packed | `done` | called via oracle_audio_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

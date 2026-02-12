@@ -335,6 +335,16 @@ describe('runtime step parity', () => {
     expect(a.includes(148)).toBe(true); // ID_VL.VL_SetVGAPlaneMode
     expect(a.includes(149)).toBe(true); // ID_VL.VL_SetTextMode
     expect(a.includes(150)).toBe(true); // ID_VL.VL_ColorBorder
+    expect(a.includes(151)).toBe(true); // wolf_oracle.fixed_mul
+    expect(a.includes(152)).toBe(true); // wolf_oracle.fixed_by_frac
+    expect(a.includes(153)).toBe(true); // wolf_oracle.rlew_expand_checksum
+    expect(a.includes(154)).toBe(true); // wolf_oracle.raycast_distance_q16
+    expect(a.includes(155)).toBe(true); // wolf_oracle.actor_step_packed
+    expect(a.includes(156)).toBe(true); // wolf_oracle.player_move_packed
+    expect(a.includes(157)).toBe(true); // wolf_oracle.game_event_hash
+    expect(a.includes(158)).toBe(true); // wolf_oracle.menu_reduce_packed
+    expect(a.includes(159)).toBe(true); // wolf_oracle.measure_text_packed
+    expect(a.includes(160)).toBe(true); // wolf_oracle.audio_reduce_packed
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {
