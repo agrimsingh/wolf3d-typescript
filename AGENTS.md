@@ -61,6 +61,9 @@ Rules:
 - Verify required-runtime symbol parity coverage + no-fallback policy: `pnpm runtime:required:verify`
 - Replay runtime repro artifact: `pnpm runtime:replay <artifact.json>`
 - Run smoke tests directly: `pnpm test:smoke`
+- Run PR 1k changed-symbol property selection: `pnpm ci:property:pr`
+- Run one 10k shard parity slice: `CI_PARITY_SHARD=4 pnpm ci:property:shard`
+- Collect CI triage summary/artifacts: `pnpm ci:triage:collect`
 - Run local property tests (1k): `pnpm test:property:local`
 - Run CI property tests (10k): `pnpm test:property:ci`
 - Replay failing seed: `pnpm test:property -- --seed <seed>`

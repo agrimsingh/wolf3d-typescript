@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R8 in progress (CI hardening + release gates)
+**Status:** All R-phases complete (R0..R8)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -102,11 +102,15 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 
 ## Phase R8: CI Hardening + Release Gating
 
-- [ ] Add sharded nightly/release `10k` parity jobs.
-- [ ] Keep PR gate at `1k` with changed-symbol selection.
-- [ ] Add reproducible triage artifacts for parity failures.
-- [ ] Gate: stable CI over full runtime-path suite.
-- [ ] Commit: `phase-r8: parity ci hardening and release gates`
+- [x] Add sharded nightly/release `10k` parity jobs.
+: Added matrix-sharded workflow `.github/workflows/parity-10k.yml` (4 shards, `FAST_CHECK_NUM_RUNS=10000`) for nightly schedule, manual dispatch, and release tags.
+- [x] Keep PR gate at `1k` with changed-symbol selection.
+: Added PR selector runner `scripts/ci/run-pr-property-suite.ts`, script `pnpm ci:property:pr`, and workflow `.github/workflows/parity-pr.yml` to run targeted 1k property suites.
+- [x] Add reproducible triage artifacts for parity failures.
+: Added triage collector `scripts/ci/collect-triage.ts`, script `pnpm ci:triage:collect`, and workflow artifact uploads (`artifacts/ci-triage-summary.md`, `test/repro/**`, runtime lock artifacts).
+- [x] Gate: stable CI over full runtime-path suite.
+: Local validation green on `pnpm verify`, `pnpm test:property:ci`, `FAST_CHECK_NUM_RUNS=1 pnpm ci:property:pr`, and `FAST_CHECK_NUM_RUNS=10 CI_PARITY_SHARD=4 pnpm ci:property:shard`.
+- [x] Commit: `phase-r8: parity ci hardening and release gates`
 
 ## Global Rules
 

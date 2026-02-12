@@ -1,0 +1,83 @@
+name: parity-pr
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: parity-pr-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch WL1 assets
+        run: pnpm assets:fetch
+
+      - name: Validate assets
+        run: pnpm verify:assets
+
+      - name: Verify WOLFSRC compatibility
+        run: pnpm wasm:verify:compat
+
+      - name: Build oracle wasm
+        run: pnpm wasm:build
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: PR parity suite (1k changed-symbol selection)
+        env:
+          FAST_CHECK_NUM_RUNS: "1000"
+        run: pnpm ci:property:pr
+
+      - name: Runtime checkpoint lock
+        run: pnpm runtime:checkpoints:verify
+
+      - name: Runtime episode lock
+        run: pnpm runtime:episode:verify
+
+      - name: Browser smoke
+        run: pnpm test:smoke
+
+      - name: Build app
+        run: pnpm build
+
+      - name: Collect triage
+        if: always()
+        run: pnpm ci:triage:collect
+
+      - name: Upload triage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-pr-triage-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            artifacts/ci-triage-summary.md
+            test/repro/**
+            specs/generated/runtime-checkpoints*.json
+            specs/generated/runtime-episode-checkpoints*.json

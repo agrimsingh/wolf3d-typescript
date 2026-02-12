@@ -1,0 +1,89 @@
+name: parity-10k
+
+on:
+  schedule:
+    - cron: "15 4 * * *"
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+concurrency:
+  group: parity-10k-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  parity-shards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.2
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch WL1 assets
+        run: pnpm assets:fetch
+
+      - name: Validate assets
+        run: pnpm verify:assets
+
+      - name: Verify WOLFSRC compatibility
+        run: pnpm wasm:verify:compat
+
+      - name: Build oracle wasm
+        run: pnpm wasm:build
+
+      - name: Sharded 10k parity
+        env:
+          FAST_CHECK_NUM_RUNS: "10000"
+          CI_PARITY_SHARD: "${{ matrix.shard }}"
+        run: pnpm ci:property:shard
+
+      - name: Runtime checkpoint lock (shard 4)
+        if: matrix.shard == 4
+        run: pnpm runtime:checkpoints:verify
+
+      - name: Runtime episode lock (shard 4)
+        if: matrix.shard == 4
+        run: pnpm runtime:episode:verify
+
+      - name: Browser smoke + build (shard 4)
+        if: matrix.shard == 4
+        run: |
+          pnpm test:smoke
+          pnpm build
+
+      - name: Collect triage
+        if: always()
+        run: pnpm ci:triage:collect
+
+      - name: Upload triage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-10k-shard-${{ matrix.shard }}-${{ github.run_id }}
+          if-no-files-found: ignore
+          path: |
+            artifacts/ci-triage-summary.md
+            test/repro/**
+            specs/generated/runtime-checkpoints*.json
+            specs/generated/runtime-episode-checkpoints*.json
