@@ -120,16 +120,16 @@
 
 ## G10: Production Runtime Swap + Oracle Isolation
 
-- [ ] Production app path uses pure TS runtime only.
-- [ ] Oracle/WASM remains test harness only.
-- [ ] Remove synthetic scenario-driver and prototype fallback routes.
-- [ ] Gate: `pnpm runtime:required:verify`
-- [ ] Gate: `pnpm test:smoke`
-- [ ] Gate: `pnpm build`
-- [ ] Gate: runtime guard scripts all green
-- [ ] Gate: agent-browser playable smoke without oracle dependency in production path
-- [ ] Tests green
-- [ ] Phase commit pushed (`g10: production path on pure ts runtime`)
+- [x] Production app path uses pure TS runtime only.
+- [x] Oracle/WASM remains test harness only.
+- [x] Remove synthetic scenario-driver and prototype fallback routes.
+- [x] Gate: `pnpm runtime:required:verify`
+- [x] Gate: `pnpm test:smoke`
+- [x] Gate: `pnpm build`
+- [x] Gate: runtime guard scripts all green
+- [x] Gate: agent-browser playable smoke without oracle dependency in production path
+- [x] Tests green
+- [x] Phase commit pushed (`g10: production path on pure ts runtime`)
 
 ## G11: Full-Episode Parity Lock + CI Freeze
 

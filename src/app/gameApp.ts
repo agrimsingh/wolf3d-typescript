@@ -1,5 +1,5 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
-import { loadWl1RuntimeScenarios } from '../runtime/wl1RuntimeScenarios';
+import { loadWl1Campaign } from '../runtime/wl1Campaign';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController, type RuntimeScenario } from './runtimeController';
 
@@ -9,8 +9,6 @@ const MINIMAP_TILE_SIZE = 8;
 const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
 const AREATILE = 107;
-const PROTOTYPE_BASELINE_BANNER = 'Prototype runtime baseline active (G0-G9)';
-const PROTOTYPE_BASELINE_BANNER_ID = 'runtime-baseline-banner';
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -82,22 +80,12 @@ export class WolfApp {
   private readonly image: ImageData;
   private readonly controller = new RuntimeAppController({
     audio: new WebAudioRuntimeAdapter(),
-    scenarioLoader: () => loadWl1RuntimeScenarios('/assets/wl1', 64),
+    scenarioLoader: () => loadWl1Campaign('/assets/wl1', 64),
   });
   private loopHandle = 0;
   private lastMouseClientX: number | null = null;
 
   constructor(container: HTMLElement) {
-    if (!container.querySelector(`#${PROTOTYPE_BASELINE_BANNER_ID}`)) {
-      const banner = document.createElement('div');
-      banner.id = PROTOTYPE_BASELINE_BANNER_ID;
-      banner.textContent = PROTOTYPE_BASELINE_BANNER;
-      banner.style.color = '#ffb703';
-      banner.style.font = '12px monospace';
-      banner.style.marginBottom = '8px';
-      container.appendChild(banner);
-    }
-
     this.canvas = document.createElement('canvas');
     this.canvas.width = WIDTH;
     this.canvas.height = HEIGHT;
@@ -189,9 +177,6 @@ export class WolfApp {
     this.ctx.fillStyle = '#d6d6d6';
     this.ctx.font = '12px monospace';
     this.ctx.fillText('Loading WL1 assets and runtime...', 18, HEIGHT / 2);
-    this.ctx.fillStyle = '#ffb703';
-    this.ctx.font = '10px monospace';
-    this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 18, HEIGHT / 2 + 16);
   }
 
   private drawTitleFrame(): void {
@@ -200,9 +185,6 @@ export class WolfApp {
     this.ctx.fillStyle = '#f7f1d1';
     this.ctx.font = '18px monospace';
     this.ctx.fillText('Wolf3D TS Runtime', 58, 82);
-    this.ctx.fillStyle = '#ffb703';
-    this.ctx.font = '10px monospace';
-    this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 46, 98);
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.font = '12px monospace';
     this.ctx.fillText('Press Enter to open Control Panel', 52, 128);
@@ -216,14 +198,11 @@ export class WolfApp {
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.font = '14px monospace';
     this.ctx.fillText('Wolf3D TS Control Panel', 18, 24);
-    this.ctx.fillStyle = '#ffb703';
-    this.ctx.font = '10px monospace';
-    this.ctx.fillText(PROTOTYPE_BASELINE_BANNER, 18, 34);
     this.ctx.font = '10px monospace';
     this.ctx.fillStyle = '#d6dfef';
-    this.ctx.fillText('Arrow keys: select map  Enter: New Game', 18, 48);
+    this.ctx.fillText('Arrow keys: select map  Enter: New Game', 18, 40);
 
-    let y = 70;
+    let y = 62;
     for (let i = 0; i < state.scenarios.length; i++) {
       const scenario = state.scenarios[i]!;
       const selected = i === state.selectedScenarioIndex;

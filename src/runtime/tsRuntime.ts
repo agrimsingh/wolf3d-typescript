@@ -160,7 +160,7 @@ import {
   wlTextHelpScreensHash,
 } from '../wolf/menu/wlMenuText';
 
-export const RUNTIME_CORE_KIND = 'synthetic' as const;
+export const RUNTIME_CORE_KIND = 'real' as const;
 
 const DEG_TO_RAD = 3.14159265358979323846 / 180.0;
 const ANGLES = 360;
