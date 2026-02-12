@@ -66,13 +66,13 @@
 
 ## Phase F4: Runtime-Required TS Parity Port Waves
 
-- [ ] Wave A: ID_CA/ID_MM/ID_PM runtime-required symbols parity.
-- [ ] Wave B: WL_DRAW/WL_SCALE/ID_VH/ID_VL runtime-required symbols parity.
-- [ ] Wave C: WL_STATE/WL_ACT1/WL_ACT2/WL_AGENT/WL_PLAY/WL_GAME/WL_INTER runtime-required symbols parity.
-- [ ] Wave D: WL_MENU/WL_TEXT/ID_US_1/ID_IN runtime-required symbols parity.
-- [ ] Wave E: ID_SD runtime-required audio-state parity.
-- [ ] Gate: all required-runtime symbols marked done with explicit property tests.
-- [ ] Commit: `phase-f4: runtime-required symbol parity complete`
+- [x] Wave A: ID_CA/ID_MM/ID_PM runtime-required symbols parity.
+- [x] Wave B: WL_DRAW/WL_SCALE/ID_VH/ID_VL runtime-required symbols parity.
+- [x] Wave C: WL_STATE/WL_ACT1/WL_ACT2/WL_AGENT/WL_PLAY/WL_GAME/WL_INTER runtime-required symbols parity.
+- [x] Wave D: WL_MENU/WL_TEXT/ID_US_1/ID_IN runtime-required symbols parity.
+- [x] Wave E: ID_SD runtime-required audio-state parity.
+- [x] Gate: all required-runtime symbols marked done with explicit property tests.
+- [x] Commit: `phase-f4: runtime-required symbol parity complete`
 
 ## Phase F5: Browser Runtime Core Replacement
 
