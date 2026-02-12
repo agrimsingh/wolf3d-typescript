@@ -179,7 +179,7 @@ case "$PHASE" in
   K2)
     run_phase K2 "wl6:p2 contracts and deterministic state schema" \
       "pnpm typecheck" \
-      "pnpm lint --filter src/oracle src/runtime src/wolf" 
+      "pnpm lint --filter src/oracle src/runtime src/wolf"
     ;;
   K3)
     run_phase K3 "wl6:p3 real wolfsrc runtime determinism" \
@@ -195,30 +195,30 @@ case "$PHASE" in
     ;;
   K5)
     run_phase K5 "wl6:p5 full-world map boot parity" \
-      "pnpm test:property:local -- test/property/phase2.map-loading.test.ts" \
-      "pnpm test:property:ci -- test/property/phase2.map-loading.test.ts"
+      "pnpm test:property:local test/property/phase2.map-loading.test.ts" \
+      "pnpm test:property:ci test/property/phase2.map-loading.test.ts"
     ;;
   K6)
     run_phase K6 "wl6:p6 renderer parity" \
-      "pnpm test:property:local -- test/property/raycasting" \
-      "pnpm test:property:ci -- test/property/raycasting" \
+      "pnpm test:property:local test/property/phase3.raycast.test.ts test/property/runtime.renderer-orientation.test.ts" \
+      "pnpm test:property:ci test/property/phase3.raycast.test.ts test/property/runtime.renderer-orientation.test.ts" \
       "pnpm runtime:checkpoints:verify"
     ;;
   K7)
     run_phase K7 "wl6:p7 player movement doors gameplay loop" \
-      "pnpm test:property:local -- test/property/movement" \
-      "pnpm test:property:ci -- test/property/movement" \
+      "pnpm test:property:local test/property/phase5.player-movement.test.ts" \
+      "pnpm test:property:ci test/property/phase5.player-movement.test.ts" \
       "pnpm runtime:checkpoints:generate"
     ;;
   K8)
     run_phase K8 "wl6:p8 ai actor combat parity" \
-      "pnpm test:property:local -- test/property/actors" \
-      "pnpm test:property:ci -- test/property/actors"
+      "pnpm test:property:local test/property/phase4.actors-ai.test.ts" \
+      "pnpm test:property:ci test/property/phase4.actors-ai.test.ts"
     ;;
   K9)
-    run_phase K9 "wl6:p9 menu text input audo parity" \
-      "pnpm test:property:local -- test/property/menu" \
-      "pnpm test:property:ci -- test/property/menu"
+    run_phase K9 "wl6:p9 menu text input audio parity" \
+      "pnpm test:property:local test/property/phase7.menu-text.test.ts" \
+      "pnpm test:property:ci test/property/phase7.menu-text.test.ts"
     ;;
   K10)
     run_phase K10 "wl6:p10 full runtime production swap" \
