@@ -51,6 +51,11 @@ jobs:
       - name: Build oracle wasm
         run: pnpm wasm:build
 
+      - name: Runtime manifest + full symbol classification
+        run: |
+          pnpm runtime:manifest:verify
+          pnpm runtime:classification:verify
+
       - name: Typecheck
         run: pnpm typecheck
 
@@ -86,3 +91,6 @@ jobs:
             test/repro/**
             specs/generated/runtime-checkpoints*.json
             specs/generated/runtime-episode-checkpoints*.json
+            specs/generated/runtime-symbol-hits.json
+            specs/generated/runtime-symbol-lock.json
+            specs/generated/wolfsrc-runtime-classification.json
