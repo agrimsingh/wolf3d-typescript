@@ -277,7 +277,8 @@ export class WolfApp {
         if (hit && y >= top && y <= bottom) {
           if (tex) {
             const ty = ((((y - top) * TEXTURE_SIZE) / Math.max(1, wallHeight)) | 0) & (TEXTURE_SIZE - 1);
-            const palIndex = tex[(ty * TEXTURE_SIZE + hit.texX) & (TEXTURE_SIZE * TEXTURE_SIZE - 1)] ?? 0;
+            // VSWAP wall chunks are laid out per-column; sample in column-major order.
+            const palIndex = tex[(hit.texX * TEXTURE_SIZE + ty) & (TEXTURE_SIZE * TEXTURE_SIZE - 1)] ?? 0;
             let [r, g, b] = paletteIndexToRgb(palIndex);
             if (hit.side === 1) {
               r = (r * 3) >> 2;

@@ -128,18 +128,19 @@ export class RuntimeAppController {
 
     if (key('KeyW') || key('ArrowUp')) inputMask |= 1 << 0;
     if (key('KeyS') || key('ArrowDown')) inputMask |= 1 << 1;
-    if (key('ArrowLeft')) inputMask |= 1 << 2;
-    if (key('ArrowRight')) inputMask |= 1 << 3;
+    // Runtime turn polarity from oracle control path is inverted relative to expected UI arrows.
+    if (key('ArrowLeft')) inputMask |= 1 << 3;
+    if (key('ArrowRight')) inputMask |= 1 << 2;
     if (key('KeyA')) inputMask |= 1 << 4;
     if (key('KeyD')) inputMask |= 1 << 5;
     if (key('Space')) inputMask |= 1 << 6;
     if (key('KeyE') || key('Enter')) inputMask |= 1 << 7;
 
     if (this.mouseTurnAccumulator <= -2) {
-      inputMask |= 1 << 2;
+      inputMask |= 1 << 3;
       this.mouseTurnAccumulator += 2;
     } else if (this.mouseTurnAccumulator >= 2) {
-      inputMask |= 1 << 3;
+      inputMask |= 1 << 2;
       this.mouseTurnAccumulator -= 2;
     }
 
