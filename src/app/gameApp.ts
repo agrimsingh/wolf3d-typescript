@@ -1,5 +1,6 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
 import { loadWl1Campaign } from '../runtime/wl1Campaign';
+import { loadModernAssetMap, type ModernAssetRect } from '../assets/modernAssetMap';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController, type RuntimeScenario } from './runtimeController';
 
@@ -12,6 +13,7 @@ const AREATILE = 107;
 const BASELINE_STATUS_TEXT = 'Baseline: WL6 migration in progress (K0)';
 const DATA_VARIANT = 'WL6';
 const CAMPAIGN_BASE_URL = '/assets/wl6/raw';
+const MODERN_ASSET_BASE_URL = '/assets/wl6-modern';
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -92,6 +94,8 @@ export class WolfApp {
   });
   private loopHandle = 0;
   private lastMouseClientX: number | null = null;
+  private hudPanelImage: HTMLImageElement | null = null;
+  private hudPanelRect: ModernAssetRect | null = null;
 
   constructor(container: HTMLElement) {
     this.canvas = document.createElement('canvas');
@@ -107,6 +111,7 @@ export class WolfApp {
 
     this.bindControls();
     void this.loadWallTextures();
+    void this.loadHudPanel();
     void this.controller.boot();
     this.loopHandle = requestAnimationFrame((now) => this.loop(now));
   }
@@ -122,6 +127,24 @@ export class WolfApp {
       }
     } catch {
       // Keep runtime on procedural fallback if textures cannot be loaded.
+    }
+  }
+
+  private async loadHudPanel(): Promise<void> {
+    try {
+      const assetMap = await loadModernAssetMap();
+      const hudPanel = assetMap.entries.find((entry) => entry.targetKind === 'uiSprite' && entry.targetId === 'ui.hud.panel' && !!entry.rect);
+      if (!hudPanel || !hudPanel.rect) {
+        return;
+      }
+      const image = new Image();
+      image.src = `${MODERN_ASSET_BASE_URL}/${hudPanel.sourceFile}`;
+      await image.decode();
+      this.hudPanelImage = image;
+      this.hudPanelRect = hudPanel.rect;
+    } catch {
+      this.hudPanelImage = null;
+      this.hudPanelRect = null;
     }
   }
 
@@ -287,6 +310,7 @@ export class WolfApp {
     }
 
     this.ctx.putImageData(this.image, 0, 0);
+    this.drawHudOverlay();
     this.drawMiniMap(mapLo, mapHi, snapshot, scenario ?? null);
 
     this.ctx.fillStyle = '#f5f7ff';
@@ -299,6 +323,19 @@ export class WolfApp {
     this.ctx.fillText(`hp:${snapshot.health} ammo:${snapshot.ammo} tick:${snapshot.tick}`, 8, 24);
     this.ctx.fillText(`x:${(posXQ8 / 256).toFixed(2)} y:${(posYQ8 / 256).toFixed(2)} angle:${snapshot.angleDeg}`, 8, 36);
     this.ctx.fillText(`snapshot:${snapshot.hash >>> 0} frame:${state.frameHash >>> 0}`, 8, HEIGHT - 10);
+  }
+
+  private drawHudOverlay(): void {
+    if (!this.hudPanelImage || !this.hudPanelRect) {
+      return;
+    }
+    const { x, y, w, h } = this.hudPanelRect;
+    const hudHeight = 44;
+    this.ctx.save();
+    this.ctx.globalAlpha = 0.75;
+    this.ctx.imageSmoothingEnabled = false;
+    this.ctx.drawImage(this.hudPanelImage, x, y, w, h, 0, HEIGHT - hudHeight, WIDTH, hudHeight);
+    this.ctx.restore();
   }
 
   private drawMiniMap(mapLo: number, mapHi: number, snapshot: RuntimeSnapshot, scenario: RuntimeScenario | null): void {

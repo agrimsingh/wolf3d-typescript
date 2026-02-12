@@ -6,7 +6,7 @@ Track the remaining gap between the current browser runtime and a gameplay-compl
 
 ## Current Reality (2026-02-12)
 
-Progress checkpoint: `K0..K6` are complete; `K7` (renderer/orientation/sprites/HUD parity) is now active.
+Progress checkpoint: `K0..K7` are complete; `K8` (player/doors/pushwalls/game-loop parity) is now active.
 
 1. Runtime currently boots and renders in browser, but the experience still exposes prototype-era behavior and presentation shortcuts.
 2. The app has existing WL1-centric file/contract paths that must be generalized for WL6 canonical runtime ingestion.

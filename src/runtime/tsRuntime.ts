@@ -2558,8 +2558,8 @@ export class TsRuntimePort implements RuntimePort {
       for (let y = top; y <= bottom; y++) {
         if (texture) {
           const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
-          // VSWAP walls are stored column-major (x-major).
-          const sampleX = (63 - hit.texX) & 63;
+          // VSWAP walls are stored column-major (x-major). castRayFullMap already applies side-dependent flips.
+          const sampleX = hit.texX & 63;
           indexed[y * FRAME_WIDTH + x] = texture[(sampleX * 64 + ty) & 4095] ?? wallIndex;
         } else {
           indexed[y * FRAME_WIDTH + x] = wallIndex;
