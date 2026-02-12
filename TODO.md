@@ -57,12 +57,12 @@
 
 ## Phase F3: Full Symbol Classification Burn-Down
 
-- [ ] Replace static trace symbol map with generated inventory-backed map.
+- [x] Replace static trace symbol map with generated inventory-backed map.
 - [x] Classify all 568 manifest symbols as `required-runtime` or `excluded-non-runtime` with evidence.
-- [ ] Generate `specs/runtime-symbol-manifest.md` from classification artifacts.
+- [x] Generate `specs/runtime-symbol-manifest.md` from classification artifacts.
 - [x] Add verification that zero symbols remain unclassified.
-- [ ] Gate: classification + lock reproducibility green.
-- [ ] Commit: `phase-f3: full symbol classification and runtime manifest freeze`
+- [x] Gate: classification + lock reproducibility green.
+- [x] Commit: `phase-f3: full symbol classification and runtime manifest freeze`
 
 ## Phase F4: Runtime-Required TS Parity Port Waves
 

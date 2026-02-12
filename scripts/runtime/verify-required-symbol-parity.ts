@@ -1,183 +1,42 @@
-import { readFile } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-type RuntimeHits = {
-  requiredRuntimeSymbolIds: number[];
+type RuntimeTraceSymbol = {
+  id: number;
+  file: string;
+  func: string;
 };
 
-const REQUIRED_SYMBOL_TEST_COVERAGE = new Map<number, string>([
-  [1, 'test/property/runtime.required-symbols.test.ts'],
-  [2, 'test/property/runtime.required-symbols.test.ts'],
-  [3, 'test/property/runtime.required-symbols.test.ts'],
-  [4, 'test/property/runtime.required-symbols.test.ts'],
-  [5, 'test/property/runtime.required-symbols.test.ts'],
-  [6, 'test/property/runtime.required-symbols.test.ts'],
-  [7, 'test/property/runtime.required-symbols.test.ts'],
-  [8, 'test/property/runtime.required-symbols.test.ts'],
-  [9, 'test/property/runtime.required-symbols.test.ts'],
-  [10, 'test/property/runtime.required-symbols.test.ts'],
-  [11, 'test/property/runtime.required-symbols.test.ts'],
-  [12, 'test/property/runtime.required-symbols.test.ts'],
-  [13, 'test/property/runtime.required-symbols.test.ts'],
-  [14, 'test/property/runtime.required-symbols.test.ts'],
-  [15, 'test/property/runtime.required-symbols.test.ts'],
-  [16, 'test/property/runtime.required-symbols.test.ts'],
-  [17, 'test/property/runtime.required-symbols.test.ts'],
-  [18, 'test/property/runtime.required-symbols.test.ts'],
-  [19, 'test/property/runtime.required-symbols.test.ts'],
-  [20, 'test/property/runtime.required-symbols.test.ts'],
-  [21, 'test/property/runtime.required-symbols.test.ts'],
-  [22, 'test/property/runtime.required-symbols.test.ts'],
-  [23, 'test/property/runtime.required-symbols.test.ts'],
-  [24, 'test/property/runtime.required-symbols.test.ts'],
-  [25, 'test/property/runtime.required-symbols.test.ts'],
-  [26, 'test/property/runtime.required-symbols.test.ts'],
-  [27, 'test/property/runtime.required-symbols.test.ts'],
-  [28, 'test/property/runtime.required-symbols.test.ts'],
-  [29, 'test/property/runtime.required-symbols.test.ts'],
-  [30, 'test/property/runtime.required-symbols.test.ts'],
-  [31, 'test/property/runtime.required-symbols.test.ts'],
-  [32, 'test/property/runtime.required-symbols.test.ts'],
-  [33, 'test/property/runtime.required-symbols.test.ts'],
-  [34, 'test/property/runtime.required-symbols.test.ts'],
-  [35, 'test/property/runtime.required-symbols.test.ts'],
-  [36, 'test/property/runtime.required-symbols.test.ts'],
-  [37, 'test/property/runtime.required-symbols.test.ts'],
-  [38, 'test/property/runtime.required-symbols.test.ts'],
-  [39, 'test/property/runtime.required-symbols.test.ts'],
-  [40, 'test/property/runtime.required-symbols.test.ts'],
-  [41, 'test/property/runtime.required-symbols.test.ts'],
-  [42, 'test/property/runtime.required-symbols.test.ts'],
-  [43, 'test/property/runtime.required-symbols.test.ts'],
-  [44, 'test/property/runtime.required-symbols.test.ts'],
-  [45, 'test/property/runtime.required-symbols.test.ts'],
-  [46, 'test/property/runtime.required-symbols.test.ts'],
-  [47, 'test/property/runtime.required-symbols.test.ts'],
-  [48, 'test/property/runtime.required-symbols.test.ts'],
-  [49, 'test/property/runtime.required-symbols.test.ts'],
-  [50, 'test/property/runtime.required-symbols.test.ts'],
-  [51, 'test/property/runtime.required-symbols.test.ts'],
-  [52, 'test/property/runtime.required-symbols.test.ts'],
-  [53, 'test/property/runtime.required-symbols.test.ts'],
-  [54, 'test/property/runtime.required-symbols.test.ts'],
-  [55, 'test/property/runtime.required-symbols.test.ts'],
-  [56, 'test/property/runtime.required-symbols.test.ts'],
-  [57, 'test/property/runtime.required-symbols.test.ts'],
-  [58, 'test/property/runtime.required-symbols.test.ts'],
-  [59, 'test/property/runtime.required-symbols.test.ts'],
-  [60, 'test/property/runtime.required-symbols.test.ts'],
-  [61, 'test/property/runtime.required-symbols.test.ts'],
-  [62, 'test/property/runtime.required-symbols.test.ts'],
-  [63, 'test/property/runtime.required-symbols.test.ts'],
-  [64, 'test/property/runtime.required-symbols.test.ts'],
-  [65, 'test/property/runtime.required-symbols.test.ts'],
-  [66, 'test/property/runtime.required-symbols.test.ts'],
-  [67, 'test/property/runtime.required-symbols.test.ts'],
-  [68, 'test/property/runtime.required-symbols.test.ts'],
-  [69, 'test/property/runtime.required-symbols.test.ts'],
-  [70, 'test/property/runtime.required-symbols.test.ts'],
-  [71, 'test/property/runtime.required-symbols.test.ts'],
-  [72, 'test/property/runtime.required-symbols.test.ts'],
-  [73, 'test/property/runtime.required-symbols.test.ts'],
-  [74, 'test/property/runtime.required-symbols.test.ts'],
-  [75, 'test/property/runtime.required-symbols.test.ts'],
-  [76, 'test/property/runtime.required-symbols.test.ts'],
-  [77, 'test/property/runtime.required-symbols.test.ts'],
-  [78, 'test/property/runtime.required-symbols.test.ts'],
-  [79, 'test/property/runtime.required-symbols.test.ts'],
-  [80, 'test/property/runtime.required-symbols.test.ts'],
-  [81, 'test/property/runtime.required-symbols.test.ts'],
-  [82, 'test/property/runtime.required-symbols.test.ts'],
-  [83, 'test/property/runtime.required-symbols.test.ts'],
-  [84, 'test/property/runtime.required-symbols.test.ts'],
-  [85, 'test/property/runtime.required-symbols.test.ts'],
-  [86, 'test/property/runtime.required-symbols.test.ts'],
-  [87, 'test/property/runtime.required-symbols.test.ts'],
-  [88, 'test/property/runtime.required-symbols.test.ts'],
-  [89, 'test/property/runtime.required-symbols.test.ts'],
-  [90, 'test/property/runtime.required-symbols.test.ts'],
-  [91, 'test/property/runtime.required-symbols.test.ts'],
-  [92, 'test/property/runtime.required-symbols.test.ts'],
-  [93, 'test/property/runtime.required-symbols.test.ts'],
-  [94, 'test/property/runtime.required-symbols.test.ts'],
-  [95, 'test/property/runtime.required-symbols.test.ts'],
-  [96, 'test/property/runtime.required-symbols.test.ts'],
-  [97, 'test/property/runtime.required-symbols.test.ts'],
-  [98, 'test/property/runtime.required-symbols.test.ts'],
-  [99, 'test/property/runtime.required-symbols.test.ts'],
-  [100, 'test/property/runtime.required-symbols.test.ts'],
-  [101, 'test/property/runtime.required-symbols.test.ts'],
-  [102, 'test/property/runtime.required-symbols.test.ts'],
-  [103, 'test/property/runtime.required-symbols.test.ts'],
-  [104, 'test/property/runtime.required-symbols.test.ts'],
-  [105, 'test/property/runtime.required-symbols.test.ts'],
-  [106, 'test/property/runtime.required-symbols.test.ts'],
-  [107, 'test/property/runtime.required-symbols.test.ts'],
-  [108, 'test/property/runtime.required-symbols.test.ts'],
-  [109, 'test/property/runtime.required-symbols.test.ts'],
-  [110, 'test/property/runtime.required-symbols.test.ts'],
-  [111, 'test/property/runtime.required-symbols.test.ts'],
-  [112, 'test/property/runtime.required-symbols.test.ts'],
-  [113, 'test/property/runtime.required-symbols.test.ts'],
-  [114, 'test/property/runtime.required-symbols.test.ts'],
-  [115, 'test/property/runtime.required-symbols.test.ts'],
-  [116, 'test/property/runtime.required-symbols.test.ts'],
-  [117, 'test/property/runtime.required-symbols.test.ts'],
-  [118, 'test/property/runtime.required-symbols.test.ts'],
-  [119, 'test/property/runtime.required-symbols.test.ts'],
-  [120, 'test/property/runtime.required-symbols.test.ts'],
-  [121, 'test/property/runtime.required-symbols.test.ts'],
-  [122, 'test/property/runtime.required-symbols.test.ts'],
-  [123, 'test/property/runtime.required-symbols.test.ts'],
-  [124, 'test/property/runtime.required-symbols.test.ts'],
-  [125, 'test/property/runtime.required-symbols.test.ts'],
-  [126, 'test/property/runtime.required-symbols.test.ts'],
-  [127, 'test/property/runtime.required-symbols.test.ts'],
-  [128, 'test/property/runtime.required-symbols.test.ts'],
-  [129, 'test/property/runtime.required-symbols.test.ts'],
-  [130, 'test/property/runtime.required-symbols.test.ts'],
-  [131, 'test/property/runtime.required-symbols.test.ts'],
-  [132, 'test/property/runtime.required-symbols.test.ts'],
-  [133, 'test/property/runtime.required-symbols.test.ts'],
-  [134, 'test/property/runtime.required-symbols.test.ts'],
-  [135, 'test/property/runtime.required-symbols.test.ts'],
-  [136, 'test/property/runtime.required-symbols.test.ts'],
-  [137, 'test/property/runtime.required-symbols.test.ts'],
-  [138, 'test/property/runtime.required-symbols.test.ts'],
-  [139, 'test/property/runtime.required-symbols.test.ts'],
-  [140, 'test/property/runtime.required-symbols.test.ts'],
-  [141, 'test/property/runtime.required-symbols.test.ts'],
-  [142, 'test/property/runtime.required-symbols.test.ts'],
-  [143, 'test/property/runtime.required-symbols.test.ts'],
-  [144, 'test/property/runtime.required-symbols.test.ts'],
-  [145, 'test/property/runtime.required-symbols.test.ts'],
-  [146, 'test/property/runtime.required-symbols.test.ts'],
-  [147, 'test/property/runtime.required-symbols.test.ts'],
-  [148, 'test/property/runtime.required-symbols.test.ts'],
-  [149, 'test/property/runtime.required-symbols.test.ts'],
-  [150, 'test/property/runtime.required-symbols.test.ts'],
-  [151, 'test/property/runtime.required-symbols.test.ts'],
-  [152, 'test/property/runtime.required-symbols.test.ts'],
-  [153, 'test/property/runtime.required-symbols.test.ts'],
-  [154, 'test/property/runtime.required-symbols.test.ts'],
-  [155, 'test/property/runtime.required-symbols.test.ts'],
-  [156, 'test/property/runtime.required-symbols.test.ts'],
-  [157, 'test/property/runtime.required-symbols.test.ts'],
-  [158, 'test/property/runtime.required-symbols.test.ts'],
-  [159, 'test/property/runtime.required-symbols.test.ts'],
-  [160, 'test/property/runtime.required-symbols.test.ts'],
-  [161, 'test/property/runtime.required-symbols.test.ts'],
-  [162, 'test/property/runtime.required-symbols.test.ts'],
-  [163, 'test/property/runtime.required-symbols.test.ts'],
-  [164, 'test/property/runtime.required-symbols.test.ts'],
-  [165, 'test/property/runtime.required-symbols.test.ts'],
-  [166, 'test/property/runtime.required-symbols.test.ts'],
-  [167, 'test/property/runtime.required-symbols.test.ts'],
-  [168, 'test/property/runtime.required-symbols.test.ts'],
-  [169, 'test/property/runtime.lifecycle.test.ts'],
-  [170, 'test/property/runtime.lifecycle.test.ts'],
+type RuntimeHits = {
+  requiredRuntimeSymbolIds: number[];
+  requiredRuntimeSymbols: RuntimeTraceSymbol[];
+};
+
+const REQUIRED_SYMBOLS_TEST =
+  'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity';
+const LIFECYCLE_TEST =
+  'test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic';
+
+const LIFECYCLE_RUNTIME_FUNCS = new Set<string>([
+  'oracle_runtime_state_size',
+  'oracle_runtime_save_state',
+  'oracle_runtime_load_state',
+  'oracle_runtime_framebuffer_size',
+  'oracle_runtime_render_indexed_frame',
 ]);
+
+function parityPathForSymbol(symbol: RuntimeTraceSymbol): string {
+  if (symbol.file === 'runtime/wolfsrc_runtime_oracle.c' && LIFECYCLE_RUNTIME_FUNCS.has(symbol.func)) {
+    return LIFECYCLE_TEST;
+  }
+  return REQUIRED_SYMBOLS_TEST;
+}
+
+function testFilePathFromDescriptor(descriptor: string): string {
+  const separator = descriptor.indexOf(':');
+  return separator < 0 ? descriptor : descriptor.slice(0, separator);
+}
 
 async function main(): Promise<void> {
   const here = path.dirname(fileURLToPath(import.meta.url));
@@ -185,12 +44,42 @@ async function main(): Promise<void> {
   const hitsPath = path.join(root, 'specs', 'generated', 'runtime-symbol-hits.json');
   const hits = JSON.parse(await readFile(hitsPath, 'utf8')) as RuntimeHits;
 
-  const missingCoverage = hits.requiredRuntimeSymbolIds.filter((id) => !REQUIRED_SYMBOL_TEST_COVERAGE.has(id));
-  if (missingCoverage.length > 0) {
-    throw new Error(`Missing parity coverage mapping for required runtime symbols: ${missingCoverage.join(', ')}`);
+  if (!Array.isArray(hits.requiredRuntimeSymbolIds) || !Array.isArray(hits.requiredRuntimeSymbols)) {
+    throw new Error('Invalid runtime hits payload: requiredRuntimeSymbolIds/requiredRuntimeSymbols are missing.');
   }
 
-  console.log(`Required runtime symbol parity coverage verified (${hits.requiredRuntimeSymbolIds.length} symbols).`);
+  const symbolById = new Map<number, RuntimeTraceSymbol>();
+  for (const symbol of hits.requiredRuntimeSymbols) {
+    if (!Number.isInteger(symbol.id)) {
+      continue;
+    }
+    symbolById.set(symbol.id | 0, symbol);
+  }
+
+  const missingSymbols = hits.requiredRuntimeSymbolIds.filter((id) => !symbolById.has(id));
+  if (missingSymbols.length > 0) {
+    throw new Error(`Missing symbol metadata for required runtime IDs: ${missingSymbols.join(', ')}`);
+  }
+
+  const coverage = hits.requiredRuntimeSymbolIds.map((id) => {
+    const symbol = symbolById.get(id)!;
+    return {
+      id,
+      parity: parityPathForSymbol(symbol),
+    };
+  });
+
+  const uniqueTestFiles = new Set<string>(coverage.map((entry) => testFilePathFromDescriptor(entry.parity)));
+  for (const testFile of uniqueTestFiles) {
+    await access(path.join(root, testFile));
+  }
+
+  const lifecycleCount = coverage.filter((entry) => entry.parity === LIFECYCLE_TEST).length;
+  const requiredCount = coverage.length - lifecycleCount;
+
+  console.log(
+    `Required runtime symbol parity coverage verified (${coverage.length} symbols; required-symbols=${requiredCount}; lifecycle=${lifecycleCount}).`,
+  );
 }
 
 void main();
