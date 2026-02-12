@@ -44,6 +44,22 @@ generate_checksums() {
   ) >"$out"
 }
 
+create_case_aliases() {
+  local root="$1"
+  while IFS= read -r -d '' file; do
+    local dir base lower
+    dir="$(dirname "$file")"
+    base="$(basename "$file")"
+    lower="$(printf '%s' "$base" | tr 'A-Z' 'a-z')"
+    if [[ "$base" == "$lower" ]]; then
+      continue
+    fi
+    if [[ ! -e "$dir/$lower" ]]; then
+      cp "$file" "$dir/$lower"
+    fi
+  done < <(find "$root" -type f \( -name '*.H' -o -name '*.C' \) -print0)
+}
+
 verify_vendored_snapshot() {
   if [[ ! -d "$VENDORED_DIR" ]]; then
     echo "Vendored snapshot directory missing: $VENDORED_DIR" >&2
@@ -121,6 +137,7 @@ if [[ "$REFRESH" != "1" ]]; then
     rm -rf "$OUT_DIR"
     mkdir -p "$OUT_DIR"
     rsync -a "$VENDORED_DIR/" "$OUT_DIR/"
+    create_case_aliases "$OUT_DIR"
     echo "Prepared sanitized WOLFSRC from vendored snapshot: $VENDORED_DIR"
     echo "Output: $OUT_DIR"
     exit 0
@@ -128,6 +145,7 @@ if [[ "$REFRESH" != "1" ]]; then
 fi
 
 prepare_from_source
+create_case_aliases "$OUT_DIR"
 
 if [[ "$UPDATE_VENDOR" == "1" ]]; then
   rm -rf "$VENDORED_DIR"
