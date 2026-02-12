@@ -1,0 +1,35 @@
+{
+  "phase": "K6",
+  "timestamp": "2026-02-12",
+  "gates": {
+    "phase2MapLoadingLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/phase2.map-loading.test.ts",
+      "status": "pass"
+    },
+    "phase2MapLoadingCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/phase2.map-loading.test.ts",
+      "status": "pass"
+    },
+    "runtimeLevelLoadLocal": {
+      "command": "FAST_CHECK_NUM_RUNS=1000 pnpm exec vitest run test/property/runtime.level-load-parity.test.ts",
+      "status": "pass"
+    },
+    "runtimeLevelLoadCi": {
+      "command": "FAST_CHECK_NUM_RUNS=10000 pnpm exec vitest run test/property/runtime.level-load-parity.test.ts",
+      "status": "pass"
+    }
+  },
+  "agentBrowser": {
+    "session": "k6",
+    "multiMapLoadArtifact": "artifacts/agent-browser/k6/multi-map-load.json",
+    "screenshots": [
+      "artifacts/agent-browser/k6/title.png",
+      "artifacts/agent-browser/k6/map3.png"
+    ],
+    "loadedMaps": [
+      { "requested": 0, "active": "Wolf1 Map1" },
+      { "requested": 1, "active": "Wolf1 Map2" },
+      { "requested": 2, "active": "Wolf1 Map3" }
+    ]
+  }
+}

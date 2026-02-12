@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K6` active)  
+**Status:** In Progress (`K7` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -85,13 +85,13 @@
 
 ## K6: TS Parity Wave A (Cache/Memory/Map)
 
-- [ ] Integrate runtime-required map/cache/memory ports into production flow.
-- [ ] Add/refresh function-level property parity tests.
-- [ ] Gate: per-function parity local 1k and CI 10k
-- [ ] Gate: deterministic multi-map load traces
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k6: wl6 cache-memory-map parity`)
+- [x] Integrate runtime-required map/cache/memory ports into production flow.
+- [x] Add/refresh function-level property parity tests.
+- [x] Gate: per-function parity local 1k and CI 10k
+- [x] Gate: deterministic multi-map load traces
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k6: wl6 cache-memory-map parity`)
 
 ## K7: TS Parity Wave B (Renderer/Orientation/Sprites/HUD)
 
