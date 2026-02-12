@@ -33,14 +33,19 @@ if [[ "$mode" == "synthetic" ]]; then
   exit 0
 fi
 
-if ! rg -q "new WolfsrcOraclePort\\(" "$RUNTIME_CONTROLLER"; then
-  echo "Runtime core guard failed: mode=real but runtime controller is not defaulting to WolfsrcOraclePort" >&2
-  exit 1
+phase_num="$(node -e "const p=process.argv[1]||''; const m=p.match(/^R([0-9]+)$/); process.stdout.write(m?String(Number(m[1])):'-1');" "$phase")"
+
+if [[ "$phase_num" -ge 9 ]]; then
+  if ! rg -q "new TsRuntimePort\\(" "$RUNTIME_CONTROLLER"; then
+    echo "Runtime core guard failed: phase '$phase' requires browser runtime to default to TsRuntimePort." >&2
+    exit 1
+  fi
+  if rg -q "new WolfsrcOraclePort\\(" "$RUNTIME_CONTROLLER"; then
+    echo "Runtime core guard failed: phase '$phase' still defaults browser runtime to WolfsrcOraclePort." >&2
+    exit 1
+  fi
+  echo "Runtime core guard: phase '$phase' uses TsRuntimePort in production runtime path."
+  exit 0
 fi
 
-if rg -q "TsRuntimePort" "$RUNTIME_CONTROLLER"; then
-  echo "Runtime core guard failed: mode=real but runtime controller still references TsRuntimePort" >&2
-  exit 1
-fi
-
-echo "Runtime core guard: real mode active and browser runtime defaults to WolfsrcOraclePort."
+echo "Runtime core guard: real mode active for pre-R9 phase '$phase'."

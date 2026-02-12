@@ -1,5 +1,5 @@
 {
-  "phase": "R8",
+  "phase": "R9",
   "mode": "real",
-  "notes": "R8 menu/input/audio parity gate is green with required-symbol parity verification."
+  "notes": "R9 production runtime path defaults to TsRuntimePort; oracle runtime remains test-only reference."
 }

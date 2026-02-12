@@ -1,18 +1,26 @@
-import type { RuntimeFramebufferView, RuntimePort, RuntimeInput, RuntimeSnapshot } from '../runtime/contracts';
-import { WolfsrcOraclePort } from '../oracle/runtimeOracle';
-import { loadWl1RuntimeScenarios, type Wl1RuntimeScenario } from '../runtime/wl1RuntimeScenarios';
+import type { RuntimeConfig, RuntimeFramebufferView, RuntimeInput, RuntimePort, RuntimeSnapshot } from '../runtime/contracts';
+import { TsRuntimePort } from '../runtime/tsRuntime';
 import { NullRuntimeAudioAdapter, type RuntimeAudioAdapter } from './runtimeAudio';
 
 const TIC_MS = 1000 / 70;
+
+export interface RuntimeScenario {
+  id: string;
+  mapIndex: number;
+  mapName: string;
+  seed: number;
+  config: RuntimeConfig;
+  steps: RuntimeInput[];
+}
 
 export type RuntimeAppMode = 'loading' | 'menu' | 'playing' | 'error';
 
 export interface RuntimeAppState {
   mode: RuntimeAppMode;
   errorMessage: string;
-  scenarios: Wl1RuntimeScenario[];
+  scenarios: RuntimeScenario[];
   selectedScenarioIndex: number;
-  currentScenario: Wl1RuntimeScenario | null;
+  currentScenario: RuntimeScenario | null;
   snapshot: RuntimeSnapshot | null;
   framebuffer: RuntimeFramebufferView | null;
   frameHash: number;
@@ -20,13 +28,13 @@ export interface RuntimeAppState {
 
 interface RuntimeControllerOptions {
   runtime?: RuntimePort;
-  scenarioLoader?: () => Promise<Wl1RuntimeScenario[]>;
+  scenarioLoader?: () => Promise<RuntimeScenario[]>;
   audio?: RuntimeAudioAdapter;
 }
 
 export class RuntimeAppController {
   private readonly runtime: RuntimePort;
-  private readonly scenarioLoader: () => Promise<Wl1RuntimeScenario[]>;
+  private readonly scenarioLoader: () => Promise<RuntimeScenario[]>;
   private readonly audio: RuntimeAudioAdapter;
   private readonly heldKeys = new Set<string>();
 
@@ -75,8 +83,12 @@ export class RuntimeAppController {
   }
 
   constructor(options: RuntimeControllerOptions = {}) {
-    this.runtime = options.runtime ?? new WolfsrcOraclePort();
-    this.scenarioLoader = options.scenarioLoader ?? (() => loadWl1RuntimeScenarios('/assets/wl1', 64));
+    this.runtime = options.runtime ?? new TsRuntimePort();
+    this.scenarioLoader =
+      options.scenarioLoader ??
+      (async () => {
+        throw new Error('No scenario loader configured for runtime controller');
+      });
     this.audio = options.audio ?? new NullRuntimeAudioAdapter();
   }
 

@@ -1,4 +1,5 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
+import { loadWl1RuntimeScenarios } from '../runtime/wl1RuntimeScenarios';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController } from './runtimeController';
 
@@ -129,6 +130,7 @@ export class WolfApp {
   private readonly image: ImageData;
   private readonly controller = new RuntimeAppController({
     audio: new WebAudioRuntimeAdapter(),
+    scenarioLoader: () => loadWl1RuntimeScenarios('/assets/wl1', 64),
   });
   private wallTextures: Uint8Array[] = [];
   private wallTexturesReady = false;
@@ -185,13 +187,16 @@ export class WolfApp {
 
     this.canvas.addEventListener('click', () => {
       this.canvas.focus();
-      if (this.controller.getState().mode === 'playing' && document.pointerLockElement !== this.canvas) {
-        void this.canvas.requestPointerLock();
-      }
     });
 
     window.addEventListener('mousemove', (event) => {
-      if (document.pointerLockElement !== this.canvas) {
+      if (this.controller.getState().mode !== 'playing') {
+        return;
+      }
+      if (document.pointerLockElement && document.pointerLockElement !== this.canvas) {
+        return;
+      }
+      if (document.pointerLockElement !== this.canvas && document.activeElement !== this.canvas) {
         return;
       }
       this.controller.onMouseMove(event.movementX);

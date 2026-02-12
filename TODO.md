@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime Parity TODO (R-Phases)
 
-**Status:** In Progress (`R9` active)  
+**Status:** In Progress (`R10` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -102,12 +102,12 @@
 
 ## R9: Browser Runtime Swap to Pure TS Core
 
-- [ ] Switch production gameplay path to TS runtime core.
-- [ ] Keep oracle/WASM usage in tests only.
-- [ ] Remove synthetic scenario-driver gameplay path from app runtime loop.
-- [ ] Gate: agent-browser flow (boot -> menu -> start -> move -> door -> enemy -> fire -> damage -> exit)
-- [ ] Tests green
-- [ ] Phase commit pushed (`r9: browser app on ts runtime core`)
+- [x] Switch production gameplay path to TS runtime core.
+- [x] Keep oracle/WASM usage in tests only.
+- [x] Remove synthetic scenario-driver gameplay path from app runtime loop.
+- [x] Gate: agent-browser flow (boot -> menu -> start -> move -> door -> enemy -> fire -> damage -> exit)
+- [x] Tests green
+- [x] Phase commit pushed (`r9: browser app on ts runtime core`)
 
 ## R10: Full Episode Parity + CI Freeze
 
