@@ -73,6 +73,10 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 35, file: 'WL_ACT2.C', func: 'T_Bite', notes: 'called via oracle_wl_act2_t_bite_hash from runtime ai probe' },
   { id: 36, file: 'WL_ACT2.C', func: 'T_DogChase', notes: 'called via oracle_wl_act2_t_dogchase_hash from runtime ai probe' },
   { id: 37, file: 'WL_ACT2.C', func: 'T_Projectile', notes: 'called via oracle_wl_act2_t_projectile_hash from runtime ai probe' },
+  { id: 38, file: 'WL_ACT1.C', func: 'OpenDoor', notes: 'called via oracle_wl_act1_open_door_hash from runtime door probe' },
+  { id: 39, file: 'WL_ACT1.C', func: 'CloseDoor', notes: 'called via oracle_wl_act1_close_door_hash from runtime door probe' },
+  { id: 40, file: 'WL_ACT1.C', func: 'OperateDoor', notes: 'called via oracle_wl_act1_operate_door_hash from runtime door probe' },
+  { id: 41, file: 'WL_ACT1.C', func: 'MoveDoors', notes: 'called via oracle_wl_act1_move_doors_hash from runtime door probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -115,6 +119,10 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [35, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [36, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [37, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [38, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [39, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [40, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [41, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

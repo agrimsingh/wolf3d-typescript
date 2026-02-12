@@ -55,6 +55,10 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_ACT2.C | T_Bite | `done` | called via oracle_wl_act2_t_bite_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_ACT2.C | T_DogChase | `done` | called via oracle_wl_act2_t_dogchase_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_ACT2.C | T_Projectile | `done` | called via oracle_wl_act2_t_projectile_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT1.C | OpenDoor | `done` | called via oracle_wl_act1_open_door_hash from runtime door probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT1.C | CloseDoor | `done` | called via oracle_wl_act1_close_door_hash from runtime door probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT1.C | OperateDoor | `done` | called via oracle_wl_act1_operate_door_hash from runtime door probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT1.C | MoveDoors | `done` | called via oracle_wl_act1_move_doors_hash from runtime door probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

@@ -99,6 +99,35 @@ uint32_t oracle_wl_inter_check_high_score_hash(
   int32_t s3,
   int32_t s4
 );
+uint32_t oracle_wl_act1_open_door_hash(
+  int32_t door_mask,
+  int32_t door_state,
+  int32_t door_num,
+  int32_t speed,
+  int32_t blocked
+);
+uint32_t oracle_wl_act1_close_door_hash(
+  int32_t door_mask,
+  int32_t door_state,
+  int32_t door_num,
+  int32_t speed,
+  int32_t blocked
+);
+uint32_t oracle_wl_act1_operate_door_hash(
+  int32_t door_mask,
+  int32_t door_state,
+  int32_t door_num,
+  int32_t action,
+  int32_t speed,
+  int32_t blocked
+);
+uint32_t oracle_wl_act1_move_doors_hash(
+  int32_t door_mask,
+  int32_t door_state,
+  int32_t tics,
+  int32_t speed,
+  int32_t active_mask
+);
 uint32_t oracle_wl_state_first_sighting_hash(
   int32_t ax,
   int32_t ay,
@@ -291,9 +320,13 @@ enum runtime_trace_symbol_e {
   TRACE_WL_ACT2_T_BITE = 35,
   TRACE_WL_ACT2_T_DOGCHASE = 36,
   TRACE_WL_ACT2_T_PROJECTILE = 37,
+  TRACE_WL_ACT1_OPEN_DOOR = 38,
+  TRACE_WL_ACT1_CLOSE_DOOR = 39,
+  TRACE_WL_ACT1_OPERATE_DOOR = 40,
+  TRACE_WL_ACT1_MOVE_DOORS = 41,
 };
 
-#define TRACE_SYMBOL_MAX 40
+#define TRACE_SYMBOL_MAX 48
 static uint8_t g_trace_seen[TRACE_SYMBOL_MAX];
 static int32_t g_trace_count = 0;
 
@@ -561,6 +594,10 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t t_bite_hash;
       uint32_t t_dogchase_hash;
       uint32_t t_projectile_hash;
+      uint32_t open_door_hash;
+      uint32_t close_door_hash;
+      uint32_t operate_door_hash;
+      uint32_t move_doors_hash;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
       int32_t ai_dir = (state->angle_deg / 90) & 3;
@@ -569,6 +606,14 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t ai_speed = 0x100 + ((state->tick & 0x1f) << 3);
       int32_t ai_cooldown = clamp_i32(state->cooldown, 0, 255);
       int32_t ai_flags = state->flags;
+      int32_t door_mask = (int32_t)(((state->map_lo >> 8) ^ state->map_hi) & 0xffffu);
+      int32_t door_state = (int32_t)(((state->flags >> 5) & 0xff) | ((state->cooldown & 0xff) << 8));
+      int32_t door_num = state->tick & 31;
+      int32_t door_speed = ((state->tick >> 1) & 15) + 1;
+      int32_t door_blocked = (state->flags & 0x20) ? 1 : 0;
+      int32_t door_action = (input_mask & (1 << 7)) ? 1 : 0;
+      int32_t door_tics = ((input_mask & 3) + 1);
+      int32_t door_active_mask = (int32_t)((state_hash ^ (uint32_t)rng) & 0x7fffffffu);
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -718,6 +763,14 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->map_lo,
         state->map_hi
       );
+      trace_hit(TRACE_WL_ACT1_OPEN_DOOR);
+      open_door_hash = oracle_wl_act1_open_door_hash(door_mask, door_state, door_num, door_speed, door_blocked);
+      trace_hit(TRACE_WL_ACT1_CLOSE_DOOR);
+      close_door_hash = oracle_wl_act1_close_door_hash(door_mask, door_state, door_num, door_speed, door_blocked);
+      trace_hit(TRACE_WL_ACT1_OPERATE_DOOR);
+      operate_door_hash = oracle_wl_act1_operate_door_hash(door_mask, door_state, door_num, door_action, door_speed, door_blocked);
+      trace_hit(TRACE_WL_ACT1_MOVE_DOORS);
+      move_doors_hash = oracle_wl_act1_move_doors_hash(door_mask, door_state, door_tics, door_speed, door_active_mask);
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
@@ -773,6 +826,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->flags |= 0x800000;
       } else {
         state->flags &= ~0x800000;
+      }
+      if (open_door_hash & 1u) {
+        state->flags |= 0x1000000;
+      } else {
+        state->flags &= ~0x1000000;
+      }
+      if (close_door_hash & 1u) {
+        state->flags |= 0x2000000;
+      } else {
+        state->flags &= ~0x2000000;
+      }
+      if (operate_door_hash & 1u) {
+        state->flags |= 0x4000000;
+      } else {
+        state->flags &= ~0x4000000;
+      }
+      if (move_doors_hash & 1u) {
+        state->flags |= 0x8000000;
+      } else {
+        state->flags &= ~0x8000000;
       }
     }
   }

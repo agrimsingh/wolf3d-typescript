@@ -24,7 +24,14 @@ import {
   wlStateFirstSightingHash,
   wlStateSightPlayerHash,
 } from '../wolf/ai/wlAi';
-import { wlGameGameLoopHash, wlInterCheckHighScoreHash } from '../wolf/game/wlGameState';
+import {
+  wlAct1CloseDoorHash,
+  wlAct1MoveDoorsHash,
+  wlAct1OpenDoorHash,
+  wlAct1OperateDoorHash,
+  wlGameGameLoopHash,
+  wlInterCheckHighScoreHash,
+} from '../wolf/game/wlGameState';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 import { wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
 import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
@@ -512,6 +519,14 @@ export class TsRuntimePort implements RuntimePort {
         const aiSpeed = (0x100 + ((this.state.tick & 0x1f) << 3)) | 0;
         const aiCooldown = clampI32(this.state.cooldown, 0, 255);
         const aiFlags = this.state.flags | 0;
+        const doorMask = (((this.state.mapLo >>> 8) ^ this.state.mapHi) & 0xffff) | 0;
+        const doorState = (((this.state.flags >> 5) & 0xff) | ((this.state.cooldown & 0xff) << 8)) | 0;
+        const doorNum = this.state.tick & 31;
+        const doorSpeed = ((this.state.tick >> 1) & 15) + 1;
+        const doorBlocked = (this.state.flags & 0x20) !== 0 ? 1 : 0;
+        const doorAction = (inputMask & (1 << 7)) !== 0 ? 1 : 0;
+        const doorTics = (inputMask & 3) + 1;
+        const doorActiveMask = ((stateHash ^ (rng >>> 0)) & 0x7fffffff) | 0;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -644,6 +659,10 @@ export class TsRuntimePort implements RuntimePort {
           this.state.mapLo | 0,
           this.state.mapHi | 0,
         ) >>> 0;
+        const openDoorHash = wlAct1OpenDoorHash(doorMask, doorState, doorNum, doorSpeed, doorBlocked) >>> 0;
+        const closeDoorHash = wlAct1CloseDoorHash(doorMask, doorState, doorNum, doorSpeed, doorBlocked) >>> 0;
+        const operateDoorHash = wlAct1OperateDoorHash(doorMask, doorState, doorNum, doorAction, doorSpeed, doorBlocked) >>> 0;
+        const moveDoorsHash = wlAct1MoveDoorsHash(doorMask, doorState, doorTics, doorSpeed, doorActiveMask) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
@@ -699,6 +718,26 @@ export class TsRuntimePort implements RuntimePort {
           this.state.flags |= 0x800000;
         } else {
           this.state.flags &= ~0x800000;
+        }
+        if ((openDoorHash & 1) !== 0) {
+          this.state.flags |= 0x1000000;
+        } else {
+          this.state.flags &= ~0x1000000;
+        }
+        if ((closeDoorHash & 1) !== 0) {
+          this.state.flags |= 0x2000000;
+        } else {
+          this.state.flags &= ~0x2000000;
+        }
+        if ((operateDoorHash & 1) !== 0) {
+          this.state.flags |= 0x4000000;
+        } else {
+          this.state.flags &= ~0x4000000;
+        }
+        if ((moveDoorsHash & 1) !== 0) {
+          this.state.flags |= 0x8000000;
+        } else {
+          this.state.flags &= ~0x8000000;
         }
       }
     }
