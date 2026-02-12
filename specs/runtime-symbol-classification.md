@@ -1,6 +1,6 @@
 # WOLFSRC Runtime Symbol Classification
 
-- Generated: 2026-02-12T10:42:45.342Z
+- Generated: 2026-02-12T11:51:59.007Z
 - Source manifest: `specs/generated/wolfsrc-manifest.json`
 - Runtime hits: `specs/generated/runtime-symbol-hits.json`
 - Trace scenarios: 10
@@ -70,7 +70,7 @@
 | WL_AGENT.C | GiveAmmo | 43 | phase-6-gamestate |
 | WL_AGENT.C | GivePoints | 44 | phase-6-gamestate |
 | WL_AGENT.C | HealSelf | 45 | phase-6-gamestate |
-| WL_AGENT.C | TakeDamage | 20, 52 | phase-6-gamestate |
+| WL_AGENT.C | TakeDamage | 52 | phase-6-gamestate |
 | WL_GAME.C | GameLoop | 28 | phase-6-gamestate |
 | WL_INTER.C | CheckHighScore | 29 | phase-6-gamestate |
 | WL_INTER.C | LevelCompleted | 53 | phase-6-gamestate |

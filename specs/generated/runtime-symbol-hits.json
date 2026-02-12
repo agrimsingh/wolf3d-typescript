@@ -755,7 +755,6 @@
     17,
     18,
     19,
-    20,
     21,
     22,
     23,
@@ -1040,13 +1039,6 @@
       "file": "WL_AGENT.C",
       "func": "ControlMovement",
       "notes": "called via real_wl_agent_control_movement_apply shim"
-    },
-    {
-      "id": 20,
-      "symbolName": "TRACE_REAL_WL_AGENT_TAKE_DAMAGE",
-      "file": "WL_AGENT.C",
-      "func": "TakeDamage",
-      "notes": "called via real_wl_agent_take_damage_apply shim"
     },
     {
       "id": 21,
@@ -2099,5 +2091,13 @@
       "notes": "indexed framebuffer render API"
     }
   ],
-  "excludedRuntimeSymbols": []
+  "excludedRuntimeSymbols": [
+    {
+      "id": 20,
+      "symbolName": "TRACE_REAL_WL_AGENT_TAKE_DAMAGE",
+      "file": "WL_AGENT.C",
+      "func": "TakeDamage",
+      "notes": "called via real_wl_agent_take_damage_apply shim"
+    }
+  ]
 }

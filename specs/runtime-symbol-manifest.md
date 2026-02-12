@@ -8,7 +8,7 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 - Source of truth: `specs/generated/runtime-symbol-hits.json` + `specs/generated/wolfsrc-runtime-classification.json`
 - Trace scenarios: 10 (WL1 asset-backed)
 - Deterministic menu-trace digest: `3960187756`
-- Required runtime trace symbols: 170
+- Required runtime trace symbols: 169
 - WOLFSRC required-runtime symbols: 130
 - WOLFSRC excluded-non-runtime symbols: 438
 - Refresh command: `pnpm runtime:manifest:extract`
@@ -108,7 +108,7 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 | phase-6-gamestate | WL_AGENT.C | GiveAmmo | 43 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | phase-6-gamestate | WL_AGENT.C | GivePoints | 44 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | phase-6-gamestate | WL_AGENT.C | HealSelf | 45 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
-| phase-6-gamestate | WL_AGENT.C | TakeDamage | 20, 52 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| phase-6-gamestate | WL_AGENT.C | TakeDamage | 52 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | phase-6-gamestate | WL_GAME.C | GameLoop | 28 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | phase-6-gamestate | WL_INTER.C | CheckHighScore | 29 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | phase-6-gamestate | WL_INTER.C | LevelCompleted | 53 | `done` | parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |

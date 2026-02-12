@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-12T10:42:45.342Z",
+  "generatedAt": "2026-02-12T11:51:59.007Z",
   "sourceManifestPath": "specs/generated/wolfsrc-manifest.json",
   "sourceRuntimeHitsPath": "specs/generated/runtime-symbol-hits.json",
   "scenarioCount": 10,
@@ -664,10 +664,9 @@
       "primaryPhase": "phase-6-gamestate",
       "classification": "required-runtime",
       "traceIds": [
-        20,
         52
       ],
-      "evidence": "Trace-hit via runtime manifest IDs 20, 52; scenarios=10; digest=3960187756."
+      "evidence": "Trace-hit via runtime manifest IDs 52; scenarios=10; digest=3960187756."
     },
     {
       "file": "WL_GAME.C",

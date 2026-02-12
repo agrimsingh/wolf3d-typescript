@@ -42,17 +42,17 @@
 - [x] Gate: `pnpm runtime:parity:test`
 - [x] Gate: deterministic replay equality for repeated traces
 - [x] Tests green
-- [ ] Phase commit pushed (`r2: real wolfsrc runtime oracle`)
+- [x] Phase commit pushed (`r2: real wolfsrc runtime oracle`)
 
 ## R3: Runtime Symbol Reclassification From Real Traces
 
-- [ ] Regenerate runtime hits using real runtime menu/gameplay/progression traces.
-- [ ] Rebuild `specs/runtime-symbol-manifest.md` from artifacts.
-- [ ] Ensure all inventory entries remain classified with explicit evidence.
-- [ ] Gate: `pnpm runtime:manifest:extract`
-- [ ] Gate: `pnpm runtime:classification:verify`
-- [ ] Gate: `pnpm runtime:manifest:verify`
-- [ ] Tests green
+- [x] Regenerate runtime hits using real runtime menu/gameplay/progression traces.
+- [x] Rebuild `specs/runtime-symbol-manifest.md` from artifacts.
+- [x] Ensure all inventory entries remain classified with explicit evidence.
+- [x] Gate: `pnpm runtime:manifest:extract`
+- [x] Gate: `pnpm runtime:classification:verify`
+- [x] Gate: `pnpm runtime:manifest:verify`
+- [x] Tests green
 - [ ] Phase commit pushed (`r3: real-runtime symbol classification freeze`)
 
 ## R4: TS Port Wave A (Map/Memory/Cache Runtime Paths)
