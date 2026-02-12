@@ -85,12 +85,12 @@
 
 ## Phase F6: End-to-End Per-Tic Episode Parity
 
-- [ ] Add deterministic real WL1 input traces for full episode progression.
-- [ ] Store canonical per-tic trace lock artifacts in `specs/generated/`.
-- [ ] Add TS-vs-oracle per-tic parity assertions (state + frame hash each tic).
-- [ ] Persist minimal repro trace JSON for first mismatch.
-- [ ] Gate: full-episode per-tic parity green locally and in CI.
-- [ ] Commit: `phase-f6: full episode per-tic parity locked`
+- [x] Add deterministic real WL1 input traces for full episode progression.
+- [x] Store canonical per-tic trace lock artifacts in `specs/generated/`.
+- [x] Add TS-vs-oracle per-tic parity assertions (state + frame hash each tic).
+- [x] Persist minimal repro trace JSON for first mismatch.
+- [x] Gate: full-episode per-tic parity green locally and in CI.
+- [x] Commit: `phase-f6: full episode per-tic parity locked`
 
 ## Phase F7: Remote CI Hardening + Release Gates
 

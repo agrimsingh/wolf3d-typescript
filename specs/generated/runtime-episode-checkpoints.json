@@ -1,5 +1,5 @@
 {
-  "phase": "R7",
+  "phase": "F6",
   "stepsPerMap": 64,
   "scenarioCount": 10,
   "mapOrder": [
@@ -14,7 +14,7 @@
     8,
     9
   ],
-  "episodeDigest": 1004809082,
+  "episodeDigest": 3999100843,
   "maps": [
     {
       "id": "wl1-map-0",
@@ -22,6 +22,520 @@
       "mapName": "Wolf1 Map1",
       "seedHex": "0x9a6ae682",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 249,
+          "tics": 3,
+          "rng": 1872772500,
+          "snapshotHash": 3840828050,
+          "frameHash": 2476891475,
+          "tick": 3
+        },
+        {
+          "inputMask": 4,
+          "tics": 5,
+          "rng": 1051038174,
+          "snapshotHash": 4074851837,
+          "frameHash": 631322031,
+          "tick": 8
+        },
+        {
+          "inputMask": 147,
+          "tics": 4,
+          "rng": -1119166508,
+          "snapshotHash": 433484435,
+          "frameHash": 924755373,
+          "tick": 12
+        },
+        {
+          "inputMask": 214,
+          "tics": 0,
+          "rng": 468584802,
+          "snapshotHash": 433484435,
+          "frameHash": 924755373,
+          "tick": 12
+        },
+        {
+          "inputMask": 61,
+          "tics": 2,
+          "rng": -1081591268,
+          "snapshotHash": 4057006879,
+          "frameHash": 2827390027,
+          "tick": 14
+        },
+        {
+          "inputMask": 120,
+          "tics": 6,
+          "rng": -1367762698,
+          "snapshotHash": 3346077150,
+          "frameHash": 2911825164,
+          "tick": 20
+        },
+        {
+          "inputMask": 119,
+          "tics": 7,
+          "rng": 1089903500,
+          "snapshotHash": 2520053140,
+          "frameHash": 3862062385,
+          "tick": 27
+        },
+        {
+          "inputMask": 106,
+          "tics": 6,
+          "rng": -1258199806,
+          "snapshotHash": 2465209608,
+          "frameHash": 3114516947,
+          "tick": 33
+        },
+        {
+          "inputMask": 193,
+          "tics": 2,
+          "rng": 112694036,
+          "snapshotHash": 842661102,
+          "frameHash": 3903274391,
+          "tick": 35
+        },
+        {
+          "inputMask": 44,
+          "tics": 5,
+          "rng": 888610158,
+          "snapshotHash": 4192988097,
+          "frameHash": 2363494211,
+          "tick": 40
+        },
+        {
+          "inputMask": 155,
+          "tics": 6,
+          "rng": 1277589556,
+          "snapshotHash": 3288680412,
+          "frameHash": 4008218744,
+          "tick": 46
+        },
+        {
+          "inputMask": 62,
+          "tics": 3,
+          "rng": 192349730,
+          "snapshotHash": 3020667853,
+          "frameHash": 2905925874,
+          "tick": 49
+        },
+        {
+          "inputMask": 133,
+          "tics": 1,
+          "rng": -35806708,
+          "snapshotHash": 1713537790,
+          "frameHash": 2887394198,
+          "tick": 50
+        },
+        {
+          "inputMask": 32,
+          "tics": 5,
+          "rng": -1968229162,
+          "snapshotHash": 4095415235,
+          "frameHash": 329666230,
+          "tick": 55
+        },
+        {
+          "inputMask": 255,
+          "tics": 5,
+          "rng": -622488164,
+          "snapshotHash": 1375719744,
+          "frameHash": 1781855482,
+          "tick": 60
+        },
+        {
+          "inputMask": 82,
+          "tics": 3,
+          "rng": -1269979774,
+          "snapshotHash": 3288809595,
+          "frameHash": 4271090438,
+          "tick": 63
+        },
+        {
+          "inputMask": 137,
+          "tics": 2,
+          "rng": -1804124236,
+          "snapshotHash": 3757597189,
+          "frameHash": 2575427466,
+          "tick": 65
+        },
+        {
+          "inputMask": 84,
+          "tics": 2,
+          "rng": -1453420034,
+          "snapshotHash": 738023127,
+          "frameHash": 302763574,
+          "tick": 67
+        },
+        {
+          "inputMask": 163,
+          "tics": 1,
+          "rng": 1868794804,
+          "snapshotHash": 569114104,
+          "frameHash": 1576542810,
+          "tick": 68
+        },
+        {
+          "inputMask": 166,
+          "tics": 2,
+          "rng": -89697758,
+          "snapshotHash": 1844507338,
+          "frameHash": 432352102,
+          "tick": 70
+        },
+        {
+          "inputMask": 205,
+          "tics": 1,
+          "rng": 1192855356,
+          "snapshotHash": 2482203955,
+          "frameHash": 1813229654,
+          "tick": 71
+        },
+        {
+          "inputMask": 200,
+          "tics": 0,
+          "rng": -1670759018,
+          "snapshotHash": 2482203955,
+          "frameHash": 1813229654,
+          "tick": 71
+        },
+        {
+          "inputMask": 135,
+          "tics": 5,
+          "rng": -1342429620,
+          "snapshotHash": 4057475760,
+          "frameHash": 2285271898,
+          "tick": 76
+        },
+        {
+          "inputMask": 58,
+          "tics": 5,
+          "rng": 1721390850,
+          "snapshotHash": 2144385909,
+          "frameHash": 28637130,
+          "tick": 81
+        },
+        {
+          "inputMask": 81,
+          "tics": 3,
+          "rng": -77982732,
+          "snapshotHash": 3250870120,
+          "frameHash": 2092786234,
+          "tick": 84
+        },
+        {
+          "inputMask": 124,
+          "tics": 4,
+          "rng": -377664658,
+          "snapshotHash": 700083652,
+          "frameHash": 1264205522,
+          "tick": 88
+        },
+        {
+          "inputMask": 171,
+          "tics": 5,
+          "rng": -325474092,
+          "snapshotHash": 3081961097,
+          "frameHash": 1861926690,
+          "tick": 93
+        },
+        {
+          "inputMask": 14,
+          "tics": 7,
+          "rng": -33049374,
+          "snapshotHash": 1637658840,
+          "frameHash": 2743283034,
+          "tick": 100
+        },
+        {
+          "inputMask": 21,
+          "tics": 3,
+          "rng": -505454260,
+          "snapshotHash": 3550748691,
+          "frameHash": 1265655702,
+          "tick": 103
+        },
+        {
+          "inputMask": 112,
+          "tics": 1,
+          "rng": -1284716106,
+          "snapshotHash": 3381839668,
+          "frameHash": 3240340690,
+          "tick": 104
+        },
+        {
+          "inputMask": 15,
+          "tics": 6,
+          "rng": 1692942652,
+          "snapshotHash": 2106446434,
+          "frameHash": 1779359158,
+          "tick": 110
+        },
+        {
+          "inputMask": 34,
+          "tics": 4,
+          "rng": -1319380606,
+          "snapshotHash": 3850627262,
+          "frameHash": 1225817622,
+          "tick": 114
+        },
+        {
+          "inputMask": 25,
+          "tics": 5,
+          "rng": 513906964,
+          "snapshotHash": 1937537411,
+          "frameHash": 3749147574,
+          "tick": 119
+        },
+        {
+          "inputMask": 164,
+          "tics": 3,
+          "rng": -1321352738,
+          "snapshotHash": 3044021622,
+          "frameHash": 1955563142,
+          "tick": 122
+        },
+        {
+          "inputMask": 179,
+          "tics": 2,
+          "rng": 1783806548,
+          "snapshotHash": 3512809216,
+          "frameHash": 1996659578,
+          "tick": 124
+        },
+        {
+          "inputMask": 118,
+          "tics": 0,
+          "rng": 588279586,
+          "snapshotHash": 3512809216,
+          "frameHash": 1996659578,
+          "tick": 124
+        },
+        {
+          "inputMask": 93,
+          "tics": 5,
+          "rng": 1650004124,
+          "snapshotHash": 1641296069,
+          "frameHash": 1915531914,
+          "tick": 129
+        },
+        {
+          "inputMask": 24,
+          "tics": 7,
+          "rng": -1842011338,
+          "snapshotHash": 196993812,
+          "frameHash": 609048402,
+          "tick": 136
+        },
+        {
+          "inputMask": 151,
+          "tics": 7,
+          "rng": -1543066356,
+          "snapshotHash": 3854264491,
+          "frameHash": 2842216326,
+          "tick": 143
+        },
+        {
+          "inputMask": 10,
+          "tics": 0,
+          "rng": 2133047554,
+          "snapshotHash": 3854264491,
+          "frameHash": 2842216326,
+          "tick": 143
+        },
+        {
+          "inputMask": 225,
+          "tics": 7,
+          "rng": 710805652,
+          "snapshotHash": 2409962234,
+          "frameHash": 2942543462,
+          "tick": 150
+        },
+        {
+          "inputMask": 204,
+          "tics": 7,
+          "rng": -336158162,
+          "snapshotHash": 965659977,
+          "frameHash": 3824160546,
+          "tick": 157
+        },
+        {
+          "inputMask": 187,
+          "tics": 0,
+          "rng": -570583820,
+          "snapshotHash": 965659977,
+          "frameHash": 3824160546,
+          "tick": 157
+        },
+        {
+          "inputMask": 222,
+          "tics": 6,
+          "rng": 1816833122,
+          "snapshotHash": 3985234039,
+          "frameHash": 384612022,
+          "tick": 163
+        },
+        {
+          "inputMask": 165,
+          "tics": 0,
+          "rng": -1454597748,
+          "snapshotHash": 3985234039,
+          "frameHash": 384612022,
+          "tick": 163
+        },
+        {
+          "inputMask": 192,
+          "tics": 1,
+          "rng": -1912676778,
+          "snapshotHash": 3816325016,
+          "frameHash": 2027981530,
+          "tick": 164
+        },
+        {
+          "inputMask": 31,
+          "tics": 2,
+          "rng": -1976576996,
+          "snapshotHash": 796750954,
+          "frameHash": 2447109542,
+          "tick": 166
+        },
+        {
+          "inputMask": 242,
+          "tics": 0,
+          "rng": -1371739006,
+          "snapshotHash": 796750954,
+          "frameHash": 2447109542,
+          "tick": 166
+        },
+        {
+          "inputMask": 169,
+          "tics": 3,
+          "rng": 1838866804,
+          "snapshotHash": 1903235165,
+          "frameHash": 2935151914,
+          "tick": 169
+        },
+        {
+          "inputMask": 244,
+          "tics": 0,
+          "rng": 166234558,
+          "snapshotHash": 1903235165,
+          "frameHash": 2935151914,
+          "tick": 169
+        },
+        {
+          "inputMask": 195,
+          "tics": 7,
+          "rng": 1870114932,
+          "snapshotHash": 458932908,
+          "frameHash": 2787530530,
+          "tick": 176
+        },
+        {
+          "inputMask": 70,
+          "tics": 2,
+          "rng": -1488585630,
+          "snapshotHash": 1734326142,
+          "frameHash": 4263443094,
+          "tick": 178
+        },
+        {
+          "inputMask": 237,
+          "tics": 4,
+          "rng": 162134140,
+          "snapshotHash": 3478506970,
+          "frameHash": 569391142,
+          "tick": 182
+        },
+        {
+          "inputMask": 104,
+          "tics": 1,
+          "rng": -597955690,
+          "snapshotHash": 4116203587,
+          "frameHash": 4263902390,
+          "tick": 183
+        },
+        {
+          "inputMask": 167,
+          "tics": 5,
+          "rng": 791973068,
+          "snapshotHash": 1396508096,
+          "frameHash": 2328664826,
+          "tick": 188
+        },
+        {
+          "inputMask": 218,
+          "tics": 6,
+          "rng": -1378225918,
+          "snapshotHash": 121114862,
+          "frameHash": 3072417462,
+          "tick": 194
+        },
+        {
+          "inputMask": 113,
+          "tics": 0,
+          "rng": -107885004,
+          "snapshotHash": 121114862,
+          "frameHash": 3072417462,
+          "tick": 194
+        },
+        {
+          "inputMask": 28,
+          "tics": 7,
+          "rng": 617714606,
+          "snapshotHash": 2971779901,
+          "frameHash": 554826538,
+          "tick": 201
+        },
+        {
+          "inputMask": 203,
+          "tics": 7,
+          "rng": -1924885292,
+          "snapshotHash": 1527477644,
+          "frameHash": 2189149154,
+          "tick": 208
+        },
+        {
+          "inputMask": 174,
+          "tics": 2,
+          "rng": -1461069022,
+          "snapshotHash": 2802870878,
+          "frameHash": 2725257942,
+          "tick": 210
+        },
+        {
+          "inputMask": 53,
+          "tics": 2,
+          "rng": -1727107636,
+          "snapshotHash": 3271658472,
+          "frameHash": 103874618,
+          "tick": 212
+        },
+        {
+          "inputMask": 16,
+          "tics": 6,
+          "rng": -1476784010,
+          "snapshotHash": 1996265238,
+          "frameHash": 794987142,
+          "tick": 218
+        },
+        {
+          "inputMask": 47,
+          "tics": 2,
+          "rng": 729556732,
+          "snapshotHash": 2465052832,
+          "frameHash": 1944223674,
+          "tick": 220
+        },
+        {
+          "inputMask": 194,
+          "tics": 1,
+          "rng": -104559998,
+          "snapshotHash": 3102749449,
+          "frameHash": 177580066,
+          "tick": 221
+        }
+      ],
       "traceHash": 1287918594,
       "mapDigest": 2384904428,
       "finalSnapshotHash": 3102749449,
@@ -34,6 +548,520 @@
       "mapName": "Wolf1 Map2",
       "seedHex": "0x968c47cf",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 226,
+          "tics": 2,
+          "rng": -2002494321,
+          "snapshotHash": 3495543943,
+          "frameHash": 486483967,
+          "tick": 2
+        },
+        {
+          "inputMask": 217,
+          "tics": 4,
+          "rng": -510826493,
+          "snapshotHash": 2512865067,
+          "frameHash": 1780754519,
+          "tick": 6
+        },
+        {
+          "inputMask": 100,
+          "tics": 0,
+          "rng": 571814691,
+          "snapshotHash": 2512865067,
+          "frameHash": 1780754519,
+          "tick": 6
+        },
+        {
+          "inputMask": 115,
+          "tics": 0,
+          "rng": -1173753401,
+          "snapshotHash": 2512865067,
+          "frameHash": 1780754519,
+          "tick": 6
+        },
+        {
+          "inputMask": 54,
+          "tics": 3,
+          "rng": 1371437847,
+          "snapshotHash": 227296618,
+          "frameHash": 3815968925,
+          "tick": 9
+        },
+        {
+          "inputMask": 29,
+          "tics": 1,
+          "rng": -953153645,
+          "snapshotHash": 1912399407,
+          "frameHash": 3901665999,
+          "tick": 10
+        },
+        {
+          "inputMask": 216,
+          "tics": 7,
+          "rng": -2040710365,
+          "snapshotHash": 3149249978,
+          "frameHash": 2144699813,
+          "tick": 17
+        },
+        {
+          "inputMask": 87,
+          "tics": 1,
+          "rng": -1584934337,
+          "snapshotHash": 2793806068,
+          "frameHash": 637332176,
+          "tick": 18
+        },
+        {
+          "inputMask": 202,
+          "tics": 6,
+          "rng": 127340319,
+          "snapshotHash": 2672656748,
+          "frameHash": 52941958,
+          "tick": 24
+        },
+        {
+          "inputMask": 161,
+          "tics": 7,
+          "rng": 965083107,
+          "snapshotHash": 1091966408,
+          "frameHash": 1008583325,
+          "tick": 31
+        },
+        {
+          "inputMask": 140,
+          "tics": 4,
+          "rng": 2049251875,
+          "snapshotHash": 3916724688,
+          "frameHash": 1740225337,
+          "tick": 35
+        },
+        {
+          "inputMask": 123,
+          "tics": 6,
+          "rng": 1942330215,
+          "snapshotHash": 644879353,
+          "frameHash": 3086386810,
+          "tick": 41
+        },
+        {
+          "inputMask": 158,
+          "tics": 1,
+          "rng": 978207255,
+          "snapshotHash": 2597314351,
+          "frameHash": 1398483535,
+          "tick": 42
+        },
+        {
+          "inputMask": 101,
+          "tics": 4,
+          "rng": -1770644077,
+          "snapshotHash": 2814517285,
+          "frameHash": 2756578517,
+          "tick": 46
+        },
+        {
+          "inputMask": 128,
+          "tics": 2,
+          "rng": 1951982307,
+          "snapshotHash": 1329636461,
+          "frameHash": 1583291107,
+          "tick": 48
+        },
+        {
+          "inputMask": 223,
+          "tics": 3,
+          "rng": 1001835791,
+          "snapshotHash": 670332416,
+          "frameHash": 1752968265,
+          "tick": 51
+        },
+        {
+          "inputMask": 178,
+          "tics": 7,
+          "rng": 376844943,
+          "snapshotHash": 2114634673,
+          "frameHash": 3551469421,
+          "tick": 58
+        },
+        {
+          "inputMask": 105,
+          "tics": 3,
+          "rng": 627753155,
+          "snapshotHash": 1008150462,
+          "frameHash": 3539093701,
+          "tick": 61
+        },
+        {
+          "inputMask": 180,
+          "tics": 5,
+          "rng": -908466269,
+          "snapshotHash": 4010573401,
+          "frameHash": 1904412397,
+          "tick": 66
+        },
+        {
+          "inputMask": 131,
+          "tics": 5,
+          "rng": 1367295239,
+          "snapshotHash": 1628695956,
+          "frameHash": 2710471705,
+          "tick": 71
+        },
+        {
+          "inputMask": 6,
+          "tics": 5,
+          "rng": 469378039,
+          "snapshotHash": 53424151,
+          "frameHash": 1300283553,
+          "tick": 76
+        },
+        {
+          "inputMask": 173,
+          "tics": 0,
+          "rng": -1554645517,
+          "snapshotHash": 53424151,
+          "frameHash": 1300283553,
+          "tick": 76
+        },
+        {
+          "inputMask": 40,
+          "tics": 2,
+          "rng": 1363026403,
+          "snapshotHash": 3072998213,
+          "frameHash": 2925632213,
+          "tick": 78
+        },
+        {
+          "inputMask": 103,
+          "tics": 7,
+          "rng": 1021271391,
+          "snapshotHash": 1290877910,
+          "frameHash": 3880091061,
+          "tick": 85
+        },
+        {
+          "inputMask": 154,
+          "tics": 5,
+          "rng": -1505430209,
+          "snapshotHash": 3203967761,
+          "frameHash": 3917451437,
+          "tick": 90
+        },
+        {
+          "inputMask": 49,
+          "tics": 0,
+          "rng": 288220963,
+          "snapshotHash": 3203967761,
+          "frameHash": 3917451437,
+          "tick": 90
+        },
+        {
+          "inputMask": 220,
+          "tics": 3,
+          "rng": -259518813,
+          "snapshotHash": 2097483550,
+          "frameHash": 985221829,
+          "tick": 93
+        },
+        {
+          "inputMask": 139,
+          "tics": 5,
+          "rng": 1452467815,
+          "snapshotHash": 784150841,
+          "frameHash": 3738955693,
+          "tick": 98
+        },
+        {
+          "inputMask": 110,
+          "tics": 5,
+          "rng": -572412105,
+          "snapshotHash": 2697240692,
+          "frameHash": 2831563481,
+          "tick": 103
+        },
+        {
+          "inputMask": 245,
+          "tics": 5,
+          "rng": 1200129331,
+          "snapshotHash": 1121968887,
+          "frameHash": 2731678561,
+          "tick": 108
+        },
+        {
+          "inputMask": 208,
+          "tics": 6,
+          "rng": 1276555747,
+          "snapshotHash": 3465906857,
+          "frameHash": 1838869837,
+          "tick": 114
+        },
+        {
+          "inputMask": 239,
+          "tics": 3,
+          "rng": -1484218801,
+          "snapshotHash": 2359422646,
+          "frameHash": 50975797,
+          "tick": 117
+        },
+        {
+          "inputMask": 130,
+          "tics": 0,
+          "rng": -166171505,
+          "snapshotHash": 2359422646,
+          "frameHash": 50975797,
+          "tick": 117
+        },
+        {
+          "inputMask": 249,
+          "tics": 5,
+          "rng": 78913411,
+          "snapshotHash": 4272512497,
+          "frameHash": 1453490285,
+          "tick": 122
+        },
+        {
+          "inputMask": 4,
+          "tics": 7,
+          "rng": -1638031389,
+          "snapshotHash": 2511180546,
+          "frameHash": 2023547837,
+          "tick": 129
+        },
+        {
+          "inputMask": 147,
+          "tics": 6,
+          "rng": -615611961,
+          "snapshotHash": 3786573780,
+          "frameHash": 2458996377,
+          "tick": 135
+        },
+        {
+          "inputMask": 214,
+          "tics": 2,
+          "rng": -1601106153,
+          "snapshotHash": 3317786186,
+          "frameHash": 446353661,
+          "tick": 137
+        },
+        {
+          "inputMask": 61,
+          "tics": 4,
+          "rng": -66228205,
+          "snapshotHash": 1573605358,
+          "frameHash": 1369120453,
+          "tick": 141
+        },
+        {
+          "inputMask": 120,
+          "tics": 0,
+          "rng": -1949500701,
+          "snapshotHash": 1573605358,
+          "frameHash": 1369120453,
+          "tick": 141
+        },
+        {
+          "inputMask": 119,
+          "tics": 1,
+          "rng": -892309377,
+          "snapshotHash": 935908741,
+          "frameHash": 1124088789,
+          "tick": 142
+        },
+        {
+          "inputMask": 106,
+          "tics": 0,
+          "rng": 1136881439,
+          "snapshotHash": 935908741,
+          "frameHash": 1124088789,
+          "tick": 142
+        },
+        {
+          "inputMask": 193,
+          "tics": 4,
+          "rng": -3978973,
+          "snapshotHash": 260272649,
+          "frameHash": 4210519629,
+          "tick": 146
+        },
+        {
+          "inputMask": 44,
+          "tics": 7,
+          "rng": -1725150365,
+          "snapshotHash": 1704574906,
+          "frameHash": 2804058429,
+          "tick": 153
+        },
+        {
+          "inputMask": 155,
+          "tics": 0,
+          "rng": -822623705,
+          "snapshotHash": 1704574906,
+          "frameHash": 2804058429,
+          "tick": 153
+        },
+        {
+          "inputMask": 62,
+          "tics": 5,
+          "rng": -1418142697,
+          "snapshotHash": 3617664757,
+          "frameHash": 2462708661,
+          "tick": 158
+        },
+        {
+          "inputMask": 133,
+          "tics": 3,
+          "rng": -140923885,
+          "snapshotHash": 3579725282,
+          "frameHash": 505148285,
+          "tick": 161
+        },
+        {
+          "inputMask": 32,
+          "tics": 7,
+          "rng": 1497567523,
+          "snapshotHash": 729060243,
+          "frameHash": 2293170657,
+          "tick": 168
+        },
+        {
+          "inputMask": 255,
+          "tics": 7,
+          "rng": -1592521841,
+          "snapshotHash": 1366756860,
+          "frameHash": 4097689641,
+          "tick": 175
+        },
+        {
+          "inputMask": 82,
+          "tics": 5,
+          "rng": 1562660751,
+          "snapshotHash": 860029791,
+          "frameHash": 3305990497,
+          "tick": 180
+        },
+        {
+          "inputMask": 137,
+          "tics": 4,
+          "rng": 1599856067,
+          "snapshotHash": 3410816259,
+          "frameHash": 4163483585,
+          "tick": 184
+        },
+        {
+          "inputMask": 84,
+          "tics": 4,
+          "rng": 1320432611,
+          "snapshotHash": 1666635431,
+          "frameHash": 770565441,
+          "tick": 188
+        },
+        {
+          "inputMask": 163,
+          "tics": 3,
+          "rng": -431897209,
+          "snapshotHash": 4048512876,
+          "frameHash": 2841972937,
+          "tick": 191
+        },
+        {
+          "inputMask": 166,
+          "tics": 4,
+          "rng": -117235657,
+          "snapshotHash": 3393665136,
+          "frameHash": 1039071977,
+          "tick": 195
+        },
+        {
+          "inputMask": 205,
+          "tics": 3,
+          "rng": -1569914573,
+          "snapshotHash": 2287180925,
+          "frameHash": 467735045,
+          "tick": 198
+        },
+        {
+          "inputMask": 200,
+          "tics": 2,
+          "rng": 302605219,
+          "snapshotHash": 1818393331,
+          "frameHash": 2768359457,
+          "tick": 200
+        },
+        {
+          "inputMask": 135,
+          "tics": 7,
+          "rng": -1753073569,
+          "snapshotHash": 2456089948,
+          "frameHash": 2663327401,
+          "tick": 207
+        },
+        {
+          "inputMask": 58,
+          "tics": 7,
+          "rng": -1684987521,
+          "snapshotHash": 673969645,
+          "frameHash": 4237086405,
+          "tick": 214
+        },
+        {
+          "inputMask": 81,
+          "tics": 5,
+          "rng": 1911667171,
+          "snapshotHash": 2587059496,
+          "frameHash": 171617913,
+          "tick": 219
+        },
+        {
+          "inputMask": 124,
+          "tics": 6,
+          "rng": 1460438371,
+          "snapshotHash": 1442635810,
+          "frameHash": 450630909,
+          "tick": 225
+        },
+        {
+          "inputMask": 171,
+          "tics": 7,
+          "rng": -1666867673,
+          "snapshotHash": 2886938067,
+          "frameHash": 835373409,
+          "tick": 232
+        },
+        {
+          "inputMask": 14,
+          "tics": 1,
+          "rng": 1361100535,
+          "snapshotHash": 2249241450,
+          "frameHash": 2151010749,
+          "tick": 233
+        },
+        {
+          "inputMask": 21,
+          "tics": 5,
+          "rng": -444621965,
+          "snapshotHash": 4162331301,
+          "frameHash": 1824138261,
+          "tick": 238
+        },
+        {
+          "inputMask": 112,
+          "tics": 3,
+          "rng": 555827107,
+          "snapshotHash": 4124391826,
+          "frameHash": 1188018109,
+          "tick": 241
+        },
+        {
+          "inputMask": 15,
+          "tics": 0,
+          "rng": 197978959,
+          "snapshotHash": 4124391826,
+          "frameHash": 1188018109,
+          "tick": 241
+        }
+      ],
       "traceHash": 3146711287,
       "mapDigest": 3245166758,
       "finalSnapshotHash": 4124391826,
@@ -46,6 +1074,520 @@
       "mapName": "Wolf1 Map3",
       "seedHex": "0x932fa408",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 199,
+          "tics": 7,
+          "rng": -197445206,
+          "snapshotHash": 1481416605,
+          "frameHash": 1318121140,
+          "tick": 7
+        },
+        {
+          "inputMask": 122,
+          "tics": 2,
+          "rng": -1443180896,
+          "snapshotHash": 4198639378,
+          "frameHash": 1343566481,
+          "tick": 9
+        },
+        {
+          "inputMask": 145,
+          "tics": 7,
+          "rng": 1382372566,
+          "snapshotHash": 3758822525,
+          "frameHash": 2994029527,
+          "tick": 16
+        },
+        {
+          "inputMask": 188,
+          "tics": 3,
+          "rng": -757511672,
+          "snapshotHash": 3484696652,
+          "frameHash": 844891613,
+          "tick": 19
+        },
+        {
+          "inputMask": 235,
+          "tics": 3,
+          "rng": 1517433802,
+          "snapshotHash": 1895193563,
+          "frameHash": 900402119,
+          "tick": 22
+        },
+        {
+          "inputMask": 78,
+          "tics": 0,
+          "rng": 1219622592,
+          "snapshotHash": 1895193563,
+          "frameHash": 900402119,
+          "tick": 22
+        },
+        {
+          "inputMask": 85,
+          "tics": 3,
+          "rng": -1885499474,
+          "snapshotHash": 3879268655,
+          "frameHash": 1585906588,
+          "tick": 25
+        },
+        {
+          "inputMask": 176,
+          "tics": 4,
+          "rng": -1149765672,
+          "snapshotHash": 2625130909,
+          "frameHash": 763091118,
+          "tick": 29
+        },
+        {
+          "inputMask": 79,
+          "tics": 0,
+          "rng": 1459360154,
+          "snapshotHash": 2625130909,
+          "frameHash": 763091118,
+          "tick": 29
+        },
+        {
+          "inputMask": 98,
+          "tics": 1,
+          "rng": 1440420128,
+          "snapshotHash": 56773871,
+          "frameHash": 3669341179,
+          "tick": 30
+        },
+        {
+          "inputMask": 89,
+          "tics": 1,
+          "rng": -483962890,
+          "snapshotHash": 3971459539,
+          "frameHash": 150093950,
+          "tick": 31
+        },
+        {
+          "inputMask": 228,
+          "tics": 2,
+          "rng": -334501896,
+          "snapshotHash": 2505704265,
+          "frameHash": 4264702110,
+          "tick": 33
+        },
+        {
+          "inputMask": 243,
+          "tics": 0,
+          "rng": 1007707002,
+          "snapshotHash": 2505704265,
+          "frameHash": 4264702110,
+          "tick": 33
+        },
+        {
+          "inputMask": 182,
+          "tics": 1,
+          "rng": -1493712832,
+          "snapshotHash": 3238648050,
+          "frameHash": 3443788478,
+          "tick": 34
+        },
+        {
+          "inputMask": 157,
+          "tics": 5,
+          "rng": 316927486,
+          "snapshotHash": 2895715978,
+          "frameHash": 1271901203,
+          "tick": 39
+        },
+        {
+          "inputMask": 88,
+          "tics": 2,
+          "rng": -6579064,
+          "snapshotHash": 3627216364,
+          "frameHash": 3264762003,
+          "tick": 41
+        },
+        {
+          "inputMask": 215,
+          "tics": 1,
+          "rng": -745272086,
+          "snapshotHash": 3418362952,
+          "frameHash": 1604507156,
+          "tick": 42
+        },
+        {
+          "inputMask": 74,
+          "tics": 5,
+          "rng": -639758624,
+          "snapshotHash": 2787815832,
+          "frameHash": 1556780109,
+          "tick": 47
+        },
+        {
+          "inputMask": 33,
+          "tics": 4,
+          "rng": 1793674806,
+          "snapshotHash": 3006461055,
+          "frameHash": 882121758,
+          "tick": 51
+        },
+        {
+          "inputMask": 12,
+          "tics": 7,
+          "rng": 1658136456,
+          "snapshotHash": 4270339771,
+          "frameHash": 3035516419,
+          "tick": 58
+        },
+        {
+          "inputMask": 251,
+          "tics": 6,
+          "rng": 39680010,
+          "snapshotHash": 2209129249,
+          "frameHash": 3577329947,
+          "tick": 64
+        },
+        {
+          "inputMask": 30,
+          "tics": 0,
+          "rng": 292199744,
+          "snapshotHash": 2209129249,
+          "frameHash": 3577329947,
+          "tick": 64
+        },
+        {
+          "inputMask": 229,
+          "tics": 0,
+          "rng": 131826478,
+          "snapshotHash": 2209129249,
+          "frameHash": 3577329947,
+          "tick": 64
+        },
+        {
+          "inputMask": 0,
+          "tics": 5,
+          "rng": -629702856,
+          "snapshotHash": 4122219100,
+          "frameHash": 4231794023,
+          "tick": 69
+        },
+        {
+          "inputMask": 95,
+          "tics": 4,
+          "rng": 265518330,
+          "snapshotHash": 764826992,
+          "frameHash": 1516013639,
+          "tick": 73
+        },
+        {
+          "inputMask": 50,
+          "tics": 6,
+          "rng": 1589076256,
+          "snapshotHash": 296039398,
+          "frameHash": 11499767,
+          "tick": 79
+        },
+        {
+          "inputMask": 233,
+          "tics": 7,
+          "rng": -1117898090,
+          "snapshotHash": 127130375,
+          "frameHash": 3235978667,
+          "tick": 86
+        },
+        {
+          "inputMask": 52,
+          "tics": 0,
+          "rng": -371074088,
+          "snapshotHash": 127130375,
+          "frameHash": 3235978667,
+          "tick": 86
+        },
+        {
+          "inputMask": 3,
+          "tics": 6,
+          "rng": -618744742,
+          "snapshotHash": 2340098797,
+          "frameHash": 3137515491,
+          "tick": 92
+        },
+        {
+          "inputMask": 134,
+          "tics": 3,
+          "rng": 2004267840,
+          "snapshotHash": 2977795414,
+          "frameHash": 2906470263,
+          "tick": 95
+        },
+        {
+          "inputMask": 45,
+          "tics": 5,
+          "rng": -4097506,
+          "snapshotHash": 1533493157,
+          "frameHash": 4206675571,
+          "tick": 100
+        },
+        {
+          "inputMask": 168,
+          "tics": 4,
+          "rng": 1165486344,
+          "snapshotHash": 2471068345,
+          "frameHash": 2014395899,
+          "tick": 104
+        },
+        {
+          "inputMask": 231,
+          "tics": 7,
+          "rng": -1937136662,
+          "snapshotHash": 1364584134,
+          "frameHash": 1958330935,
+          "tick": 111
+        },
+        {
+          "inputMask": 26,
+          "tics": 4,
+          "rng": 127194720,
+          "snapshotHash": 2302159322,
+          "frameHash": 1928499511,
+          "tick": 115
+        },
+        {
+          "inputMask": 177,
+          "tics": 4,
+          "rng": 1154638934,
+          "snapshotHash": 557978494,
+          "frameHash": 3726328887,
+          "tick": 119
+        },
+        {
+          "inputMask": 92,
+          "tics": 6,
+          "rng": -1916491512,
+          "snapshotHash": 2770946916,
+          "frameHash": 2367754087,
+          "tick": 125
+        },
+        {
+          "inputMask": 11,
+          "tics": 6,
+          "rng": -1622268982,
+          "snapshotHash": 668159690,
+          "frameHash": 4077252855,
+          "tick": 131
+        },
+        {
+          "inputMask": 238,
+          "tics": 3,
+          "rng": 1294268352,
+          "snapshotHash": 3856642775,
+          "frameHash": 3709624747,
+          "tick": 134
+        },
+        {
+          "inputMask": 117,
+          "tics": 2,
+          "rng": -1362822930,
+          "snapshotHash": 3518824729,
+          "frameHash": 20942843,
+          "tick": 136
+        },
+        {
+          "inputMask": 80,
+          "tics": 1,
+          "rng": 1102600280,
+          "snapshotHash": 2881128112,
+          "frameHash": 1820265287,
+          "tick": 137
+        },
+        {
+          "inputMask": 111,
+          "tics": 4,
+          "rng": -1123511526,
+          "snapshotHash": 1136947284,
+          "frameHash": 69007751,
+          "tick": 141
+        },
+        {
+          "inputMask": 2,
+          "tics": 7,
+          "rng": -1890237728,
+          "snapshotHash": 968038261,
+          "frameHash": 130208563,
+          "tick": 148
+        },
+        {
+          "inputMask": 121,
+          "tics": 2,
+          "rng": -1854669258,
+          "snapshotHash": 2243431495,
+          "frameHash": 2608189995,
+          "tick": 150
+        },
+        {
+          "inputMask": 132,
+          "tics": 1,
+          "rng": 1277666104,
+          "snapshotHash": 1605734878,
+          "frameHash": 1855347447,
+          "tick": 151
+        },
+        {
+          "inputMask": 19,
+          "tics": 7,
+          "rng": 1447648826,
+          "snapshotHash": 1436825855,
+          "frameHash": 1666073675,
+          "tick": 158
+        },
+        {
+          "inputMask": 86,
+          "tics": 1,
+          "rng": -1605425472,
+          "snapshotHash": 799129238,
+          "frameHash": 3915739127,
+          "tick": 159
+        },
+        {
+          "inputMask": 189,
+          "tics": 0,
+          "rng": 1273028286,
+          "snapshotHash": 799129238,
+          "frameHash": 3915739127,
+          "tick": 159
+        },
+        {
+          "inputMask": 248,
+          "tics": 2,
+          "rng": 1784551048,
+          "snapshotHash": 461311192,
+          "frameHash": 3447111111,
+          "tick": 161
+        },
+        {
+          "inputMask": 247,
+          "tics": 1,
+          "rng": -692384982,
+          "snapshotHash": 2374401043,
+          "frameHash": 4020938995,
+          "tick": 162
+        },
+        {
+          "inputMask": 234,
+          "tics": 6,
+          "rng": 1237815200,
+          "snapshotHash": 292402169,
+          "frameHash": 615227643,
+          "tick": 168
+        },
+        {
+          "inputMask": 65,
+          "tics": 1,
+          "rng": 1072701174,
+          "snapshotHash": 3949672848,
+          "frameHash": 41497671,
+          "tick": 169
+        },
+        {
+          "inputMask": 172,
+          "tics": 1,
+          "rng": -1605597304,
+          "snapshotHash": 1567795403,
+          "frameHash": 1538266915,
+          "tick": 170
+        },
+        {
+          "inputMask": 27,
+          "tics": 1,
+          "rng": 2028463498,
+          "snapshotHash": 930098786,
+          "frameHash": 3435586967,
+          "tick": 171
+        },
+        {
+          "inputMask": 190,
+          "tics": 3,
+          "rng": -1985597120,
+          "snapshotHash": 4118581871,
+          "frameHash": 197122955,
+          "tick": 174
+        },
+        {
+          "inputMask": 5,
+          "tics": 0,
+          "rng": -1929057938,
+          "snapshotHash": 4118581871,
+          "frameHash": 197122955,
+          "tick": 174
+        },
+        {
+          "inputMask": 160,
+          "tics": 1,
+          "rng": -612940168,
+          "snapshotHash": 3480885254,
+          "frameHash": 1488111415,
+          "tick": 175
+        },
+        {
+          "inputMask": 127,
+          "tics": 0,
+          "rng": -1406083526,
+          "snapshotHash": 3480885254,
+          "frameHash": 1488111415,
+          "tick": 175
+        },
+        {
+          "inputMask": 210,
+          "tics": 3,
+          "rng": 1925308256,
+          "snapshotHash": 761189763,
+          "frameHash": 3140493043,
+          "tick": 178
+        },
+        {
+          "inputMask": 9,
+          "tics": 1,
+          "rng": 636492310,
+          "snapshotHash": 123493146,
+          "frameHash": 328574775,
+          "tick": 179
+        },
+        {
+          "inputMask": 212,
+          "tics": 6,
+          "rng": -1943560360,
+          "snapshotHash": 2336461568,
+          "frameHash": 631050151,
+          "tick": 185
+        },
+        {
+          "inputMask": 35,
+          "tics": 4,
+          "rng": -382602278,
+          "snapshotHash": 592280740,
+          "frameHash": 400616295,
+          "tick": 189
+        },
+        {
+          "inputMask": 38,
+          "tics": 3,
+          "rng": 56061248,
+          "snapshotHash": 2188340897,
+          "frameHash": 298814235,
+          "tick": 192
+        },
+        {
+          "inputMask": 77,
+          "tics": 0,
+          "rng": 120052894,
+          "snapshotHash": 2188340897,
+          "frameHash": 298814235,
+          "tick": 192
+        },
+        {
+          "inputMask": 72,
+          "tics": 5,
+          "rng": -1396150776,
+          "snapshotHash": 4101430748,
+          "frameHash": 3624281959,
+          "tick": 197
+        }
+      ],
       "traceHash": 203696784,
       "mapDigest": 1412739220,
       "finalSnapshotHash": 4101430748,
@@ -58,6 +1600,520 @@
       "mapName": "Wolf1 Map4",
       "seedHex": "0x8f410555",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 176,
+          "tics": 6,
+          "rng": -1309714211,
+          "snapshotHash": 4040501449,
+          "frameHash": 2590384137,
+          "tick": 6
+        },
+        {
+          "inputMask": 79,
+          "tics": 2,
+          "rng": -2026658155,
+          "snapshotHash": 2078489209,
+          "frameHash": 3770886071,
+          "tick": 8
+        },
+        {
+          "inputMask": 98,
+          "tics": 3,
+          "rng": -1740273627,
+          "snapshotHash": 734591452,
+          "frameHash": 2726202121,
+          "tick": 11
+        },
+        {
+          "inputMask": 89,
+          "tics": 3,
+          "rng": -70044947,
+          "snapshotHash": 446183644,
+          "frameHash": 2826708760,
+          "tick": 14
+        },
+        {
+          "inputMask": 228,
+          "tics": 4,
+          "rng": -432507707,
+          "snapshotHash": 728663262,
+          "frameHash": 2647494426,
+          "tick": 18
+        },
+        {
+          "inputMask": 243,
+          "tics": 2,
+          "rng": -1248299907,
+          "snapshotHash": 3465848726,
+          "frameHash": 1552260240,
+          "tick": 20
+        },
+        {
+          "inputMask": 182,
+          "tics": 3,
+          "rng": 659828557,
+          "snapshotHash": 299392816,
+          "frameHash": 177105593,
+          "tick": 23
+        },
+        {
+          "inputMask": 157,
+          "tics": 7,
+          "rng": -1450541835,
+          "snapshotHash": 1146247142,
+          "frameHash": 3946596878,
+          "tick": 30
+        },
+        {
+          "inputMask": 88,
+          "tics": 4,
+          "rng": -760377971,
+          "snapshotHash": 936064494,
+          "frameHash": 1781183210,
+          "tick": 34
+        },
+        {
+          "inputMask": 215,
+          "tics": 3,
+          "rng": 997847957,
+          "snapshotHash": 3743587803,
+          "frameHash": 1517956284,
+          "tick": 37
+        },
+        {
+          "inputMask": 74,
+          "tics": 7,
+          "rng": -1261800987,
+          "snapshotHash": 3220978561,
+          "frameHash": 2554361379,
+          "tick": 44
+        },
+        {
+          "inputMask": 33,
+          "tics": 6,
+          "rng": -1278313667,
+          "snapshotHash": 2798470387,
+          "frameHash": 1311835107,
+          "tick": 50
+        },
+        {
+          "inputMask": 12,
+          "tics": 1,
+          "rng": -1160445307,
+          "snapshotHash": 1003956175,
+          "frameHash": 3147950814,
+          "tick": 51
+        },
+        {
+          "inputMask": 251,
+          "tics": 0,
+          "rng": -2079446771,
+          "snapshotHash": 1003956175,
+          "frameHash": 3147950814,
+          "tick": 51
+        },
+        {
+          "inputMask": 30,
+          "tics": 2,
+          "rng": 1290173053,
+          "snapshotHash": 1999001097,
+          "frameHash": 2595704590,
+          "tick": 53
+        },
+        {
+          "inputMask": 229,
+          "tics": 2,
+          "rng": 66880565,
+          "snapshotHash": 3274394331,
+          "frameHash": 1161138846,
+          "tick": 55
+        },
+        {
+          "inputMask": 0,
+          "tics": 7,
+          "rng": 1759183421,
+          "snapshotHash": 3443303354,
+          "frameHash": 1382920858,
+          "tick": 62
+        },
+        {
+          "inputMask": 95,
+          "tics": 6,
+          "rng": -2072363531,
+          "snapshotHash": 1905971024,
+          "frameHash": 3098113266,
+          "tick": 68
+        },
+        {
+          "inputMask": 50,
+          "tics": 0,
+          "rng": 102738469,
+          "snapshotHash": 1905971024,
+          "frameHash": 3098113266,
+          "tick": 68
+        },
+        {
+          "inputMask": 233,
+          "tics": 1,
+          "rng": -4400787,
+          "snapshotHash": 2543667641,
+          "frameHash": 788381294,
+          "tick": 69
+        },
+        {
+          "inputMask": 52,
+          "tics": 2,
+          "rng": -320006971,
+          "snapshotHash": 3819060875,
+          "frameHash": 762236254,
+          "tick": 71
+        },
+        {
+          "inputMask": 3,
+          "tics": 0,
+          "rng": 147086685,
+          "snapshotHash": 3819060875,
+          "frameHash": 762236254,
+          "tick": 71
+        },
+        {
+          "inputMask": 134,
+          "tics": 5,
+          "rng": -1616015795,
+          "snapshotHash": 2712576664,
+          "frameHash": 721625394,
+          "tick": 76
+        },
+        {
+          "inputMask": 45,
+          "tics": 7,
+          "rng": -543406827,
+          "snapshotHash": 461668767,
+          "frameHash": 3176208270,
+          "tick": 83
+        },
+        {
+          "inputMask": 168,
+          "tics": 6,
+          "rng": 1267588621,
+          "snapshotHash": 4287848469,
+          "frameHash": 3401546846,
+          "tick": 89
+        },
+        {
+          "inputMask": 231,
+          "tics": 1,
+          "rng": 1234181877,
+          "snapshotHash": 630577790,
+          "frameHash": 386215442,
+          "tick": 90
+        },
+        {
+          "inputMask": 26,
+          "tics": 6,
+          "rng": 1756928869,
+          "snapshotHash": 3388212756,
+          "frameHash": 3731944138,
+          "tick": 96
+        },
+        {
+          "inputMask": 177,
+          "tics": 6,
+          "rng": -518257315,
+          "snapshotHash": 2112819522,
+          "frameHash": 206776394,
+          "tick": 102
+        },
+        {
+          "inputMask": 92,
+          "tics": 0,
+          "rng": 602980869,
+          "snapshotHash": 2112819522,
+          "frameHash": 206776394,
+          "tick": 102
+        },
+        {
+          "inputMask": 11,
+          "tics": 0,
+          "rng": 1478652109,
+          "snapshotHash": 2112819522,
+          "frameHash": 206776394,
+          "tick": 102
+        },
+        {
+          "inputMask": 238,
+          "tics": 5,
+          "rng": 211806941,
+          "snapshotHash": 1812940951,
+          "frameHash": 250207486,
+          "tick": 107
+        },
+        {
+          "inputMask": 117,
+          "tics": 4,
+          "rng": 865380821,
+          "snapshotHash": 3557121779,
+          "frameHash": 2968323118,
+          "tick": 111
+        },
+        {
+          "inputMask": 80,
+          "tics": 3,
+          "rng": -1355761827,
+          "snapshotHash": 3050394710,
+          "frameHash": 3147809106,
+          "tick": 114
+        },
+        {
+          "inputMask": 111,
+          "tics": 6,
+          "rng": 1761602581,
+          "snapshotHash": 2581607116,
+          "frameHash": 1803562778,
+          "tick": 120
+        },
+        {
+          "inputMask": 2,
+          "tics": 1,
+          "rng": 1265547749,
+          "snapshotHash": 3219303733,
+          "frameHash": 2325978398,
+          "tick": 121
+        },
+        {
+          "inputMask": 121,
+          "tics": 4,
+          "rng": -952972499,
+          "snapshotHash": 668517265,
+          "frameHash": 4177915102,
+          "tick": 125
+        },
+        {
+          "inputMask": 132,
+          "tics": 3,
+          "rng": -269033915,
+          "snapshotHash": 2278091316,
+          "frameHash": 1581224266,
+          "tick": 128
+        },
+        {
+          "inputMask": 19,
+          "tics": 1,
+          "rng": 1269564733,
+          "snapshotHash": 2915787933,
+          "frameHash": 2996265486,
+          "tick": 129
+        },
+        {
+          "inputMask": 86,
+          "tics": 3,
+          "rng": -564969011,
+          "snapshotHash": 4022272144,
+          "frameHash": 1871356786,
+          "tick": 132
+        },
+        {
+          "inputMask": 189,
+          "tics": 2,
+          "rng": -1988357195,
+          "snapshotHash": 1002698082,
+          "frameHash": 2286651722,
+          "tick": 134
+        },
+        {
+          "inputMask": 248,
+          "tics": 4,
+          "rng": 1939733389,
+          "snapshotHash": 65122894,
+          "frameHash": 1131696402,
+          "tick": 138
+        },
+        {
+          "inputMask": 247,
+          "tics": 3,
+          "rng": -1080922603,
+          "snapshotHash": 1171607105,
+          "frameHash": 783991582,
+          "tick": 141
+        },
+        {
+          "inputMask": 234,
+          "tics": 0,
+          "rng": 1775414437,
+          "snapshotHash": 1171607105,
+          "frameHash": 783991582,
+          "tick": 141
+        },
+        {
+          "inputMask": 65,
+          "tics": 3,
+          "rng": -206519811,
+          "snapshotHash": 664880036,
+          "frameHash": 3956108938,
+          "tick": 144
+        },
+        {
+          "inputMask": 172,
+          "tics": 3,
+          "rng": -1609198971,
+          "snapshotHash": 2577969887,
+          "frameHash": 1005486222,
+          "tick": 147
+        },
+        {
+          "inputMask": 27,
+          "tics": 3,
+          "rng": 127808653,
+          "snapshotHash": 3684454098,
+          "frameHash": 3881322442,
+          "tick": 150
+        },
+        {
+          "inputMask": 190,
+          "tics": 5,
+          "rng": -1837884483,
+          "snapshotHash": 3384575527,
+          "frameHash": 74441854,
+          "tick": 155
+        },
+        {
+          "inputMask": 5,
+          "tics": 2,
+          "rng": 967294581,
+          "snapshotHash": 3853363121,
+          "frameHash": 1991383454,
+          "tick": 157
+        },
+        {
+          "inputMask": 160,
+          "tics": 3,
+          "rng": -987074179,
+          "snapshotHash": 1209546580,
+          "frameHash": 2786494922,
+          "tick": 160
+        },
+        {
+          "inputMask": 127,
+          "tics": 2,
+          "rng": 163758901,
+          "snapshotHash": 2484939814,
+          "frameHash": 1563415186,
+          "tick": 162
+        },
+        {
+          "inputMask": 210,
+          "tics": 5,
+          "rng": -2065603995,
+          "snapshotHash": 571849963,
+          "frameHash": 185884702,
+          "tick": 167
+        },
+        {
+          "inputMask": 9,
+          "tics": 3,
+          "rng": -373789395,
+          "snapshotHash": 3291545454,
+          "frameHash": 1540226642,
+          "tick": 170
+        },
+        {
+          "inputMask": 212,
+          "tics": 0,
+          "rng": -1972302779,
+          "snapshotHash": 3291545454,
+          "frameHash": 1540226642,
+          "tick": 170
+        },
+        {
+          "inputMask": 35,
+          "tics": 6,
+          "rng": 1725459677,
+          "snapshotHash": 3891302596,
+          "frameHash": 2425881354,
+          "tick": 176
+        },
+        {
+          "inputMask": 38,
+          "tics": 5,
+          "rng": 514411597,
+          "snapshotHash": 1978212745,
+          "frameHash": 2937273102,
+          "tick": 181
+        },
+        {
+          "inputMask": 77,
+          "tics": 2,
+          "rng": -212759147,
+          "snapshotHash": 3253605979,
+          "frameHash": 3729745310,
+          "tick": 183
+        },
+        {
+          "inputMask": 72,
+          "tics": 7,
+          "rng": 828387597,
+          "snapshotHash": 3422515002,
+          "frameHash": 1302732442,
+          "tick": 190
+        },
+        {
+          "inputMask": 7,
+          "tics": 2,
+          "rng": -963541323,
+          "snapshotHash": 141001844,
+          "frameHash": 3873356874,
+          "tick": 192
+        },
+        {
+          "inputMask": 186,
+          "tics": 7,
+          "rng": -16251739,
+          "snapshotHash": 3798272523,
+          "frameHash": 896814686,
+          "tick": 199
+        },
+        {
+          "inputMask": 209,
+          "tics": 3,
+          "rng": 434119261,
+          "snapshotHash": 2223000718,
+          "frameHash": 2480914194,
+          "tick": 202
+        },
+        {
+          "inputMask": 252,
+          "tics": 2,
+          "rng": -1645083387,
+          "snapshotHash": 2691788312,
+          "frameHash": 662541106,
+          "tick": 204
+        },
+        {
+          "inputMask": 43,
+          "tics": 2,
+          "rng": 1262023757,
+          "snapshotHash": 3967181546,
+          "frameHash": 1021800378,
+          "tick": 206
+        },
+        {
+          "inputMask": 142,
+          "tics": 1,
+          "rng": 2031670621,
+          "snapshotHash": 309910867,
+          "frameHash": 3247961134,
+          "tick": 207
+        },
+        {
+          "inputMask": 149,
+          "tics": 3,
+          "rng": -825767723,
+          "snapshotHash": 4098151094,
+          "frameHash": 1051644434,
+          "tick": 210
+        }
+      ],
       "traceHash": 4096317630,
       "mapDigest": 4020622554,
       "finalSnapshotHash": 4098151094,
@@ -70,6 +2126,520 @@
       "mapName": "Wolf1 Map5",
       "seedHex": "0x8be3659e",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 101,
+          "tics": 0,
+          "rng": -1675600376,
+          "snapshotHash": 1328842110,
+          "frameHash": 1302220880,
+          "tick": 0
+        },
+        {
+          "inputMask": 128,
+          "tics": 6,
+          "rng": 1175427674,
+          "snapshotHash": 728803066,
+          "frameHash": 2525035542,
+          "tick": 6
+        },
+        {
+          "inputMask": 223,
+          "tics": 7,
+          "rng": -562058088,
+          "snapshotHash": 3083417647,
+          "frameHash": 3425011448,
+          "tick": 13
+        },
+        {
+          "inputMask": 178,
+          "tics": 3,
+          "rng": -1438889466,
+          "snapshotHash": 1365315003,
+          "frameHash": 2587073545,
+          "tick": 16
+        },
+        {
+          "inputMask": 105,
+          "tics": 7,
+          "rng": 1997485896,
+          "snapshotHash": 3467222796,
+          "frameHash": 1842207373,
+          "tick": 23
+        },
+        {
+          "inputMask": 180,
+          "tics": 1,
+          "rng": -584558790,
+          "snapshotHash": 1138613227,
+          "frameHash": 3350117217,
+          "tick": 24
+        },
+        {
+          "inputMask": 131,
+          "tics": 1,
+          "rng": 1988912504,
+          "snapshotHash": 2167495502,
+          "frameHash": 2973720345,
+          "tick": 25
+        },
+        {
+          "inputMask": 6,
+          "tics": 1,
+          "rng": 2005207662,
+          "snapshotHash": 3853006119,
+          "frameHash": 4108319127,
+          "tick": 26
+        },
+        {
+          "inputMask": 173,
+          "tics": 4,
+          "rng": 427212152,
+          "snapshotHash": 10046392,
+          "frameHash": 2179173716,
+          "tick": 30
+        },
+        {
+          "inputMask": 40,
+          "tics": 6,
+          "rng": 92415594,
+          "snapshotHash": 4185114023,
+          "frameHash": 4212829113,
+          "tick": 36
+        },
+        {
+          "inputMask": 103,
+          "tics": 3,
+          "rng": -1568408120,
+          "snapshotHash": 3129987723,
+          "frameHash": 3898768166,
+          "tick": 39
+        },
+        {
+          "inputMask": 154,
+          "tics": 1,
+          "rng": -2036013946,
+          "snapshotHash": 3574810788,
+          "frameHash": 2253977578,
+          "tick": 40
+        },
+        {
+          "inputMask": 49,
+          "tics": 4,
+          "rng": 300087224,
+          "snapshotHash": 279253952,
+          "frameHash": 531722274,
+          "tick": 44
+        },
+        {
+          "inputMask": 220,
+          "tics": 7,
+          "rng": 1186160170,
+          "snapshotHash": 77880989,
+          "frameHash": 2337107096,
+          "tick": 51
+        },
+        {
+          "inputMask": 139,
+          "tics": 1,
+          "rng": 1564625384,
+          "snapshotHash": 1181515935,
+          "frameHash": 1807989361,
+          "tick": 52
+        },
+        {
+          "inputMask": 110,
+          "tics": 1,
+          "rng": -1999560770,
+          "snapshotHash": 4272403898,
+          "frameHash": 2917536897,
+          "tick": 53
+        },
+        {
+          "inputMask": 245,
+          "tics": 1,
+          "rng": -119061304,
+          "snapshotHash": 2565856235,
+          "frameHash": 1639482383,
+          "tick": 54
+        },
+        {
+          "inputMask": 208,
+          "tics": 2,
+          "rng": -724248198,
+          "snapshotHash": 1869581452,
+          "frameHash": 2183632978,
+          "tick": 56
+        },
+        {
+          "inputMask": 239,
+          "tics": 7,
+          "rng": 744799736,
+          "snapshotHash": 1231884835,
+          "frameHash": 2545322854,
+          "tick": 63
+        },
+        {
+          "inputMask": 130,
+          "tics": 4,
+          "rng": -26870778,
+          "snapshotHash": 3520732207,
+          "frameHash": 2980022662,
+          "tick": 67
+        },
+        {
+          "inputMask": 249,
+          "tics": 1,
+          "rng": 2082643720,
+          "snapshotHash": 3351823184,
+          "frameHash": 3511159306,
+          "tick": 68
+        },
+        {
+          "inputMask": 4,
+          "tics": 3,
+          "rng": -1956000166,
+          "snapshotHash": 969945739,
+          "frameHash": 3602944390,
+          "tick": 71
+        },
+        {
+          "inputMask": 147,
+          "tics": 2,
+          "rng": -1335727784,
+          "snapshotHash": 3051944613,
+          "frameHash": 1112144858,
+          "tick": 73
+        },
+        {
+          "inputMask": 214,
+          "tics": 6,
+          "rng": -38019858,
+          "snapshotHash": 1776551379,
+          "frameHash": 854562406,
+          "tick": 79
+        },
+        {
+          "inputMask": 61,
+          "tics": 0,
+          "rng": 2114762904,
+          "snapshotHash": 1776551379,
+          "frameHash": 854562406,
+          "tick": 79
+        },
+        {
+          "inputMask": 120,
+          "tics": 4,
+          "rng": -1562778774,
+          "snapshotHash": 1907520927,
+          "frameHash": 1738996486,
+          "tick": 83
+        },
+        {
+          "inputMask": 119,
+          "tics": 5,
+          "rng": 1726711816,
+          "snapshotHash": 801036716,
+          "frameHash": 1546940818,
+          "tick": 88
+        },
+        {
+          "inputMask": 106,
+          "tics": 4,
+          "rng": -877502586,
+          "snapshotHash": 2545217544,
+          "frameHash": 3109586970,
+          "tick": 92
+        },
+        {
+          "inputMask": 193,
+          "tics": 0,
+          "rng": 1898541720,
+          "snapshotHash": 2545217544,
+          "frameHash": 3109586970,
+          "tick": 92
+        },
+        {
+          "inputMask": 44,
+          "tics": 3,
+          "rng": 619840490,
+          "snapshotHash": 163340099,
+          "frameHash": 620019430,
+          "tick": 95
+        },
+        {
+          "inputMask": 155,
+          "tics": 4,
+          "rng": -962106456,
+          "snapshotHash": 2452187471,
+          "frameHash": 1711225158,
+          "tick": 99
+        },
+        {
+          "inputMask": 62,
+          "tics": 1,
+          "rng": 500501662,
+          "snapshotHash": 2283278448,
+          "frameHash": 4280030218,
+          "tick": 100
+        },
+        {
+          "inputMask": 133,
+          "tics": 7,
+          "rng": 140602248,
+          "snapshotHash": 3258793111,
+          "frameHash": 2132230886,
+          "tick": 107
+        },
+        {
+          "inputMask": 32,
+          "tics": 3,
+          "rng": 1209559386,
+          "snapshotHash": 70310026,
+          "frameHash": 1428804766,
+          "tick": 110
+        },
+        {
+          "inputMask": 255,
+          "tics": 3,
+          "rng": -102800616,
+          "snapshotHash": 3858550253,
+          "frameHash": 105712970,
+          "tick": 113
+        },
+        {
+          "inputMask": 82,
+          "tics": 1,
+          "rng": 420265478,
+          "snapshotHash": 201279574,
+          "frameHash": 1805311678,
+          "tick": 114
+        },
+        {
+          "inputMask": 137,
+          "tics": 0,
+          "rng": 1390239048,
+          "snapshotHash": 201279574,
+          "frameHash": 1805311678,
+          "tick": 114
+        },
+        {
+          "inputMask": 84,
+          "tics": 0,
+          "rng": -915055494,
+          "snapshotHash": 201279574,
+          "frameHash": 1805311678,
+          "tick": 114
+        },
+        {
+          "inputMask": 163,
+          "tics": 7,
+          "rng": -1144589000,
+          "snapshotHash": 370188597,
+          "frameHash": 1490252154,
+          "tick": 121
+        },
+        {
+          "inputMask": 166,
+          "tics": 0,
+          "rng": -1002436178,
+          "snapshotHash": 370188597,
+          "frameHash": 1490252154,
+          "tick": 121
+        },
+        {
+          "inputMask": 205,
+          "tics": 7,
+          "rng": 1977895096,
+          "snapshotHash": 3723943476,
+          "frameHash": 4110329138,
+          "tick": 128
+        },
+        {
+          "inputMask": 200,
+          "tics": 6,
+          "rng": -997254358,
+          "snapshotHash": 2448550242,
+          "frameHash": 575184014,
+          "tick": 134
+        },
+        {
+          "inputMask": 135,
+          "tics": 3,
+          "rng": 2042664904,
+          "snapshotHash": 873278437,
+          "frameHash": 3904845146,
+          "tick": 137
+        },
+        {
+          "inputMask": 58,
+          "tics": 3,
+          "rng": -2018035322,
+          "snapshotHash": 1979762648,
+          "frameHash": 268051642,
+          "tick": 140
+        },
+        {
+          "inputMask": 81,
+          "tics": 1,
+          "rng": 1053077624,
+          "snapshotHash": 2617459265,
+          "frameHash": 845854130,
+          "tick": 141
+        },
+        {
+          "inputMask": 124,
+          "tics": 2,
+          "rng": 1340437994,
+          "snapshotHash": 3892852499,
+          "frameHash": 3130290918,
+          "tick": 143
+        },
+        {
+          "inputMask": 171,
+          "tics": 3,
+          "rng": 1174420904,
+          "snapshotHash": 3386125430,
+          "frameHash": 2631242942,
+          "tick": 146
+        },
+        {
+          "inputMask": 14,
+          "tics": 5,
+          "rng": 1339689342,
+          "snapshotHash": 1473035579,
+          "frameHash": 4015933510,
+          "tick": 151
+        },
+        {
+          "inputMask": 21,
+          "tics": 1,
+          "rng": 41624520,
+          "snapshotHash": 2917337836,
+          "frameHash": 1248600850,
+          "tick": 152
+        },
+        {
+          "inputMask": 112,
+          "tics": 7,
+          "rng": 2069540410,
+          "snapshotHash": 2279641219,
+          "frameHash": 322526054,
+          "tick": 159
+        },
+        {
+          "inputMask": 15,
+          "tics": 4,
+          "rng": -1776413768,
+          "snapshotHash": 273521295,
+          "frameHash": 3522904518,
+          "tick": 163
+        },
+        {
+          "inputMask": 34,
+          "tics": 2,
+          "rng": -1014373370,
+          "snapshotHash": 742308889,
+          "frameHash": 1204823122,
+          "tick": 165
+        },
+        {
+          "inputMask": 25,
+          "tics": 3,
+          "rng": -246464632,
+          "snapshotHash": 3462004380,
+          "frameHash": 702051282,
+          "tick": 168
+        },
+        {
+          "inputMask": 164,
+          "tics": 1,
+          "rng": -927098022,
+          "snapshotHash": 4099700997,
+          "frameHash": 3686469402,
+          "tick": 169
+        },
+        {
+          "inputMask": 179,
+          "tics": 0,
+          "rng": 592112088,
+          "snapshotHash": 4099700997,
+          "frameHash": 3686469402,
+          "tick": 169
+        },
+        {
+          "inputMask": 118,
+          "tics": 6,
+          "rng": 1988270510,
+          "snapshotHash": 2824307763,
+          "frameHash": 873507430,
+          "tick": 175
+        },
+        {
+          "inputMask": 93,
+          "tics": 3,
+          "rng": 357553432,
+          "snapshotHash": 2317580694,
+          "frameHash": 1895342014,
+          "tick": 178
+        },
+        {
+          "inputMask": 24,
+          "tics": 5,
+          "rng": 805734826,
+          "snapshotHash": 404490843,
+          "frameHash": 1818653574,
+          "tick": 183
+        },
+        {
+          "inputMask": 151,
+          "tics": 5,
+          "rng": 1187348104,
+          "snapshotHash": 3592973928,
+          "frameHash": 4165764314,
+          "tick": 188
+        },
+        {
+          "inputMask": 10,
+          "tics": 6,
+          "rng": -673132666,
+          "snapshotHash": 2862247238,
+          "frameHash": 2985368702,
+          "tick": 194
+        },
+        {
+          "inputMask": 225,
+          "tics": 5,
+          "rng": -774149608,
+          "snapshotHash": 949157387,
+          "frameHash": 641440134,
+          "tick": 199
+        },
+        {
+          "inputMask": 204,
+          "tics": 5,
+          "rng": -282174550,
+          "snapshotHash": 4137640472,
+          "frameHash": 3217706426,
+          "tick": 204
+        },
+        {
+          "inputMask": 187,
+          "tics": 6,
+          "rng": -2118653336,
+          "snapshotHash": 1249035958,
+          "frameHash": 3060133310,
+          "tick": 210
+        },
+        {
+          "inputMask": 222,
+          "tics": 4,
+          "rng": 1321826206,
+          "snapshotHash": 2993216786,
+          "frameHash": 4166301742,
+          "tick": 214
+        }
+      ],
       "traceHash": 731333483,
       "mapDigest": 3249858584,
       "finalSnapshotHash": 2993216786,
@@ -82,6 +2652,520 @@
       "mapName": "Wolf1 Map6",
       "seedHex": "0x8406c2db",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 126,
+          "tics": 2,
+          "rng": -401910765,
+          "snapshotHash": 436015635,
+          "frameHash": 2712405995,
+          "tick": 2
+        },
+        {
+          "inputMask": 197,
+          "tics": 7,
+          "rng": -1455824097,
+          "snapshotHash": 3628849486,
+          "frameHash": 4115359833,
+          "tick": 9
+        },
+        {
+          "inputMask": 96,
+          "tics": 6,
+          "rng": -140966617,
+          "snapshotHash": 2981819582,
+          "frameHash": 3377728347,
+          "tick": 15
+        },
+        {
+          "inputMask": 63,
+          "tics": 6,
+          "rng": 1581086603,
+          "snapshotHash": 2546560431,
+          "frameHash": 1405407400,
+          "tick": 21
+        },
+        {
+          "inputMask": 146,
+          "tics": 6,
+          "rng": -1773891917,
+          "snapshotHash": 2991141065,
+          "frameHash": 2575733336,
+          "tick": 27
+        },
+        {
+          "inputMask": 201,
+          "tics": 4,
+          "rng": 2039194183,
+          "snapshotHash": 923713820,
+          "frameHash": 2906060857,
+          "tick": 31
+        },
+        {
+          "inputMask": 148,
+          "tics": 7,
+          "rng": -1281371281,
+          "snapshotHash": 1762857457,
+          "frameHash": 2087119801,
+          "tick": 38
+        },
+        {
+          "inputMask": 227,
+          "tics": 5,
+          "rng": 332992139,
+          "snapshotHash": 1263378026,
+          "frameHash": 1835546155,
+          "tick": 43
+        },
+        {
+          "inputMask": 230,
+          "tics": 1,
+          "rng": -1353775053,
+          "snapshotHash": 218309257,
+          "frameHash": 1170625171,
+          "tick": 44
+        },
+        {
+          "inputMask": 13,
+          "tics": 0,
+          "rng": 102025295,
+          "snapshotHash": 218309257,
+          "frameHash": 1170625171,
+          "tick": 44
+        },
+        {
+          "inputMask": 8,
+          "tics": 2,
+          "rng": 1376142503,
+          "snapshotHash": 3160867902,
+          "frameHash": 2763350890,
+          "tick": 46
+        },
+        {
+          "inputMask": 199,
+          "tics": 5,
+          "rng": -2106205989,
+          "snapshotHash": 4274254107,
+          "frameHash": 2668419162,
+          "tick": 51
+        },
+        {
+          "inputMask": 122,
+          "tics": 0,
+          "rng": 451331059,
+          "snapshotHash": 4274254107,
+          "frameHash": 2668419162,
+          "tick": 51
+        },
+        {
+          "inputMask": 145,
+          "tics": 5,
+          "rng": -1363205017,
+          "snapshotHash": 2204993355,
+          "frameHash": 3523670033,
+          "tick": 56
+        },
+        {
+          "inputMask": 188,
+          "tics": 1,
+          "rng": 840880607,
+          "snapshotHash": 1567296738,
+          "frameHash": 220934389,
+          "tick": 57
+        },
+        {
+          "inputMask": 235,
+          "tics": 1,
+          "rng": 1204518715,
+          "snapshotHash": 929600121,
+          "frameHash": 2504827989,
+          "tick": 58
+        },
+        {
+          "inputMask": 78,
+          "tics": 6,
+          "rng": -1114942605,
+          "snapshotHash": 2487720803,
+          "frameHash": 2003219825,
+          "tick": 64
+        },
+        {
+          "inputMask": 85,
+          "tics": 1,
+          "rng": 772061951,
+          "snapshotHash": 1850024186,
+          "frameHash": 2013765541,
+          "tick": 65
+        },
+        {
+          "inputMask": 176,
+          "tics": 2,
+          "rng": 1974495399,
+          "snapshotHash": 574630952,
+          "frameHash": 3032679713,
+          "tick": 67
+        },
+        {
+          "inputMask": 79,
+          "tics": 6,
+          "rng": 857452235,
+          "snapshotHash": 1043418546,
+          "frameHash": 3296929685,
+          "tick": 73
+        },
+        {
+          "inputMask": 98,
+          "tics": 7,
+          "rng": 189122963,
+          "snapshotHash": 4100932083,
+          "frameHash": 3038858609,
+          "tick": 80
+        },
+        {
+          "inputMask": 89,
+          "tics": 7,
+          "rng": 1959641607,
+          "snapshotHash": 443661404,
+          "frameHash": 821322593,
+          "tick": 87
+        },
+        {
+          "inputMask": 228,
+          "tics": 0,
+          "rng": 19917615,
+          "snapshotHash": 443661404,
+          "frameHash": 821322593,
+          "tick": 87
+        },
+        {
+          "inputMask": 243,
+          "tics": 6,
+          "rng": -2002228021,
+          "snapshotHash": 912448998,
+          "frameHash": 656987485,
+          "tick": 93
+        },
+        {
+          "inputMask": 182,
+          "tics": 7,
+          "rng": 1796810515,
+          "snapshotHash": 1812084711,
+          "frameHash": 3743275537,
+          "tick": 100
+        },
+        {
+          "inputMask": 157,
+          "tics": 3,
+          "rng": 1523659919,
+          "snapshotHash": 4193962156,
+          "frameHash": 1619669185,
+          "tick": 103
+        },
+        {
+          "inputMask": 88,
+          "tics": 0,
+          "rng": 1860318503,
+          "snapshotHash": 4193962156,
+          "frameHash": 1619669185,
+          "tick": 103
+        },
+        {
+          "inputMask": 215,
+          "tics": 7,
+          "rng": 780608571,
+          "snapshotHash": 4025053133,
+          "frameHash": 8067421,
+          "tick": 110
+        },
+        {
+          "inputMask": 74,
+          "tics": 3,
+          "rng": -1963519725,
+          "snapshotHash": 236812906,
+          "frameHash": 55639141,
+          "tick": 113
+        },
+        {
+          "inputMask": 33,
+          "tics": 2,
+          "rng": -1005782297,
+          "snapshotHash": 3256386968,
+          "frameHash": 3681962561,
+          "tick": 115
+        },
+        {
+          "inputMask": 12,
+          "tics": 5,
+          "rng": 2025529919,
+          "snapshotHash": 67903883,
+          "frameHash": 1507951633,
+          "tick": 120
+        },
+        {
+          "inputMask": 251,
+          "tics": 4,
+          "rng": 751024475,
+          "snapshotHash": 2618690351,
+          "frameHash": 452793745,
+          "tick": 124
+        },
+        {
+          "inputMask": 30,
+          "tics": 6,
+          "rng": -1568277997,
+          "snapshotHash": 3328628689,
+          "frameHash": 2156414437,
+          "tick": 130
+        },
+        {
+          "inputMask": 229,
+          "tics": 6,
+          "rng": -729809761,
+          "snapshotHash": 3797416283,
+          "frameHash": 71255825,
+          "tick": 136
+        },
+        {
+          "inputMask": 0,
+          "tics": 3,
+          "rng": 723215335,
+          "snapshotHash": 1884326432,
+          "frameHash": 1252351201,
+          "tick": 139
+        },
+        {
+          "inputMask": 95,
+          "tics": 2,
+          "rng": -1376512757,
+          "snapshotHash": 1415538838,
+          "frameHash": 2607105117,
+          "tick": 141
+        },
+        {
+          "inputMask": 50,
+          "tics": 4,
+          "rng": 630909427,
+          "snapshotHash": 1284569290,
+          "frameHash": 3840692709,
+          "tick": 145
+        },
+        {
+          "inputMask": 233,
+          "tics": 5,
+          "rng": 1401080263,
+          "snapshotHash": 3197659141,
+          "frameHash": 2394881277,
+          "tick": 150
+        },
+        {
+          "inputMask": 52,
+          "tics": 6,
+          "rng": -348345169,
+          "snapshotHash": 3666446735,
+          "frameHash": 2246929873,
+          "tick": 156
+        },
+        {
+          "inputMask": 3,
+          "tics": 4,
+          "rng": 125383947,
+          "snapshotHash": 1377599363,
+          "frameHash": 2110881905,
+          "tick": 160
+        },
+        {
+          "inputMask": 134,
+          "tics": 1,
+          "rng": -1736931597,
+          "snapshotHash": 739902746,
+          "frameHash": 4236427301,
+          "tick": 161
+        },
+        {
+          "inputMask": 45,
+          "tics": 3,
+          "rng": -381022513,
+          "snapshotHash": 3928385831,
+          "frameHash": 2120729873,
+          "tick": 164
+        },
+        {
+          "inputMask": 168,
+          "tics": 2,
+          "rng": 1083422439,
+          "snapshotHash": 2652992597,
+          "frameHash": 4148275133,
+          "tick": 166
+        },
+        {
+          "inputMask": 231,
+          "tics": 5,
+          "rng": 1841088347,
+          "snapshotHash": 2952871168,
+          "frameHash": 2476894561,
+          "tick": 171
+        },
+        {
+          "inputMask": 26,
+          "tics": 2,
+          "rng": -1231197389,
+          "snapshotHash": 2484083574,
+          "frameHash": 2595946909,
+          "tick": 173
+        },
+        {
+          "inputMask": 177,
+          "tics": 2,
+          "rng": -813195993,
+          "snapshotHash": 1208690340,
+          "frameHash": 2964881313,
+          "tick": 175
+        },
+        {
+          "inputMask": 92,
+          "tics": 4,
+          "rng": 1468719711,
+          "snapshotHash": 1077720792,
+          "frameHash": 3208485953,
+          "tick": 179
+        },
+        {
+          "inputMask": 11,
+          "tics": 4,
+          "rng": -1132011397,
+          "snapshotHash": 3628507260,
+          "frameHash": 3316168289,
+          "tick": 183
+        },
+        {
+          "inputMask": 238,
+          "tics": 1,
+          "rng": -159409357,
+          "snapshotHash": 2184205003,
+          "frameHash": 25935377,
+          "tick": 184
+        },
+        {
+          "inputMask": 117,
+          "tics": 0,
+          "rng": -1112487617,
+          "snapshotHash": 2184205003,
+          "frameHash": 25935377,
+          "tick": 184
+        },
+        {
+          "inputMask": 80,
+          "tics": 7,
+          "rng": -89075481,
+          "snapshotHash": 2821901620,
+          "frameHash": 1414411969,
+          "tick": 191
+        },
+        {
+          "inputMask": 111,
+          "tics": 2,
+          "rng": 1595814987,
+          "snapshotHash": 1829235834,
+          "frameHash": 1039682725,
+          "tick": 193
+        },
+        {
+          "inputMask": 2,
+          "tics": 5,
+          "rng": 399538579,
+          "snapshotHash": 3742325685,
+          "frameHash": 571673533,
+          "tick": 198
+        },
+        {
+          "inputMask": 121,
+          "tics": 0,
+          "rng": 1455278727,
+          "snapshotHash": 3742325685,
+          "frameHash": 571673533,
+          "tick": 198
+        },
+        {
+          "inputMask": 132,
+          "tics": 7,
+          "rng": 1406318319,
+          "snapshotHash": 3573416662,
+          "frameHash": 192839005,
+          "tick": 205
+        },
+        {
+          "inputMask": 19,
+          "tics": 5,
+          "rng": -1458695477,
+          "snapshotHash": 2804750497,
+          "frameHash": 3661495141,
+          "tick": 210
+        },
+        {
+          "inputMask": 86,
+          "tics": 7,
+          "rng": -1489878765,
+          "snapshotHash": 2635841474,
+          "frameHash": 490044213,
+          "tick": 217
+        },
+        {
+          "inputMask": 189,
+          "tics": 6,
+          "rng": -736574961,
+          "snapshotHash": 3911234708,
+          "frameHash": 2069525249,
+          "tick": 223
+        },
+        {
+          "inputMask": 248,
+          "tics": 0,
+          "rng": 883985383,
+          "snapshotHash": 3911234708,
+          "frameHash": 2069525249,
+          "tick": 223
+        },
+        {
+          "inputMask": 247,
+          "tics": 7,
+          "rng": 128968315,
+          "snapshotHash": 515903125,
+          "frameHash": 2909776573,
+          "tick": 230
+        },
+        {
+          "inputMask": 234,
+          "tics": 4,
+          "rng": -2016220397,
+          "snapshotHash": 1453478313,
+          "frameHash": 717410165,
+          "tick": 234
+        },
+        {
+          "inputMask": 65,
+          "tics": 7,
+          "rng": -1691528921,
+          "snapshotHash": 216024554,
+          "frameHash": 3220823653,
+          "tick": 241
+        },
+        {
+          "inputMask": 172,
+          "tics": 7,
+          "rng": -1692470401,
+          "snapshotHash": 47115531,
+          "frameHash": 387671057,
+          "tick": 248
+        },
+        {
+          "inputMask": 27,
+          "tics": 7,
+          "rng": -255218597,
+          "snapshotHash": 684812148,
+          "frameHash": 3205206209,
+          "tick": 255
+        }
+      ],
       "traceHash": 2051242725,
       "mapDigest": 92354618,
       "finalSnapshotHash": 684812148,
@@ -94,6 +3178,520 @@
       "mapName": "Wolf1 Map7",
       "seedHex": "0x80b82324",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 51,
+          "tics": 4,
+          "rng": -745842082,
+          "snapshotHash": 1509171134,
+          "frameHash": 919746416,
+          "tick": 4
+        },
+        {
+          "inputMask": 246,
+          "tics": 3,
+          "rng": -622012628,
+          "snapshotHash": 2514119671,
+          "frameHash": 3951756642,
+          "tick": 7
+        },
+        {
+          "inputMask": 221,
+          "tics": 2,
+          "rng": 1255029146,
+          "snapshotHash": 2666502432,
+          "frameHash": 2676396439,
+          "tick": 9
+        },
+        {
+          "inputMask": 152,
+          "tics": 6,
+          "rng": -1645768916,
+          "snapshotHash": 1800610015,
+          "frameHash": 3534384162,
+          "tick": 15
+        },
+        {
+          "inputMask": 23,
+          "tics": 1,
+          "rng": 606683446,
+          "snapshotHash": 4153572989,
+          "frameHash": 30550783,
+          "tick": 16
+        },
+        {
+          "inputMask": 138,
+          "tics": 3,
+          "rng": 921732356,
+          "snapshotHash": 1390285081,
+          "frameHash": 1719623052,
+          "tick": 19
+        },
+        {
+          "inputMask": 97,
+          "tics": 5,
+          "rng": 954927514,
+          "snapshotHash": 841651367,
+          "frameHash": 2177333485,
+          "tick": 24
+        },
+        {
+          "inputMask": 76,
+          "tics": 7,
+          "rng": -1338332,
+          "snapshotHash": 3833150646,
+          "frameHash": 1546256159,
+          "tick": 31
+        },
+        {
+          "inputMask": 59,
+          "tics": 2,
+          "rng": -1561642002,
+          "snapshotHash": 1745343498,
+          "frameHash": 2894661161,
+          "tick": 33
+        },
+        {
+          "inputMask": 94,
+          "tics": 2,
+          "rng": 978729500,
+          "snapshotHash": 3240177294,
+          "frameHash": 3763618603,
+          "tick": 35
+        },
+        {
+          "inputMask": 37,
+          "tics": 6,
+          "rng": -758067062,
+          "snapshotHash": 897906788,
+          "frameHash": 425100827,
+          "tick": 41
+        },
+        {
+          "inputMask": 64,
+          "tics": 1,
+          "rng": 1397572700,
+          "snapshotHash": 1373630393,
+          "frameHash": 816239833,
+          "tick": 42
+        },
+        {
+          "inputMask": 159,
+          "tics": 3,
+          "rng": 99201046,
+          "snapshotHash": 1628786783,
+          "frameHash": 1299493000,
+          "tick": 45
+        },
+        {
+          "inputMask": 114,
+          "tics": 4,
+          "rng": 1533767044,
+          "snapshotHash": 1794968265,
+          "frameHash": 1803249094,
+          "tick": 49
+        },
+        {
+          "inputMask": 41,
+          "tics": 1,
+          "rng": -961437366,
+          "snapshotHash": 3665350419,
+          "frameHash": 2818337803,
+          "tick": 50
+        },
+        {
+          "inputMask": 116,
+          "tics": 0,
+          "rng": 217634468,
+          "snapshotHash": 3665350419,
+          "frameHash": 2818337803,
+          "tick": 50
+        },
+        {
+          "inputMask": 67,
+          "tics": 1,
+          "rng": 1423217790,
+          "snapshotHash": 3378741154,
+          "frameHash": 2676390503,
+          "tick": 51
+        },
+        {
+          "inputMask": 198,
+          "tics": 5,
+          "rng": -87796116,
+          "snapshotHash": 2095702339,
+          "frameHash": 1457169545,
+          "tick": 56
+        },
+        {
+          "inputMask": 109,
+          "tics": 2,
+          "rng": 1377460346,
+          "snapshotHash": 1821735957,
+          "frameHash": 238344709,
+          "tick": 58
+        },
+        {
+          "inputMask": 232,
+          "tics": 0,
+          "rng": -561819540,
+          "snapshotHash": 1821735957,
+          "frameHash": 238344709,
+          "tick": 58
+        },
+        {
+          "inputMask": 39,
+          "tics": 7,
+          "rng": 1186361814,
+          "snapshotHash": 39615654,
+          "frameHash": 4080062517,
+          "tick": 65
+        },
+        {
+          "inputMask": 90,
+          "tics": 2,
+          "rng": 905555716,
+          "snapshotHash": 3059189716,
+          "frameHash": 3948051029,
+          "tick": 67
+        },
+        {
+          "inputMask": 241,
+          "tics": 5,
+          "rng": -1104038342,
+          "snapshotHash": 1483917911,
+          "frameHash": 3759708685,
+          "tick": 72
+        },
+        {
+          "inputMask": 156,
+          "tics": 6,
+          "rng": -1801927516,
+          "snapshotHash": 1952705505,
+          "frameHash": 3454981261,
+          "tick": 78
+        },
+        {
+          "inputMask": 75,
+          "tics": 1,
+          "rng": -168459794,
+          "snapshotHash": 1315008888,
+          "frameHash": 3664463629,
+          "tick": 79
+        },
+        {
+          "inputMask": 46,
+          "tics": 6,
+          "rng": -1130620612,
+          "snapshotHash": 170585202,
+          "frameHash": 2260599021,
+          "tick": 85
+        },
+        {
+          "inputMask": 181,
+          "tics": 7,
+          "rng": 74980042,
+          "snapshotHash": 1614887459,
+          "frameHash": 4289148277,
+          "tick": 92
+        },
+        {
+          "inputMask": 144,
+          "tics": 5,
+          "rng": -333676932,
+          "snapshotHash": 1108160390,
+          "frameHash": 2772983029,
+          "tick": 97
+        },
+        {
+          "inputMask": 175,
+          "tics": 3,
+          "rng": -459767306,
+          "snapshotHash": 3490037835,
+          "frameHash": 3362979509,
+          "tick": 100
+        },
+        {
+          "inputMask": 66,
+          "tics": 5,
+          "rng": 509971844,
+          "snapshotHash": 1914766030,
+          "frameHash": 4095724501,
+          "tick": 105
+        },
+        {
+          "inputMask": 185,
+          "tics": 3,
+          "rng": 835298442,
+          "snapshotHash": 1676179,
+          "frameHash": 4264640885,
+          "tick": 108
+        },
+        {
+          "inputMask": 196,
+          "tics": 1,
+          "rng": -1517216668,
+          "snapshotHash": 3658946858,
+          "frameHash": 3637755485,
+          "tick": 109
+        },
+        {
+          "inputMask": 83,
+          "tics": 2,
+          "rng": 1664724574,
+          "snapshotHash": 2383553624,
+          "frameHash": 2032077389,
+          "tick": 111
+        },
+        {
+          "inputMask": 150,
+          "tics": 3,
+          "rng": 761493996,
+          "snapshotHash": 3152219789,
+          "frameHash": 831645125,
+          "tick": 114
+        },
+        {
+          "inputMask": 253,
+          "tics": 5,
+          "rng": 1434979610,
+          "snapshotHash": 4258704000,
+          "frameHash": 328929853,
+          "tick": 119
+        },
+        {
+          "inputMask": 56,
+          "tics": 7,
+          "rng": -959383444,
+          "snapshotHash": 1408038961,
+          "frameHash": 1133717581,
+          "tick": 126
+        },
+        {
+          "inputMask": 55,
+          "tics": 1,
+          "rng": 160591094,
+          "snapshotHash": 770342344,
+          "frameHash": 3982070925,
+          "tick": 127
+        },
+        {
+          "inputMask": 42,
+          "tics": 5,
+          "rng": -1779146492,
+          "snapshotHash": 263615275,
+          "frameHash": 537766773,
+          "tick": 132
+        },
+        {
+          "inputMask": 129,
+          "tics": 2,
+          "rng": -248168422,
+          "snapshotHash": 3283189337,
+          "frameHash": 4065350141,
+          "tick": 134
+        },
+        {
+          "inputMask": 236,
+          "tics": 1,
+          "rng": 281815268,
+          "snapshotHash": 2645492720,
+          "frameHash": 3183592669,
+          "tick": 135
+        },
+        {
+          "inputMask": 91,
+          "tics": 4,
+          "rng": -1209609426,
+          "snapshotHash": 1707917532,
+          "frameHash": 924875989,
+          "tick": 139
+        },
+        {
+          "inputMask": 254,
+          "tics": 5,
+          "rng": 947795996,
+          "snapshotHash": 1201190463,
+          "frameHash": 3141167613,
+          "tick": 144
+        },
+        {
+          "inputMask": 69,
+          "tics": 5,
+          "rng": 1680275722,
+          "snapshotHash": 2307674674,
+          "frameHash": 3330900973,
+          "tick": 149
+        },
+        {
+          "inputMask": 224,
+          "tics": 5,
+          "rng": -963625124,
+          "snapshotHash": 732402869,
+          "frameHash": 3774462149,
+          "tick": 154
+        },
+        {
+          "inputMask": 191,
+          "tics": 7,
+          "rng": -1741588842,
+          "snapshotHash": 3245249862,
+          "frameHash": 2438742261,
+          "tick": 161
+        },
+        {
+          "inputMask": 18,
+          "tics": 2,
+          "rng": 1690688900,
+          "snapshotHash": 1969856628,
+          "frameHash": 33341909,
+          "tick": 163
+        },
+        {
+          "inputMask": 73,
+          "tics": 2,
+          "rng": -1684994998,
+          "snapshotHash": 694463394,
+          "frameHash": 3609232941,
+          "tick": 165
+        },
+        {
+          "inputMask": 20,
+          "tics": 7,
+          "rng": 1917694820,
+          "snapshotHash": 2138765651,
+          "frameHash": 618114421,
+          "tick": 172
+        },
+        {
+          "inputMask": 99,
+          "tics": 7,
+          "rng": -188136002,
+          "snapshotHash": 356645348,
+          "frameHash": 2697686293,
+          "tick": 179
+        },
+        {
+          "inputMask": 102,
+          "tics": 5,
+          "rng": -299871188,
+          "snapshotHash": 3076340839,
+          "frameHash": 1178229005,
+          "tick": 184
+        },
+        {
+          "inputMask": 141,
+          "tics": 5,
+          "rng": 1475035706,
+          "snapshotHash": 4182825050,
+          "frameHash": 1162183933,
+          "tick": 189
+        },
+        {
+          "inputMask": 136,
+          "tics": 1,
+          "rng": 1033932716,
+          "snapshotHash": 3545128433,
+          "frameHash": 1386468557,
+          "tick": 190
+        },
+        {
+          "inputMask": 71,
+          "tics": 7,
+          "rng": 1918708694,
+          "snapshotHash": 1763008130,
+          "frameHash": 331109165,
+          "tick": 197
+        },
+        {
+          "inputMask": 250,
+          "tics": 3,
+          "rng": 1107878148,
+          "snapshotHash": 1463129559,
+          "frameHash": 3814641421,
+          "tick": 200
+        },
+        {
+          "inputMask": 17,
+          "tics": 3,
+          "rng": -1098198406,
+          "snapshotHash": 3845007004,
+          "frameHash": 3735147989,
+          "tick": 203
+        },
+        {
+          "inputMask": 60,
+          "tics": 1,
+          "rng": -1439666460,
+          "snapshotHash": 3207310387,
+          "frameHash": 2057427509,
+          "tick": 204
+        },
+        {
+          "inputMask": 107,
+          "tics": 3,
+          "rng": 1522459950,
+          "snapshotHash": 1294220536,
+          "frameHash": 3562196493,
+          "tick": 207
+        },
+        {
+          "inputMask": 206,
+          "tics": 1,
+          "rng": 730256764,
+          "snapshotHash": 3338279935,
+          "frameHash": 2855065213,
+          "tick": 208
+        },
+        {
+          "inputMask": 213,
+          "tics": 6,
+          "rng": 966852042,
+          "snapshotHash": 3807067529,
+          "frameHash": 2758542941,
+          "tick": 214
+        },
+        {
+          "inputMask": 48,
+          "tics": 2,
+          "rng": -1374776388,
+          "snapshotHash": 4144885575,
+          "frameHash": 1338395853,
+          "tick": 216
+        },
+        {
+          "inputMask": 207,
+          "tics": 7,
+          "rng": -640749514,
+          "snapshotHash": 3975976552,
+          "frameHash": 2882877389,
+          "tick": 223
+        },
+        {
+          "inputMask": 226,
+          "tics": 2,
+          "rng": -1542736764,
+          "snapshotHash": 1087372038,
+          "frameHash": 2155887861,
+          "tick": 225
+        },
+        {
+          "inputMask": 217,
+          "tics": 4,
+          "rng": -1261535222,
+          "snapshotHash": 2831552866,
+          "frameHash": 2233290925,
+          "tick": 229
+        },
+        {
+          "inputMask": 100,
+          "tics": 0,
+          "rng": -771994844,
+          "snapshotHash": 2831552866,
+          "frameHash": 2233290925,
+          "tick": 229
+        }
+      ],
       "traceHash": 2715240056,
       "mapDigest": 644835436,
       "finalSnapshotHash": 2831552866,
@@ -106,6 +3704,520 @@
       "mapName": "Wolf1 Map8",
       "seedHex": "0xbcdb8061",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 76,
+          "tics": 6,
+          "rng": -1812836319,
+          "snapshotHash": 2692424657,
+          "frameHash": 2990620833,
+          "tick": 6
+        },
+        {
+          "inputMask": 59,
+          "tics": 5,
+          "rng": 555637217,
+          "snapshotHash": 3582935475,
+          "frameHash": 1483427658,
+          "tick": 11
+        },
+        {
+          "inputMask": 94,
+          "tics": 1,
+          "rng": -26635751,
+          "snapshotHash": 2889120550,
+          "frameHash": 4271228976,
+          "tick": 12
+        },
+        {
+          "inputMask": 37,
+          "tics": 1,
+          "rng": -840652655,
+          "snapshotHash": 3696701421,
+          "frameHash": 3018565458,
+          "tick": 13
+        },
+        {
+          "inputMask": 64,
+          "tics": 0,
+          "rng": -148989855,
+          "snapshotHash": 3696701421,
+          "frameHash": 3018565458,
+          "tick": 13
+        },
+        {
+          "inputMask": 159,
+          "tics": 6,
+          "rng": -246181871,
+          "snapshotHash": 1298801222,
+          "frameHash": 3560544499,
+          "tick": 19
+        },
+        {
+          "inputMask": 114,
+          "tics": 3,
+          "rng": 1106691977,
+          "snapshotHash": 1766282145,
+          "frameHash": 1194970641,
+          "tick": 22
+        },
+        {
+          "inputMask": 41,
+          "tics": 4,
+          "rng": 1413455681,
+          "snapshotHash": 3185396465,
+          "frameHash": 3359447877,
+          "tick": 26
+        },
+        {
+          "inputMask": 116,
+          "tics": 7,
+          "rng": 616924833,
+          "snapshotHash": 1480518905,
+          "frameHash": 2055949594,
+          "tick": 33
+        },
+        {
+          "inputMask": 67,
+          "tics": 4,
+          "rng": -2098668543,
+          "snapshotHash": 1192741866,
+          "frameHash": 3275594037,
+          "tick": 37
+        },
+        {
+          "inputMask": 198,
+          "tics": 4,
+          "rng": -162047383,
+          "snapshotHash": 4058540554,
+          "frameHash": 811048193,
+          "tick": 41
+        },
+        {
+          "inputMask": 109,
+          "tics": 5,
+          "rng": 1478342769,
+          "snapshotHash": 1511121857,
+          "frameHash": 3932875913,
+          "tick": 46
+        },
+        {
+          "inputMask": 232,
+          "tics": 7,
+          "rng": -621966239,
+          "snapshotHash": 2355564133,
+          "frameHash": 1537170594,
+          "tick": 53
+        },
+        {
+          "inputMask": 39,
+          "tics": 2,
+          "rng": 662123473,
+          "snapshotHash": 2736826136,
+          "frameHash": 1752420713,
+          "tick": 55
+        },
+        {
+          "inputMask": 90,
+          "tics": 1,
+          "rng": 172763449,
+          "snapshotHash": 93682143,
+          "frameHash": 2206744837,
+          "tick": 56
+        },
+        {
+          "inputMask": 241,
+          "tics": 0,
+          "rng": 133248545,
+          "snapshotHash": 93682143,
+          "frameHash": 2206744837,
+          "tick": 56
+        },
+        {
+          "inputMask": 156,
+          "tics": 5,
+          "rng": -436690783,
+          "snapshotHash": 2336240858,
+          "frameHash": 2950484653,
+          "tick": 61
+        },
+        {
+          "inputMask": 75,
+          "tics": 4,
+          "rng": 804534241,
+          "snapshotHash": 2467210406,
+          "frameHash": 4125145045,
+          "tick": 65
+        },
+        {
+          "inputMask": 46,
+          "tics": 5,
+          "rng": -329896135,
+          "snapshotHash": 3573694617,
+          "frameHash": 907670089,
+          "tick": 70
+        },
+        {
+          "inputMask": 181,
+          "tics": 2,
+          "rng": -1774648783,
+          "snapshotHash": 3911512663,
+          "frameHash": 1515539581,
+          "tick": 72
+        },
+        {
+          "inputMask": 144,
+          "tics": 4,
+          "rng": 1237891681,
+          "snapshotHash": 1360726195,
+          "frameHash": 1059118613,
+          "tick": 76
+        },
+        {
+          "inputMask": 175,
+          "tics": 6,
+          "rng": -111303695,
+          "snapshotHash": 216302509,
+          "frameHash": 3811112041,
+          "tick": 82
+        },
+        {
+          "inputMask": 66,
+          "tics": 4,
+          "rng": 1425880969,
+          "snapshotHash": 1960483337,
+          "frameHash": 3515082921,
+          "tick": 86
+        },
+        {
+          "inputMask": 185,
+          "tics": 6,
+          "rng": 1739920513,
+          "snapshotHash": 4042482211,
+          "frameHash": 3035475637,
+          "tick": 92
+        },
+        {
+          "inputMask": 196,
+          "tics": 0,
+          "rng": -289013663,
+          "snapshotHash": 4042482211,
+          "frameHash": 3035475637,
+          "tick": 92
+        },
+        {
+          "inputMask": 83,
+          "tics": 5,
+          "rng": -258250175,
+          "snapshotHash": 3535755142,
+          "frameHash": 1312672085,
+          "tick": 97
+        },
+        {
+          "inputMask": 150,
+          "tics": 2,
+          "rng": 410208233,
+          "snapshotHash": 2260361908,
+          "frameHash": 3771593153,
+          "tick": 99
+        },
+        {
+          "inputMask": 253,
+          "tics": 0,
+          "rng": 928074513,
+          "snapshotHash": 2260361908,
+          "frameHash": 3771593153,
+          "tick": 99
+        },
+        {
+          "inputMask": 56,
+          "tics": 6,
+          "rng": -1335483295,
+          "snapshotHash": 47393486,
+          "frameHash": 1678560405,
+          "tick": 105
+        },
+        {
+          "inputMask": 55,
+          "tics": 4,
+          "rng": -1685691151,
+          "snapshotHash": 1791574314,
+          "frameHash": 207391437,
+          "tick": 109
+        },
+        {
+          "inputMask": 42,
+          "tics": 4,
+          "rng": -1881384167,
+          "snapshotHash": 1922543862,
+          "frameHash": 3369092213,
+          "tick": 113
+        },
+        {
+          "inputMask": 129,
+          "tics": 5,
+          "rng": -393263071,
+          "snapshotHash": 3029028073,
+          "frameHash": 3220911081,
+          "tick": 118
+        },
+        {
+          "inputMask": 236,
+          "tics": 0,
+          "rng": -2007089951,
+          "snapshotHash": 3029028073,
+          "frameHash": 3220911081,
+          "tick": 118
+        },
+        {
+          "inputMask": 91,
+          "tics": 7,
+          "rng": 1430703393,
+          "snapshotHash": 178363034,
+          "frameHash": 1295513901,
+          "tick": 125
+        },
+        {
+          "inputMask": 254,
+          "tics": 4,
+          "rng": -222032871,
+          "snapshotHash": 309332582,
+          "frameHash": 1053361877,
+          "tick": 129
+        },
+        {
+          "inputMask": 69,
+          "tics": 0,
+          "rng": -675782895,
+          "snapshotHash": 309332582,
+          "frameHash": 1053361877,
+          "tick": 129
+        },
+        {
+          "inputMask": 224,
+          "tics": 4,
+          "rng": -1923892959,
+          "snapshotHash": 2053513410,
+          "frameHash": 349754013,
+          "tick": 133
+        },
+        {
+          "inputMask": 191,
+          "tics": 2,
+          "rng": -1040081263,
+          "snapshotHash": 778120176,
+          "frameHash": 2726368049,
+          "tick": 135
+        },
+        {
+          "inputMask": 18,
+          "tics": 1,
+          "rng": -232588407,
+          "snapshotHash": 1753634839,
+          "frameHash": 1148997885,
+          "tick": 136
+        },
+        {
+          "inputMask": 73,
+          "tics": 5,
+          "rng": -1643785151,
+          "snapshotHash": 2860119050,
+          "frameHash": 2705299341,
+          "tick": 141
+        },
+        {
+          "inputMask": 20,
+          "tics": 6,
+          "rng": -831188639,
+          "snapshotHash": 1715695364,
+          "frameHash": 857927073,
+          "tick": 147
+        },
+        {
+          "inputMask": 99,
+          "tics": 2,
+          "rng": -1506201727,
+          "snapshotHash": 440302130,
+          "frameHash": 869862365,
+          "tick": 149
+        },
+        {
+          "inputMask": 102,
+          "tics": 4,
+          "rng": 1610192937,
+          "snapshotHash": 3797694238,
+          "frameHash": 2502721653,
+          "tick": 153
+        },
+        {
+          "inputMask": 141,
+          "tics": 0,
+          "rng": -1466320335,
+          "snapshotHash": 3797694238,
+          "frameHash": 2502721653,
+          "tick": 153
+        },
+        {
+          "inputMask": 136,
+          "tics": 0,
+          "rng": 1539973537,
+          "snapshotHash": 3797694238,
+          "frameHash": 2502721653,
+          "tick": 153
+        },
+        {
+          "inputMask": 71,
+          "tics": 2,
+          "rng": 149415377,
+          "snapshotHash": 2522301004,
+          "frameHash": 2323618801,
+          "tick": 155
+        },
+        {
+          "inputMask": 250,
+          "tics": 2,
+          "rng": -551817991,
+          "snapshotHash": 1246907770,
+          "frameHash": 2441728941,
+          "tick": 157
+        },
+        {
+          "inputMask": 17,
+          "tics": 6,
+          "rng": 1865951841,
+          "snapshotHash": 102484084,
+          "frameHash": 1560862913,
+          "tick": 163
+        },
+        {
+          "inputMask": 60,
+          "tics": 0,
+          "rng": 885900001,
+          "snapshotHash": 102484084,
+          "frameHash": 1560862913,
+          "tick": 163
+        },
+        {
+          "inputMask": 107,
+          "tics": 6,
+          "rng": 58707745,
+          "snapshotHash": 2184482958,
+          "frameHash": 3760345365,
+          "tick": 169
+        },
+        {
+          "inputMask": 206,
+          "tics": 0,
+          "rng": 779960185,
+          "snapshotHash": 2184482958,
+          "frameHash": 3760345365,
+          "tick": 169
+        },
+        {
+          "inputMask": 213,
+          "tics": 1,
+          "rng": 355786737,
+          "snapshotHash": 1546786341,
+          "frameHash": 3197109289,
+          "tick": 170
+        },
+        {
+          "inputMask": 48,
+          "tics": 1,
+          "rng": 620651937,
+          "snapshotHash": 909089724,
+          "frameHash": 1281740145,
+          "tick": 171
+        },
+        {
+          "inputMask": 207,
+          "tics": 2,
+          "rng": -335015887,
+          "snapshotHash": 3928663786,
+          "frameHash": 1370658125,
+          "tick": 173
+        },
+        {
+          "inputMask": 226,
+          "tics": 1,
+          "rng": -1022193527,
+          "snapshotHash": 3290967169,
+          "frameHash": 3621354697,
+          "tick": 174
+        },
+        {
+          "inputMask": 217,
+          "tics": 7,
+          "rng": 582850561,
+          "snapshotHash": 1508846866,
+          "frameHash": 2019939229,
+          "tick": 181
+        },
+        {
+          "inputMask": 100,
+          "tics": 7,
+          "rng": -530493151,
+          "snapshotHash": 2953149123,
+          "frameHash": 4160376565,
+          "tick": 188
+        },
+        {
+          "inputMask": 115,
+          "tics": 3,
+          "rng": 1805193153,
+          "snapshotHash": 1040059272,
+          "frameHash": 1680231521,
+          "tick": 191
+        },
+        {
+          "inputMask": 54,
+          "tics": 2,
+          "rng": -98825943,
+          "snapshotHash": 2446422054,
+          "frameHash": 3328743893,
+          "tick": 193
+        },
+        {
+          "inputMask": 29,
+          "tics": 4,
+          "rng": 315993489,
+          "snapshotHash": 4190602882,
+          "frameHash": 3671174173,
+          "tick": 197
+        },
+        {
+          "inputMask": 216,
+          "tics": 6,
+          "rng": -71012063,
+          "snapshotHash": 1977634460,
+          "frameHash": 234129393,
+          "tick": 203
+        },
+        {
+          "inputMask": 87,
+          "tics": 4,
+          "rng": -1944671695,
+          "snapshotHash": 3721815288,
+          "frameHash": 855871745,
+          "tick": 207
+        },
+        {
+          "inputMask": 202,
+          "tics": 5,
+          "rng": -627988199,
+          "snapshotHash": 3215088219,
+          "frameHash": 1139368085,
+          "tick": 212
+        },
+        {
+          "inputMask": 161,
+          "tics": 2,
+          "rng": 1476166113,
+          "snapshotHash": 1939694985,
+          "frameHash": 1413498281,
+          "tick": 214
+        }
+      ],
       "traceHash": 507610638,
       "mapDigest": 3327777122,
       "finalSnapshotHash": 1939694985,
@@ -118,6 +4230,520 @@
       "mapName": "Wolf1 Boss",
       "seedHex": "0xb97de0aa",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 1,
+          "tics": 0,
+          "rng": -29927828,
+          "snapshotHash": 2856060076,
+          "frameHash": 1732324722,
+          "tick": 0
+        },
+        {
+          "inputMask": 108,
+          "tics": 1,
+          "rng": -522580554,
+          "snapshotHash": 2017061193,
+          "frameHash": 1323529966,
+          "tick": 1
+        },
+        {
+          "inputMask": 219,
+          "tics": 5,
+          "rng": 1006876316,
+          "snapshotHash": 600621906,
+          "frameHash": 49006046,
+          "tick": 6
+        },
+        {
+          "inputMask": 126,
+          "tics": 1,
+          "rng": 2084683978,
+          "snapshotHash": 654380083,
+          "frameHash": 3712097734,
+          "tick": 7
+        },
+        {
+          "inputMask": 197,
+          "tics": 2,
+          "rng": 410409700,
+          "snapshotHash": 1159892312,
+          "frameHash": 1058062699,
+          "tick": 9
+        },
+        {
+          "inputMask": 96,
+          "tics": 5,
+          "rng": 518255598,
+          "snapshotHash": 1366930106,
+          "frameHash": 3466749454,
+          "tick": 14
+        },
+        {
+          "inputMask": 63,
+          "tics": 1,
+          "rng": -1859174972,
+          "snapshotHash": 2395598632,
+          "frameHash": 3843583481,
+          "tick": 15
+        },
+        {
+          "inputMask": 146,
+          "tics": 5,
+          "rng": 574564090,
+          "snapshotHash": 1404279799,
+          "frameHash": 3415728977,
+          "tick": 20
+        },
+        {
+          "inputMask": 201,
+          "tics": 7,
+          "rng": 1804514844,
+          "snapshotHash": 14260847,
+          "frameHash": 3902367318,
+          "tick": 27
+        },
+        {
+          "inputMask": 148,
+          "tics": 6,
+          "rng": 1836125910,
+          "snapshotHash": 1894824461,
+          "frameHash": 1959367666,
+          "tick": 33
+        },
+        {
+          "inputMask": 227,
+          "tics": 0,
+          "rng": -66312628,
+          "snapshotHash": 1894824461,
+          "frameHash": 1959367666,
+          "tick": 33
+        },
+        {
+          "inputMask": 230,
+          "tics": 0,
+          "rng": 804529658,
+          "snapshotHash": 1894824461,
+          "frameHash": 1959367666,
+          "tick": 33
+        },
+        {
+          "inputMask": 13,
+          "tics": 3,
+          "rng": -1338281852,
+          "snapshotHash": 3215592402,
+          "frameHash": 3764728616,
+          "tick": 36
+        },
+        {
+          "inputMask": 8,
+          "tics": 1,
+          "rng": 429684990,
+          "snapshotHash": 3724086598,
+          "frameHash": 1074385989,
+          "tick": 37
+        },
+        {
+          "inputMask": 199,
+          "tics": 0,
+          "rng": 413677732,
+          "snapshotHash": 3724086598,
+          "frameHash": 1074385989,
+          "tick": 37
+        },
+        {
+          "inputMask": 122,
+          "tics": 7,
+          "rng": -1932033622,
+          "snapshotHash": 653790757,
+          "frameHash": 2250904907,
+          "tick": 44
+        },
+        {
+          "inputMask": 145,
+          "tics": 0,
+          "rng": 1971643820,
+          "snapshotHash": 653790757,
+          "frameHash": 2250904907,
+          "tick": 44
+        },
+        {
+          "inputMask": 188,
+          "tics": 0,
+          "rng": 1081004822,
+          "snapshotHash": 653790757,
+          "frameHash": 2250904907,
+          "tick": 44
+        },
+        {
+          "inputMask": 235,
+          "tics": 4,
+          "rng": 364586748,
+          "snapshotHash": 3151457124,
+          "frameHash": 4145366538,
+          "tick": 48
+        },
+        {
+          "inputMask": 78,
+          "tics": 5,
+          "rng": -1763826230,
+          "snapshotHash": 1354916462,
+          "frameHash": 1306544909,
+          "tick": 53
+        },
+        {
+          "inputMask": 85,
+          "tics": 4,
+          "rng": -653385052,
+          "snapshotHash": 1263870349,
+          "frameHash": 517659338,
+          "tick": 57
+        },
+        {
+          "inputMask": 176,
+          "tics": 1,
+          "rng": 2111900910,
+          "snapshotHash": 522689565,
+          "frameHash": 1246062229,
+          "tick": 58
+        },
+        {
+          "inputMask": 79,
+          "tics": 1,
+          "rng": 1974604420,
+          "snapshotHash": 2460418390,
+          "frameHash": 1853172615,
+          "tick": 59
+        },
+        {
+          "inputMask": 98,
+          "tics": 6,
+          "rng": 97840218,
+          "snapshotHash": 2241333292,
+          "frameHash": 3276465751,
+          "tick": 65
+        },
+        {
+          "inputMask": 89,
+          "tics": 2,
+          "rng": 21097212,
+          "snapshotHash": 3516726526,
+          "frameHash": 563824983,
+          "tick": 67
+        },
+        {
+          "inputMask": 228,
+          "tics": 7,
+          "rng": 769470710,
+          "snapshotHash": 3347817503,
+          "frameHash": 2104903607,
+          "tick": 74
+        },
+        {
+          "inputMask": 243,
+          "tics": 1,
+          "rng": 380482700,
+          "snapshotHash": 2710120886,
+          "frameHash": 1982036663,
+          "tick": 75
+        },
+        {
+          "inputMask": 182,
+          "tics": 6,
+          "rng": 25730394,
+          "snapshotHash": 3854544572,
+          "frameHash": 3173795703,
+          "tick": 81
+        },
+        {
+          "inputMask": 157,
+          "tics": 6,
+          "rng": 127718596,
+          "snapshotHash": 2579151338,
+          "frameHash": 2701796575,
+          "tick": 87
+        },
+        {
+          "inputMask": 88,
+          "tics": 7,
+          "rng": 1716942750,
+          "snapshotHash": 2410242315,
+          "frameHash": 1948532095,
+          "tick": 94
+        },
+        {
+          "inputMask": 215,
+          "tics": 2,
+          "rng": 1508236772,
+          "snapshotHash": 1810485173,
+          "frameHash": 4036276047,
+          "tick": 96
+        },
+        {
+          "inputMask": 74,
+          "tics": 2,
+          "rng": -758370326,
+          "snapshotHash": 3085878407,
+          "frameHash": 169641623,
+          "tick": 98
+        },
+        {
+          "inputMask": 33,
+          "tics": 5,
+          "rng": -359730900,
+          "snapshotHash": 4192362618,
+          "frameHash": 411256191,
+          "tick": 103
+        },
+        {
+          "inputMask": 12,
+          "tics": 4,
+          "rng": -1260171658,
+          "snapshotHash": 1641576150,
+          "frameHash": 1102613111,
+          "tick": 107
+        },
+        {
+          "inputMask": 251,
+          "tics": 7,
+          "rng": -1590282468,
+          "snapshotHash": 404122391,
+          "frameHash": 3915476471,
+          "tick": 114
+        },
+        {
+          "inputMask": 30,
+          "tics": 5,
+          "rng": 697975370,
+          "snapshotHash": 1510606602,
+          "frameHash": 8238751,
+          "tick": 119
+        },
+        {
+          "inputMask": 229,
+          "tics": 1,
+          "rng": -207209436,
+          "snapshotHash": 2617090813,
+          "frameHash": 2030289599,
+          "tick": 120
+        },
+        {
+          "inputMask": 0,
+          "tics": 2,
+          "rng": 1101674030,
+          "snapshotHash": 3892484047,
+          "frameHash": 2625512535,
+          "tick": 122
+        },
+        {
+          "inputMask": 95,
+          "tics": 5,
+          "rng": -543772732,
+          "snapshotHash": 704000962,
+          "frameHash": 1809543407,
+          "tick": 127
+        },
+        {
+          "inputMask": 50,
+          "tics": 3,
+          "rng": -892745158,
+          "snapshotHash": 2017333671,
+          "frameHash": 2025035415,
+          "tick": 130
+        },
+        {
+          "inputMask": 233,
+          "tics": 0,
+          "rng": -1061388388,
+          "snapshotHash": 2017333671,
+          "frameHash": 2025035415,
+          "tick": 130
+        },
+        {
+          "inputMask": 52,
+          "tics": 5,
+          "rng": -820520746,
+          "snapshotHash": 3123817882,
+          "frameHash": 2943014655,
+          "tick": 135
+        },
+        {
+          "inputMask": 3,
+          "tics": 7,
+          "rng": 1877459788,
+          "snapshotHash": 2954908859,
+          "frameHash": 754961247,
+          "tick": 142
+        },
+        {
+          "inputMask": 134,
+          "tics": 0,
+          "rng": -1130614214,
+          "snapshotHash": 2954908859,
+          "frameHash": 754961247,
+          "tick": 142
+        },
+        {
+          "inputMask": 45,
+          "tics": 6,
+          "rng": -625422588,
+          "snapshotHash": 4099332545,
+          "frameHash": 980416359,
+          "tick": 148
+        },
+        {
+          "inputMask": 168,
+          "tics": 1,
+          "rng": 1894983230,
+          "snapshotHash": 3461635928,
+          "frameHash": 2074963391,
+          "tick": 149
+        },
+        {
+          "inputMask": 231,
+          "tics": 0,
+          "rng": -1277751580,
+          "snapshotHash": 3461635928,
+          "frameHash": 2074963391,
+          "tick": 149
+        },
+        {
+          "inputMask": 26,
+          "tics": 1,
+          "rng": -1112742550,
+          "snapshotHash": 1079758483,
+          "frameHash": 591104495,
+          "tick": 150
+        },
+        {
+          "inputMask": 177,
+          "tics": 5,
+          "rng": 1947365228,
+          "snapshotHash": 2186242694,
+          "frameHash": 374052247,
+          "tick": 155
+        },
+        {
+          "inputMask": 92,
+          "tics": 3,
+          "rng": 1989564950,
+          "snapshotHash": 273152843,
+          "frameHash": 2202753407,
+          "tick": 158
+        },
+        {
+          "inputMask": 11,
+          "tics": 7,
+          "rng": 968536252,
+          "snapshotHash": 779879912,
+          "frameHash": 65733407,
+          "tick": 165
+        },
+        {
+          "inputMask": 238,
+          "tics": 0,
+          "rng": 1862686410,
+          "snapshotHash": 779879912,
+          "frameHash": 65733407,
+          "tick": 165
+        },
+        {
+          "inputMask": 117,
+          "tics": 3,
+          "rng": -1950607388,
+          "snapshotHash": 3161757357,
+          "frameHash": 2906595295,
+          "tick": 168
+        },
+        {
+          "inputMask": 80,
+          "tics": 6,
+          "rng": 1307331758,
+          "snapshotHash": 1886364123,
+          "frameHash": 881018527,
+          "tick": 174
+        },
+        {
+          "inputMask": 111,
+          "tics": 5,
+          "rng": -2017575932,
+          "snapshotHash": 1924303598,
+          "frameHash": 141695095,
+          "tick": 179
+        },
+        {
+          "inputMask": 2,
+          "tics": 4,
+          "rng": -1527843878,
+          "snapshotHash": 3668484426,
+          "frameHash": 3473851551,
+          "tick": 183
+        },
+        {
+          "inputMask": 121,
+          "tics": 3,
+          "rng": -1002375876,
+          "snapshotHash": 1755394575,
+          "frameHash": 2352956119,
+          "tick": 186
+        },
+        {
+          "inputMask": 132,
+          "tics": 6,
+          "rng": -1525804490,
+          "snapshotHash": 2899818261,
+          "frameHash": 2958239119,
+          "tick": 192
+        },
+        {
+          "inputMask": 19,
+          "tics": 0,
+          "rng": 1105814284,
+          "snapshotHash": 2899818261,
+          "frameHash": 2958239119,
+          "tick": 192
+        },
+        {
+          "inputMask": 86,
+          "tics": 6,
+          "rng": -1463134246,
+          "snapshotHash": 1624425027,
+          "frameHash": 1120947503,
+          "tick": 198
+        },
+        {
+          "inputMask": 189,
+          "tics": 1,
+          "rng": 254629444,
+          "snapshotHash": 986728410,
+          "frameHash": 4279344895,
+          "tick": 199
+        },
+        {
+          "inputMask": 248,
+          "tics": 7,
+          "rng": 1409028510,
+          "snapshotHash": 817819387,
+          "frameHash": 1194699487,
+          "tick": 206
+        },
+        {
+          "inputMask": 247,
+          "tics": 2,
+          "rng": 1657585188,
+          "snapshotHash": 218062245,
+          "frameHash": 3419269903,
+          "tick": 208
+        },
+        {
+          "inputMask": 234,
+          "tics": 3,
+          "rng": -672782166,
+          "snapshotHash": 855758862,
+          "frameHash": 146288695,
+          "tick": 211
+        }
+      ],
       "traceHash": 815163366,
       "mapDigest": 4169392868,
       "finalSnapshotHash": 855758862,
@@ -130,6 +4756,520 @@
       "mapName": "Wolf1 Secret",
       "seedHex": "0xb59f41f7",
       "stepCount": 64,
+      "stepTrace": [
+        {
+          "inputMask": 234,
+          "tics": 6,
+          "rng": 455800967,
+          "snapshotHash": 4065835507,
+          "frameHash": 2773852143,
+          "tick": 6
+        },
+        {
+          "inputMask": 65,
+          "tics": 1,
+          "rng": -1952193125,
+          "snapshotHash": 4225146564,
+          "frameHash": 1658037417,
+          "tick": 7
+        },
+        {
+          "inputMask": 172,
+          "tics": 1,
+          "rng": -1378620693,
+          "snapshotHash": 403982759,
+          "frameHash": 3288155581,
+          "tick": 8
+        },
+        {
+          "inputMask": 27,
+          "tics": 1,
+          "rng": 476817583,
+          "snapshotHash": 3189879516,
+          "frameHash": 3970391387,
+          "tick": 9
+        },
+        {
+          "inputMask": 190,
+          "tics": 3,
+          "rng": 980130719,
+          "snapshotHash": 367253722,
+          "frameHash": 2458219392,
+          "tick": 12
+        },
+        {
+          "inputMask": 5,
+          "tics": 0,
+          "rng": 911900299,
+          "snapshotHash": 367253722,
+          "frameHash": 2458219392,
+          "tick": 12
+        },
+        {
+          "inputMask": 160,
+          "tics": 1,
+          "rng": -692757157,
+          "snapshotHash": 1176811220,
+          "frameHash": 349156431,
+          "tick": 13
+        },
+        {
+          "inputMask": 127,
+          "tics": 0,
+          "rng": 784175895,
+          "snapshotHash": 1176811220,
+          "frameHash": 349156431,
+          "tick": 13
+        },
+        {
+          "inputMask": 210,
+          "tics": 3,
+          "rng": 1819161095,
+          "snapshotHash": 3731277676,
+          "frameHash": 4100145166,
+          "tick": 16
+        },
+        {
+          "inputMask": 9,
+          "tics": 1,
+          "rng": 1853755723,
+          "snapshotHash": 3363662184,
+          "frameHash": 1842752263,
+          "tick": 17
+        },
+        {
+          "inputMask": 212,
+          "tics": 6,
+          "rng": -368850821,
+          "snapshotHash": 3978743005,
+          "frameHash": 2665493472,
+          "tick": 23
+        },
+        {
+          "inputMask": 35,
+          "tics": 4,
+          "rng": -1772439233,
+          "snapshotHash": 426436098,
+          "frameHash": 3869335987,
+          "tick": 27
+        },
+        {
+          "inputMask": 38,
+          "tics": 3,
+          "rng": -22277969,
+          "snapshotHash": 3741160345,
+          "frameHash": 4237151433,
+          "tick": 30
+        },
+        {
+          "inputMask": 77,
+          "tics": 0,
+          "rng": -442285637,
+          "snapshotHash": 3741160345,
+          "frameHash": 4237151433,
+          "tick": 30
+        },
+        {
+          "inputMask": 72,
+          "tics": 5,
+          "rng": -1440967381,
+          "snapshotHash": 320031034,
+          "frameHash": 707291347,
+          "tick": 35
+        },
+        {
+          "inputMask": 7,
+          "tics": 0,
+          "rng": 205043415,
+          "snapshotHash": 320031034,
+          "frameHash": 707291347,
+          "tick": 35
+        },
+        {
+          "inputMask": 186,
+          "tics": 5,
+          "rng": -140773241,
+          "snapshotHash": 2513279050,
+          "frameHash": 4294015660,
+          "tick": 40
+        },
+        {
+          "inputMask": 209,
+          "tics": 1,
+          "rng": -59112837,
+          "snapshotHash": 4150295076,
+          "frameHash": 3892113971,
+          "tick": 41
+        },
+        {
+          "inputMask": 252,
+          "tics": 0,
+          "rng": 1813054187,
+          "snapshotHash": 4150295076,
+          "frameHash": 3892113971,
+          "tick": 41
+        },
+        {
+          "inputMask": 43,
+          "tics": 0,
+          "rng": 1857673391,
+          "snapshotHash": 4150295076,
+          "frameHash": 3892113971,
+          "tick": 41
+        },
+        {
+          "inputMask": 142,
+          "tics": 7,
+          "rng": 2112799103,
+          "snapshotHash": 4185239945,
+          "frameHash": 1579348471,
+          "tick": 48
+        },
+        {
+          "inputMask": 149,
+          "tics": 1,
+          "rng": 81841355,
+          "snapshotHash": 3573357501,
+          "frameHash": 3505746862,
+          "tick": 49
+        },
+        {
+          "inputMask": 240,
+          "tics": 5,
+          "rng": -118219205,
+          "snapshotHash": 3262029385,
+          "frameHash": 2032963969,
+          "tick": 54
+        },
+        {
+          "inputMask": 143,
+          "tics": 0,
+          "rng": -739644745,
+          "snapshotHash": 3262029385,
+          "frameHash": 2032963969,
+          "tick": 54
+        },
+        {
+          "inputMask": 162,
+          "tics": 4,
+          "rng": -865055737,
+          "snapshotHash": 243718078,
+          "frameHash": 780193966,
+          "tick": 58
+        },
+        {
+          "inputMask": 153,
+          "tics": 3,
+          "rng": 1435364491,
+          "snapshotHash": 1841386931,
+          "frameHash": 4157492908,
+          "tick": 61
+        },
+        {
+          "inputMask": 36,
+          "tics": 0,
+          "rng": -86239909,
+          "snapshotHash": 1841386931,
+          "frameHash": 4157492908,
+          "tick": 61
+        },
+        {
+          "inputMask": 51,
+          "tics": 5,
+          "rng": -166474017,
+          "snapshotHash": 3285689188,
+          "frameHash": 2609551328,
+          "tick": 66
+        },
+        {
+          "inputMask": 246,
+          "tics": 0,
+          "rng": -475077969,
+          "snapshotHash": 3285689188,
+          "frameHash": 2609551328,
+          "tick": 66
+        },
+        {
+          "inputMask": 221,
+          "tics": 3,
+          "rng": 183644955,
+          "snapshotHash": 2647992571,
+          "frameHash": 704714460,
+          "tick": 69
+        },
+        {
+          "inputMask": 152,
+          "tics": 3,
+          "rng": 554847403,
+          "snapshotHash": 1072720766,
+          "frameHash": 1324307144,
+          "tick": 72
+        },
+        {
+          "inputMask": 23,
+          "tics": 2,
+          "rng": -948113481,
+          "snapshotHash": 4092294828,
+          "frameHash": 1838572624,
+          "tick": 74
+        },
+        {
+          "inputMask": 138,
+          "tics": 0,
+          "rng": -1025129337,
+          "snapshotHash": 4092294828,
+          "frameHash": 1838572624,
+          "tick": 74
+        },
+        {
+          "inputMask": 97,
+          "tics": 6,
+          "rng": 142443547,
+          "snapshotHash": 1879326406,
+          "frameHash": 3585320840,
+          "tick": 80
+        },
+        {
+          "inputMask": 76,
+          "tics": 4,
+          "rng": -721351509,
+          "snapshotHash": 3623507234,
+          "frameHash": 3960475200,
+          "tick": 84
+        },
+        {
+          "inputMask": 59,
+          "tics": 3,
+          "rng": -506436497,
+          "snapshotHash": 2985810617,
+          "frameHash": 2151451188,
+          "tick": 87
+        },
+        {
+          "inputMask": 94,
+          "tics": 7,
+          "rng": 788408991,
+          "snapshotHash": 3154719640,
+          "frameHash": 196460072,
+          "tick": 94
+        },
+        {
+          "inputMask": 37,
+          "tics": 7,
+          "rng": -1281197301,
+          "snapshotHash": 1579447835,
+          "frameHash": 711107292,
+          "tick": 101
+        },
+        {
+          "inputMask": 64,
+          "tics": 6,
+          "rng": -849546021,
+          "snapshotHash": 3661446709,
+          "frameHash": 1443146628,
+          "tick": 107
+        },
+        {
+          "inputMask": 159,
+          "tics": 4,
+          "rng": -1736604265,
+          "snapshotHash": 1110660241,
+          "frameHash": 2316285780,
+          "tick": 111
+        },
+        {
+          "inputMask": 114,
+          "tics": 1,
+          "rng": -131676665,
+          "snapshotHash": 810781670,
+          "frameHash": 3684058824,
+          "tick": 112
+        },
+        {
+          "inputMask": 41,
+          "tics": 2,
+          "rng": -739981365,
+          "snapshotHash": 3830355732,
+          "frameHash": 3905772352,
+          "tick": 114
+        },
+        {
+          "inputMask": 116,
+          "tics": 5,
+          "rng": 722907451,
+          "snapshotHash": 1917265881,
+          "frameHash": 389167668,
+          "tick": 119
+        },
+        {
+          "inputMask": 67,
+          "tics": 2,
+          "rng": 521752831,
+          "snapshotHash": 2255083927,
+          "frameHash": 3509744236,
+          "tick": 121
+        },
+        {
+          "inputMask": 198,
+          "tics": 2,
+          "rng": -592116753,
+          "snapshotHash": 979690693,
+          "frameHash": 1940111332,
+          "tick": 123
+        },
+        {
+          "inputMask": 109,
+          "tics": 3,
+          "rng": -1164823301,
+          "snapshotHash": 2086174904,
+          "frameHash": 2947517480,
+          "tick": 126
+        },
+        {
+          "inputMask": 232,
+          "tics": 5,
+          "rng": 1120619499,
+          "snapshotHash": 1744719629,
+          "frameHash": 1152402500,
+          "tick": 131
+        },
+        {
+          "inputMask": 39,
+          "tics": 0,
+          "rng": -1266414505,
+          "snapshotHash": 1744719629,
+          "frameHash": 1152402500,
+          "tick": 131
+        },
+        {
+          "inputMask": 90,
+          "tics": 7,
+          "rng": 633197959,
+          "snapshotHash": 1913628652,
+          "frameHash": 1047109712,
+          "tick": 138
+        },
+        {
+          "inputMask": 241,
+          "tics": 6,
+          "rng": -1140658245,
+          "snapshotHash": 3995627526,
+          "frameHash": 3511073928,
+          "tick": 144
+        },
+        {
+          "inputMask": 156,
+          "tics": 3,
+          "rng": 469447723,
+          "snapshotHash": 3357930909,
+          "frameHash": 1321128420,
+          "tick": 147
+        },
+        {
+          "inputMask": 75,
+          "tics": 2,
+          "rng": -1375585169,
+          "snapshotHash": 2082537675,
+          "frameHash": 796946588,
+          "tick": 149
+        },
+        {
+          "inputMask": 46,
+          "tics": 3,
+          "rng": 2065285055,
+          "snapshotHash": 507265870,
+          "frameHash": 1481919752,
+          "tick": 152
+        },
+        {
+          "inputMask": 181,
+          "tics": 0,
+          "rng": -743015861,
+          "snapshotHash": 507265870,
+          "frameHash": 1481919752,
+          "tick": 152
+        },
+        {
+          "inputMask": 144,
+          "tics": 2,
+          "rng": -359623685,
+          "snapshotHash": 3526839932,
+          "frameHash": 3090145424,
+          "tick": 154
+        },
+        {
+          "inputMask": 175,
+          "tics": 4,
+          "rng": -1898235017,
+          "snapshotHash": 976053464,
+          "frameHash": 2668015272,
+          "tick": 158
+        },
+        {
+          "inputMask": 66,
+          "tics": 2,
+          "rng": -431991801,
+          "snapshotHash": 1313871510,
+          "frameHash": 1631081416,
+          "tick": 160
+        },
+        {
+          "inputMask": 185,
+          "tics": 4,
+          "rng": -30525429,
+          "snapshotHash": 3058052338,
+          "frameHash": 1938377760,
+          "tick": 164
+        },
+        {
+          "inputMask": 196,
+          "tics": 6,
+          "rng": 1804692955,
+          "snapshotHash": 845083916,
+          "frameHash": 956305872,
+          "tick": 170
+        },
+        {
+          "inputMask": 83,
+          "tics": 3,
+          "rng": -1668932897,
+          "snapshotHash": 207387299,
+          "frameHash": 527280396,
+          "tick": 173
+        },
+        {
+          "inputMask": 150,
+          "tics": 0,
+          "rng": -952113297,
+          "snapshotHash": 207387299,
+          "frameHash": 527280396,
+          "tick": 173
+        },
+        {
+          "inputMask": 253,
+          "tics": 6,
+          "rng": -1854826341,
+          "snapshotHash": 2289386173,
+          "frameHash": 2244089764,
+          "tick": 179
+        },
+        {
+          "inputMask": 56,
+          "tics": 4,
+          "rng": 2029105387,
+          "snapshotHash": 4033567001,
+          "frameHash": 114591796,
+          "tick": 183
+        },
+        {
+          "inputMask": 55,
+          "tics": 2,
+          "rng": -370308745,
+          "snapshotHash": 76417751,
+          "frameHash": 1043428972,
+          "tick": 185
+        }
+      ],
       "traceHash": 212409253,
       "mapDigest": 898941850,
       "finalSnapshotHash": 76417751,

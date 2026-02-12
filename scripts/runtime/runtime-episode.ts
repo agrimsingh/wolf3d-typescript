@@ -79,6 +79,7 @@ export interface RuntimeEpisodeMapCheckpoint {
   mapName: string;
   seedHex: string;
   stepCount: number;
+  stepTrace: RuntimeEpisodeStepTrace[];
   traceHash: number;
   mapDigest: number;
   finalSnapshotHash: number;
@@ -86,8 +87,17 @@ export interface RuntimeEpisodeMapCheckpoint {
   finalTick: number;
 }
 
+export interface RuntimeEpisodeStepTrace {
+  inputMask: number;
+  tics: number;
+  rng: number;
+  snapshotHash: number;
+  frameHash: number;
+  tick: number;
+}
+
 export interface RuntimeEpisodeArtifact {
-  phase: 'R7';
+  phase: 'F6';
   stepsPerMap: number;
   scenarioCount: number;
   mapOrder: number[];
@@ -121,12 +131,28 @@ export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap
       const lastStep = oracleTrace.steps[oracleTrace.steps.length - 1];
       const finalFrameHash = lastStep ? (lastStep.frameHash >>> 0) : (oracle.renderHash(320, 200) >>> 0);
 
+      const stepTrace: RuntimeEpisodeStepTrace[] = scenario.steps.map((input, index) => {
+        const step = oracleTrace.steps[index];
+        if (!step) {
+          throw new Error(`Missing oracle step trace at index ${index} for scenario ${scenario.id}`);
+        }
+        return {
+          inputMask: input.inputMask | 0,
+          tics: input.tics | 0,
+          rng: input.rng | 0,
+          snapshotHash: step.snapshotHash >>> 0,
+          frameHash: step.frameHash >>> 0,
+          tick: step.tick | 0,
+        };
+      });
+
       const checkpoint: RuntimeEpisodeMapCheckpoint = {
         id: fixture.id,
         mapIndex: fixture.mapIndex,
         mapName: fixture.mapName,
         seedHex: toSeedHex(fixture.seed),
-        stepCount: fixture.steps.length | 0,
+        stepCount: stepTrace.length | 0,
+        stepTrace,
         traceHash: oracleTrace.traceHash >>> 0,
         mapDigest: mapDigest >>> 0,
         finalSnapshotHash: oracleTrace.finalSnapshot.hash >>> 0,
@@ -142,6 +168,14 @@ export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap
       episodeDigest = fnv1a(episodeDigest, checkpoint.finalSnapshotHash >>> 0);
       episodeDigest = fnv1a(episodeDigest, checkpoint.finalFrameHash >>> 0);
       episodeDigest = fnv1a(episodeDigest, checkpoint.finalTick | 0);
+      for (const step of checkpoint.stepTrace) {
+        episodeDigest = fnv1a(episodeDigest, step.inputMask | 0);
+        episodeDigest = fnv1a(episodeDigest, step.tics | 0);
+        episodeDigest = fnv1a(episodeDigest, step.rng | 0);
+        episodeDigest = fnv1a(episodeDigest, step.snapshotHash >>> 0);
+        episodeDigest = fnv1a(episodeDigest, step.frameHash >>> 0);
+        episodeDigest = fnv1a(episodeDigest, step.tick | 0);
+      }
     }
   } finally {
     await oracle.shutdown();
@@ -150,7 +184,7 @@ export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap
 
   maps.sort((a, b) => a.mapIndex - b.mapIndex);
   return {
-    phase: 'R7',
+    phase: 'F6',
     stepsPerMap: stepsPerMap | 0,
     scenarioCount: maps.length,
     mapOrder: maps.map((entry) => entry.mapIndex | 0),

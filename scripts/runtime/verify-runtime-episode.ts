@@ -25,8 +25,8 @@ async function main(): Promise<void> {
   const generated = JSON.parse(await readFile(generatedPath, 'utf8')) as RuntimeEpisodeArtifact;
   const lock = JSON.parse(await readFile(lockPath, 'utf8')) as RuntimeEpisodeArtifact;
 
-  if (generated.phase !== 'R7' || lock.phase !== 'R7') {
-    throw new Error(`Expected phase R7 in generated/lock artifacts (got ${generated.phase} and ${lock.phase})`);
+  if (generated.phase !== 'F6' || lock.phase !== 'F6') {
+    throw new Error(`Expected phase F6 in generated/lock artifacts (got ${generated.phase} and ${lock.phase})`);
   }
   assertContiguousMapOrder(generated);
   assertContiguousMapOrder(lock);
