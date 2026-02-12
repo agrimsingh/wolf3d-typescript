@@ -51,6 +51,10 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_STATE.C | SightPlayer | `done` | called via oracle_wl_state_sight_player_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_ACT2.C | T_Chase | `done` | called via oracle_wl_act2_t_chase_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_ACT2.C | T_Path | `done` | called via oracle_wl_act2_t_path_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT2.C | T_Shoot | `done` | called via oracle_wl_act2_t_shoot_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT2.C | T_Bite | `done` | called via oracle_wl_act2_t_bite_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT2.C | T_DogChase | `done` | called via oracle_wl_act2_t_dogchase_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_ACT2.C | T_Projectile | `done` | called via oracle_wl_act2_t_projectile_hash from runtime ai probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

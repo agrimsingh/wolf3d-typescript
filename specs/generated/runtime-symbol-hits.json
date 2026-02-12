@@ -86,7 +86,11 @@
     30,
     31,
     32,
-    33
+    33,
+    34,
+    35,
+    36,
+    37
   ],
   "requiredRuntimeSymbols": [
     {
@@ -286,6 +290,30 @@
       "file": "WL_ACT2.C",
       "func": "T_Path",
       "notes": "called via oracle_wl_act2_t_path_hash from runtime ai probe"
+    },
+    {
+      "id": 34,
+      "file": "WL_ACT2.C",
+      "func": "T_Shoot",
+      "notes": "called via oracle_wl_act2_t_shoot_hash from runtime ai probe"
+    },
+    {
+      "id": 35,
+      "file": "WL_ACT2.C",
+      "func": "T_Bite",
+      "notes": "called via oracle_wl_act2_t_bite_hash from runtime ai probe"
+    },
+    {
+      "id": 36,
+      "file": "WL_ACT2.C",
+      "func": "T_DogChase",
+      "notes": "called via oracle_wl_act2_t_dogchase_hash from runtime ai probe"
+    },
+    {
+      "id": 37,
+      "file": "WL_ACT2.C",
+      "func": "T_Projectile",
+      "notes": "called via oracle_wl_act2_t_projectile_hash from runtime ai probe"
     }
   ],
   "excludedRuntimeSymbols": []

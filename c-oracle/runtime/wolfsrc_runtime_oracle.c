@@ -160,6 +160,66 @@ uint32_t oracle_wl_act2_t_path_hash(
   uint32_t map_lo,
   uint32_t map_hi
 );
+uint32_t oracle_wl_act2_t_shoot_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_act2_t_bite_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_act2_t_dogchase_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
+uint32_t oracle_wl_act2_t_projectile_hash(
+  int32_t ax,
+  int32_t ay,
+  int32_t px,
+  int32_t py,
+  int32_t dir,
+  int32_t state,
+  int32_t hp,
+  int32_t speed,
+  int32_t cooldown,
+  int32_t flags,
+  int32_t rng,
+  uint32_t map_lo,
+  uint32_t map_hi
+);
 uint32_t oracle_wl_draw_wall_refresh_hash(
   int32_t player_angle,
   int32_t player_x,
@@ -227,6 +287,10 @@ enum runtime_trace_symbol_e {
   TRACE_WL_STATE_SIGHT_PLAYER = 31,
   TRACE_WL_ACT2_T_CHASE = 32,
   TRACE_WL_ACT2_T_PATH = 33,
+  TRACE_WL_ACT2_T_SHOOT = 34,
+  TRACE_WL_ACT2_T_BITE = 35,
+  TRACE_WL_ACT2_T_DOGCHASE = 36,
+  TRACE_WL_ACT2_T_PROJECTILE = 37,
 };
 
 #define TRACE_SYMBOL_MAX 40
@@ -493,6 +557,10 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t sight_player_hash;
       uint32_t t_chase_hash;
       uint32_t t_path_hash;
+      uint32_t t_shoot_hash;
+      uint32_t t_bite_hash;
+      uint32_t t_dogchase_hash;
+      uint32_t t_projectile_hash;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
       int32_t ai_dir = (state->angle_deg / 90) & 3;
@@ -586,6 +654,70 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->map_lo,
         state->map_hi
       );
+      trace_hit(TRACE_WL_ACT2_T_SHOOT);
+      t_shoot_hash = oracle_wl_act2_t_shoot_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_ACT2_T_BITE);
+      t_bite_hash = oracle_wl_act2_t_bite_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_ACT2_T_DOGCHASE);
+      t_dogchase_hash = oracle_wl_act2_t_dogchase_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
+      trace_hit(TRACE_WL_ACT2_T_PROJECTILE);
+      t_projectile_hash = oracle_wl_act2_t_projectile_hash(
+        ai_ax,
+        ai_ay,
+        player_x,
+        player_y,
+        ai_dir,
+        ai_state,
+        ai_hp,
+        ai_speed,
+        ai_cooldown,
+        ai_flags,
+        rng,
+        state->map_lo,
+        state->map_hi
+      );
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;
@@ -621,6 +753,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         state->flags |= 0x80000;
       } else {
         state->flags &= ~0x80000;
+      }
+      if (t_shoot_hash & 1u) {
+        state->flags |= 0x100000;
+      } else {
+        state->flags &= ~0x100000;
+      }
+      if (t_bite_hash & 1u) {
+        state->flags |= 0x200000;
+      } else {
+        state->flags &= ~0x200000;
+      }
+      if (t_dogchase_hash & 1u) {
+        state->flags |= 0x400000;
+      } else {
+        state->flags &= ~0x400000;
+      }
+      if (t_projectile_hash & 1u) {
+        state->flags |= 0x800000;
+      } else {
+        state->flags &= ~0x800000;
       }
     }
   }

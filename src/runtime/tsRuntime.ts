@@ -14,7 +14,16 @@ import {
   wlStateRealMoveObjHash,
   wlStateRealSelectChaseDirHash,
 } from '../wolf/ai/wlStateReal';
-import { wlAct2TChaseHash, wlAct2TPathHash, wlStateFirstSightingHash, wlStateSightPlayerHash } from '../wolf/ai/wlAi';
+import {
+  wlAct2TBiteHash,
+  wlAct2TChaseHash,
+  wlAct2TDogChaseHash,
+  wlAct2TPathHash,
+  wlAct2TProjectileHash,
+  wlAct2TShootHash,
+  wlStateFirstSightingHash,
+  wlStateSightPlayerHash,
+} from '../wolf/ai/wlAi';
 import { wlGameGameLoopHash, wlInterCheckHighScoreHash } from '../wolf/game/wlGameState';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
 import { wlPlayPlayLoopHash } from '../wolf/player/wlPlayer';
@@ -575,6 +584,66 @@ export class TsRuntimePort implements RuntimePort {
           this.state.mapLo | 0,
           this.state.mapHi | 0,
         ) >>> 0;
+        const tShootHash = wlAct2TShootHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
+        const tBiteHash = wlAct2TBiteHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
+        const tDogChaseHash = wlAct2TDogChaseHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
+        const tProjectileHash = wlAct2TProjectileHash(
+          aiAx,
+          aiAy,
+          playerXQ16,
+          playerYQ16,
+          aiDir,
+          aiState,
+          aiHp,
+          aiSpeed,
+          aiCooldown,
+          aiFlags,
+          rng | 0,
+          this.state.mapLo | 0,
+          this.state.mapHi | 0,
+        ) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
@@ -610,6 +679,26 @@ export class TsRuntimePort implements RuntimePort {
           this.state.flags |= 0x80000;
         } else {
           this.state.flags &= ~0x80000;
+        }
+        if ((tShootHash & 1) !== 0) {
+          this.state.flags |= 0x100000;
+        } else {
+          this.state.flags &= ~0x100000;
+        }
+        if ((tBiteHash & 1) !== 0) {
+          this.state.flags |= 0x200000;
+        } else {
+          this.state.flags &= ~0x200000;
+        }
+        if ((tDogChaseHash & 1) !== 0) {
+          this.state.flags |= 0x400000;
+        } else {
+          this.state.flags &= ~0x400000;
+        }
+        if ((tProjectileHash & 1) !== 0) {
+          this.state.flags |= 0x800000;
+        } else {
+          this.state.flags &= ~0x800000;
         }
       }
     }

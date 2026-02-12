@@ -69,6 +69,10 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 31, file: 'WL_STATE.C', func: 'SightPlayer', notes: 'called via oracle_wl_state_sight_player_hash from runtime ai probe' },
   { id: 32, file: 'WL_ACT2.C', func: 'T_Chase', notes: 'called via oracle_wl_act2_t_chase_hash from runtime ai probe' },
   { id: 33, file: 'WL_ACT2.C', func: 'T_Path', notes: 'called via oracle_wl_act2_t_path_hash from runtime ai probe' },
+  { id: 34, file: 'WL_ACT2.C', func: 'T_Shoot', notes: 'called via oracle_wl_act2_t_shoot_hash from runtime ai probe' },
+  { id: 35, file: 'WL_ACT2.C', func: 'T_Bite', notes: 'called via oracle_wl_act2_t_bite_hash from runtime ai probe' },
+  { id: 36, file: 'WL_ACT2.C', func: 'T_DogChase', notes: 'called via oracle_wl_act2_t_dogchase_hash from runtime ai probe' },
+  { id: 37, file: 'WL_ACT2.C', func: 'T_Projectile', notes: 'called via oracle_wl_act2_t_projectile_hash from runtime ai probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -107,6 +111,10 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [31, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [32, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [33, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [34, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [35, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [36, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [37, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {
