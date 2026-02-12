@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import fc from 'fast-check';
@@ -152,8 +152,16 @@ describe('phase 2 real WOLFSRC map/cache parity', () => {
 
   beforeAll(async () => {
     oracle = await getOracleBridge();
-    mapheadBytes = new Uint8Array(readFileSync(join(process.cwd(), 'assets', 'wl1', 'MAPHEAD.WL1')));
-    gamemapsBytes = new Uint8Array(readFileSync(join(process.cwd(), 'assets', 'wl1', 'GAMEMAPS.WL1')));
+    const wl6MapHead = join(process.cwd(), 'assets', 'wl6', 'raw', 'MAPHEAD.WL6');
+    const wl6GameMaps = join(process.cwd(), 'assets', 'wl6', 'raw', 'GAMEMAPS.WL6');
+    const wl1MapHead = join(process.cwd(), 'assets', 'wl1', 'MAPHEAD.WL1');
+    const wl1GameMaps = join(process.cwd(), 'assets', 'wl1', 'GAMEMAPS.WL1');
+
+    const mapheadPath = existsSync(wl6MapHead) ? wl6MapHead : wl1MapHead;
+    const gamemapsPath = existsSync(wl6GameMaps) ? wl6GameMaps : wl1GameMaps;
+
+    mapheadBytes = new Uint8Array(readFileSync(mapheadPath));
+    gamemapsBytes = new Uint8Array(readFileSync(gamemapsPath));
   });
 
   it('ID_CA.CAL_CarmackExpand hash matches oracle', () => {
@@ -227,7 +235,7 @@ describe('phase 2 real WOLFSRC map/cache parity', () => {
     });
   });
 
-  it('ID_CA.CA_CacheMap stays in parity on WL1 real map fixtures', () => {
+  it('ID_CA.CA_CacheMap stays in parity on real map fixtures', () => {
     const mapnums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     for (const mapnum of mapnums) {
       const tiny = buildTrimmedWl1MapCase(mapheadBytes, gamemapsBytes, mapnum);

@@ -15,8 +15,8 @@ function fnv1a(hash: number, value: number): number {
 
 function hashConfig(hash: number, config: RuntimeConfig): number {
   let h = hash >>> 0;
-  h = fnv1a(h, config.mapLo >>> 0);
-  h = fnv1a(h, config.mapHi >>> 0);
+  h = fnv1a(h, (config.mapLo ?? 0) >>> 0);
+  h = fnv1a(h, (config.mapHi ?? 0) >>> 0);
   h = fnv1a(h, config.startXQ8 | 0);
   h = fnv1a(h, config.startYQ8 | 0);
   h = fnv1a(h, config.startAngleDeg | 0);
@@ -108,7 +108,7 @@ export interface RuntimeEpisodeArtifact {
 export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap = 64): Promise<RuntimeEpisodeArtifact> {
   const fixtures = await loadWl1RuntimeScenarios(rootDir, stepsPerMap);
   if (fixtures.length === 0) {
-    throw new Error('No WL1 runtime fixtures found. Run `pnpm verify:assets` to install and validate shareware data files.');
+    throw new Error('No runtime fixtures found. Run `pnpm verify:assets` and `pnpm verify:assets:wl6` to install/validate data files.');
   }
 
   const oracle = new WolfsrcOraclePort();

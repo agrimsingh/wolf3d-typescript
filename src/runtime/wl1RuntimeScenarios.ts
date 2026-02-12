@@ -18,5 +18,5 @@ export async function loadWl1RuntimeScenarios(
 ): Promise<Wl1RuntimeScenario[]> {
   const mapheadBytes = await fetchBytes(`${baseUrl}/MAPHEAD.${variant}`);
   const gamemapsBytes = await fetchBytes(`${baseUrl}/GAMEMAPS.${variant}`);
-  return buildWl1RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario);
+  return buildWl1RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
 }

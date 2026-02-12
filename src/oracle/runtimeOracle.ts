@@ -180,8 +180,8 @@ export class WolfsrcOraclePort implements RuntimePort {
 
     const fns = this.assertReady();
     fns.init(
-      config.mapLo >>> 0,
-      config.mapHi >>> 0,
+      (config.mapLo ?? 0) >>> 0,
+      (config.mapHi ?? 0) >>> 0,
       config.startXQ8 | 0,
       config.startYQ8 | 0,
       config.startAngleDeg | 0,

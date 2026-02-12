@@ -194,11 +194,7 @@ export class RuntimeAppController {
     }
 
     const token = ++this.transitionToken;
-    const runtimeConfig: RuntimeConfig = {
-      ...scenario.config,
-      enableFullMapRuntime: true,
-    };
-    await this.runtime.init(runtimeConfig);
+    await this.runtime.init({ ...scenario.config });
     if (token !== this.transitionToken) {
       return;
     }

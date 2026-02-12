@@ -1,20 +1,30 @@
 export interface RuntimeConfig {
-  mapLo: number;
-  mapHi: number;
+  // Variant/profile selector for asset and fixture pipelines.
+  variant?: 'WL1' | 'WL6';
+  // Legacy 8x8 compatibility bits. Runtime derives these from full map state when omitted.
+  mapLo?: number;
+  mapHi?: number;
+  // Deprecated: full-map mode now auto-enables when plane data is present.
   enableFullMapRuntime?: boolean;
   mapIndex?: number;
   mapName?: string;
   mapWidth?: number;
   mapHeight?: number;
+  // Deprecated: runtime derives window origin from world position when possible.
   runtimeWindowOriginX?: number;
   runtimeWindowOriginY?: number;
   plane0?: Uint16Array;
   plane1?: Uint16Array;
+  // Canonical world-space player start (16.8 fixed tile coordinates).
+  worldStartXQ8?: number;
+  worldStartYQ8?: number;
+  // Deprecated: retained for compatibility with older fixtures.
   playerStartAbsTileX?: number;
   playerStartAbsTileY?: number;
   playerStartTileX?: number;
   playerStartTileY?: number;
   playerStartAngleDeg?: number;
+  // Legacy local-window start coordinates. If worldStart* is present these are treated as fallbacks.
   startXQ8: number;
   startYQ8: number;
   startAngleDeg: number;
