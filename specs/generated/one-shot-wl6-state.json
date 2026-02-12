@@ -1,9 +1,8 @@
 {
   "version": 1,
-  "phase": "K6",
+  "phase": "K7",
   "status": "complete",
   "phases": [
-    "K6",
     "K7",
     "K8",
     "K9",
@@ -36,6 +35,10 @@
     {
       "phase": "K5",
       "completedAt": "2026-02-12T21:16:38.868Z"
+    },
+    {
+      "phase": "K6",
+      "completedAt": "2026-02-12T21:18:12.213Z"
     }
   ]
 }
