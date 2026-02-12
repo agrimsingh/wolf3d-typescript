@@ -256,6 +256,14 @@ export class TsRuntimePort implements RuntimePort {
   }
 
   private stepOne(inputMask: number, rng: number): void {
+    if ((this.state.flags & 0x40) !== 0 || this.state.health <= 0) {
+      this.state.health = 0;
+      this.state.flags |= 0x40;
+      this.state.flags &= ~0x10;
+      this.state.tick++;
+      return;
+    }
+
     let forward = 0;
     let strafe = 0;
     let turn = 0;

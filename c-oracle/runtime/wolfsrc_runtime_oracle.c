@@ -131,6 +131,14 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
   int32_t xq16;
   int32_t yq16;
 
+  if ((state->flags & 0x40) != 0 || state->health <= 0) {
+    state->health = 0;
+    state->flags |= 0x40;
+    state->flags &= ~0x10;
+    state->tick++;
+    return;
+  }
+
   if (input_mask & (1 << 0)) forward += 32;
   if (input_mask & (1 << 1)) forward -= 32;
   if (input_mask & (1 << 2)) turn -= 8;
