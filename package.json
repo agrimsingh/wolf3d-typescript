@@ -25,7 +25,7 @@
     "runtime:manifest:verify": "pnpm runtime:manifest:extract && tsx scripts/runtime/verify-runtime-manifest.ts",
     "runtime:classification:extract": "tsx scripts/runtime/classify-wolfsrc-symbols.ts",
     "runtime:classification:verify": "pnpm runtime:classification:extract && tsx scripts/runtime/verify-wolfsrc-symbol-classification.ts",
-    "runtime:parity:test": "pnpm wasm:build && vitest run test/property/runtime*.test.ts",
+    "runtime:parity:test": "pnpm wasm:build && vitest run test/property/runtime.required-symbols.test.ts test/property/runtime.lifecycle.test.ts test/property/runtime.step-parity.test.ts test/property/runtime.oracle-determinism.test.ts",
     "runtime:checkpoints:generate": "pnpm wasm:build && tsx scripts/runtime/generate-runtime-checkpoints.ts",
     "runtime:checkpoints:verify": "pnpm runtime:checkpoints:generate && tsx scripts/runtime/verify-runtime-checkpoints.ts",
     "runtime:episode:generate": "pnpm wasm:build && tsx scripts/runtime/generate-runtime-episode.ts",

@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime Parity TODO (R-Phases)
 
-**Status:** In Progress (`R10` active)  
+**Status:** Completed (`R10` complete)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -111,16 +111,17 @@
 
 ## R10: Full Episode Parity + CI Freeze
 
-- [ ] Lock full deterministic WL1 episode traces (per-tic snapshot + indexed frame exact parity).
-- [ ] Harden PR/nightly CI workflows and triage artifacts.
-- [ ] Gate: `pnpm runtime:required:verify`
-- [ ] Gate: `pnpm runtime:checkpoints:verify`
-- [ ] Gate: `pnpm runtime:episode:verify`
-- [ ] Gate: `pnpm test:smoke`
-- [ ] Gate: `pnpm build`
-- [ ] Gate: 3 consecutive green remote runs on `parity-pr.yml` and `parity-10k.yml`
-- [ ] Tests green
-- [ ] Phase commit pushed (`r10: wl1 gameplay-complete parity freeze`)
+- [x] Lock full deterministic WL1 episode traces (per-tic snapshot + indexed frame exact parity).
+- [x] Harden PR/nightly CI workflows and triage artifacts.
+- [x] Gate: `pnpm runtime:required:verify`
+- [x] Gate: `pnpm runtime:checkpoints:verify`
+- [x] Gate: `pnpm runtime:episode:verify`
+- [x] Gate: `pnpm test:smoke`
+- [x] Gate: `pnpm build`
+- [x] Gate: 3 consecutive green remote runs on `parity-pr.yml` and `parity-10k.yml`
+- [x] Evidence: parity-pr runs `21944346187`, `21944142846`, `21943692889`; parity-10k runs `21942620377`, `21942620230`, `21935039117`
+- [x] Tests green
+- [x] Phase commit pushed (`r10: wl1 gameplay-complete parity freeze`)
 
 ## Global Rules
 

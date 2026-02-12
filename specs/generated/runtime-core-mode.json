@@ -1,5 +1,5 @@
 {
-  "phase": "R9",
+  "phase": "R10",
   "mode": "real",
-  "notes": "R9 production runtime path defaults to TsRuntimePort; oracle runtime remains test-only reference."
+  "notes": "R10 freeze: production runtime defaults to TsRuntimePort; oracle runtime is parity-reference only."
 }
