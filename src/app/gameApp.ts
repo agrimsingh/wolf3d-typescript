@@ -375,7 +375,14 @@ export class WolfApp {
     if (mode === 'playing' && document.activeElement !== this.canvas) {
       this.canvas.focus();
     }
-    (globalThis as { __wolfDebugState?: unknown }).__wolfDebugState = this.controller.getState();
+    const debugGlobal = globalThis as {
+      __wolfDebugState?: unknown;
+      __wolfDebugController?: RuntimeAppController;
+      __wolfDebugRuntime?: unknown;
+    };
+    debugGlobal.__wolfDebugState = this.controller.getState();
+    debugGlobal.__wolfDebugController = this.controller;
+    debugGlobal.__wolfDebugRuntime = (this.controller as unknown as { runtime?: unknown }).runtime;
     this.drawFrame();
     this.loopHandle = requestAnimationFrame((nextNow) => this.loop(nextNow));
   }

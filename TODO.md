@@ -91,13 +91,13 @@
 
 ## G7: TS Port Wave C (Player, Doors, Pushwalls, Game Loop Core)
 
-- [ ] Port runtime-faithful player/use/fire/collision and door/pushwall/game-loop transitions.
-- [ ] Remove synthetic HP countdown/probe side effects from gameplay path.
-- [ ] Gate: stateful parity properties for movement/use/fire/door/pushwall/loop
-- [ ] Gate: deterministic traces for door interactions, damage/death, level completion
-- [ ] Gate: agent-browser scripted flow `move -> open door -> push wall -> pick item -> damage -> survive`
-- [ ] Tests green
-- [ ] Phase commit pushed (`g7: player-doors-gameloop parity`)
+- [x] Port runtime-faithful player/use/fire/collision and door/pushwall/game-loop transitions.
+- [x] Remove synthetic HP countdown/probe side effects from gameplay path.
+- [x] Gate: stateful parity properties for movement/use/fire/door/pushwall/loop
+- [x] Gate: deterministic traces for door interactions, damage/death, level completion
+- [x] Gate: agent-browser scripted flow `move -> open door -> push wall -> pick item -> damage -> survive`
+- [x] Tests green
+- [x] Phase commit pushed (`g7: player-doors-gameloop parity`)
 
 ## G8: TS Port Wave D (Actors/AI/Combat)
 

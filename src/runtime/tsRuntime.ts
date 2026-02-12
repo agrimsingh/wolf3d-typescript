@@ -174,6 +174,8 @@ const PI = 3.141592657;
 const SIN_TABLE = new Int32Array(ANGLES + ANGLEQUAD + 1);
 const FULL_MAP_WINDOW_SIZE = 8;
 const AREATILE = 107;
+const DOOR_TILE_MIN = 90;
+const DOOR_TILE_MAX = 101;
 const FRAME_WIDTH = 320;
 const FRAME_HEIGHT = 200;
 const RENDER_FOV = Math.PI / 3;
@@ -522,6 +524,7 @@ type FullMapState = {
   width: number;
   height: number;
   plane0: Uint16Array | null;
+  plane1: Uint16Array | null;
   originX: number;
   originY: number;
   worldXQ8: number;
@@ -759,6 +762,7 @@ export class TsRuntimePort implements RuntimePort {
     width: 0,
     height: 0,
     plane0: null,
+    plane1: null,
     originX: 0,
     originY: 0,
     worldXQ8: 0,
@@ -772,6 +776,7 @@ export class TsRuntimePort implements RuntimePort {
       width: source.width | 0,
       height: source.height | 0,
       plane0: source.plane0,
+      plane1: source.plane1,
       originX: source.originX | 0,
       originY: source.originY | 0,
       worldXQ8: source.worldXQ8 | 0,
@@ -835,6 +840,98 @@ export class TsRuntimePort implements RuntimePort {
     this.refreshMapWindowFromWorld(true);
   }
 
+  private facingVector(): { dx: number; dy: number } {
+    const facing = ((this.state.angleDeg % 360) + 360) % 360;
+    if (facing < 45 || facing >= 315) {
+      return { dx: 1, dy: 0 };
+    }
+    if (facing < 135) {
+      return { dx: 0, dy: -1 };
+    }
+    if (facing < 225) {
+      return { dx: -1, dy: 0 };
+    }
+    return { dx: 0, dy: 1 };
+  }
+
+  private tryUseFullMapTile(): boolean {
+    if (!this.fullMap.enabled || !this.fullMap.plane0) {
+      return false;
+    }
+
+    const plane0 = this.fullMap.plane0;
+    const mapWidth = this.fullMap.width | 0;
+    const mapHeight = this.fullMap.height | 0;
+    const tileX = this.fullMap.worldXQ8 >> 8;
+    const tileY = this.fullMap.worldYQ8 >> 8;
+    const { dx, dy } = this.facingVector();
+    const tx = tileX + dx;
+    const ty = tileY + dy;
+    if (tx < 0 || ty < 0 || tx >= mapWidth || ty >= mapHeight) {
+      return false;
+    }
+
+    const idx = ty * mapWidth + tx;
+    const tile = plane0[idx] ?? 0;
+    if ((tile & 0xffff) >= AREATILE) {
+      return false;
+    }
+
+    const isDoor = (tile & 0xffff) >= DOOR_TILE_MIN && (tile & 0xffff) <= DOOR_TILE_MAX;
+    if (isDoor) {
+      plane0[idx] = AREATILE;
+      this.state.flags |= 1 << 18;
+      this.refreshMapWindowFromWorld(false);
+      return true;
+    }
+
+    const pushX = tx + dx;
+    const pushY = ty + dy;
+    if (pushX < 0 || pushY < 0 || pushX >= mapWidth || pushY >= mapHeight) {
+      return false;
+    }
+    const pushIdx = pushY * mapWidth + pushX;
+    const pushTile = plane0[pushIdx] ?? 0;
+    if ((pushTile & 0xffff) < AREATILE) {
+      return false;
+    }
+
+    plane0[pushIdx] = tile & 0xffff;
+    plane0[idx] = AREATILE;
+    this.state.flags |= 1 << 19;
+    this.refreshMapWindowFromWorld(false);
+    return true;
+  }
+
+  private applyFullMapPickupEffects(): void {
+    if (!this.fullMap.enabled || !this.fullMap.plane1) {
+      return;
+    }
+
+    const mapWidth = this.fullMap.width | 0;
+    const mapHeight = this.fullMap.height | 0;
+    const tileX = this.fullMap.worldXQ8 >> 8;
+    const tileY = this.fullMap.worldYQ8 >> 8;
+    if (tileX < 0 || tileY < 0 || tileX >= mapWidth || tileY >= mapHeight) {
+      return;
+    }
+
+    const idx = tileY * mapWidth + tileX;
+    const item = (this.fullMap.plane1[idx] ?? 0) & 0xffff;
+    if (item === 0) {
+      return;
+    }
+
+    const itemClass = item % 3;
+    if (itemClass === 0) {
+      this.state.health = clampI32(this.state.health + 8, 0, 100);
+    } else if (itemClass === 1) {
+      this.state.ammo = clampI32(this.state.ammo + 6, 0, 99);
+    }
+    this.state.flags |= 1 << 17;
+    this.fullMap.plane1[idx] = 0;
+  }
+
   async bootWl1(config: RuntimeConfig): Promise<void> {
     await this.init(config);
   }
@@ -845,6 +942,7 @@ export class TsRuntimePort implements RuntimePort {
       width: 0,
       height: 0,
       plane0: null,
+      plane1: null,
       originX: 0,
       originY: 0,
       worldXQ8: 0,
@@ -868,7 +966,8 @@ export class TsRuntimePort implements RuntimePort {
     const height = config.mapHeight ?? 0;
     const hasFullMap = config.enableFullMapRuntime === true && !!config.plane0 && width > 0 && height > 0;
     if (hasFullMap) {
-      const plane0 = config.plane0!;
+      const plane0 = new Uint16Array(config.plane0!);
+      const plane1 = config.plane1 ? new Uint16Array(config.plane1) : null;
       let originX = clampWindowOrigin(config.runtimeWindowOriginX ?? 0, width);
       let originY = clampWindowOrigin(config.runtimeWindowOriginY ?? 0, height);
 
@@ -892,6 +991,7 @@ export class TsRuntimePort implements RuntimePort {
         width: width | 0,
         height: height | 0,
         plane0,
+        plane1,
         originX,
         originY,
         worldXQ8,
@@ -1018,30 +1118,35 @@ export class TsRuntimePort implements RuntimePort {
       const useHeld = (this.state.flags & 0x100) !== 0;
 
       if (usePressed && !useHeld) {
-        let tx = this.state.xQ8 >> 8;
-        let ty = this.state.yQ8 >> 8;
-        const facing = ((this.state.angleDeg % 360) + 360) % 360;
-        if (facing < 45 || facing >= 315) tx += 1;
-        else if (facing < 135) ty -= 1;
-        else if (facing < 225) tx -= 1;
-        else ty += 1;
-        const targetXQ16 = (((tx << 8) + 128) << 8) | 0;
-        const targetYQ16 = (((ty << 8) + 128) << 8) | 0;
-        const baseXQ16 = this.state.xQ8 << 8;
-        const baseYQ16 = this.state.yQ8 << 8;
-        const clipMove = wlAgentRealClipMoveQ16(
-          baseXQ16,
-          baseYQ16,
-          (targetXQ16 - baseXQ16) | 0,
-          (targetYQ16 - baseYQ16) | 0,
-          this.state.mapLo,
-          this.state.mapHi,
-          0,
-        );
-        const clipBlocked = (clipMove.x | 0) !== (targetXQ16 | 0) || (clipMove.y | 0) !== (targetYQ16 | 0);
-        const tryMoveBlocked = (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) | 0) === 0;
-        if (clipBlocked || tryMoveBlocked) {
-          this.state.flags |= 0x20;
+        const interacted = this.tryUseFullMapTile();
+        if (!interacted) {
+          let tx = this.state.xQ8 >> 8;
+          let ty = this.state.yQ8 >> 8;
+          const facing = ((this.state.angleDeg % 360) + 360) % 360;
+          if (facing < 45 || facing >= 315) tx += 1;
+          else if (facing < 135) ty -= 1;
+          else if (facing < 225) tx -= 1;
+          else ty += 1;
+          const targetXQ16 = (((tx << 8) + 128) << 8) | 0;
+          const targetYQ16 = (((ty << 8) + 128) << 8) | 0;
+          const baseXQ16 = this.state.xQ8 << 8;
+          const baseYQ16 = this.state.yQ8 << 8;
+          const clipMove = wlAgentRealClipMoveQ16(
+            baseXQ16,
+            baseYQ16,
+            (targetXQ16 - baseXQ16) | 0,
+            (targetYQ16 - baseYQ16) | 0,
+            this.state.mapLo,
+            this.state.mapHi,
+            0,
+          );
+          const clipBlocked = (clipMove.x | 0) !== (targetXQ16 | 0) || (clipMove.y | 0) !== (targetYQ16 | 0);
+          const tryMoveBlocked = (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) | 0) === 0;
+          if (clipBlocked || tryMoveBlocked) {
+            this.state.flags |= 0x20;
+          } else {
+            this.state.flags &= ~0x20;
+          }
         } else {
           this.state.flags &= ~0x20;
         }
@@ -1055,6 +1160,8 @@ export class TsRuntimePort implements RuntimePort {
         this.state.flags &= ~0x100;
       }
     }
+
+    this.applyFullMapPickupEffects();
 
     {
       const playerXQ16 = this.state.xQ8 << 8;
@@ -2094,8 +2201,13 @@ export class TsRuntimePort implements RuntimePort {
 
     if (pendingDamageCalls > 0) {
       const difficulty = (this.state.tick >> 2) & 3;
-      for (let i = 0; i < pendingDamageCalls; i++) {
-        const points = (((rng >> ((i & 7) * 4)) & 0x0f) + 1) | 0;
+      const damageCalls = this.fullMap.enabled
+        ? (((this.state.tick & 0x0f) === 0) ? 1 : 0)
+        : pendingDamageCalls;
+      for (let i = 0; i < damageCalls; i++) {
+        const points = this.fullMap.enabled
+          ? 1
+          : ((((rng >> ((i & 7) * 4)) & 0x0f) + 1) | 0);
         const takeDamage = wlAgentTakeDamageStep(this.state.health, points, difficulty, false, false);
         this.state.health = clampI32(takeDamage.health, 0, 100);
         if (takeDamage.died) {
@@ -2103,6 +2215,10 @@ export class TsRuntimePort implements RuntimePort {
           break;
         }
       }
+    }
+
+    if (this.fullMap.enabled && this.state.health > 1 && (this.state.tick % 96) === 0) {
+      this.state.health = (this.state.health - 1) | 0;
     }
 
     if (this.state.health <= 0) {
