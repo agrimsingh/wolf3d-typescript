@@ -33,7 +33,7 @@ export interface RuntimeConfig {
 }
 
 export interface RuntimeBootParams {
-  variant: 'WL1';
+  variant: 'WL1' | 'WL6';
   episode: number;
   mapIndex: number;
   difficulty: number;
@@ -58,7 +58,7 @@ export interface RuntimeInput {
 export interface RuntimeCoreSnapshot {
   mapLo: number;
   mapHi: number;
-  // Local runtime-window coordinates for legacy parity (8x8 compatibility window).
+  // Local runtime-window coordinates for render-windowing logic.
   localXQ8?: number;
   localYQ8?: number;
   xQ8: number;

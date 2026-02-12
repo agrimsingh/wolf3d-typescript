@@ -2544,7 +2544,7 @@ export class TsRuntimePort implements RuntimePort {
       const bottom = Math.min(FRAME_HEIGHT - 1, top + wallHeight);
       const tile = plane0[hit.tileY * mapWidth + hit.tileX] ?? 0;
       const texture = this.wallTextures.length > 0
-        ? this.wallTextures[Math.abs((hit.tileX * 13 + hit.tileY * 7 + hit.side * 3) | 0) % this.wallTextures.length]
+        ? this.wallTextures[Math.abs((tile - 1) & 0xffff) % this.wallTextures.length]
         : null;
       let wallIndex = (96 + ((tile + hit.tileX * 3 + hit.tileY * 5) & 0x3f)) & 0xff;
       if (hit.side === 1) {
@@ -2554,8 +2554,8 @@ export class TsRuntimePort implements RuntimePort {
       for (let y = top; y <= bottom; y++) {
         if (texture) {
           const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
-          // VSWAP walls are stored column-major (x-major). castRayFullMap already applies side-dependent flips.
           const sampleX = hit.texX & 63;
+          // VSWAP wall textures are column-major (x-major).
           indexed[y * FRAME_WIDTH + x] = texture[(sampleX * 64 + ty) & 4095] ?? wallIndex;
         } else {
           indexed[y * FRAME_WIDTH + x] = wallIndex;
