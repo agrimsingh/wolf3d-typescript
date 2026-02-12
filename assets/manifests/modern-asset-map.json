@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "profile": "wl6-modern-v1",
+  "entries": [
+    {
+      "targetKind": "wallTexture",
+      "targetId": "wall.stone.01",
+      "sourceFile": "textures/walls.png",
+      "rect": { "x": 0, "y": 0, "w": 64, "h": 64 },
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "rgb",
+      "soundName": null,
+      "soundCategory": null
+    },
+    {
+      "targetKind": "wallTexture",
+      "targetId": "wall.stone.02",
+      "sourceFile": "textures/walls.png",
+      "rect": { "x": 65, "y": 0, "w": 64, "h": 64 },
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "rgb",
+      "soundName": null,
+      "soundCategory": null
+    },
+    {
+      "targetKind": "wallTexture",
+      "targetId": "ui.achtung.sign",
+      "sourceFile": "textures/walls.png",
+      "rect": { "x": 195, "y": 0, "w": 64, "h": 64 },
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "rgb",
+      "soundName": null,
+      "soundCategory": null
+    },
+    {
+      "targetKind": "uiSprite",
+      "targetId": "ui.hud.panel",
+      "sourceFile": "sprites/ui/hud.png",
+      "rect": { "x": 0, "y": 0, "w": 391, "h": 159 },
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "rgba",
+      "soundName": null,
+      "soundCategory": null
+    },
+    {
+      "targetKind": "uiSprite",
+      "targetId": "ui.menu.sheet",
+      "sourceFile": "sprites/ui/menu-and-miscellaneous.png",
+      "rect": { "x": 0, "y": 0, "w": 1240, "h": 469 },
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "rgba",
+      "soundName": null,
+      "soundCategory": null
+    },
+    {
+      "targetKind": "actorSheet",
+      "targetId": "actor.guard.sheet",
+      "sourceFile": "sprites/characters/guard.png",
+      "rect": { "x": 0, "y": 0, "w": 519, "h": 454 },
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "rgb",
+      "soundName": null,
+      "soundCategory": null
+    },
+    {
+      "targetKind": "objectSheet",
+      "targetId": "object.items.sheet",
+      "sourceFile": "sprites/objects/objects.png",
+      "rect": { "x": 0, "y": 0, "w": 261, "h": 1053 },
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "indexed",
+      "soundName": null,
+      "soundCategory": null
+    },
+    {
+      "targetKind": "soundEffect",
+      "targetId": "sfx.door.open",
+      "sourceFile": "sounds/misc/opendoorsnd.wav",
+      "rect": null,
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "pcm-u8-mono",
+      "soundName": "OPENDOORSND",
+      "soundCategory": "misc"
+    },
+    {
+      "targetKind": "soundEffect",
+      "targetId": "sfx.door.close",
+      "sourceFile": "sounds/misc/closedoorsnd.wav",
+      "rect": null,
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "pcm-u8-mono",
+      "soundName": "CLOSEDOORSND",
+      "soundCategory": "misc"
+    },
+    {
+      "targetKind": "soundEffect",
+      "targetId": "sfx.weapon.pistol",
+      "sourceFile": "sounds/weapons/atkpistolsnd.wav",
+      "rect": null,
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "pcm-u8-mono",
+      "soundName": "ATKPISTOLSND",
+      "soundCategory": "weapons"
+    },
+    {
+      "targetKind": "soundEffect",
+      "targetId": "sfx.weapon.machinegun",
+      "sourceFile": "sounds/weapons/atkmachinegunsnd.wav",
+      "rect": null,
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "pcm-u8-mono",
+      "soundName": "ATKMACHINEGUNSND",
+      "soundCategory": "weapons"
+    },
+    {
+      "targetKind": "soundEffect",
+      "targetId": "sfx.level.complete",
+      "sourceFile": "sounds/misc/leveldonesnd.wav",
+      "rect": null,
+      "flipX": false,
+      "flipY": false,
+      "rotate90": false,
+      "paletteMode": "pcm-u8-mono",
+      "soundName": "LEVELDONESND",
+      "soundCategory": "misc"
+    }
+  ]
+}

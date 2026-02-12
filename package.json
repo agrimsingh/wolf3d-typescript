@@ -44,15 +44,19 @@
     "assets:import:modern:wl6": "bash scripts/assets/import-modern-wl6.sh",
     "assets:lock:wl6": "tsx scripts/assets/generate-wl6-locks.ts",
     "assets:validate:wl6": "tsx scripts/assets/validate-wl6.ts",
+    "assets:map:validate:wl6": "tsx scripts/assets/validate-modern-asset-map.ts",
+    "assets:map:samples:write:wl6": "tsx scripts/assets/verify-modern-asset-samples.ts --write",
+    "assets:map:samples:verify:wl6": "tsx scripts/assets/verify-modern-asset-samples.ts",
     "verify:assets:wl6": "pnpm assets:validate:wl6"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "@types/pngjs": "^6.0.5",
     "fast-check": "^3.22.0",
+    "pngjs": "^7.0.0",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "vite": "^7.1.3",
-    "vitest": "^2.1.9",
-    "tsx": "^4.20.5"
+    "vitest": "^2.1.9"
   }
 }

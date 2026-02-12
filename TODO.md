@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K2` active)  
+**Status:** In Progress (`K3` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -43,14 +43,14 @@
 
 ## K2: Asset Mapping Layer
 
-- [ ] Add deterministic mapping manifest and loader pipeline.
-- [ ] Validate missing IDs, duplicate IDs, orientation flags, and palette mode.
-- [ ] Add mapping hash tests and known orientation checks (Achtung included).
-- [ ] Gate: mapping validation suite
-- [ ] Gate: deterministic hash tests for sampled assets
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k2: deterministic modern asset mapping layer`)
+- [x] Add deterministic mapping manifest and loader pipeline.
+- [x] Validate missing IDs, duplicate IDs, orientation flags, and palette mode.
+- [x] Add mapping hash tests and known orientation checks (Achtung included).
+- [x] Gate: mapping validation suite
+- [x] Gate: deterministic hash tests for sampled assets
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k2: deterministic modern asset mapping layer`)
 
 ## K3: WL6 Runtime Data/Boot Pipeline
 
