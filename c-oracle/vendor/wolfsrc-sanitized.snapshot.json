@@ -1,0 +1,9 @@
+{
+  "snapshot": "wolfsrc-sanitized",
+  "sourceHint": "/Users/agrim/Downloads/ai fun projects/wolf3d-master/WOLFSRC",
+  "checksumManifest": "c-oracle/vendor/wolfsrc-sanitized.sha256",
+  "notes": [
+    "This vendored snapshot is the deterministic default for wasm prepare/build paths.",
+    "Refresh from source only with scripts/wasm/prepare-wolfsrc.sh --refresh and explicit WOLF3D_SRC_DIR."
+  ]
+}

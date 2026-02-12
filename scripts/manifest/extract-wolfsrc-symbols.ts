@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { join, extname, basename, resolve } from 'node:path';
 
 type PhaseName =
@@ -23,7 +23,11 @@ interface SymbolEntry {
 }
 
 const projectRoot = resolve(process.cwd());
-const wolfsrc = resolve('/Users/agrim/Downloads/ai fun projects/wolf3d-master/WOLFSRC');
+const wolfsrc = resolve(
+  process.env.WOLFSRC_MANIFEST_SRC_DIR
+    ?? process.env.WOLF3D_SRC_DIR
+    ?? join(projectRoot, 'c-oracle', 'wolfsrc-sanitized'),
+);
 const outDir = join(projectRoot, 'specs', 'generated');
 
 const targetedPhaseMap: Record<string, Record<string, PhaseName>> = {
@@ -293,6 +297,13 @@ function toMarkdown(entries: SymbolEntry[]): string {
 }
 
 function main(): void {
+  if (!existsSync(wolfsrc)) {
+    throw new Error(
+      `WOLFSRC manifest source directory not found: ${wolfsrc}\n`
+      + 'Set WOLFSRC_MANIFEST_SRC_DIR or WOLF3D_SRC_DIR, or run pnpm wasm:prepare:wolfsrc first.',
+    );
+  }
+
   const cFiles = readdirSync(wolfsrc)
     .filter((name) => extname(name).toUpperCase() === '.C')
     .map((name) => join(wolfsrc, name));

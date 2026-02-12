@@ -1,4 +1,4 @@
-# WOLFSRC Compatibility Bring-Up (R1)
+# WOLFSRC Compatibility Baseline (G1)
 
 ## Goal
 
@@ -11,6 +11,7 @@ Create a deterministic pathway from upstream DOS-era `WOLFSRC` sources to a comp
 - Output: `c-oracle/wolfsrc-sanitized/`
 - Vendored snapshot source: `c-oracle/vendor/wolfsrc-sanitized/`
 - Vendored checksum manifest: `c-oracle/vendor/wolfsrc-sanitized.sha256`
+- Vendored snapshot metadata: `c-oracle/vendor/wolfsrc-sanitized.snapshot.json`
 
 Default behavior:
 

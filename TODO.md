@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Real Runtime TODO (G-Phases)
 
-**Status:** In Progress (`G0` active)  
+**Status:** In Progress (`G2` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -15,25 +15,25 @@
 
 ## G0: Truth Reset + Anti-Synthetic Guard Lock
 
-- [ ] Rewrite docs to mark runtime as synthetic baseline, not gameplay-complete.
-- [ ] Add `specs/wl1-real-runtime-execution-spec.md` as authoritative one-shot plan.
-- [ ] Strengthen runtime guard scripts for synthetic/runtime-window detection by phase.
-- [ ] Gate: `pnpm verify`
-- [ ] Gate: agent-browser confirms explicit prototype baseline banner/state before replacement
-- [ ] Tests green
-- [ ] Phase commit pushed (`g0: truth reset and anti-synthetic guards`)
+- [x] Rewrite docs to mark runtime as synthetic baseline, not gameplay-complete.
+- [x] Add `specs/wl1-real-runtime-execution-spec.md` as authoritative one-shot plan.
+- [x] Strengthen runtime guard scripts for synthetic/runtime-window detection by phase.
+- [x] Gate: `pnpm verify`
+- [x] Gate: agent-browser confirms explicit prototype baseline banner/state before replacement
+- [x] Tests green
+- [x] Phase commit pushed (`g0: truth reset and anti-synthetic guards`)
 
 ## G1: Deterministic WOLFSRC Source + Asset Baseline
 
-- [ ] Pin sanitized WOLFSRC snapshot from `/Users/agrim/Downloads/ai fun projects/wolf3d-master/WOLFSRC` with checksum manifest.
-- [ ] Ensure `scripts/wasm/prepare-wolfsrc.sh` defaults to vendored source with optional source refresh.
-- [ ] Validate WL1 assets under `assets/wl1`.
-- [ ] Gate: `pnpm wasm:verify:compat`
-- [ ] Gate: `pnpm verify:assets`
-- [ ] Gate: `pnpm wasm:build`
-- [ ] Gate: agent-browser verifies menu boots with real assets and no placeholder fallbacks
-- [ ] Tests green
-- [ ] Phase commit pushed (`g1: deterministic wolfsrc source and asset baseline`)
+- [x] Pin sanitized WOLFSRC snapshot from `/Users/agrim/Downloads/ai fun projects/wolf3d-master/WOLFSRC` with checksum manifest.
+- [x] Ensure `scripts/wasm/prepare-wolfsrc.sh` defaults to vendored source with optional source refresh.
+- [x] Validate WL1 assets under `assets/wl1`.
+- [x] Gate: `pnpm wasm:verify:compat`
+- [x] Gate: `pnpm verify:assets`
+- [x] Gate: `pnpm wasm:build`
+- [x] Gate: agent-browser verifies menu boots with real assets and no placeholder fallbacks
+- [x] Tests green
+- [x] Phase commit pushed (`g1: deterministic wolfsrc source and asset baseline`)
 
 ## G2: Real Oracle Runtime Driver (No Probe-Synthetic Runtime Semantics)
 
