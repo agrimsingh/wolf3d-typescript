@@ -96,6 +96,18 @@ Symbols exercised by deterministic runtime trace scenarios.
 | WL_MENU.C | Message | `done` | called via oracle_wl_menu_message_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_TEXT.C | HelpScreens | `done` | called via oracle_wl_text_help_screens_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_TEXT.C | EndText | `done` | called via oracle_wl_text_end_text_hash from runtime menu/text probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_DRAW.C | FixedByFrac | `done` | called via oracle_wl_draw_fixed_by_frac from runtime render-math probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MAIN.C | BuildTables | `done` | called via oracle_wl_main_build_tables_hash from runtime render-math probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_MAIN.C | CalcProjection | `done` | called via oracle_wl_main_calc_projection_hash from runtime render-math probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_DRAW.C | TransformActor | `done` | called via oracle_wl_draw_transform_actor_hash from runtime ray probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_DRAW.C | TransformTile | `done` | called via oracle_wl_draw_transform_tile_hash from runtime ray probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_DRAW.C | CalcHeight | `done` | called via oracle_wl_draw_calc_height from runtime ray probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_DRAW.C | HitVertWall | `done` | called via oracle_wl_draw_hit_vert_wall_hash from runtime ray probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_DRAW.C | HitHorizWall | `done` | called via oracle_wl_draw_hit_horiz_wall_hash from runtime ray probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_SCALE.C | SetupScaling | `done` | called via oracle_wl_scale_setup_scaling_hash from runtime scale probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_SCALE.C | ScaleShape | `done` | called via oracle_wl_scale_scale_shape_hash from runtime scale probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_SCALE.C | SimpleScaleShape | `done` | called via oracle_wl_scale_simple_scale_shape_hash from runtime scale probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_GAME.C | DrawPlayScreen | `done` | called via oracle_wl_game_draw_play_screen_hash from runtime hud probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

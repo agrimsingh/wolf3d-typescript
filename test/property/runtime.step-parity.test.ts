@@ -263,6 +263,18 @@ describe('runtime step parity', () => {
     expect(a.includes(76)).toBe(true); // WL_MENU.Message
     expect(a.includes(77)).toBe(true); // WL_TEXT.HelpScreens
     expect(a.includes(78)).toBe(true); // WL_TEXT.EndText
+    expect(a.includes(79)).toBe(true); // WL_DRAW.FixedByFrac
+    expect(a.includes(80)).toBe(true); // WL_MAIN.BuildTables
+    expect(a.includes(81)).toBe(true); // WL_MAIN.CalcProjection
+    expect(a.includes(82)).toBe(true); // WL_DRAW.TransformActor
+    expect(a.includes(83)).toBe(true); // WL_DRAW.TransformTile
+    expect(a.includes(84)).toBe(true); // WL_DRAW.CalcHeight
+    expect(a.includes(85)).toBe(true); // WL_DRAW.HitVertWall
+    expect(a.includes(86)).toBe(true); // WL_DRAW.HitHorizWall
+    expect(a.includes(87)).toBe(true); // WL_SCALE.SetupScaling
+    expect(a.includes(88)).toBe(true); // WL_SCALE.ScaleShape
+    expect(a.includes(89)).toBe(true); // WL_SCALE.SimpleScaleShape
+    expect(a.includes(90)).toBe(true); // WL_GAME.DrawPlayScreen
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

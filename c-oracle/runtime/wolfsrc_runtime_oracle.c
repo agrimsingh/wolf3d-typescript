@@ -520,6 +520,125 @@ uint32_t oracle_wl_draw_three_d_refresh_hash(
   int32_t fizzlein,
   uint32_t wallrefresh_hash
 );
+int32_t oracle_wl_draw_fixed_by_frac(
+  int32_t a,
+  int32_t b
+);
+uint32_t oracle_wl_main_build_tables_hash(void);
+uint32_t oracle_wl_main_calc_projection_hash(
+  int32_t viewwidth,
+  int32_t focal
+);
+uint32_t oracle_wl_draw_transform_actor_hash(
+  int32_t obx,
+  int32_t oby,
+  int32_t viewx,
+  int32_t viewy,
+  int32_t viewcos,
+  int32_t viewsin,
+  int32_t scale,
+  int32_t centerx,
+  int32_t heightnumerator,
+  int32_t mindist
+);
+uint32_t oracle_wl_draw_transform_tile_hash(
+  int32_t tx,
+  int32_t ty,
+  int32_t viewx,
+  int32_t viewy,
+  int32_t viewcos,
+  int32_t viewsin,
+  int32_t scale,
+  int32_t centerx,
+  int32_t heightnumerator,
+  int32_t mindist
+);
+int32_t oracle_wl_draw_calc_height(
+  int32_t xintercept,
+  int32_t yintercept,
+  int32_t viewx,
+  int32_t viewy,
+  int32_t viewcos,
+  int32_t viewsin,
+  int32_t heightnumerator,
+  int32_t mindist
+);
+uint32_t oracle_wl_draw_hit_vert_wall_hash(
+  int32_t xintercept,
+  int32_t yintercept,
+  int32_t xtilestep,
+  int32_t pixx,
+  int32_t xtile,
+  int32_t ytile,
+  int32_t lastside,
+  int32_t lastintercept,
+  int32_t lasttilehit,
+  int32_t tilehit,
+  int32_t postsource_low,
+  int32_t postwidth,
+  int32_t prevheight,
+  int32_t adjacent_door,
+  int32_t wallpic_normal,
+  int32_t wallpic_door,
+  int32_t viewx,
+  int32_t viewy,
+  int32_t viewcos,
+  int32_t viewsin,
+  int32_t heightnumerator,
+  int32_t mindist
+);
+uint32_t oracle_wl_draw_hit_horiz_wall_hash(
+  int32_t xintercept,
+  int32_t yintercept,
+  int32_t ytilestep,
+  int32_t pixx,
+  int32_t xtile,
+  int32_t ytile,
+  int32_t lastside,
+  int32_t lastintercept,
+  int32_t lasttilehit,
+  int32_t tilehit,
+  int32_t postsource_low,
+  int32_t postwidth,
+  int32_t prevheight,
+  int32_t adjacent_door,
+  int32_t wallpic_normal,
+  int32_t wallpic_door,
+  int32_t viewx,
+  int32_t viewy,
+  int32_t viewcos,
+  int32_t viewsin,
+  int32_t heightnumerator,
+  int32_t mindist
+);
+uint32_t oracle_wl_scale_setup_scaling_hash(
+  int32_t maxscaleheight_in,
+  int32_t viewheight
+);
+uint32_t oracle_wl_scale_scale_shape_hash(
+  int32_t xcenter,
+  int32_t leftpix_in,
+  int32_t rightpix_in,
+  uint32_t height,
+  int32_t maxscale,
+  int32_t viewwidth,
+  int32_t wallheight_seed
+);
+uint32_t oracle_wl_scale_simple_scale_shape_hash(
+  int32_t xcenter,
+  int32_t leftpix_in,
+  int32_t rightpix_in,
+  int32_t height
+);
+uint32_t oracle_wl_game_draw_play_screen_hash(
+  int32_t viewwidth,
+  int32_t viewheight,
+  int32_t bufferofs,
+  int32_t screenloc0,
+  int32_t screenloc1,
+  int32_t screenloc2,
+  int32_t statusbarpic
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -617,6 +736,18 @@ enum runtime_trace_symbol_e {
   TRACE_WL_MENU_MESSAGE = 76,
   TRACE_WL_TEXT_HELP_SCREENS = 77,
   TRACE_WL_TEXT_END_TEXT = 78,
+  TRACE_WL_DRAW_FIXED_BY_FRAC = 79,
+  TRACE_WL_MAIN_BUILD_TABLES = 80,
+  TRACE_WL_MAIN_CALC_PROJECTION = 81,
+  TRACE_WL_DRAW_TRANSFORM_ACTOR = 82,
+  TRACE_WL_DRAW_TRANSFORM_TILE = 83,
+  TRACE_WL_DRAW_CALC_HEIGHT = 84,
+  TRACE_WL_DRAW_HIT_VERT_WALL = 85,
+  TRACE_WL_DRAW_HIT_HORIZ_WALL = 86,
+  TRACE_WL_SCALE_SETUP_SCALING = 87,
+  TRACE_WL_SCALE_SCALE_SHAPE = 88,
+  TRACE_WL_SCALE_SIMPLE_SCALE_SHAPE = 89,
+  TRACE_WL_GAME_DRAW_PLAY_SCREEN = 90,
 };
 
 #define TRACE_SYMBOL_MAX 96
@@ -928,6 +1059,18 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t menu_message_hash;
       uint32_t text_help_hash;
       uint32_t text_end_hash;
+      int32_t fixed_by_frac_value;
+      uint32_t build_tables_hash;
+      uint32_t calc_projection_hash;
+      uint32_t transform_actor_hash;
+      uint32_t transform_tile_hash;
+      int32_t calc_height_value;
+      uint32_t hit_vert_wall_hash;
+      uint32_t hit_horiz_wall_hash;
+      uint32_t setup_scaling_hash;
+      uint32_t scale_shape_hash;
+      uint32_t simple_scale_shape_hash;
+      uint32_t draw_play_screen_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -1037,6 +1180,52 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t help_total_pages = 8;
       int32_t text_scroll_pos = (state->tick * 3) & 0x3ff;
       int32_t text_speed = ((rng >> 6) & 7) + 1;
+      int32_t fixed_a = (int32_t)(state_hash ^ (uint32_t)rng);
+      int32_t fixed_b = (int16_t)(rng & 0xffff);
+      int32_t proj_viewwidth = 320;
+      int32_t proj_focal = 0x5800 + ((state->tick & 31) << 7);
+      int32_t ray_viewx = state->xq8 << 8;
+      int32_t ray_viewy = state->yq8 << 8;
+      int32_t ray_viewcos = 0x10000;
+      int32_t ray_viewsin = 0;
+      int32_t ray_scale = 256 + ((state->tick & 63) << 2);
+      int32_t ray_centerx = 160;
+      int32_t ray_heightnumerator = 0x40000 + ((state->tick & 255) << 8);
+      int32_t ray_mindist = 0x5800;
+      int32_t ray_obx = ray_viewx + ((rng & 0xff) << 8);
+      int32_t ray_oby = ray_viewy - (((rng >> 8) & 0xff) << 8);
+      int32_t ray_tilex = ((state->xq8 >> 8) & 63);
+      int32_t ray_tiley = ((state->yq8 >> 8) & 63);
+      int32_t ray_xintercept = ray_viewx + 0x12345;
+      int32_t ray_yintercept = ray_viewy + 0x23456;
+      int32_t ray_xtilestep = (state->tick & 1) ? 1 : -1;
+      int32_t ray_ytilestep = (state->tick & 2) ? 1 : -1;
+      int32_t ray_pixx = state->tick & 319;
+      int32_t ray_xtile = ray_tilex;
+      int32_t ray_ytile = ray_tiley;
+      int32_t ray_lastside = state->tick & 1;
+      int32_t ray_lastintercept = ray_xtile;
+      int32_t ray_lasttilehit = (rng >> 2) & 255;
+      int32_t ray_tilehit = (rng >> 4) & 255;
+      int32_t ray_postsource_low = (rng >> 6) & 0xfc0;
+      int32_t ray_postwidth = ((rng >> 10) & 7) + 1;
+      int32_t ray_prevheight = 64 + ((rng >> 8) & 255);
+      int32_t ray_adjacent_door = (state->flags >> 5) & 1;
+      int32_t ray_wallpic_normal = 1;
+      int32_t ray_wallpic_door = 2;
+      int32_t scale_maxscaleheight = 200 + (state->tick & 63);
+      int32_t scale_viewheight = 160;
+      int32_t scale_height = 128 + (state->tick & 1023);
+      int32_t scale_maxscale = 255;
+      int32_t scale_viewwidth = 320;
+      int32_t scale_seed = state->tick ^ rng;
+      int32_t play_screen_viewwidth = 320;
+      int32_t play_screen_viewheight = 160;
+      int32_t play_screen_bufferofs = (state->tick & 1) ? 1024 : 0;
+      int32_t play_screen_screenloc0 = 0;
+      int32_t play_screen_screenloc1 = 16640;
+      int32_t play_screen_screenloc2 = 33280;
+      int32_t play_screen_statusbarpic = rng & 255;
       int32_t score0 = (int32_t)(state_hash & 0xffffu);
       int32_t score1 = (int32_t)((state_hash >> 4) & 0xffffu);
       int32_t score2 = (int32_t)((state_hash >> 8) & 0xffffu);
@@ -1342,6 +1531,123 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       text_help_hash = oracle_wl_text_help_screens_hash(help_page, help_total_pages, input_mask, rng);
       trace_hit(TRACE_WL_TEXT_END_TEXT);
       text_end_hash = oracle_wl_text_end_text_hash(message_len, text_scroll_pos, text_speed, input_mask);
+      trace_hit(TRACE_WL_DRAW_FIXED_BY_FRAC);
+      fixed_by_frac_value = oracle_wl_draw_fixed_by_frac(fixed_a, fixed_b);
+      trace_hit(TRACE_WL_MAIN_BUILD_TABLES);
+      build_tables_hash = oracle_wl_main_build_tables_hash();
+      trace_hit(TRACE_WL_MAIN_CALC_PROJECTION);
+      calc_projection_hash = oracle_wl_main_calc_projection_hash(proj_viewwidth, proj_focal);
+      trace_hit(TRACE_WL_DRAW_TRANSFORM_ACTOR);
+      transform_actor_hash = oracle_wl_draw_transform_actor_hash(
+        ray_obx,
+        ray_oby,
+        ray_viewx,
+        ray_viewy,
+        ray_viewcos,
+        ray_viewsin,
+        ray_scale,
+        ray_centerx,
+        ray_heightnumerator,
+        ray_mindist
+      );
+      trace_hit(TRACE_WL_DRAW_TRANSFORM_TILE);
+      transform_tile_hash = oracle_wl_draw_transform_tile_hash(
+        ray_tilex,
+        ray_tiley,
+        ray_viewx,
+        ray_viewy,
+        ray_viewcos,
+        ray_viewsin,
+        ray_scale,
+        ray_centerx,
+        ray_heightnumerator,
+        ray_mindist
+      );
+      trace_hit(TRACE_WL_DRAW_CALC_HEIGHT);
+      calc_height_value = oracle_wl_draw_calc_height(
+        ray_xintercept,
+        ray_yintercept,
+        ray_viewx,
+        ray_viewy,
+        ray_viewcos,
+        ray_viewsin,
+        ray_heightnumerator,
+        ray_mindist
+      );
+      trace_hit(TRACE_WL_DRAW_HIT_VERT_WALL);
+      hit_vert_wall_hash = oracle_wl_draw_hit_vert_wall_hash(
+        ray_xintercept,
+        ray_yintercept,
+        ray_xtilestep,
+        ray_pixx,
+        ray_xtile,
+        ray_ytile,
+        ray_lastside,
+        ray_lastintercept,
+        ray_lasttilehit,
+        ray_tilehit,
+        ray_postsource_low,
+        ray_postwidth,
+        ray_prevheight,
+        ray_adjacent_door,
+        ray_wallpic_normal,
+        ray_wallpic_door,
+        ray_viewx,
+        ray_viewy,
+        ray_viewcos,
+        ray_viewsin,
+        ray_heightnumerator,
+        ray_mindist
+      );
+      trace_hit(TRACE_WL_DRAW_HIT_HORIZ_WALL);
+      hit_horiz_wall_hash = oracle_wl_draw_hit_horiz_wall_hash(
+        ray_xintercept,
+        ray_yintercept,
+        ray_ytilestep,
+        ray_pixx,
+        ray_xtile,
+        ray_ytile,
+        ray_lastside,
+        ray_lastintercept,
+        ray_lasttilehit,
+        ray_tilehit,
+        ray_postsource_low,
+        ray_postwidth,
+        ray_prevheight,
+        ray_adjacent_door,
+        ray_wallpic_normal,
+        ray_wallpic_door,
+        ray_viewx,
+        ray_viewy,
+        ray_viewcos,
+        ray_viewsin,
+        ray_heightnumerator,
+        ray_mindist
+      );
+      trace_hit(TRACE_WL_SCALE_SETUP_SCALING);
+      setup_scaling_hash = oracle_wl_scale_setup_scaling_hash(scale_maxscaleheight, scale_viewheight);
+      trace_hit(TRACE_WL_SCALE_SCALE_SHAPE);
+      scale_shape_hash = oracle_wl_scale_scale_shape_hash(
+        ray_centerx,
+        0,
+        63,
+        (uint32_t)scale_height,
+        scale_maxscale,
+        scale_viewwidth,
+        scale_seed
+      );
+      trace_hit(TRACE_WL_SCALE_SIMPLE_SCALE_SHAPE);
+      simple_scale_shape_hash = oracle_wl_scale_simple_scale_shape_hash(ray_centerx, 0, 63, scale_height);
+      trace_hit(TRACE_WL_GAME_DRAW_PLAY_SCREEN);
+      draw_play_screen_hash = oracle_wl_game_draw_play_screen_hash(
+        play_screen_viewwidth,
+        play_screen_viewheight,
+        play_screen_bufferofs,
+        play_screen_screenloc0,
+        play_screen_screenloc1,
+        play_screen_screenloc2,
+        play_screen_statusbarpic
+      );
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -1371,7 +1677,19 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         menu_control_hash ^
         menu_message_hash ^
         text_help_hash ^
-        text_end_hash;
+        text_end_hash ^
+        ((uint32_t)fixed_by_frac_value) ^
+        build_tables_hash ^
+        calc_projection_hash ^
+        transform_actor_hash ^
+        transform_tile_hash ^
+        ((uint32_t)calc_height_value) ^
+        hit_vert_wall_hash ^
+        hit_horiz_wall_hash ^
+        setup_scaling_hash ^
+        scale_shape_hash ^
+        simple_scale_shape_hash ^
+        draw_play_screen_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

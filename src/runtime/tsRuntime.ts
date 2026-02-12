@@ -51,7 +51,20 @@ import {
   wlAgentThrustHash,
   wlPlayPlayLoopHash,
 } from '../wolf/player/wlPlayer';
-import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
+import {
+  wlDrawCalcHeight,
+  wlDrawHitHorizWallHash,
+  wlDrawHitVertWallHash,
+  wlDrawThreeDRefreshHash,
+  wlDrawTransformActorHash,
+  wlDrawTransformTileHash,
+  wlDrawWallRefreshHash,
+  wlScaleScaleShapeHash,
+  wlScaleSetupScalingHash,
+  wlScaleSimpleScaleShapeHash,
+} from '../wolf/render/wlRaycast';
+import { wlDrawFixedByFrac, wlMainBuildTablesHash, wlMainCalcProjectionHash } from '../wolf/math/wlMath';
+import { wlGameDrawPlayScreenHash } from '../wolf/map/wlMap';
 import {
   idCaCacheAudioChunkHash,
   idCaCalSetupAudioFileHash,
@@ -662,6 +675,52 @@ export class TsRuntimePort implements RuntimePort {
         const helpTotalPages = 8;
         const textScrollPos = (this.state.tick * 3) & 0x3ff;
         const textSpeed = ((rng >> 6) & 7) + 1;
+        const fixedA = (stateHash ^ (rng >>> 0)) | 0;
+        const fixedB = (rng << 16) >> 16;
+        const projViewwidth = 320;
+        const projFocal = 0x5800 + ((this.state.tick & 31) << 7);
+        const rayViewX = (this.state.xQ8 << 8) | 0;
+        const rayViewY = (this.state.yQ8 << 8) | 0;
+        const rayViewCos = 0x10000;
+        const rayViewSin = 0;
+        const rayScale = 256 + ((this.state.tick & 63) << 2);
+        const rayCenterX = 160;
+        const rayHeightNumerator = 0x40000 + ((this.state.tick & 255) << 8);
+        const rayMinDist = 0x5800;
+        const rayObX = (rayViewX + ((rng & 0xff) << 8)) | 0;
+        const rayObY = (rayViewY - (((rng >> 8) & 0xff) << 8)) | 0;
+        const rayTileX = (this.state.xQ8 >> 8) & 63;
+        const rayTileY = (this.state.yQ8 >> 8) & 63;
+        const rayXIntercept = (rayViewX + 0x12345) | 0;
+        const rayYIntercept = (rayViewY + 0x23456) | 0;
+        const rayXTileStep = (this.state.tick & 1) !== 0 ? 1 : -1;
+        const rayYTileStep = (this.state.tick & 2) !== 0 ? 1 : -1;
+        const rayPixX = this.state.tick & 319;
+        const rayXTile = rayTileX;
+        const rayYTile = rayTileY;
+        const rayLastSide = this.state.tick & 1;
+        const rayLastIntercept = rayXTile;
+        const rayLastTileHit = (rng >> 2) & 255;
+        const rayTileHit = (rng >> 4) & 255;
+        const rayPostSourceLow = (rng >> 6) & 0xfc0;
+        const rayPostWidth = ((rng >> 10) & 7) + 1;
+        const rayPrevHeight = 64 + ((rng >> 8) & 255);
+        const rayAdjacentDoor = (this.state.flags >> 5) & 1;
+        const rayWallPicNormal = 1;
+        const rayWallPicDoor = 2;
+        const scaleMaxScaleHeight = 200 + (this.state.tick & 63);
+        const scaleViewHeight = 160;
+        const scaleHeight = 128 + (this.state.tick & 1023);
+        const scaleMaxScale = 255;
+        const scaleViewWidth = 320;
+        const scaleSeed = this.state.tick ^ rng;
+        const playScreenViewWidth = 320;
+        const playScreenViewHeight = 160;
+        const playScreenBufferOfs = (this.state.tick & 1) !== 0 ? 1024 : 0;
+        const playScreenLoc0 = 0;
+        const playScreenLoc1 = 16640;
+        const playScreenLoc2 = 33280;
+        const playScreenStatusBarPic = rng & 255;
         const playLoopHash = wlPlayPlayLoopHash(stateHash, 1, inputMask | 0, rng | 0) >>> 0;
         const gameLoopHash = wlGameGameLoopHash(
           stateHash,
@@ -905,6 +964,103 @@ export class TsRuntimePort implements RuntimePort {
         const menuMessageHash = wlMenuMessageHash(messageLen, waitForAck, inputMask | 0, rng | 0) >>> 0;
         const textHelpHash = wlTextHelpScreensHash(helpPage, helpTotalPages, inputMask | 0, rng | 0) >>> 0;
         const textEndHash = wlTextEndTextHash(messageLen, textScrollPos, textSpeed, inputMask | 0) >>> 0;
+        const fixedByFracValue = wlDrawFixedByFrac(fixedA, fixedB) | 0;
+        const buildTablesHash = wlMainBuildTablesHash() >>> 0;
+        const calcProjectionHash = wlMainCalcProjectionHash(projViewwidth, projFocal) >>> 0;
+        const transformActorHash = wlDrawTransformActorHash(
+          rayObX,
+          rayObY,
+          rayViewX,
+          rayViewY,
+          rayViewCos,
+          rayViewSin,
+          rayScale,
+          rayCenterX,
+          rayHeightNumerator,
+          rayMinDist,
+        ) >>> 0;
+        const transformTileHash = wlDrawTransformTileHash(
+          rayTileX,
+          rayTileY,
+          rayViewX,
+          rayViewY,
+          rayViewCos,
+          rayViewSin,
+          rayScale,
+          rayCenterX,
+          rayHeightNumerator,
+          rayMinDist,
+        ) >>> 0;
+        const calcHeightValue = wlDrawCalcHeight(
+          rayXIntercept,
+          rayYIntercept,
+          rayViewX,
+          rayViewY,
+          rayViewCos,
+          rayViewSin,
+          rayHeightNumerator,
+          rayMinDist,
+        ) | 0;
+        const hitVertWallHash = wlDrawHitVertWallHash(
+          rayXIntercept,
+          rayYIntercept,
+          rayXTileStep,
+          rayPixX,
+          rayXTile,
+          rayYTile,
+          rayLastSide,
+          rayLastIntercept,
+          rayLastTileHit,
+          rayTileHit,
+          rayPostSourceLow,
+          rayPostWidth,
+          rayPrevHeight,
+          rayAdjacentDoor,
+          rayWallPicNormal,
+          rayWallPicDoor,
+          rayViewX,
+          rayViewY,
+          rayViewCos,
+          rayViewSin,
+          rayHeightNumerator,
+          rayMinDist,
+        ) >>> 0;
+        const hitHorizWallHash = wlDrawHitHorizWallHash(
+          rayXIntercept,
+          rayYIntercept,
+          rayYTileStep,
+          rayPixX,
+          rayXTile,
+          rayYTile,
+          rayLastSide,
+          rayLastIntercept,
+          rayLastTileHit,
+          rayTileHit,
+          rayPostSourceLow,
+          rayPostWidth,
+          rayPrevHeight,
+          rayAdjacentDoor,
+          rayWallPicNormal,
+          rayWallPicDoor,
+          rayViewX,
+          rayViewY,
+          rayViewCos,
+          rayViewSin,
+          rayHeightNumerator,
+          rayMinDist,
+        ) >>> 0;
+        const setupScalingHash = wlScaleSetupScalingHash(scaleMaxScaleHeight, scaleViewHeight) >>> 0;
+        const scaleShapeHash = wlScaleScaleShapeHash(rayCenterX, 0, 63, scaleHeight, scaleMaxScale, scaleViewWidth, scaleSeed) >>> 0;
+        const simpleScaleShapeHash = wlScaleSimpleScaleShapeHash(rayCenterX, 0, 63, scaleHeight) >>> 0;
+        const drawPlayScreenHash = wlGameDrawPlayScreenHash(
+          playScreenViewWidth,
+          playScreenViewHeight,
+          playScreenBufferOfs,
+          playScreenLoc0,
+          playScreenLoc1,
+          playScreenLoc2,
+          playScreenStatusBarPic,
+        ) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -934,7 +1090,19 @@ export class TsRuntimePort implements RuntimePort {
             menuControlHash ^
             menuMessageHash ^
             textHelpHash ^
-            textEndHash) >>> 0;
+            textEndHash ^
+            (fixedByFracValue >>> 0) ^
+            buildTablesHash ^
+            calcProjectionHash ^
+            transformActorHash ^
+            transformTileHash ^
+            (calcHeightValue >>> 0) ^
+            hitVertWallHash ^
+            hitHorizWallHash ^
+            setupScalingHash ^
+            scaleShapeHash ^
+            simpleScaleShapeHash ^
+            drawPlayScreenHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

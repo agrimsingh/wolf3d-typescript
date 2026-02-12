@@ -131,7 +131,19 @@
     75,
     76,
     77,
-    78
+    78,
+    79,
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90
   ],
   "requiredRuntimeSymbols": [
     {
@@ -601,6 +613,78 @@
       "file": "WL_TEXT.C",
       "func": "EndText",
       "notes": "called via oracle_wl_text_end_text_hash from runtime menu/text probe"
+    },
+    {
+      "id": 79,
+      "file": "WL_DRAW.C",
+      "func": "FixedByFrac",
+      "notes": "called via oracle_wl_draw_fixed_by_frac from runtime render-math probe"
+    },
+    {
+      "id": 80,
+      "file": "WL_MAIN.C",
+      "func": "BuildTables",
+      "notes": "called via oracle_wl_main_build_tables_hash from runtime render-math probe"
+    },
+    {
+      "id": 81,
+      "file": "WL_MAIN.C",
+      "func": "CalcProjection",
+      "notes": "called via oracle_wl_main_calc_projection_hash from runtime render-math probe"
+    },
+    {
+      "id": 82,
+      "file": "WL_DRAW.C",
+      "func": "TransformActor",
+      "notes": "called via oracle_wl_draw_transform_actor_hash from runtime ray probe"
+    },
+    {
+      "id": 83,
+      "file": "WL_DRAW.C",
+      "func": "TransformTile",
+      "notes": "called via oracle_wl_draw_transform_tile_hash from runtime ray probe"
+    },
+    {
+      "id": 84,
+      "file": "WL_DRAW.C",
+      "func": "CalcHeight",
+      "notes": "called via oracle_wl_draw_calc_height from runtime ray probe"
+    },
+    {
+      "id": 85,
+      "file": "WL_DRAW.C",
+      "func": "HitVertWall",
+      "notes": "called via oracle_wl_draw_hit_vert_wall_hash from runtime ray probe"
+    },
+    {
+      "id": 86,
+      "file": "WL_DRAW.C",
+      "func": "HitHorizWall",
+      "notes": "called via oracle_wl_draw_hit_horiz_wall_hash from runtime ray probe"
+    },
+    {
+      "id": 87,
+      "file": "WL_SCALE.C",
+      "func": "SetupScaling",
+      "notes": "called via oracle_wl_scale_setup_scaling_hash from runtime scale probe"
+    },
+    {
+      "id": 88,
+      "file": "WL_SCALE.C",
+      "func": "ScaleShape",
+      "notes": "called via oracle_wl_scale_scale_shape_hash from runtime scale probe"
+    },
+    {
+      "id": 89,
+      "file": "WL_SCALE.C",
+      "func": "SimpleScaleShape",
+      "notes": "called via oracle_wl_scale_simple_scale_shape_hash from runtime scale probe"
+    },
+    {
+      "id": 90,
+      "file": "WL_GAME.C",
+      "func": "DrawPlayScreen",
+      "notes": "called via oracle_wl_game_draw_play_screen_hash from runtime hud probe"
     }
   ],
   "excludedRuntimeSymbols": []

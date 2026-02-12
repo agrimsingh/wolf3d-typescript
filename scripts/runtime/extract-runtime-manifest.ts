@@ -114,6 +114,18 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 76, file: 'WL_MENU.C', func: 'Message', notes: 'called via oracle_wl_menu_message_hash from runtime menu/text probe' },
   { id: 77, file: 'WL_TEXT.C', func: 'HelpScreens', notes: 'called via oracle_wl_text_help_screens_hash from runtime menu/text probe' },
   { id: 78, file: 'WL_TEXT.C', func: 'EndText', notes: 'called via oracle_wl_text_end_text_hash from runtime menu/text probe' },
+  { id: 79, file: 'WL_DRAW.C', func: 'FixedByFrac', notes: 'called via oracle_wl_draw_fixed_by_frac from runtime render-math probe' },
+  { id: 80, file: 'WL_MAIN.C', func: 'BuildTables', notes: 'called via oracle_wl_main_build_tables_hash from runtime render-math probe' },
+  { id: 81, file: 'WL_MAIN.C', func: 'CalcProjection', notes: 'called via oracle_wl_main_calc_projection_hash from runtime render-math probe' },
+  { id: 82, file: 'WL_DRAW.C', func: 'TransformActor', notes: 'called via oracle_wl_draw_transform_actor_hash from runtime ray probe' },
+  { id: 83, file: 'WL_DRAW.C', func: 'TransformTile', notes: 'called via oracle_wl_draw_transform_tile_hash from runtime ray probe' },
+  { id: 84, file: 'WL_DRAW.C', func: 'CalcHeight', notes: 'called via oracle_wl_draw_calc_height from runtime ray probe' },
+  { id: 85, file: 'WL_DRAW.C', func: 'HitVertWall', notes: 'called via oracle_wl_draw_hit_vert_wall_hash from runtime ray probe' },
+  { id: 86, file: 'WL_DRAW.C', func: 'HitHorizWall', notes: 'called via oracle_wl_draw_hit_horiz_wall_hash from runtime ray probe' },
+  { id: 87, file: 'WL_SCALE.C', func: 'SetupScaling', notes: 'called via oracle_wl_scale_setup_scaling_hash from runtime scale probe' },
+  { id: 88, file: 'WL_SCALE.C', func: 'ScaleShape', notes: 'called via oracle_wl_scale_scale_shape_hash from runtime scale probe' },
+  { id: 89, file: 'WL_SCALE.C', func: 'SimpleScaleShape', notes: 'called via oracle_wl_scale_simple_scale_shape_hash from runtime scale probe' },
+  { id: 90, file: 'WL_GAME.C', func: 'DrawPlayScreen', notes: 'called via oracle_wl_game_draw_play_screen_hash from runtime hud probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -197,6 +209,18 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [76, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [77, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [78, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [79, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [80, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [81, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [82, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [83, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [84, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [85, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [86, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [87, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [88, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [89, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [90, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {
