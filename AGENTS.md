@@ -46,7 +46,8 @@ Rules:
 ### Development
 
 - Install dependencies: `pnpm install`
-- Prepare sanitized real WOLFSRC sources: `pnpm wasm:prepare:wolfsrc`
+- Prepare sanitized real WOLFSRC sources (vendored by default): `pnpm wasm:prepare:wolfsrc`
+- Refresh sanitized sources from local upstream checkout: `pnpm wasm:prepare:wolfsrc -- --refresh`
 - Probe real-source compile compatibility: `pnpm wasm:probe:wolfsrc`
 - Verify real-source compatibility gate (expects zero probe failures): `pnpm wasm:verify:compat`
 - Build C/WASM oracle: `pnpm wasm:build`
@@ -86,7 +87,7 @@ Rules:
 
 | Variable | Purpose | Required |
 | :--- | :--- | :--- |
-| `WOLF3D_SRC_DIR` | Absolute path to original C source root (`.../wolf3d-master/WOLFSRC`) | Yes |
+| `WOLF3D_SRC_DIR` | Absolute path to original C source root (`.../wolf3d-master/WOLFSRC`) used for explicit `--refresh` workflows | No |
 | `WOLF3D_DATA_DIR` | Path to canonical WL1 shareware game data used for test fixtures | Yes |
 | `EMSDK` | Emscripten SDK root when `emcc` is not globally available | Yes |
 | `ORACLE_WASM_PATH` | Optional override for compiled oracle artifact path | No |

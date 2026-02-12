@@ -9,6 +9,14 @@ Create a deterministic pathway from upstream DOS-era `WOLFSRC` sources to a comp
 - Command: `pnpm wasm:prepare:wolfsrc`
 - Script: `scripts/wasm/prepare-wolfsrc.sh`
 - Output: `c-oracle/wolfsrc-sanitized/`
+- Vendored snapshot source: `c-oracle/vendor/wolfsrc-sanitized/`
+- Vendored checksum manifest: `c-oracle/vendor/wolfsrc-sanitized.sha256`
+
+Default behavior:
+
+1. Verify vendored snapshot checksums.
+2. Copy vendored snapshot to `c-oracle/wolfsrc-sanitized/`.
+3. Use source refresh mode only when explicitly requested (`--refresh` + `WOLF3D_SRC_DIR`).
 
 Preparation rules currently applied:
 
@@ -29,6 +37,13 @@ Preparation rules currently applied:
 6. Normalize legacy function-pointer and asm-macro constructs for Clang:
  - menu callback `routine` typedef/prototype relaxed to old-style function pointer
  - `VGAMAPMASK` / `VGAREADMAP` / `VGAWRITEMODE` / `COLORBORDER` asm macros rewritten as no-op macros in sanitized sources.
+
+Source refresh options:
+
+- `pnpm wasm:prepare:wolfsrc -- --refresh`:
+  rebuilds sanitized output from `WOLF3D_SRC_DIR`.
+- `WOLF3D_UPDATE_VENDOR=1 pnpm wasm:prepare:wolfsrc -- --refresh`:
+  rebuilds from source and updates vendored snapshot + checksum manifest.
 
 ## Compatibility Headers
 
