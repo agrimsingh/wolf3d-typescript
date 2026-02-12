@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R0 in progress (truthful runtime reset)
+**Status:** Phase R2 in progress (runtime-path symbol discovery + freeze)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -17,20 +17,21 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 
 ## Phase R0: Recovery Reset to Runtime Truth
 
-- [ ] Add `specs/runtime-gap-assessment.md` with objective gaps from current prototype to runtime-complete state.
-- [ ] Add `specs/runtime-symbol-manifest.md` as authoritative runtime-path symbol tracker.
-- [ ] Update specs/workflows/TODO to R-phase model and runtime acceptance gates.
-- [ ] Mark old completion claims as superseded in docs.
-- [ ] Gate: docs reflect runtime reality and new phase model.
-- [ ] Commit: `phase-r0: reset baseline for full wl1 gameplay parity`
+- [x] Add `specs/runtime-gap-assessment.md` with objective gaps from current prototype to runtime-complete state.
+- [x] Add `specs/runtime-symbol-manifest.md` as authoritative runtime-path symbol tracker.
+- [x] Update specs/workflows/TODO to R-phase model and runtime acceptance gates.
+- [x] Mark old completion claims as superseded in docs.
+- [x] Gate: docs reflect runtime reality and new phase model.
+- [x] Commit: `phase-r0: reset baseline for full wl1 gameplay parity`
 
 ## Phase R1: Real WOLFSRC Oracle Bring-Up + Portability Layer
 
-- [ ] Add compatibility layer for DOS/BIOS/asm-era includes and calling conventions.
-- [ ] Add runtime oracle entrypoints (`init/reset/step/snapshot/render/serialize`).
-- [ ] Build real WOLFSRC runtime path to WASM (not synthetic hash wrappers).
-- [ ] Add deterministic reset and state serialization API.
-- [ ] Gate: oracle boots, steps deterministically, can snapshot state.
+- [x] Add compatibility layer for DOS/BIOS/asm-era includes and calling conventions.
+- [x] Add runtime oracle entrypoints (`init/reset/step/snapshot/render/serialize`).
+- [x] Build real WOLFSRC runtime path to WASM (not synthetic hash wrappers).
+: Completed baseline: compatibility pipeline now compiles all runtime-target files in probe (`18/18` pass via `pnpm wasm:verify:compat`), oracle links real `WL_STATE.C` + `WL_AGENT.C`, exports real wrappers `oracle_real_wl_state_check_line`, `oracle_real_wl_state_check_sight`, `oracle_real_wl_state_move_obj_hash`, `oracle_real_wl_state_select_chase_dir_hash`, `oracle_real_wl_agent_try_move`, `oracle_real_wl_agent_clip_move_hash`, and runtime step movement routes through real `WL_AGENT.ClipMove` (q8<->q16 bridge) with property gates green at `1k/10k`.
+- [x] Add deterministic reset and state serialization API.
+- [x] Gate: oracle boots, steps deterministically, can snapshot state.
 - [ ] Commit: `phase-r1: real wolfsrc oracle runtime + portability layer`
 
 ## Phase R2: Runtime-Path Symbol Discovery and Freeze

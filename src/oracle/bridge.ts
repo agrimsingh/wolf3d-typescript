@@ -156,6 +156,40 @@ type OracleFns = {
   wlStateMoveObjHash: (...args: number[]) => number;
   wlStateDamageActorHash: (...args: number[]) => number;
   wlStateCheckLine: (ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number) => number;
+  wlStateRealCheckLine: (obx: number, oby: number, px: number, py: number, doorMask: number, doorPosQ8: number) => number;
+  wlStateRealCheckSight: (
+    obx: number,
+    oby: number,
+    px: number,
+    py: number,
+    dir: number,
+    areaConnected: number,
+    doorMask: number,
+    doorPosQ8: number,
+  ) => number;
+  wlAgentRealTryMove: (x: number, y: number, mapLo: number, mapHi: number) => number;
+  wlAgentRealClipMoveHash: (x: number, y: number, xmove: number, ymove: number, mapLo: number, mapHi: number, noclip: number) => number;
+  wlStateRealMoveObjHash: (
+    obx: number,
+    oby: number,
+    dir: number,
+    playerx: number,
+    playery: number,
+    areaConnected: number,
+    distance: number,
+    move: number,
+    obclass: number,
+    tics: number,
+  ) => number;
+  wlStateRealSelectChaseDirHash: (
+    obTileX: number,
+    obTileY: number,
+    dir: number,
+    obclass: number,
+    flags: number,
+    playerTileX: number,
+    playerTileY: number,
+  ) => number;
   wlStateCheckSight: (ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number) => number;
   wlStateFirstSightingHash: (...args: number[]) => number;
   wlStateSightPlayerHash: (...args: number[]) => number;
@@ -448,6 +482,48 @@ export class OracleBridge implements OracleBridgeContract {
         'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
       ]),
       wlStateCheckLine: cwrap('oracle_wl_state_check_line', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlStateRealCheckLine: cwrap('oracle_real_wl_state_check_line', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
+      wlStateRealCheckSight: cwrap('oracle_real_wl_state_check_sight', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlAgentRealTryMove: cwrap('oracle_real_wl_agent_try_move', 'number', ['number', 'number', 'number', 'number']),
+      wlAgentRealClipMoveHash: cwrap('oracle_real_wl_agent_clip_move_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlStateRealMoveObjHash: cwrap('oracle_real_wl_state_move_obj_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
+      wlStateRealSelectChaseDirHash: cwrap('oracle_real_wl_state_select_chase_dir_hash', 'number', [
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+        'number',
+      ]),
       wlStateCheckSight: cwrap('oracle_wl_state_check_sight', 'number', ['number', 'number', 'number', 'number', 'number', 'number']),
       wlStateFirstSightingHash: cwrap('oracle_wl_state_first_sighting_hash', 'number', [
         'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number', 'number',
@@ -911,6 +987,94 @@ export class OracleBridge implements OracleBridgeContract {
 
   wlStateCheckLine(ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number): number {
     return this.assertReady().wlStateCheckLine(ax | 0, ay | 0, px | 0, py | 0, mapLo >>> 0, mapHi >>> 0) | 0;
+  }
+
+  wlStateRealCheckLine(obx: number, oby: number, px: number, py: number, doorMask: number, doorPosQ8: number): number {
+    return this.assertReady().wlStateRealCheckLine(obx | 0, oby | 0, px | 0, py | 0, doorMask >>> 0, doorPosQ8 >>> 0) | 0;
+  }
+
+  wlStateRealCheckSight(
+    obx: number,
+    oby: number,
+    px: number,
+    py: number,
+    dir: number,
+    areaConnected: number,
+    doorMask: number,
+    doorPosQ8: number,
+  ): number {
+    return this.assertReady().wlStateRealCheckSight(
+      obx | 0,
+      oby | 0,
+      px | 0,
+      py | 0,
+      dir | 0,
+      areaConnected | 0,
+      doorMask >>> 0,
+      doorPosQ8 >>> 0,
+    ) | 0;
+  }
+
+  wlAgentRealTryMove(x: number, y: number, mapLo: number, mapHi: number): number {
+    return this.assertReady().wlAgentRealTryMove(x | 0, y | 0, mapLo >>> 0, mapHi >>> 0) | 0;
+  }
+
+  wlAgentRealClipMoveHash(x: number, y: number, xmove: number, ymove: number, mapLo: number, mapHi: number, noclip: number): number {
+    return this.assertReady().wlAgentRealClipMoveHash(
+      x | 0,
+      y | 0,
+      xmove | 0,
+      ymove | 0,
+      mapLo >>> 0,
+      mapHi >>> 0,
+      noclip | 0,
+    ) >>> 0;
+  }
+
+  wlStateRealMoveObjHash(
+    obx: number,
+    oby: number,
+    dir: number,
+    playerx: number,
+    playery: number,
+    areaConnected: number,
+    distance: number,
+    move: number,
+    obclass: number,
+    tics: number,
+  ): number {
+    return this.assertReady().wlStateRealMoveObjHash(
+      obx | 0,
+      oby | 0,
+      dir | 0,
+      playerx | 0,
+      playery | 0,
+      areaConnected | 0,
+      distance | 0,
+      move | 0,
+      obclass | 0,
+      tics | 0,
+    ) >>> 0;
+  }
+
+  wlStateRealSelectChaseDirHash(
+    obTileX: number,
+    obTileY: number,
+    dir: number,
+    obclass: number,
+    flags: number,
+    playerTileX: number,
+    playerTileY: number,
+  ): number {
+    return this.assertReady().wlStateRealSelectChaseDirHash(
+      obTileX | 0,
+      obTileY | 0,
+      dir | 0,
+      obclass | 0,
+      flags | 0,
+      playerTileX | 0,
+      playerTileY | 0,
+    ) >>> 0;
   }
 
   wlStateCheckSight(ax: number, ay: number, px: number, py: number, mapLo: number, mapHi: number): number {

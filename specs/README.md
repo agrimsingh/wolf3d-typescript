@@ -6,6 +6,7 @@ Design documentation for the browser-based TypeScript port of Wolfenstein 3D, va
 
 - [runtime-gap-assessment.md](./runtime-gap-assessment.md): objective gap from current prototype parity to full WL1 runtime-complete parity.
 - [runtime-symbol-manifest.md](./runtime-symbol-manifest.md): authoritative runtime-path symbol checklist used for R-phase execution.
+- [wolfsrc-compatibility.md](./wolfsrc-compatibility.md): R1 portability layer, sanitized source pipeline, and compile-blocker burn-down status.
 
 ## Core Systems
 
@@ -47,3 +48,4 @@ Design documentation for the browser-based TypeScript port of Wolfenstein 3D, va
 | audio.md | Draft | Phase 8 optional target. |
 | runtime-gap-assessment.md | Active | Baseline truth document for runtime-complete work. |
 | runtime-symbol-manifest.md | Active | Runtime-path symbol tracker for full completion. |
+| wolfsrc-compatibility.md | Active | Compatibility bring-up and probe status for real-source compilation. |

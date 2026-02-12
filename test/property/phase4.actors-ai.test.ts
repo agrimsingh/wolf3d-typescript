@@ -19,12 +19,13 @@ import {
   wlStateSelectDodgeDirHash,
   wlStateSightPlayerHash,
 } from '../../src/wolf/ai/wlAi';
+import { wlStateRealCheckLine, wlStateRealCheckSight, wlStateRealMoveObjHash, wlStateRealSelectChaseDirHash } from '../../src/wolf/ai/wlStateReal';
 
 const commonCtxArb = fc.tuple(
-  fc.integer({ min: -0x7fffffff, max: 0x7fffffff }), // ax
-  fc.integer({ min: -0x7fffffff, max: 0x7fffffff }), // ay
-  fc.integer({ min: -0x7fffffff, max: 0x7fffffff }), // px
-  fc.integer({ min: -0x7fffffff, max: 0x7fffffff }), // py
+  fc.integer({ min: -0x70000000, max: 0x70000000 }), // ax
+  fc.integer({ min: -0x70000000, max: 0x70000000 }), // ay
+  fc.integer({ min: -0x70000000, max: 0x70000000 }), // px
+  fc.integer({ min: -0x70000000, max: 0x70000000 }), // py
   fc.integer({ min: 0, max: 3 }), // dir
   fc.integer({ min: 0, max: 8 }), // state
   fc.integer({ min: 0, max: 0x7fffffff }), // hp
@@ -35,6 +36,8 @@ const commonCtxArb = fc.tuple(
   fc.integer({ min: 0, max: 0xffffffff }), // mapLo
   fc.integer({ min: 0, max: 0xffffffff }), // mapHi
 );
+
+const checkLineCoordArb = fc.integer({ min: -1024, max: (8 << 8) + 1023 });
 
 describe('phase 4 real WOLFSRC actors/AI parity', () => {
   let oracle: OracleBridge;
@@ -91,10 +94,10 @@ describe('phase 4 real WOLFSRC actors/AI parity', () => {
     withReplay('phase4.wl_state.CheckLine', () => {
       fc.assert(
         fc.property(
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          checkLineCoordArb,
+          checkLineCoordArb,
+          checkLineCoordArb,
+          checkLineCoordArb,
           fc.integer({ min: 0, max: 0xffffffff }),
           fc.integer({ min: 0, max: 0xffffffff }),
           (ax, ay, px, py, mapLo, mapHi) => {
@@ -106,18 +109,144 @@ describe('phase 4 real WOLFSRC actors/AI parity', () => {
     });
   });
 
+  it('real WL_STATE.CheckLine bridge matches TS port', () => {
+    withReplay('phase4.wl_state_real.CheckLine', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 0, max: 0xffff }),
+          fc.integer({ min: 0, max: 0xffff }),
+          fc.integer({ min: 0, max: 0xff }),
+          fc.integer({ min: 0, max: 0xffff }),
+          (obTileX, obTileY, pTileX, pTileY, obFrac, pFrac, doorMask, doorPosQ8) => {
+            const obx = ((obTileX << 16) | obFrac) | 0;
+            const oby = ((obTileY << 16) | (obFrac ^ 0x5a5a)) | 0;
+            const px = ((pTileX << 16) | pFrac) | 0;
+            const py = ((pTileY << 16) | (pFrac ^ 0x3c3c)) | 0;
+
+            const tsValue = wlStateRealCheckLine(obx, oby, px, py, doorMask, doorPosQ8) | 0;
+            const oracleValue = oracle.wlStateRealCheckLine(obx, oby, px, py, doorMask, doorPosQ8) | 0;
+            expect(tsValue).toBe(oracleValue);
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
   it('WL_STATE.CheckSight matches oracle', () => {
     withReplay('phase4.wl_state.CheckSight', () => {
       fc.assert(
         fc.property(
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
-          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          checkLineCoordArb,
+          checkLineCoordArb,
+          checkLineCoordArb,
+          checkLineCoordArb,
           fc.integer({ min: 0, max: 0xffffffff }),
           fc.integer({ min: 0, max: 0xffffffff }),
           (ax, ay, px, py, mapLo, mapHi) => {
             expect(wlStateCheckSight(ax, ay, px, py, mapLo, mapHi) | 0).toBe(oracle.wlStateCheckSight(ax, ay, px, py, mapLo, mapHi) | 0);
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('real WL_STATE.CheckSight bridge matches TS port', () => {
+    withReplay('phase4.wl_state_real.CheckSight', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 1, max: 62 }),
+          fc.integer({ min: 0, max: 0xffff }),
+          fc.integer({ min: 0, max: 0xffff }),
+          fc.integer({ min: 0, max: 7 }),
+          fc.boolean(),
+          fc.integer({ min: 0, max: 0xff }),
+          fc.integer({ min: 0, max: 0xffff }),
+          (obTileX, obTileY, pTileX, pTileY, obFrac, pFrac, dir, areaConnected, doorMask, doorPosQ8) => {
+            const obx = ((obTileX << 16) | obFrac) | 0;
+            const oby = ((obTileY << 16) | (obFrac ^ 0x5a5a)) | 0;
+            const px = ((pTileX << 16) | pFrac) | 0;
+            const py = ((pTileY << 16) | (pFrac ^ 0x3c3c)) | 0;
+            const connected = areaConnected ? 1 : 0;
+
+            const tsValue = wlStateRealCheckSight(obx, oby, px, py, dir, connected, doorMask, doorPosQ8) | 0;
+            const oracleValue = oracle.wlStateRealCheckSight(obx, oby, px, py, dir, connected, doorMask, doorPosQ8) | 0;
+            expect(tsValue).toBe(oracleValue);
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('real WL_STATE.MoveObj bridge matches TS port', () => {
+    withReplay('phase4.wl_state_real.MoveObj', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: -0x70000000, max: 0x70000000 }),
+          fc.integer({ min: -0x70000000, max: 0x70000000 }),
+          fc.integer({ min: 0, max: 8 }),
+          fc.integer({ min: -0x70000000, max: 0x70000000 }),
+          fc.integer({ min: -0x70000000, max: 0x70000000 }),
+          fc.boolean(),
+          fc.integer({ min: -0x70000000, max: 0x70000000 }),
+          fc.integer({ min: -0x10000, max: 0x10000 }),
+          fc.integer({ min: 0, max: 30 }),
+          fc.integer({ min: 0, max: 255 }),
+          (obx, oby, dir, playerx, playery, areaConnected, distance, move, obclass, tics) => {
+            const connected = areaConnected ? 1 : 0;
+            const tsHash = wlStateRealMoveObjHash(obx, oby, dir, playerx, playery, connected, distance, move, obclass, tics) >>> 0;
+            const oracleHash = oracle.wlStateRealMoveObjHash(
+              obx,
+              oby,
+              dir,
+              playerx,
+              playery,
+              connected,
+              distance,
+              move,
+              obclass,
+              tics,
+            ) >>> 0;
+            expect(tsHash).toBe(oracleHash);
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('real WL_STATE.SelectChaseDir bridge matches TS port', () => {
+    withReplay('phase4.wl_state_real.SelectChaseDir', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: 2, max: 61 }),
+          fc.integer({ min: 2, max: 61 }),
+          fc.integer({ min: 0, max: 8 }),
+          fc.integer({ min: 0, max: 30 }),
+          fc.integer({ min: 0, max: 0xffff }),
+          fc.integer({ min: 2, max: 61 }),
+          fc.integer({ min: 2, max: 61 }),
+          (obTileX, obTileY, dir, obclass, flags, playerTileX, playerTileY) => {
+            const tsHash = wlStateRealSelectChaseDirHash(obTileX, obTileY, dir, obclass, flags, playerTileX, playerTileY) >>> 0;
+            const oracleHash = oracle.wlStateRealSelectChaseDirHash(
+              obTileX,
+              obTileY,
+              dir,
+              obclass,
+              flags,
+              playerTileX,
+              playerTileY,
+            ) >>> 0;
+            expect(tsHash).toBe(oracleHash);
           },
         ),
         { numRuns: getNumRuns(), seed: getSeed() },

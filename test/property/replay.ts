@@ -40,17 +40,28 @@ function toFailureRecord(suite: string, error: unknown): ParityFailureRecord<str
   };
 }
 
-export function withReplay(suite: string, run: () => void): void {
-  try {
-    run();
-  } catch (error) {
-    const record = toFailureRecord(suite, error);
-    const dir = join(process.cwd(), 'test', 'repro');
-    mkdirSync(dir, { recursive: true });
+function persistFailure(suite: string, error: unknown): void {
+  const record = toFailureRecord(suite, error);
+  const dir = join(process.cwd(), 'test', 'repro');
+  mkdirSync(dir, { recursive: true });
 
-    const stamp = record.timestamp.replace(/[:.]/g, '-');
-    const file = join(dir, `${sanitizeName(suite)}.${stamp}.json`);
-    writeFileSync(file, `${JSON.stringify(record, null, 2)}\n`, 'utf8');
+  const stamp = record.timestamp.replace(/[:.]/g, '-');
+  const file = join(dir, `${sanitizeName(suite)}.${stamp}.json`);
+  writeFileSync(file, `${JSON.stringify(record, null, 2)}\n`, 'utf8');
+}
+
+export function withReplay(suite: string, run: () => void | Promise<void>): void | Promise<void> {
+  try {
+    const result = run();
+    if (result && typeof (result as Promise<void>).then === 'function') {
+      return (result as Promise<void>).catch((error) => {
+        persistFailure(suite, error);
+        throw error;
+      });
+    }
+    return;
+  } catch (error) {
+    persistFailure(suite, error);
     throw error;
   }
 }

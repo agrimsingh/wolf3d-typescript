@@ -1,0 +1,3 @@
+#ifndef WOLF_COMPAT_GRAPH_H
+#define WOLF_COMPAT_GRAPH_H
+#endif

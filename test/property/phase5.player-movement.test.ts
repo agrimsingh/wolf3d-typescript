@@ -15,6 +15,7 @@ import {
   wlAgentTryMoveHash,
   wlPlayPlayLoopHash,
 } from '../../src/wolf/player/wlPlayer';
+import { wlAgentRealClipMoveHash, wlAgentRealTryMove } from '../../src/wolf/player/wlAgentReal';
 
 const mapArb = fc.tuple(
   fc.integer({ min: 0, max: 0xffffffff }),
@@ -29,6 +30,13 @@ const posArb = fc.tuple(
 const deltaArb = fc.tuple(
   fc.integer({ min: -0x7fff, max: 0x7fff }),
   fc.integer({ min: -0x7fff, max: 0x7fff }),
+);
+
+const realPosArb = fc.tuple(
+  fc.integer({ min: 1, max: 6 }),
+  fc.integer({ min: 1, max: 6 }),
+  fc.integer({ min: 0, max: 0xffff }),
+  fc.integer({ min: 0, max: 0xffff }),
 );
 
 describe('phase 5 real WOLFSRC player/input parity', () => {
@@ -94,6 +102,46 @@ describe('phase 5 real WOLFSRC player/input parity', () => {
             oracle.wlAgentClipMoveHash(mapLo, mapHi, xq8, yq8, dxq8, dyq8) >>> 0,
           );
         }),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('real WL_AGENT.TryMove bridge matches TS port', () => {
+    withReplay('phase5.wl_agent_real.TryMove', () => {
+      fc.assert(
+        fc.property(
+          mapArb,
+          realPosArb,
+          ([mapLo, mapHi], [tileX, tileY, fracX, fracY]) => {
+            const x = ((tileX << 16) | fracX) | 0;
+            const y = ((tileY << 16) | fracY) | 0;
+            expect(wlAgentRealTryMove(x, y, mapLo, mapHi) | 0).toBe(oracle.wlAgentRealTryMove(x, y, mapLo, mapHi) | 0);
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('real WL_AGENT.ClipMove bridge matches TS port', () => {
+    withReplay('phase5.wl_agent_real.ClipMove', () => {
+      fc.assert(
+        fc.property(
+          mapArb,
+          realPosArb,
+          fc.integer({ min: -0x8000, max: 0x8000 }),
+          fc.integer({ min: -0x8000, max: 0x8000 }),
+          fc.boolean(),
+          ([mapLo, mapHi], [tileX, tileY, fracX, fracY], xmove, ymove, noclip) => {
+            const x = ((tileX << 16) | fracX) | 0;
+            const y = ((tileY << 16) | fracY) | 0;
+            const noclipValue = noclip ? 1 : 0;
+            expect(wlAgentRealClipMoveHash(x, y, xmove, ymove, mapLo, mapHi, noclipValue) >>> 0).toBe(
+              oracle.wlAgentRealClipMoveHash(x, y, xmove, ymove, mapLo, mapHi, noclipValue) >>> 0,
+            );
+          },
+        ),
         { numRuns: getNumRuns(), seed: getSeed() },
       );
     });

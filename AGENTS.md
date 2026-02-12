@@ -46,6 +46,9 @@ Rules:
 ### Development
 
 - Install dependencies: `pnpm install`
+- Prepare sanitized real WOLFSRC sources: `pnpm wasm:prepare:wolfsrc`
+- Probe real-source compile compatibility: `pnpm wasm:probe:wolfsrc`
+- Verify real-source compatibility gate (expects zero probe failures): `pnpm wasm:verify:compat`
 - Build C/WASM oracle: `pnpm wasm:build`
 - Run local property tests (1k): `pnpm test:property:local`
 - Run CI property tests (10k): `pnpm test:property:ci`

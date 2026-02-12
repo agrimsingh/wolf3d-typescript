@@ -2,6 +2,8 @@ function fnv1a(hash: number, value: number): number {
   return Math.imul((hash ^ (value >>> 0)) >>> 0, 16777619) >>> 0;
 }
 
+const DEG_TO_RAD = 3.14159265358979323846 / 180.0;
+
 function clampI32(v: number, minv: number, maxv: number): number {
   return Math.max(minv, Math.min(maxv, v | 0)) | 0;
 }
@@ -92,7 +94,7 @@ export function wlAgentClipMoveHash(mapLo: number, mapHi: number, xq8: number, y
 }
 
 export function wlAgentThrustHash(mapLo: number, mapHi: number, xq8: number, yq8: number, angleDeg: number, speedQ8: number): number {
-  const rad = ((angleDeg % 360) * Math.PI) / 180;
+  const rad = (angleDeg % 360) * DEG_TO_RAD;
   const dx = (Math.cos(rad) * speedQ8) | 0;
   const dy = (Math.sin(rad) * speedQ8) | 0;
   const out = clipMove(mapLo, mapHi, xq8, yq8, dx, dy);
@@ -114,8 +116,8 @@ export function wlAgentControlMovementHash(
 ): number {
   let angle = (angleDeg + turnDeg) % 360;
   if (angle < 0) angle += 360;
-  const rad = (angle * Math.PI) / 180;
-  const sr = ((angle + 90) * Math.PI) / 180;
+  const rad = angle * DEG_TO_RAD;
+  const sr = (angle + 90) * DEG_TO_RAD;
   const dx = (Math.cos(rad) * forwardQ8 + Math.cos(sr) * strafeQ8) | 0;
   const dy = (Math.sin(rad) * forwardQ8 + Math.sin(sr) * strafeQ8) | 0;
   const out = clipMove(mapLo, mapHi, xq8, yq8, dx, dy);
@@ -188,8 +190,8 @@ export function wlAgentTPlayerHash(
 
   let angle = (angleDeg + turn) % 360;
   if (angle < 0) angle += 360;
-  const rad = (angle * Math.PI) / 180;
-  const sr = ((angle + 90) * Math.PI) / 180;
+  const rad = angle * DEG_TO_RAD;
+  const sr = (angle + 90) * DEG_TO_RAD;
   const dx = (Math.cos(rad) * forward + Math.cos(sr) * strafe) | 0;
   const dy = (Math.sin(rad) * forward + Math.sin(sr) * strafe) | 0;
   const moved = clipMove(mapLo, mapHi, xq8, yq8, dx, dy);
