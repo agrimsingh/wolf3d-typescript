@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime Parity TODO (R-Phases)
 
-**Status:** In Progress (`R8` active)  
+**Status:** In Progress (`R9` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -93,12 +93,12 @@
 
 ## R8: TS Port Wave E (Menu/Text/Input/Audio State)
 
-- [ ] Port runtime-required behavior from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`, `ID_IN.C`, `ID_SD.C`.
-- [ ] Keep audio parity at behavior/state level.
-- [ ] Gate: deterministic menu/input trace parity
-- [ ] Gate: deterministic audio state transition parity
-- [ ] Tests green
-- [ ] Phase commit pushed (`r8: menu-input-audio parity`)
+- [x] Port runtime-required behavior from `WL_MENU.C`, `WL_TEXT.C`, `ID_US_1.C`, `ID_IN.C`, `ID_SD.C`.
+- [x] Keep audio parity at behavior/state level.
+- [x] Gate: deterministic menu/input trace parity
+- [x] Gate: deterministic audio state transition parity
+- [x] Tests green
+- [x] Phase commit pushed (`r8: menu-input-audio parity`)
 
 ## R9: Browser Runtime Swap to Pure TS Core
 

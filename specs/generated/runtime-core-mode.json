@@ -1,5 +1,5 @@
 {
-  "phase": "R7",
+  "phase": "R8",
   "mode": "real",
-  "notes": "R7 actors/AI/combat parity gate is green with deterministic episode trace verification."
+  "notes": "R8 menu/input/audio parity gate is green with required-symbol parity verification."
 }
