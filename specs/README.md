@@ -12,6 +12,7 @@ Design documentation for the browser-based TypeScript port of Wolfenstein 3D, va
 - `generated/runtime-checkpoints-lock.json`: frozen R5 lock consumed by `pnpm runtime:checkpoints:verify`.
 - Runtime parity harness implementation: `src/runtime/parityHarness.ts` and runtime repro tooling in `scripts/runtime/`.
 - Required-runtime symbol parity assertions: `test/property/runtime.required-symbols.test.ts`.
+- Browser runtime smoke coverage: `test/smoke/runtime-browser.test.ts` (`boot -> menu -> new game -> level transition`).
 - [wolfsrc-compatibility.md](./wolfsrc-compatibility.md): R1 portability layer, sanitized source pipeline, and compile-blocker burn-down status.
 
 ## Core Systems

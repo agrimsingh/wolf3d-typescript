@@ -6,11 +6,11 @@ Document the exact gap between the current repository state and a true gameplay-
 
 ## Current Reality
 
-1. Browser runtime remains prototype-level (`src/app/gameApp.ts`) and is not WOLFSRC-runtime-driven.
-2. Oracle wrappers in `c-oracle/` are reduced synthetic models, not full stateful WOLFSRC runtime execution.
-3. Phase `0..8` parity currently validates selected wrapper behavior, not all runtime-path behavior.
-4. `specs/port-manifest.md` still has 488 unchecked `shared` symbols.
-5. DOS/BIOS/asm-era compile blockers exist in upstream WOLFSRC for direct WASM compilation.
+1. Browser runtime path is now runtime-driven (`src/app/runtimeController.ts` + `src/app/gameApp.ts`) with WL1 map selection/start flow and smoke coverage.
+2. Runtime-path oracle wrappers and parity harness are active for required symbols, with deterministic tick/frame checkpoint lock in place.
+3. Full end-to-end episode acceptance traces (all-map progression checkpoints) are not yet implemented.
+4. `specs/port-manifest.md` still has many unchecked `shared` symbols outside the runtime-path-required set.
+5. DOS/BIOS/asm-era compile blockers still exist upstream for full unmodified WOLFSRC direct WASM compilation.
 
 ## Required End-State
 

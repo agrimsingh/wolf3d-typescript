@@ -55,8 +55,10 @@ Rules:
 - Run runtime parity harness tests: `pnpm runtime:parity:test`
 - Generate deterministic runtime tick/frame checkpoints: `pnpm runtime:checkpoints:generate`
 - Verify runtime checkpoint lock: `pnpm runtime:checkpoints:verify`
+- Run browser-runtime smoke suite: `pnpm runtime:browser:smoke`
 - Verify required-runtime symbol parity coverage + no-fallback policy: `pnpm runtime:required:verify`
 - Replay runtime repro artifact: `pnpm runtime:replay <artifact.json>`
+- Run smoke tests directly: `pnpm test:smoke`
 - Run local property tests (1k): `pnpm test:property:local`
 - Run CI property tests (10k): `pnpm test:property:ci`
 - Replay failing seed: `pnpm test:property -- --seed <seed>`

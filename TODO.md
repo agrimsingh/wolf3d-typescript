@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Runtime-Complete Execution Plan
 
-**Status:** Phase R6 in progress (browser runtime integration)
+**Status:** Phase R7 in progress (end-to-end WL1 parity acceptance)
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -80,11 +80,15 @@ The previous phase `0..8` completion tracks prototype oracle parity wrappers and
 
 ## Phase R6: Browser Runtime Integration
 
-- [ ] Replace prototype app path with real runtime integration.
-- [ ] Wire WL1 assets + input + menu + audio adapters to runtime core.
-- [ ] Add browser smoke tests for boot/menu/new-game/level transitions.
-- [ ] Gate: browser runtime fully playable for WL1 flow.
-- [ ] Commit: `phase-r6: browser runtime integration complete`
+- [x] Replace prototype app path with real runtime integration.
+: Replaced legacy prototype loop with runtime-driven browser integration via `src/app/runtimeController.ts`, `src/app/runtimeAudio.ts`, and updated `src/app/gameApp.ts`.
+- [x] Wire WL1 assets + input + menu + audio adapters to runtime core.
+: Added browser-safe WL1 asset decode/fixture loader (`src/runtime/wl1RuntimeScenarios.ts`), deterministic input/tick controller flow, menu map selection/start flow, and Web Audio event adapter.
+- [x] Add browser smoke tests for boot/menu/new-game/level transitions.
+: Added deterministic smoke suite `test/smoke/runtime-browser.test.ts` and command wiring (`pnpm test:smoke`, `pnpm runtime:browser:smoke`).
+- [x] Gate: browser runtime fully playable for WL1 flow.
+: Green on `pnpm build`, `pnpm verify` (now includes smoke), and `pnpm test:property:ci`.
+- [x] Commit: `phase-r6: browser runtime integration complete`
 
 ## Phase R7: End-to-End WL1 Episode Parity Acceptance
 

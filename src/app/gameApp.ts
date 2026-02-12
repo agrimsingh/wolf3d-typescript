@@ -1,42 +1,32 @@
 import { raycastDistanceQ16 } from '../render/raycast';
-import { playerMovePacked } from '../player/movement';
-import { gameEventHash } from '../game/state';
-import { menuReducePacked } from '../ui/menu';
+import type { RuntimeSnapshot } from '../runtime/contracts';
+import { WebAudioRuntimeAdapter } from './runtimeAudio';
+import { RuntimeAppController } from './runtimeController';
 
 const WIDTH = 320;
 const HEIGHT = 200;
 const FOV = Math.PI / 3;
+const MINIMAP_TILE_SIZE = 8;
 
-function makeBorderMapBits(): { lo: number; hi: number } {
-  let lo = 0;
-  let hi = 0;
-  for (let y = 0; y < 8; y++) {
-    for (let x = 0; x < 8; x++) {
-      const wall = x === 0 || y === 0 || x === 7 || y === 7 || (x === 4 && y > 1 && y < 6);
-      if (!wall) continue;
-      const bit = y * 8 + x;
-      if (bit < 32) lo |= 1 << bit;
-      else hi |= 1 << (bit - 32);
-    }
+function wallAt(mapLo: number, mapHi: number, x: number, y: number): boolean {
+  if (x < 0 || x >= 8 || y < 0 || y >= 8) {
+    return true;
   }
-  return { lo: lo >>> 0, hi: hi >>> 0 };
+  const bit = y * 8 + x;
+  if (bit < 32) {
+    return ((mapLo >>> bit) & 1) === 1;
+  }
+  return ((mapHi >>> (bit - 32)) & 1) === 1;
 }
 
 export class WolfApp {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
   private readonly image: ImageData;
-  private readonly map = makeBorderMapBits();
-
-  private xQ8 = (2.5 * 256) | 0;
-  private yQ8 = (2.5 * 256) | 0;
-  private angle = 0;
-
-  private score = 0;
-  private lives = 3;
-  private health = 100;
-  private ammo = 8;
-  private menuPacked = menuReducePacked(0, 0, 0, 4);
+  private readonly controller = new RuntimeAppController({
+    audio: new WebAudioRuntimeAdapter(),
+  });
+  private loopHandle = 0;
 
   constructor(container: HTMLElement) {
     this.canvas = document.createElement('canvas');
@@ -50,93 +40,189 @@ export class WolfApp {
     this.image = ctx.createImageData(WIDTH, HEIGHT);
 
     this.bindControls();
-    requestAnimationFrame(() => this.loop());
+    void this.controller.boot();
+    this.loopHandle = requestAnimationFrame((now) => this.loop(now));
   }
 
   private bindControls(): void {
     window.addEventListener('keydown', (event) => {
-      const speed = 14;
-      if (event.key === 'ArrowLeft') this.angle -= 0.1;
-      if (event.key === 'ArrowRight') this.angle += 0.1;
+      this.controller.onKeyDown(event.code);
+      event.preventDefault();
+    });
 
-      const dx = Math.cos(this.angle) * speed;
-      const dy = Math.sin(this.angle) * speed;
+    window.addEventListener('keyup', (event) => {
+      this.controller.onKeyUp(event.code);
+      event.preventDefault();
+    });
 
-      if (event.key === 'ArrowUp') {
-        const packed = playerMovePacked(this.map.lo, this.map.hi, this.xQ8, this.yQ8, dx | 0, dy | 0);
-        this.xQ8 = packed >> 16;
-        this.yQ8 = (packed << 16) >> 16;
+    this.canvas.addEventListener('click', () => {
+      if (this.controller.getState().mode === 'playing' && document.pointerLockElement !== this.canvas) {
+        void this.canvas.requestPointerLock();
       }
-      if (event.key === 'ArrowDown') {
-        const packed = playerMovePacked(this.map.lo, this.map.hi, this.xQ8, this.yQ8, (-dx) | 0, (-dy) | 0);
-        this.xQ8 = packed >> 16;
-        this.yQ8 = (packed << 16) >> 16;
+    });
+
+    window.addEventListener('mousemove', (event) => {
+      if (document.pointerLockElement !== this.canvas) {
+        return;
       }
-      if (event.key === ' ') {
-        this.score = (this.score + 25) | 0;
-      }
-      if (event.key.toLowerCase() === 'm') {
-        this.menuPacked = menuReducePacked(this.menuPacked >> 8, this.menuPacked & 0xff, 1, 4);
-      }
+      this.controller.onMouseMove(event.movementX);
     });
   }
 
-  private loop(): void {
-    this.renderFrame();
-    requestAnimationFrame(() => this.loop());
+  private drawLoadingFrame(): void {
+    this.ctx.fillStyle = '#040404';
+    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    this.ctx.fillStyle = '#d6d6d6';
+    this.ctx.font = '12px monospace';
+    this.ctx.fillText('Loading WL1 assets and runtime...', 18, HEIGHT / 2);
   }
 
-  private renderFrame(): void {
+  private drawMenuFrame(): void {
+    const state = this.controller.getState();
+
+    this.ctx.fillStyle = '#02060d';
+    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    this.ctx.fillStyle = '#d6dfef';
+    this.ctx.font = '14px monospace';
+    this.ctx.fillText('Wolf3D TS Runtime Menu', 18, 24);
+    this.ctx.font = '10px monospace';
+    this.ctx.fillText('Arrow keys: select map  Enter: start  N: next level  Esc: menu', 18, 40);
+
+    let y = 62;
+    for (let i = 0; i < state.scenarios.length; i++) {
+      const scenario = state.scenarios[i]!;
+      const selected = i === state.selectedScenarioIndex;
+      this.ctx.fillStyle = selected ? '#ffd166' : '#9cb0cf';
+      const marker = selected ? '>' : ' ';
+      this.ctx.fillText(`${marker} [${scenario.mapIndex}] ${scenario.mapName}`, 20, y);
+      y += 12;
+    }
+  }
+
+  private drawErrorFrame(): void {
+    const state = this.controller.getState();
+    this.ctx.fillStyle = '#120306';
+    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    this.ctx.fillStyle = '#ffd0d0';
+    this.ctx.font = '12px monospace';
+    this.ctx.fillText('Failed to boot runtime', 18, 32);
+    this.ctx.fillStyle = '#ffc2a8';
+    this.ctx.font = '10px monospace';
+    this.ctx.fillText(state.errorMessage, 18, 50);
+  }
+
+  private drawPlayingFrame(): void {
+    const state = this.controller.getState();
+    const scenario = state.currentScenario;
+    const snapshot = state.snapshot;
+    if (!scenario || !snapshot) {
+      this.drawMenuFrame();
+      return;
+    }
+
+    const mapLo = scenario.config.mapLo >>> 0;
+    const mapHi = scenario.config.mapHi >>> 0;
     const pixels = this.image.data;
     pixels.fill(0);
 
+    const angleRad = (snapshot.angleDeg * Math.PI) / 180;
     for (let x = 0; x < WIDTH; x++) {
-      const camera = (x / WIDTH) - 0.5;
-      const rayAngle = this.angle + camera * FOV;
+      const camera = x / WIDTH - 0.5;
+      const rayAngle = angleRad + camera * FOV;
       const dirXQ16 = (Math.cos(rayAngle) * 0.05 * 65536) | 0;
       const dirYQ16 = (Math.sin(rayAngle) * 0.05 * 65536) | 0;
-
-      const distQ16 = raycastDistanceQ16(
-        this.map.lo,
-        this.map.hi,
-        (this.xQ8 << 8) | 0,
-        (this.yQ8 << 8) | 0,
-        dirXQ16,
-        dirYQ16,
-        1024,
-      );
-
+      const distQ16 = raycastDistanceQ16(mapLo, mapHi, snapshot.xQ8 << 8, snapshot.yQ8 << 8, dirXQ16, dirYQ16, 1024);
       const safeDist = distQ16 > 0 ? distQ16 / 65536 : 1;
       const wallHeight = Math.min(HEIGHT, Math.max(2, (HEIGHT / (safeDist * 4)) | 0));
       const top = (HEIGHT / 2 - wallHeight / 2) | 0;
       const bottom = top + wallHeight;
+      const shade = Math.max(40, Math.min(220, (220 / (1 + safeDist * 0.8)) | 0));
 
       for (let y = 0; y < HEIGHT; y++) {
         const idx = (y * WIDTH + x) * 4;
         if (y >= top && y <= bottom) {
-          pixels[idx] = 190;
-          pixels[idx + 1] = 30;
-          pixels[idx + 2] = 30;
+          pixels[idx] = shade;
+          pixels[idx + 1] = (shade * 0.4) | 0;
+          pixels[idx + 2] = (shade * 0.3) | 0;
         } else if (y < HEIGHT / 2) {
-          pixels[idx] = 30;
-          pixels[idx + 1] = 30;
-          pixels[idx + 2] = 60;
+          pixels[idx] = 22;
+          pixels[idx + 1] = 28;
+          pixels[idx + 2] = 56;
         } else {
-          pixels[idx] = 20;
-          pixels[idx + 1] = 20;
-          pixels[idx + 2] = 20;
+          pixels[idx] = 16;
+          pixels[idx + 1] = 14;
+          pixels[idx + 2] = 12;
         }
         pixels[idx + 3] = 255;
       }
     }
 
-    const stateHash = gameEventHash(this.score, this.lives, this.health, this.ammo, 0, 0);
-    const status = `x:${(this.xQ8 / 256).toFixed(2)} y:${(this.yQ8 / 256).toFixed(2)} score:${this.score} hash:${stateHash >>> 0} menu:${this.menuPacked}`;
-
     this.ctx.putImageData(this.image, 0, 0);
-    this.ctx.fillStyle = '#fff';
+    this.drawMiniMap(mapLo, mapHi, snapshot);
+
+    this.ctx.fillStyle = '#f5f7ff';
     this.ctx.font = '10px monospace';
-    this.ctx.fillText(status, 6, 12);
-    this.ctx.fillText('Arrows move, Space scores, M advances menu', 6, HEIGHT - 8);
+    this.ctx.fillText(`Map ${scenario.mapIndex}: ${scenario.mapName}`, 8, 12);
+    this.ctx.fillText(`hp:${snapshot.health} ammo:${snapshot.ammo} tick:${snapshot.tick}`, 8, 24);
+    this.ctx.fillText(`x:${(snapshot.xQ8 / 256).toFixed(2)} y:${(snapshot.yQ8 / 256).toFixed(2)} angle:${snapshot.angleDeg}`, 8, 36);
+    this.ctx.fillText(`snapshot:${snapshot.hash >>> 0} frame:${state.frameHash >>> 0}`, 8, HEIGHT - 10);
+  }
+
+  private drawMiniMap(mapLo: number, mapHi: number, snapshot: RuntimeSnapshot): void {
+    const ox = WIDTH - MINIMAP_TILE_SIZE * 8 - 10;
+    const oy = 10;
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+    this.ctx.fillRect(ox - 3, oy - 3, MINIMAP_TILE_SIZE * 8 + 6, MINIMAP_TILE_SIZE * 8 + 6);
+
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
+        this.ctx.fillStyle = wallAt(mapLo, mapHi, x, y) ? '#61351d' : '#263243';
+        this.ctx.fillRect(ox + x * MINIMAP_TILE_SIZE, oy + y * MINIMAP_TILE_SIZE, MINIMAP_TILE_SIZE - 1, MINIMAP_TILE_SIZE - 1);
+      }
+    }
+
+    const px = ox + (snapshot.xQ8 / 256) * MINIMAP_TILE_SIZE;
+    const py = oy + (snapshot.yQ8 / 256) * MINIMAP_TILE_SIZE;
+    this.ctx.fillStyle = '#ffe082';
+    this.ctx.fillRect(px - 1.5, py - 1.5, 3, 3);
+
+    const dir = (snapshot.angleDeg * Math.PI) / 180;
+    this.ctx.strokeStyle = '#ffe082';
+    this.ctx.lineWidth = 1;
+    this.ctx.beginPath();
+    this.ctx.moveTo(px, py);
+    this.ctx.lineTo(px + Math.cos(dir) * 7, py + Math.sin(dir) * 7);
+    this.ctx.stroke();
+  }
+
+  private drawFrame(): void {
+    switch (this.controller.getState().mode) {
+      case 'loading':
+        this.drawLoadingFrame();
+        break;
+      case 'menu':
+        this.drawMenuFrame();
+        break;
+      case 'playing':
+        this.drawPlayingFrame();
+        break;
+      case 'error':
+        this.drawErrorFrame();
+        break;
+    }
+  }
+
+  private loop(now: number): void {
+    this.controller.tick(now);
+    this.drawFrame();
+    this.loopHandle = requestAnimationFrame((nextNow) => this.loop(nextNow));
+  }
+
+  dispose(): void {
+    if (this.loopHandle !== 0) {
+      cancelAnimationFrame(this.loopHandle);
+      this.loopHandle = 0;
+    }
+    void this.controller.shutdown();
   }
 }
