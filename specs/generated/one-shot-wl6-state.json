@@ -2,9 +2,7 @@
   "version": 1,
   "phase": "K12",
   "status": "complete",
-  "phases": [
-    "K12"
-  ],
+  "phases": [],
   "notes": [],
   "phaseHistory": [
     {
@@ -54,6 +52,10 @@
     {
       "phase": "K11",
       "completedAt": "2026-02-12T21:25:33.459Z"
+    },
+    {
+      "phase": "K12",
+      "completedAt": "2026-02-12T21:29:35.820Z"
     }
   ]
 }
