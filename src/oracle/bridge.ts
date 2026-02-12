@@ -83,6 +83,16 @@ type OracleFns = {
   idVlVlSetPaletteHash: (start: number, count: number, paletteSeed: number, flags: number) => number;
   idVlVlGetPaletteHash: (start: number, count: number, paletteSeed: number) => number;
   idVlVlFillPaletteHash: (red: number, green: number, blue: number, count: number) => number;
+  idVhVwMarkUpdateBlockHash: (minx: number, miny: number, maxx: number, maxy: number, linewidth: number) => number;
+  idVhVwUpdateScreenHash: (bufferofs: number, displayofs: number, width: number, height: number) => number;
+  idVhLatchDrawPicHash: (x: number, y: number, picnum: number, latchofs: number, screenofs: number) => number;
+  idVhLoadLatchMemHash: (sourceLen: number, latchWidth: number, latchHeight: number, dest: number) => number;
+  idVhVlMungePicHash: (width: number, height: number, sourceLen: number, plane: number) => number;
+  idVlVlSetLineWidthHash: (linewidth: number, screenWidth: number) => number;
+  idVlVlSetSplitScreenHash: (line: number, enabled: number, linewidth: number) => number;
+  idVlVlSetVgaPlaneModeHash: (width: number, height: number, chain4: number) => number;
+  idVlVlSetTextModeHash: (mode: number, rows: number, cols: number) => number;
+  idVlVlColorBorderHash: (color: number, ticks: number) => number;
   wlDrawTransformActorHash: (
     obx: number,
     oby: number,
@@ -454,6 +464,16 @@ export class OracleBridge implements OracleBridgeContract {
       idVlVlSetPaletteHash: cwrap('oracle_id_vl_vl_set_palette_hash', 'number', ['number', 'number', 'number', 'number']),
       idVlVlGetPaletteHash: cwrap('oracle_id_vl_vl_get_palette_hash', 'number', ['number', 'number', 'number']),
       idVlVlFillPaletteHash: cwrap('oracle_id_vl_vl_fill_palette_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVhVwMarkUpdateBlockHash: cwrap('oracle_id_vh_vw_mark_update_block_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idVhVwUpdateScreenHash: cwrap('oracle_id_vh_vw_update_screen_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVhLatchDrawPicHash: cwrap('oracle_id_vh_latch_draw_pic_hash', 'number', ['number', 'number', 'number', 'number', 'number']),
+      idVhLoadLatchMemHash: cwrap('oracle_id_vh_load_latch_mem_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVhVlMungePicHash: cwrap('oracle_id_vh_vl_munge_pic_hash', 'number', ['number', 'number', 'number', 'number']),
+      idVlVlSetLineWidthHash: cwrap('oracle_id_vl_vl_set_line_width_hash', 'number', ['number', 'number']),
+      idVlVlSetSplitScreenHash: cwrap('oracle_id_vl_vl_set_split_screen_hash', 'number', ['number', 'number', 'number']),
+      idVlVlSetVgaPlaneModeHash: cwrap('oracle_id_vl_vl_set_vga_plane_mode_hash', 'number', ['number', 'number', 'number']),
+      idVlVlSetTextModeHash: cwrap('oracle_id_vl_vl_set_text_mode_hash', 'number', ['number', 'number', 'number']),
+      idVlVlColorBorderHash: cwrap('oracle_id_vl_vl_color_border_hash', 'number', ['number', 'number']),
       wlDrawTransformActorHash: cwrap('oracle_wl_draw_transform_actor_hash', 'number', [
         'number',
         'number',
@@ -971,6 +991,46 @@ export class OracleBridge implements OracleBridgeContract {
 
   idVlVlFillPaletteHash(red: number, green: number, blue: number, count: number): number {
     return this.assertReady().idVlVlFillPaletteHash(red | 0, green | 0, blue | 0, count | 0) >>> 0;
+  }
+
+  idVhVwMarkUpdateBlockHash(minx: number, miny: number, maxx: number, maxy: number, linewidth: number): number {
+    return this.assertReady().idVhVwMarkUpdateBlockHash(minx | 0, miny | 0, maxx | 0, maxy | 0, linewidth | 0) >>> 0;
+  }
+
+  idVhVwUpdateScreenHash(bufferofs: number, displayofs: number, width: number, height: number): number {
+    return this.assertReady().idVhVwUpdateScreenHash(bufferofs | 0, displayofs | 0, width | 0, height | 0) >>> 0;
+  }
+
+  idVhLatchDrawPicHash(x: number, y: number, picnum: number, latchofs: number, screenofs: number): number {
+    return this.assertReady().idVhLatchDrawPicHash(x | 0, y | 0, picnum | 0, latchofs | 0, screenofs | 0) >>> 0;
+  }
+
+  idVhLoadLatchMemHash(sourceLen: number, latchWidth: number, latchHeight: number, dest: number): number {
+    return this.assertReady().idVhLoadLatchMemHash(sourceLen | 0, latchWidth | 0, latchHeight | 0, dest | 0) >>> 0;
+  }
+
+  idVhVlMungePicHash(width: number, height: number, sourceLen: number, plane: number): number {
+    return this.assertReady().idVhVlMungePicHash(width | 0, height | 0, sourceLen | 0, plane | 0) >>> 0;
+  }
+
+  idVlVlSetLineWidthHash(linewidth: number, screenWidth: number): number {
+    return this.assertReady().idVlVlSetLineWidthHash(linewidth | 0, screenWidth | 0) >>> 0;
+  }
+
+  idVlVlSetSplitScreenHash(line: number, enabled: number, linewidth: number): number {
+    return this.assertReady().idVlVlSetSplitScreenHash(line | 0, enabled | 0, linewidth | 0) >>> 0;
+  }
+
+  idVlVlSetVgaPlaneModeHash(width: number, height: number, chain4: number): number {
+    return this.assertReady().idVlVlSetVgaPlaneModeHash(width | 0, height | 0, chain4 | 0) >>> 0;
+  }
+
+  idVlVlSetTextModeHash(mode: number, rows: number, cols: number): number {
+    return this.assertReady().idVlVlSetTextModeHash(mode | 0, rows | 0, cols | 0) >>> 0;
+  }
+
+  idVlVlColorBorderHash(color: number, ticks: number): number {
+    return this.assertReady().idVlVlColorBorderHash(color | 0, ticks | 0) >>> 0;
   }
 
   wlDrawTransformActorHash(
@@ -1885,6 +1945,46 @@ export class OracleBridge implements OracleBridgeContract {
       case 'id_vl.VL_FillPaletteHash': {
         const { red, green, blue, count } = input as Record<string, number>;
         return this.idVlVlFillPaletteHash(red, green, blue, count) as TOutput;
+      }
+      case 'id_vh.VW_MarkUpdateBlockHash': {
+        const { minx, miny, maxx, maxy, linewidth } = input as Record<string, number>;
+        return this.idVhVwMarkUpdateBlockHash(minx, miny, maxx, maxy, linewidth) as TOutput;
+      }
+      case 'id_vh.VW_UpdateScreenHash': {
+        const { bufferofs, displayofs, width, height } = input as Record<string, number>;
+        return this.idVhVwUpdateScreenHash(bufferofs, displayofs, width, height) as TOutput;
+      }
+      case 'id_vh.LatchDrawPicHash': {
+        const { x, y, picnum, latchofs, screenofs } = input as Record<string, number>;
+        return this.idVhLatchDrawPicHash(x, y, picnum, latchofs, screenofs) as TOutput;
+      }
+      case 'id_vh.LoadLatchMemHash': {
+        const { sourceLen, latchWidth, latchHeight, dest } = input as Record<string, number>;
+        return this.idVhLoadLatchMemHash(sourceLen, latchWidth, latchHeight, dest) as TOutput;
+      }
+      case 'id_vh.VL_MungePicHash': {
+        const { width, height, sourceLen, plane } = input as Record<string, number>;
+        return this.idVhVlMungePicHash(width, height, sourceLen, plane) as TOutput;
+      }
+      case 'id_vl.VL_SetLineWidthHash': {
+        const { linewidth, screenWidth } = input as Record<string, number>;
+        return this.idVlVlSetLineWidthHash(linewidth, screenWidth) as TOutput;
+      }
+      case 'id_vl.VL_SetSplitScreenHash': {
+        const { line, enabled, linewidth } = input as Record<string, number>;
+        return this.idVlVlSetSplitScreenHash(line, enabled, linewidth) as TOutput;
+      }
+      case 'id_vl.VL_SetVGAPlaneModeHash': {
+        const { width, height, chain4 } = input as Record<string, number>;
+        return this.idVlVlSetVgaPlaneModeHash(width, height, chain4) as TOutput;
+      }
+      case 'id_vl.VL_SetTextModeHash': {
+        const { mode, rows, cols } = input as Record<string, number>;
+        return this.idVlVlSetTextModeHash(mode, rows, cols) as TOutput;
+      }
+      case 'id_vl.VL_ColorBorderHash': {
+        const { color, ticks } = input as Record<string, number>;
+        return this.idVlVlColorBorderHash(color, ticks) as TOutput;
       }
       case 'wl_draw.TransformActorHash': {
         const { obx, oby, viewx, viewy, viewcos, viewsin, scale, centerx, heightnumerator, mindist } = input as Record<string, number>;

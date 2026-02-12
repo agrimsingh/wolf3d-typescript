@@ -325,6 +325,16 @@ describe('runtime step parity', () => {
     expect(a.includes(138)).toBe(true); // ID_VL.VL_SetPalette
     expect(a.includes(139)).toBe(true); // ID_VL.VL_GetPalette
     expect(a.includes(140)).toBe(true); // ID_VL.VL_FillPalette
+    expect(a.includes(141)).toBe(true); // ID_VH.VW_MarkUpdateBlock
+    expect(a.includes(142)).toBe(true); // ID_VH.VW_UpdateScreen
+    expect(a.includes(143)).toBe(true); // ID_VH.LatchDrawPic
+    expect(a.includes(144)).toBe(true); // ID_VH.LoadLatchMem
+    expect(a.includes(145)).toBe(true); // ID_VH.VL_MungePic
+    expect(a.includes(146)).toBe(true); // ID_VL.VL_SetLineWidth
+    expect(a.includes(147)).toBe(true); // ID_VL.VL_SetSplitScreen
+    expect(a.includes(148)).toBe(true); // ID_VL.VL_SetVGAPlaneMode
+    expect(a.includes(149)).toBe(true); // ID_VL.VL_SetTextMode
+    expect(a.includes(150)).toBe(true); // ID_VL.VL_ColorBorder
   });
 
   it('oracle runtime is self-consistent across deterministic scenarios', async () => {

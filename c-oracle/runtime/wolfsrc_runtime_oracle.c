@@ -974,6 +974,61 @@ uint32_t oracle_id_vl_vl_fill_palette_hash(
   int32_t blue,
   int32_t count
 );
+uint32_t oracle_id_vh_vw_mark_update_block_hash(
+  int32_t minx,
+  int32_t miny,
+  int32_t maxx,
+  int32_t maxy,
+  int32_t linewidth
+);
+uint32_t oracle_id_vh_vw_update_screen_hash(
+  int32_t bufferofs,
+  int32_t displayofs,
+  int32_t width,
+  int32_t height
+);
+uint32_t oracle_id_vh_latch_draw_pic_hash(
+  int32_t x,
+  int32_t y,
+  int32_t picnum,
+  int32_t latchofs,
+  int32_t screenofs
+);
+uint32_t oracle_id_vh_load_latch_mem_hash(
+  int32_t source_len,
+  int32_t latch_width,
+  int32_t latch_height,
+  int32_t dest
+);
+uint32_t oracle_id_vh_vl_munge_pic_hash(
+  int32_t width,
+  int32_t height,
+  int32_t source_len,
+  int32_t plane
+);
+uint32_t oracle_id_vl_vl_set_line_width_hash(
+  int32_t linewidth,
+  int32_t screen_width
+);
+uint32_t oracle_id_vl_vl_set_split_screen_hash(
+  int32_t line,
+  int32_t enabled,
+  int32_t linewidth
+);
+uint32_t oracle_id_vl_vl_set_vga_plane_mode_hash(
+  int32_t width,
+  int32_t height,
+  int32_t chain4
+);
+uint32_t oracle_id_vl_vl_set_text_mode_hash(
+  int32_t mode,
+  int32_t rows,
+  int32_t cols
+);
+uint32_t oracle_id_vl_vl_color_border_hash(
+  int32_t color,
+  int32_t ticks
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -1133,6 +1188,16 @@ enum runtime_trace_symbol_e {
   TRACE_ID_VL_VL_SET_PALETTE = 138,
   TRACE_ID_VL_VL_GET_PALETTE = 139,
   TRACE_ID_VL_VL_FILL_PALETTE = 140,
+  TRACE_ID_VH_VW_MARK_UPDATE_BLOCK = 141,
+  TRACE_ID_VH_VW_UPDATE_SCREEN = 142,
+  TRACE_ID_VH_LATCH_DRAW_PIC = 143,
+  TRACE_ID_VH_LOAD_LATCH_MEM = 144,
+  TRACE_ID_VH_VL_MUNGE_PIC = 145,
+  TRACE_ID_VL_VL_SET_LINE_WIDTH = 146,
+  TRACE_ID_VL_VL_SET_SPLIT_SCREEN = 147,
+  TRACE_ID_VL_VL_SET_VGA_PLANE_MODE = 148,
+  TRACE_ID_VL_VL_SET_TEXT_MODE = 149,
+  TRACE_ID_VL_VL_COLOR_BORDER = 150,
 };
 
 #define TRACE_SYMBOL_MAX 192
@@ -1525,6 +1590,16 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       uint32_t vl_set_palette_hash;
       uint32_t vl_get_palette_hash;
       uint32_t vl_fill_palette_hash;
+      uint32_t vh_mark_update_block_hash;
+      uint32_t vh_update_screen_hash;
+      uint32_t vh_latch_draw_pic_hash;
+      uint32_t vh_load_latch_mem_hash;
+      uint32_t vh_vl_munge_pic_hash;
+      uint32_t vl_set_line_width_hash;
+      uint32_t vl_set_split_screen_hash;
+      uint32_t vl_set_vga_plane_mode_hash;
+      uint32_t vl_set_text_mode_hash;
+      uint32_t vl_color_border_hash;
       uint32_t runtime_probe_mix;
       int32_t ai_ax = player_x + ((state->tick & 1) ? (3 << 15) : -(3 << 15));
       int32_t ai_ay = player_y + ((state->tick & 2) ? (3 << 14) : -(3 << 14));
@@ -1741,6 +1816,20 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       int32_t vl_red = (rng >> 2) & 255;
       int32_t vl_green = (rng >> 10) & 255;
       int32_t vl_blue = (rng >> 18) & 255;
+      int32_t vh_block_minx = vh_pic_x;
+      int32_t vh_block_miny = vh_pic_y;
+      int32_t vh_block_maxx = vh_pic_x + (vh_bar_w >> 1);
+      int32_t vh_block_maxy = vh_pic_y + (vh_bar_h >> 1);
+      int32_t vh_update_width = 64 + ((rng >> 14) & 63);
+      int32_t vh_update_height = 32 + ((rng >> 20) & 31);
+      int32_t vl_screen_width = 320;
+      int32_t vl_split_line = (state->tick * 3) & 199;
+      int32_t vl_split_enabled = (state->tick >> 1) & 1;
+      int32_t vl_vga_chain4 = (rng >> 7) & 1;
+      int32_t vl_text_mode = rng & 0x0f;
+      int32_t vl_text_rows = 25 + ((rng >> 5) & 7);
+      int32_t vl_text_cols = 80;
+      int32_t vl_border_ticks = state->tick & 255;
       uint8_t carmack_source[64];
       uint8_t rlew_source_bytes[64];
       uint8_t maphead_bytes[402];
@@ -2372,6 +2461,26 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       vl_get_palette_hash = oracle_id_vl_vl_get_palette_hash(vl_palette_start, vl_palette_count, vl_palette_seed);
       trace_hit(TRACE_ID_VL_VL_FILL_PALETTE);
       vl_fill_palette_hash = oracle_id_vl_vl_fill_palette_hash(vl_red, vl_green, vl_blue, vl_palette_count);
+      trace_hit(TRACE_ID_VH_VW_MARK_UPDATE_BLOCK);
+      vh_mark_update_block_hash = oracle_id_vh_vw_mark_update_block_hash(vh_block_minx, vh_block_miny, vh_block_maxx, vh_block_maxy, vl_line_width);
+      trace_hit(TRACE_ID_VH_VW_UPDATE_SCREEN);
+      vh_update_screen_hash = oracle_id_vh_vw_update_screen_hash(vh_bufferofs, vh_screenofs, vh_update_width, vh_update_height);
+      trace_hit(TRACE_ID_VH_LATCH_DRAW_PIC);
+      vh_latch_draw_pic_hash = oracle_id_vh_latch_draw_pic_hash(vh_pic_x, vh_pic_y, vh_pic_num, vh_bufferofs, vh_screenofs);
+      trace_hit(TRACE_ID_VH_LOAD_LATCH_MEM);
+      vh_load_latch_mem_hash = oracle_id_vh_load_latch_mem_hash(vl_src_len, vh_bar_w, vh_bar_h, vh_bufferofs);
+      trace_hit(TRACE_ID_VH_VL_MUNGE_PIC);
+      vh_vl_munge_pic_hash = oracle_id_vh_vl_munge_pic_hash(vh_bar_w, vh_bar_h, vl_src_len, vl_vga_chain4);
+      trace_hit(TRACE_ID_VL_VL_SET_LINE_WIDTH);
+      vl_set_line_width_hash = oracle_id_vl_vl_set_line_width_hash(vl_line_width, vl_screen_width);
+      trace_hit(TRACE_ID_VL_VL_SET_SPLIT_SCREEN);
+      vl_set_split_screen_hash = oracle_id_vl_vl_set_split_screen_hash(vl_split_line, vl_split_enabled, vl_line_width);
+      trace_hit(TRACE_ID_VL_VL_SET_VGA_PLANE_MODE);
+      vl_set_vga_plane_mode_hash = oracle_id_vl_vl_set_vga_plane_mode_hash(vl_screen_width, vh_update_height, vl_vga_chain4);
+      trace_hit(TRACE_ID_VL_VL_SET_TEXT_MODE);
+      vl_set_text_mode_hash = oracle_id_vl_vl_set_text_mode_hash(vl_text_mode, vl_text_rows, vl_text_cols);
+      trace_hit(TRACE_ID_VL_VL_COLOR_BORDER);
+      vl_color_border_hash = oracle_id_vl_vl_color_border_hash(vh_color, vl_border_ticks);
       runtime_probe_mix =
         spawn_door_hash ^
         push_wall_hash ^
@@ -2463,7 +2572,17 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
         vl_get_color_hash ^
         vl_set_palette_hash ^
         vl_get_palette_hash ^
-        vl_fill_palette_hash;
+        vl_fill_palette_hash ^
+        vh_mark_update_block_hash ^
+        vh_update_screen_hash ^
+        vh_latch_draw_pic_hash ^
+        vh_load_latch_mem_hash ^
+        vh_vl_munge_pic_hash ^
+        vl_set_line_width_hash ^
+        vl_set_split_screen_hash ^
+        vl_set_vga_plane_mode_hash ^
+        vl_set_text_mode_hash ^
+        vl_color_border_hash;
 
       if (play_loop_hash & 1u) {
         state->flags |= 0x2000;

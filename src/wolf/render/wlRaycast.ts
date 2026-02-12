@@ -1021,6 +1021,135 @@ export function idVlVlFillPaletteHash(red: number, green: number, blue: number, 
   return hash >>> 0;
 }
 
+export function idVhVwMarkUpdateBlockHash(minx: number, miny: number, maxx: number, maxy: number, linewidth: number): number {
+  const x0 = (minx | 0) < (maxx | 0) ? (minx | 0) : (maxx | 0);
+  const x1 = (minx | 0) < (maxx | 0) ? (maxx | 0) : (minx | 0);
+  const y0 = (miny | 0) < (maxy | 0) ? (miny | 0) : (maxy | 0);
+  const y1 = (miny | 0) < (maxy | 0) ? (maxy | 0) : (miny | 0);
+  const lw = linewidth <= 0 ? 1 : (linewidth | 0);
+  const area = Math.imul((x1 - x0 + 1) | 0, (y1 - y0 + 1) | 0) >>> 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x0);
+  hash = fnv1a(hash, y0);
+  hash = fnv1a(hash, x1);
+  hash = fnv1a(hash, y1);
+  hash = fnv1a(hash, lw);
+  hash = fnv1a(hash, area);
+  return hash >>> 0;
+}
+
+export function idVhVwUpdateScreenHash(bufferofs: number, displayofs: number, width: number, height: number): number {
+  const w = width < 0 ? 0 : (width | 0);
+  const h = height < 0 ? 0 : (height | 0);
+  const copied = Math.imul(w, h) >>> 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, bufferofs);
+  hash = fnv1a(hash, displayofs);
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, copied);
+  return hash >>> 0;
+}
+
+export function idVhLatchDrawPicHash(x: number, y: number, picnum: number, latchofs: number, screenofs: number): number {
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, picnum);
+  hash = fnv1a(hash, latchofs);
+  hash = fnv1a(hash, screenofs);
+  return hash >>> 0;
+}
+
+export function idVhLoadLatchMemHash(sourceLen: number, latchWidth: number, latchHeight: number, dest: number): number {
+  const len = sourceLen < 0 ? 0 : (sourceLen | 0);
+  const w = latchWidth < 0 ? 0 : (latchWidth | 0);
+  const h = latchHeight < 0 ? 0 : (latchHeight | 0);
+  let copied = Math.imul(w, h) | 0;
+  if (copied > len) {
+    copied = len;
+  }
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, len);
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, dest);
+  hash = fnv1a(hash, copied);
+  return hash >>> 0;
+}
+
+export function idVhVlMungePicHash(width: number, height: number, sourceLen: number, plane: number): number {
+  const w = width < 0 ? 0 : (width | 0);
+  const h = height < 0 ? 0 : (height | 0);
+  const len = sourceLen < 0 ? 0 : (sourceLen | 0);
+  let munged = Math.imul(w, h) | 0;
+  if (munged > len) {
+    munged = len;
+  }
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, len);
+  hash = fnv1a(hash, plane);
+  hash = fnv1a(hash, munged);
+  return hash >>> 0;
+}
+
+export function idVlVlSetLineWidthHash(linewidth: number, screenWidth: number): number {
+  const lw = linewidth <= 0 ? 1 : (linewidth | 0);
+  const sw = screenWidth <= 0 ? 320 : (screenWidth | 0);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, lw);
+  hash = fnv1a(hash, sw);
+  hash = fnv1a(hash, Math.imul(lw, sw));
+  return hash >>> 0;
+}
+
+export function idVlVlSetSplitScreenHash(line: number, enabled: number, linewidth: number): number {
+  const ln = line < 0 ? 0 : (line | 0);
+  const en = enabled ? 1 : 0;
+  const lw = linewidth <= 0 ? 1 : (linewidth | 0);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, ln);
+  hash = fnv1a(hash, en);
+  hash = fnv1a(hash, lw);
+  return hash >>> 0;
+}
+
+export function idVlVlSetVgaPlaneModeHash(width: number, height: number, chain4: number): number {
+  const w = width <= 0 ? 320 : (width | 0);
+  const h = height <= 0 ? 200 : (height | 0);
+  const ch = chain4 ? 1 : 0;
+  const pixels = Math.imul(w, h);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, ch);
+  hash = fnv1a(hash, pixels);
+  return hash >>> 0;
+}
+
+export function idVlVlSetTextModeHash(mode: number, rows: number, cols: number): number {
+  const md = mode & 0xff;
+  const r = rows <= 0 ? 25 : (rows | 0);
+  const c = cols <= 0 ? 80 : (cols | 0);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, md);
+  hash = fnv1a(hash, r);
+  hash = fnv1a(hash, c);
+  return hash >>> 0;
+}
+
+export function idVlVlColorBorderHash(color: number, ticks: number): number {
+  const c = color & 0xff;
+  const t = ticks < 0 ? 0 : (ticks | 0);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, c);
+  hash = fnv1a(hash, t);
+  hash = fnv1a(hash, ((c << 8) ^ t) >>> 0);
+  return hash >>> 0;
+}
+
 export const wlRaycastConstants = {
   actorsize: ACTORSIZE,
   tileglobal: TILEGLOBAL,

@@ -176,6 +176,16 @@ const TRACE_SYMBOLS: TraceSymbol[] = [
   { id: 138, file: 'ID_VL.C', func: 'VL_SetPalette', notes: 'called via oracle_id_vl_vl_set_palette_hash from runtime video probe' },
   { id: 139, file: 'ID_VL.C', func: 'VL_GetPalette', notes: 'called via oracle_id_vl_vl_get_palette_hash from runtime video probe' },
   { id: 140, file: 'ID_VL.C', func: 'VL_FillPalette', notes: 'called via oracle_id_vl_vl_fill_palette_hash from runtime video probe' },
+  { id: 141, file: 'ID_VH.C', func: 'VW_MarkUpdateBlock', notes: 'called via oracle_id_vh_vw_mark_update_block_hash from runtime video probe' },
+  { id: 142, file: 'ID_VH.C', func: 'VW_UpdateScreen', notes: 'called via oracle_id_vh_vw_update_screen_hash from runtime video probe' },
+  { id: 143, file: 'ID_VH.C', func: 'LatchDrawPic', notes: 'called via oracle_id_vh_latch_draw_pic_hash from runtime video probe' },
+  { id: 144, file: 'ID_VH.C', func: 'LoadLatchMem', notes: 'called via oracle_id_vh_load_latch_mem_hash from runtime video probe' },
+  { id: 145, file: 'ID_VH.C', func: 'VL_MungePic', notes: 'called via oracle_id_vh_vl_munge_pic_hash from runtime video probe' },
+  { id: 146, file: 'ID_VL.C', func: 'VL_SetLineWidth', notes: 'called via oracle_id_vl_vl_set_line_width_hash from runtime video probe' },
+  { id: 147, file: 'ID_VL.C', func: 'VL_SetSplitScreen', notes: 'called via oracle_id_vl_vl_set_split_screen_hash from runtime video probe' },
+  { id: 148, file: 'ID_VL.C', func: 'VL_SetVGAPlaneMode', notes: 'called via oracle_id_vl_vl_set_vga_plane_mode_hash from runtime video probe' },
+  { id: 149, file: 'ID_VL.C', func: 'VL_SetTextMode', notes: 'called via oracle_id_vl_vl_set_text_mode_hash from runtime video probe' },
+  { id: 150, file: 'ID_VL.C', func: 'VL_ColorBorder', notes: 'called via oracle_id_vl_vl_color_border_hash from runtime video probe' },
 ];
 
 const TRACE_SYMBOL_MAP = new Map<number, TraceSymbol>(TRACE_SYMBOLS.map((entry) => [entry.id, entry]));
@@ -321,6 +331,16 @@ const SYMBOL_PARITY_COVERAGE = new Map<number, SymbolParityCoverage>([
   [138, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [139, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
   [140, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [141, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [142, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [143, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [144, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [145, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [146, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [147, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [148, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [149, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
+  [150, { status: 'done', parity: 'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity' }],
 ]);
 
 function fnv1a(hash: number, value: number): number {

@@ -6,8 +6,13 @@ import { withReplay } from './replay';
 import {
   idVhVwMeasurePropStringHash,
   idVhVwDrawColorPropStringHash,
+  idVhVwMarkUpdateBlockHash,
   idVhVwDrawPropStringHash,
   idVhVwMeasureMPropStringHash,
+  idVhVwUpdateScreenHash,
+  idVhLatchDrawPicHash,
+  idVhLoadLatchMemHash,
+  idVhVlMungePicHash,
   idVhVwbBarHash,
   idVhVwbDrawPicHash,
   idVhVwbDrawPropStringHash,
@@ -30,8 +35,13 @@ import {
   idVlVlMemToLatchHash,
   idVlVlMemToScreenHash,
   idVlVlPlotHash,
+  idVlVlSetLineWidthHash,
   idVlVlSetColorHash,
   idVlVlSetPaletteHash,
+  idVlVlSetSplitScreenHash,
+  idVlVlSetTextModeHash,
+  idVlVlSetVgaPlaneModeHash,
+  idVlVlColorBorderHash,
   idVlVlScreenToScreenHash,
   idVlVlVlinHash,
   wlDrawCalcHeight,
@@ -594,6 +604,36 @@ describe('phase 3 real WOLFSRC raycasting parity', () => {
             );
             expect(idVlVlFillPaletteHash(a, b, c, d) >>> 0).toBe(
               oracle.idVlVlFillPaletteHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVwMarkUpdateBlockHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhVwMarkUpdateBlockHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVhVwUpdateScreenHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhVwUpdateScreenHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhLatchDrawPicHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhLatchDrawPicHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVhLoadLatchMemHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhLoadLatchMemHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVlMungePicHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhVlMungePicHash(a, b, c, d) >>> 0,
+            );
+            expect(idVlVlSetLineWidthHash(a, b) >>> 0).toBe(
+              oracle.idVlVlSetLineWidthHash(a, b) >>> 0,
+            );
+            expect(idVlVlSetSplitScreenHash(a, b, c) >>> 0).toBe(
+              oracle.idVlVlSetSplitScreenHash(a, b, c) >>> 0,
+            );
+            expect(idVlVlSetVgaPlaneModeHash(a, b, c) >>> 0).toBe(
+              oracle.idVlVlSetVgaPlaneModeHash(a, b, c) >>> 0,
+            );
+            expect(idVlVlSetTextModeHash(a, b, c) >>> 0).toBe(
+              oracle.idVlVlSetTextModeHash(a, b, c) >>> 0,
+            );
+            expect(idVlVlColorBorderHash(a, b) >>> 0).toBe(
+              oracle.idVlVlColorBorderHash(a, b) >>> 0,
             );
           },
         ),

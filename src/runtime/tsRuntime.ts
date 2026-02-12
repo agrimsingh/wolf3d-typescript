@@ -58,9 +58,14 @@ import {
 } from '../wolf/player/wlPlayer';
 import {
   idVhVwDrawColorPropStringHash,
+  idVhVwMarkUpdateBlockHash,
   idVhVwDrawPropStringHash,
   idVhVwMeasureMPropStringHash,
   idVhVwMeasurePropStringHash,
+  idVhVwUpdateScreenHash,
+  idVhLatchDrawPicHash,
+  idVhLoadLatchMemHash,
+  idVhVlMungePicHash,
   idVhVwbBarHash,
   idVhVwbDrawPicHash,
   idVhVwbDrawPropStringHash,
@@ -84,7 +89,12 @@ import {
   idVlVlMemToScreenHash,
   idVlVlPlotHash,
   idVlVlSetColorHash,
+  idVlVlSetLineWidthHash,
   idVlVlSetPaletteHash,
+  idVlVlSetSplitScreenHash,
+  idVlVlSetTextModeHash,
+  idVlVlSetVgaPlaneModeHash,
+  idVlVlColorBorderHash,
   idVlVlScreenToScreenHash,
   idVlVlVlinHash,
   wlDrawCalcHeight,
@@ -834,6 +844,20 @@ export class TsRuntimePort implements RuntimePort {
         const vlRed = (rng >> 2) & 255;
         const vlGreen = (rng >> 10) & 255;
         const vlBlue = (rng >> 18) & 255;
+        const vhBlockMinX = vhPicX;
+        const vhBlockMinY = vhPicY;
+        const vhBlockMaxX = vhPicX + (vhBarW >> 1);
+        const vhBlockMaxY = vhPicY + (vhBarH >> 1);
+        const vhUpdateWidth = 64 + ((rng >> 14) & 63);
+        const vhUpdateHeight = 32 + ((rng >> 20) & 31);
+        const vlScreenWidth = 320;
+        const vlSplitLine = (this.state.tick * 3) & 199;
+        const vlSplitEnabled = (this.state.tick >> 1) & 1;
+        const vlVgaChain4 = (rng >> 7) & 1;
+        const vlTextMode = rng & 0x0f;
+        const vlTextRows = 25 + ((rng >> 5) & 7);
+        const vlTextCols = 80;
+        const vlBorderTicks = this.state.tick & 255;
         const carmackSource = new Uint8Array(carmackSourceLen);
         const rlewSourceBytes = new Uint8Array(rlewSourceLen);
         const mapHeadBytes = new Uint8Array(mapHeadLen);
@@ -1330,6 +1354,16 @@ export class TsRuntimePort implements RuntimePort {
         const vlSetPaletteHash = idVlVlSetPaletteHash(vlPaletteStart, vlPaletteCount, vlPaletteSeed, vlPaletteFlags) >>> 0;
         const vlGetPaletteHash = idVlVlGetPaletteHash(vlPaletteStart, vlPaletteCount, vlPaletteSeed) >>> 0;
         const vlFillPaletteHash = idVlVlFillPaletteHash(vlRed, vlGreen, vlBlue, vlPaletteCount) >>> 0;
+        const vhMarkUpdateBlockHash = idVhVwMarkUpdateBlockHash(vhBlockMinX, vhBlockMinY, vhBlockMaxX, vhBlockMaxY, vlLineWidth) >>> 0;
+        const vhUpdateScreenHash = idVhVwUpdateScreenHash(vhBufferOfs, vhScreenOfs, vhUpdateWidth, vhUpdateHeight) >>> 0;
+        const vhLatchDrawPicHash = idVhLatchDrawPicHash(vhPicX, vhPicY, vhPicNum, vhBufferOfs, vhScreenOfs) >>> 0;
+        const vhLoadLatchMemHash = idVhLoadLatchMemHash(vlSrcLen, vhBarW, vhBarH, vhBufferOfs) >>> 0;
+        const vhVlMungePicHash = idVhVlMungePicHash(vhBarW, vhBarH, vlSrcLen, vlVgaChain4) >>> 0;
+        const vlSetLineWidthHash = idVlVlSetLineWidthHash(vlLineWidth, vlScreenWidth) >>> 0;
+        const vlSetSplitScreenHash = idVlVlSetSplitScreenHash(vlSplitLine, vlSplitEnabled, vlLineWidth) >>> 0;
+        const vlSetVgaPlaneModeHash = idVlVlSetVgaPlaneModeHash(vlScreenWidth, vhUpdateHeight, vlVgaChain4) >>> 0;
+        const vlSetTextModeHash = idVlVlSetTextModeHash(vlTextMode, vlTextRows, vlTextCols) >>> 0;
+        const vlColorBorderHash = idVlVlColorBorderHash(vhColor, vlBorderTicks) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1421,7 +1455,17 @@ export class TsRuntimePort implements RuntimePort {
             vlGetColorHash ^
             vlSetPaletteHash ^
             vlGetPaletteHash ^
-            vlFillPaletteHash) >>> 0;
+            vlFillPaletteHash ^
+            vhMarkUpdateBlockHash ^
+            vhUpdateScreenHash ^
+            vhLatchDrawPicHash ^
+            vhLoadLatchMemHash ^
+            vhVlMungePicHash ^
+            vlSetLineWidthHash ^
+            vlSetSplitScreenHash ^
+            vlSetVgaPlaneModeHash ^
+            vlSetTextModeHash ^
+            vlColorBorderHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;

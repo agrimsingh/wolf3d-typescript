@@ -158,6 +158,16 @@ Symbols exercised by deterministic runtime trace scenarios.
 | ID_VL.C | VL_SetPalette | `done` | called via oracle_id_vl_vl_set_palette_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_VL.C | VL_GetPalette | `done` | called via oracle_id_vl_vl_get_palette_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_VL.C | VL_FillPalette | `done` | called via oracle_id_vl_vl_fill_palette_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VW_MarkUpdateBlock | `done` | called via oracle_id_vh_vw_mark_update_block_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VW_UpdateScreen | `done` | called via oracle_id_vh_vw_update_screen_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | LatchDrawPic | `done` | called via oracle_id_vh_latch_draw_pic_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | LoadLatchMem | `done` | called via oracle_id_vh_load_latch_mem_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VL_MungePic | `done` | called via oracle_id_vh_vl_munge_pic_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_SetLineWidth | `done` | called via oracle_id_vl_vl_set_line_width_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_SetSplitScreen | `done` | called via oracle_id_vl_vl_set_split_screen_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_SetVGAPlaneMode | `done` | called via oracle_id_vl_vl_set_vga_plane_mode_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_SetTextMode | `done` | called via oracle_id_vl_vl_set_text_mode_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_ColorBorder | `done` | called via oracle_id_vl_vl_color_border_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 
