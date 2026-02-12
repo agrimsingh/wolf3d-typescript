@@ -288,7 +288,7 @@ export class WolfApp {
     const textures = this.wallTexturesReady ? this.wallTextures : [];
     for (let x = 0; x < WIDTH; x++) {
       const camera = x / WIDTH - 0.5;
-      const rayAngle = angleRad + camera * FOV;
+      const rayAngle = angleRad - camera * FOV;
       const dirX = Math.cos(rayAngle);
       const dirY = -Math.sin(rayAngle);
       const hit = castRay(mapLo, mapHi, posX, posY, dirX, dirY);
