@@ -200,28 +200,39 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
     }
   }
 
-  if (input_mask & (1 << 7)) {
-    int32_t tx = state->xq8 >> 8;
-    int32_t ty = state->yq8 >> 8;
-    int32_t blocked = 0;
-    int32_t facing = ((state->angle_deg % 360) + 360) % 360;
-    if (facing < 45 || facing >= 315) tx += 1;
-    else if (facing < 135) ty -= 1;
-    else if (facing < 225) tx -= 1;
-    else ty += 1;
-    {
-      int32_t target_xq16 = ((tx << 8) + 128) << 8;
-      int32_t target_yq16 = ((ty << 8) + 128) << 8;
-      trace_hit(TRACE_REAL_WL_AGENT_TRY_MOVE);
-      blocked = oracle_real_wl_agent_try_move(target_xq16, target_yq16, state->map_lo, state->map_hi) ? 0 : 1;
-    }
-    if (blocked) {
-      state->flags |= 0x20;
+  {
+    int32_t use_pressed = (input_mask & (1 << 7)) ? 1 : 0;
+    int32_t use_held = (state->flags & 0x100) ? 1 : 0;
+
+    if (use_pressed && !use_held) {
+      int32_t tx = state->xq8 >> 8;
+      int32_t ty = state->yq8 >> 8;
+      int32_t blocked = 0;
+      int32_t facing = ((state->angle_deg % 360) + 360) % 360;
+      if (facing < 45 || facing >= 315) tx += 1;
+      else if (facing < 135) ty -= 1;
+      else if (facing < 225) tx -= 1;
+      else ty += 1;
+      {
+        int32_t target_xq16 = ((tx << 8) + 128) << 8;
+        int32_t target_yq16 = ((ty << 8) + 128) << 8;
+        trace_hit(TRACE_REAL_WL_AGENT_TRY_MOVE);
+        blocked = oracle_real_wl_agent_try_move(target_xq16, target_yq16, state->map_lo, state->map_hi) ? 0 : 1;
+      }
+      if (blocked) {
+        state->flags |= 0x20;
+      } else {
+        state->flags &= ~0x20;
+      }
     } else {
       state->flags &= ~0x20;
     }
-  } else {
-    state->flags &= ~0x20;
+
+    if (use_pressed) {
+      state->flags |= 0x100;
+    } else {
+      state->flags &= ~0x100;
+    }
   }
 
   if ((rng & 0x1f) == 0 && state->health > 0) {

@@ -339,23 +339,34 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
-    if ((inputMask & (1 << 7)) !== 0) {
-      let tx = this.state.xQ8 >> 8;
-      let ty = this.state.yQ8 >> 8;
-      const facing = ((this.state.angleDeg % 360) + 360) % 360;
-      if (facing < 45 || facing >= 315) tx += 1;
-      else if (facing < 135) ty -= 1;
-      else if (facing < 225) tx -= 1;
-      else ty += 1;
-      const targetXQ16 = (((tx << 8) + 128) << 8) | 0;
-      const targetYQ16 = (((ty << 8) + 128) << 8) | 0;
-      if (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) === 0) {
-        this.state.flags |= 0x20;
+    {
+      const usePressed = (inputMask & (1 << 7)) !== 0;
+      const useHeld = (this.state.flags & 0x100) !== 0;
+
+      if (usePressed && !useHeld) {
+        let tx = this.state.xQ8 >> 8;
+        let ty = this.state.yQ8 >> 8;
+        const facing = ((this.state.angleDeg % 360) + 360) % 360;
+        if (facing < 45 || facing >= 315) tx += 1;
+        else if (facing < 135) ty -= 1;
+        else if (facing < 225) tx -= 1;
+        else ty += 1;
+        const targetXQ16 = (((tx << 8) + 128) << 8) | 0;
+        const targetYQ16 = (((ty << 8) + 128) << 8) | 0;
+        if (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) === 0) {
+          this.state.flags |= 0x20;
+        } else {
+          this.state.flags &= ~0x20;
+        }
       } else {
         this.state.flags &= ~0x20;
       }
-    } else {
-      this.state.flags &= ~0x20;
+
+      if (usePressed) {
+        this.state.flags |= 0x100;
+      } else {
+        this.state.flags &= ~0x100;
+      }
     }
 
     if (((rng | 0) & 0x1f) === 0 && this.state.health > 0) {
