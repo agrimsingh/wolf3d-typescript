@@ -53,15 +53,15 @@
 - [x] Gate: `pnpm runtime:classification:verify`
 - [x] Gate: `pnpm runtime:manifest:verify`
 - [x] Tests green
-- [ ] Phase commit pushed (`r3: real-runtime symbol classification freeze`)
+- [x] Phase commit pushed (`r3: real-runtime symbol classification freeze`)
 
 ## R4: TS Port Wave A (Map/Memory/Cache Runtime Paths)
 
-- [ ] Port runtime-required behavior from `ID_CA.C`, `ID_MM.C`, `ID_PM.C`, `WL_GAME.C::SetupGameLevel`.
-- [ ] Add per-function property parity tests mapped to manifest entries.
-- [ ] Gate: local 1k + CI 10k parity for all R4 functions
-- [ ] Gate: deterministic representative level-load trace parity
-- [ ] Tests green
+- [x] Port runtime-required behavior from `ID_CA.C`, `ID_MM.C`, `ID_PM.C`, `WL_GAME.C::SetupGameLevel`.
+- [x] Add per-function property parity tests mapped to manifest entries.
+- [x] Gate: local 1k + CI 10k parity for all R4 functions
+- [x] Gate: deterministic representative level-load trace parity
+- [x] Tests green
 - [ ] Phase commit pushed (`r4: map-memory-cache runtime parity`)
 
 ## R5: TS Port Wave B (Renderer Core)
