@@ -9,6 +9,7 @@ import type {
   RuntimeStepResult,
 } from './contracts';
 import { wlAgentRealClipMoveQ16, wlAgentRealTryMove } from '../wolf/player/wlAgentReal';
+import { wlDrawThreeDRefreshHash, wlDrawWallRefreshHash } from '../wolf/render/wlRaycast';
 
 export const RUNTIME_CORE_KIND = 'synthetic' as const;
 
@@ -91,9 +92,25 @@ function snapshotHash(state: State, angleFrac: number): number {
 
 function renderFrameHash(state: State, angleFrac: number, viewWidth: number, viewHeight: number): number {
   let h = snapshotHash(state, angleFrac);
+  const wallRefreshHash = wlDrawWallRefreshHash(
+    state.angleDeg | 0,
+    (state.xQ8 << 8) | 0,
+    (state.yQ8 << 8) | 0,
+    0x5800,
+    0,
+    0x10000,
+  );
+  const threeDRefreshHash = wlDrawThreeDRefreshHash(
+    0,
+    0,
+    state.tick | 0,
+    0,
+    wallRefreshHash,
+  );
   h = fnv1a(h, viewWidth);
   h = fnv1a(h, viewHeight);
-  h = fnv1a(h, ((state.xQ8 >> 3) ^ (state.yQ8 << 2)) | 0);
+  h = fnv1a(h, wallRefreshHash);
+  h = fnv1a(h, threeDRefreshHash);
   return h >>> 0;
 }
 

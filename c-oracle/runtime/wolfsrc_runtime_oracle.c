@@ -37,6 +37,21 @@ int32_t real_wl_agent_take_damage_apply(
   int32_t god_mode_enabled,
   int32_t victory_flag
 );
+uint32_t oracle_wl_draw_wall_refresh_hash(
+  int32_t player_angle,
+  int32_t player_x,
+  int32_t player_y,
+  int32_t focallength,
+  int32_t viewsin,
+  int32_t viewcos
+);
+uint32_t oracle_wl_draw_three_d_refresh_hash(
+  int32_t bufferofs,
+  int32_t screenofs,
+  int32_t frameon,
+  int32_t fizzlein,
+  uint32_t wallrefresh_hash
+);
 
 typedef struct runtime_state_s {
   uint32_t map_lo;
@@ -76,6 +91,8 @@ enum runtime_trace_symbol_e {
   TRACE_REAL_WL_AGENT_TRY_MOVE = 18,
   TRACE_REAL_WL_AGENT_CONTROL_MOVEMENT = 19,
   TRACE_REAL_WL_AGENT_TAKE_DAMAGE = 20,
+  TRACE_REAL_WL_DRAW_WALL_REFRESH = 21,
+  TRACE_REAL_WL_DRAW_THREE_D_REFRESH = 22,
 };
 
 #define TRACE_SYMBOL_MAX 32
@@ -305,11 +322,35 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_snapshot_hash(void) {
 }
 
 EMSCRIPTEN_KEEPALIVE uint32_t oracle_runtime_render_frame_hash(int32_t view_width, int32_t view_height) {
+  uint32_t wall_refresh_hash;
+  uint32_t three_d_refresh_hash;
+  uint32_t player_x = (uint32_t)(g_state.xq8 << 8);
+  uint32_t player_y = (uint32_t)(g_state.yq8 << 8);
+
   trace_hit(TRACE_ORACLE_RUNTIME_RENDER_FRAME_HASH);
+  trace_hit(TRACE_REAL_WL_DRAW_WALL_REFRESH);
+  wall_refresh_hash = oracle_wl_draw_wall_refresh_hash(
+    g_state.angle_deg,
+    (int32_t)player_x,
+    (int32_t)player_y,
+    0x5800,
+    0,
+    0x10000
+  );
+  trace_hit(TRACE_REAL_WL_DRAW_THREE_D_REFRESH);
+  three_d_refresh_hash = oracle_wl_draw_three_d_refresh_hash(
+    0,
+    0,
+    g_state.tick,
+    0,
+    wall_refresh_hash
+  );
+
   uint32_t h = runtime_snapshot_hash(&g_state);
   h = fnv1a_u32(h, (uint32_t)view_width);
   h = fnv1a_u32(h, (uint32_t)view_height);
-  h = fnv1a_u32(h, (uint32_t)((g_state.xq8 >> 3) ^ (g_state.yq8 << 2)));
+  h = fnv1a_u32(h, wall_refresh_hash);
+  h = fnv1a_u32(h, three_d_refresh_hash);
   return h;
 }
 
