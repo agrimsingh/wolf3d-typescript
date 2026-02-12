@@ -1,6 +1,6 @@
 # Wolf3D TypeScript Real Runtime TODO (G-Phases)
 
-**Status:** In Progress (`G6` active)  
+**Status:** In Progress (`G7` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -80,14 +80,14 @@
 
 ## G6: TS Port Wave B (Real Renderer Pipeline)
 
-- [ ] Replace demo render path in `src/app/gameApp.ts` with runtime framebuffer-driven pipeline.
-- [ ] Implement runtime-faithful renderer behavior for `WL_DRAW.C`, `WL_SCALE.C`, `ID_VH.C`, `ID_VL.C` semantics.
-- [ ] Include sprites, weapon/status visuals, and texture orientation correctness.
-- [ ] Gate: helper-level parity green
-- [ ] Gate: per-tic exact indexed framebuffer parity on deterministic traces
-- [ ] Gate: agent-browser captures canonical scene set and parity signatures
-- [ ] Tests green
-- [ ] Phase commit pushed (`g6: renderer pipeline runtime parity`)
+- [x] Replace demo render path in `src/app/gameApp.ts` with runtime framebuffer-driven pipeline.
+- [x] Implement runtime-faithful renderer behavior for `WL_DRAW.C`, `WL_SCALE.C`, `ID_VH.C`, `ID_VL.C` semantics.
+- [x] Include sprites, weapon/status visuals, and texture orientation correctness.
+- [x] Gate: helper-level parity green
+- [x] Gate: per-tic exact indexed framebuffer parity on deterministic traces
+- [x] Gate: agent-browser captures canonical scene set and parity signatures
+- [x] Tests green
+- [x] Phase commit pushed (`g6: renderer pipeline runtime parity`)
 
 ## G7: TS Port Wave C (Player, Doors, Pushwalls, Game Loop Core)
 

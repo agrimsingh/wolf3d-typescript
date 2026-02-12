@@ -174,6 +174,9 @@ const PI = 3.141592657;
 const SIN_TABLE = new Int32Array(ANGLES + ANGLEQUAD + 1);
 const FULL_MAP_WINDOW_SIZE = 8;
 const AREATILE = 107;
+const FRAME_WIDTH = 320;
+const FRAME_HEIGHT = 200;
+const RENDER_FOV = Math.PI / 3;
 
 {
   let angle = 0.0;
@@ -654,9 +657,7 @@ function frameInputToLegacy(input: RuntimeFrameInput): RuntimeInput {
 }
 
 function buildIndexedBuffer(hash: number, tick: number): Uint8Array {
-  const width = 320;
-  const height = 200;
-  const out = new Uint8Array(width * height);
+  const out = new Uint8Array(FRAME_WIDTH * FRAME_HEIGHT);
   let state = hash >>> 0;
   for (let i = 0; i < out.length; i++) {
     // Deterministic pseudo-frame for parity/debug transport.
@@ -664,6 +665,75 @@ function buildIndexedBuffer(hash: number, tick: number): Uint8Array {
     out[i] = state & 0xff;
   }
   return out;
+}
+
+type RaycastHit = {
+  distance: number;
+  side: 0 | 1;
+  tileX: number;
+  tileY: number;
+  texX: number;
+};
+
+function castRayFullMap(
+  plane0: Uint16Array,
+  width: number,
+  height: number,
+  posX: number,
+  posY: number,
+  dirX: number,
+  dirY: number,
+): RaycastHit | null {
+  let mapX = Math.floor(posX);
+  let mapY = Math.floor(posY);
+
+  const deltaDistX = dirX === 0 ? 1e30 : Math.abs(1 / dirX);
+  const deltaDistY = dirY === 0 ? 1e30 : Math.abs(1 / dirY);
+  const stepX = dirX < 0 ? -1 : 1;
+  const stepY = dirY < 0 ? -1 : 1;
+  let sideDistX = dirX < 0 ? (posX - mapX) * deltaDistX : (mapX + 1 - posX) * deltaDistX;
+  let sideDistY = dirY < 0 ? (posY - mapY) * deltaDistY : (mapY + 1 - posY) * deltaDistY;
+
+  let side: 0 | 1 = 0;
+  for (let i = 0; i < 512; i++) {
+    if (sideDistX < sideDistY) {
+      sideDistX += deltaDistX;
+      mapX += stepX;
+      side = 0;
+    } else {
+      sideDistY += deltaDistY;
+      mapY += stepY;
+      side = 1;
+    }
+
+    if (planeWallAt(plane0, width, height, mapX, mapY)) {
+      const perpDist = side === 0
+        ? (mapX - posX + (1 - stepX) / 2) / (dirX === 0 ? 1e-6 : dirX)
+        : (mapY - posY + (1 - stepY) / 2) / (dirY === 0 ? 1e-6 : dirY);
+      let wallX = side === 0 ? posY + perpDist * dirY : posX + perpDist * dirX;
+      wallX -= Math.floor(wallX);
+      let texX = Math.floor(wallX * 64) & 63;
+      if (side === 0 && dirX > 0) texX = 63 - texX;
+      if (side === 1 && dirY < 0) texX = 63 - texX;
+      return {
+        distance: Math.max(0.02, Math.abs(perpDist)),
+        side,
+        tileX: mapX,
+        tileY: mapY,
+        texX,
+      };
+    }
+  }
+
+  return null;
+}
+
+function hashIndexedFrame(buffer: Uint8Array): number {
+  let hash = 2166136261 >>> 0;
+  for (let i = 0; i < buffer.length; i++) {
+    hash = fnv1a(hash, buffer[i] ?? 0);
+  }
+  return hash >>> 0;
 }
 
 export class TsRuntimePort implements RuntimePort {
@@ -683,6 +753,7 @@ export class TsRuntimePort implements RuntimePort {
   private bootState: State = { ...this.state };
   private angleFrac = 0;
   private bootAngleFrac = 0;
+  private wallTextures: Uint8Array[] = [];
   private fullMap: FullMapState = {
     enabled: false,
     width: 0,
@@ -706,6 +777,10 @@ export class TsRuntimePort implements RuntimePort {
       worldXQ8: source.worldXQ8 | 0,
       worldYQ8: source.worldYQ8 | 0,
     };
+  }
+
+  setWallTextures(textures: Uint8Array[]): void {
+    this.wallTextures = textures.slice();
   }
 
   private refreshMapWindowFromWorld(recenterWindow: boolean): void {
@@ -2039,6 +2114,84 @@ export class TsRuntimePort implements RuntimePort {
     this.state.tick++;
   }
 
+  private renderFullMapFrame(includeRaw: boolean): { indexedHash: number; indexedBuffer?: Uint8Array } {
+    if (!this.fullMap.enabled || !this.fullMap.plane0) {
+      const indexedHash = this.renderHash(FRAME_WIDTH, FRAME_HEIGHT) >>> 0;
+      return {
+        indexedHash,
+        indexedBuffer: includeRaw ? buildIndexedBuffer(indexedHash, this.state.tick | 0) : undefined,
+      };
+    }
+
+    const plane0 = this.fullMap.plane0;
+    const mapWidth = this.fullMap.width | 0;
+    const mapHeight = this.fullMap.height | 0;
+    const posX = (this.fullMap.worldXQ8 | 0) / 256;
+    const posY = (this.fullMap.worldYQ8 | 0) / 256;
+    const angleRad = ((this.state.angleDeg | 0) * Math.PI) / 180;
+
+    const indexed = new Uint8Array(FRAME_WIDTH * FRAME_HEIGHT);
+    indexed.fill(2);
+    for (let y = 0; y < FRAME_HEIGHT / 2; y++) {
+      indexed.fill(29, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
+    }
+    for (let y = FRAME_HEIGHT / 2; y < FRAME_HEIGHT; y++) {
+      indexed.fill(6, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
+    }
+
+    for (let x = 0; x < FRAME_WIDTH; x++) {
+      const camera = x / FRAME_WIDTH - 0.5;
+      const rayAngle = angleRad - camera * RENDER_FOV;
+      const dirX = Math.cos(rayAngle);
+      const dirY = -Math.sin(rayAngle);
+      const hit = castRayFullMap(plane0, mapWidth, mapHeight, posX, posY, dirX, dirY);
+      if (!hit) {
+        continue;
+      }
+
+      const wallHeight = Math.min(FRAME_HEIGHT, Math.max(2, (FRAME_HEIGHT / hit.distance) | 0));
+      const top = Math.max(0, (FRAME_HEIGHT / 2 - wallHeight / 2) | 0);
+      const bottom = Math.min(FRAME_HEIGHT - 1, top + wallHeight);
+      const tile = plane0[hit.tileY * mapWidth + hit.tileX] ?? 0;
+      const texture = this.wallTextures.length > 0
+        ? this.wallTextures[Math.abs((hit.tileX * 13 + hit.tileY * 7 + hit.side * 3) | 0) % this.wallTextures.length]
+        : null;
+      let wallIndex = (96 + ((tile + hit.tileX * 3 + hit.tileY * 5) & 0x3f)) & 0xff;
+      if (hit.side === 1) {
+        wallIndex = (wallIndex - 16) & 0xff;
+      }
+
+      for (let y = top; y <= bottom; y++) {
+        if (texture) {
+          const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
+          // VSWAP walls are stored column-major (x-major).
+          const sampleX = (63 - hit.texX) & 63;
+          indexed[y * FRAME_WIDTH + x] = texture[(sampleX * 64 + ty) & 4095] ?? wallIndex;
+        } else {
+          indexed[y * FRAME_WIDTH + x] = wallIndex;
+        }
+      }
+    }
+
+    const weaponTop = FRAME_HEIGHT - 40;
+    for (let y = weaponTop; y < FRAME_HEIGHT; y++) {
+      const width = 34 - (((y - weaponTop) / 2) | 0);
+      const left = ((FRAME_WIDTH / 2) | 0) - width;
+      const right = ((FRAME_WIDTH / 2) | 0) + width;
+      for (let x = left; x <= right; x++) {
+        if (x >= 0 && x < FRAME_WIDTH) {
+          indexed[y * FRAME_WIDTH + x] = 228;
+        }
+      }
+    }
+
+    const indexedHash = hashIndexedFrame(indexed);
+    return {
+      indexedHash,
+      indexedBuffer: includeRaw ? indexed : undefined,
+    };
+  }
+
   step(input: RuntimeInput): RuntimeStepResult {
     const loops = clampI32(input.tics, 0, 32);
     for (let i = 0; i < loops; i++) {
@@ -2047,7 +2200,9 @@ export class TsRuntimePort implements RuntimePort {
     }
 
     const snapshotHashValue = snapshotHash(this.state, this.angleFrac);
-    const frameHash = renderFrameHash(this.state, this.angleFrac, 320, 200);
+    const frameHash = this.fullMap.enabled
+      ? this.renderFullMapFrame(false).indexedHash >>> 0
+      : renderFrameHash(this.state, this.angleFrac, FRAME_WIDTH, FRAME_HEIGHT);
     return {
       snapshotHash: snapshotHashValue,
       frameHash,
@@ -2060,14 +2215,27 @@ export class TsRuntimePort implements RuntimePort {
   }
 
   renderHash(viewWidth: number, viewHeight: number): number {
+    if (this.fullMap.enabled && viewWidth === FRAME_WIDTH && viewHeight === FRAME_HEIGHT) {
+      return this.renderFullMapFrame(false).indexedHash >>> 0;
+    }
     return renderFrameHash(this.state, this.angleFrac, viewWidth | 0, viewHeight | 0);
   }
 
   framebuffer(includeRaw = false): RuntimeFramebufferView {
-    const indexedHash = this.renderHash(320, 200) >>> 0;
+    if (this.fullMap.enabled) {
+      const frame = this.renderFullMapFrame(includeRaw);
+      return {
+        width: FRAME_WIDTH,
+        height: FRAME_HEIGHT,
+        indexedHash: frame.indexedHash >>> 0,
+        indexedBuffer: frame.indexedBuffer,
+      };
+    }
+
+    const indexedHash = this.renderHash(FRAME_WIDTH, FRAME_HEIGHT) >>> 0;
     return {
-      width: 320,
-      height: 200,
+      width: FRAME_WIDTH,
+      height: FRAME_HEIGHT,
       indexedHash,
       indexedBuffer: includeRaw ? buildIndexedBuffer(indexedHash, this.state.tick | 0) : undefined,
     };

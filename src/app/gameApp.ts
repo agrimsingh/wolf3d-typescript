@@ -5,21 +5,12 @@ import { RuntimeAppController, type RuntimeScenario } from './runtimeController'
 
 const WIDTH = 320;
 const HEIGHT = 200;
-const FOV = Math.PI / 3;
 const MINIMAP_TILE_SIZE = 8;
 const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
 const AREATILE = 107;
 const PROTOTYPE_BASELINE_BANNER = 'Prototype runtime baseline active (G0-G9)';
 const PROTOTYPE_BASELINE_BANNER_ID = 'runtime-baseline-banner';
-
-type RayHit = {
-  distance: number;
-  side: 0 | 1;
-  tileX: number;
-  tileY: number;
-  texX: number;
-};
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -85,107 +76,6 @@ function paletteIndexToRgb(index: number): [number, number, number] {
   return [r | 0, g | 0, b | 0];
 }
 
-function castRayWindowBits(
-  mapLo: number,
-  mapHi: number,
-  posX: number,
-  posY: number,
-  dirX: number,
-  dirY: number,
-): RayHit | null {
-  let mapX = Math.floor(posX);
-  let mapY = Math.floor(posY);
-  if (!Number.isFinite(posX) || !Number.isFinite(posY) || !Number.isFinite(dirX) || !Number.isFinite(dirY)) {
-    return null;
-  }
-
-  const deltaDistX = dirX === 0 ? 1e30 : Math.abs(1 / dirX);
-  const deltaDistY = dirY === 0 ? 1e30 : Math.abs(1 / dirY);
-
-  const stepX = dirX < 0 ? -1 : 1;
-  const stepY = dirY < 0 ? -1 : 1;
-  let sideDistX = dirX < 0 ? (posX - mapX) * deltaDistX : (mapX + 1 - posX) * deltaDistX;
-  let sideDistY = dirY < 0 ? (posY - mapY) * deltaDistY : (mapY + 1 - posY) * deltaDistY;
-
-  let side: 0 | 1 = 0;
-  for (let i = 0; i < 128; i++) {
-    if (sideDistX < sideDistY) {
-      sideDistX += deltaDistX;
-      mapX += stepX;
-      side = 0;
-    } else {
-      sideDistY += deltaDistY;
-      mapY += stepY;
-      side = 1;
-    }
-
-    if (wallAtWindowBits(mapLo, mapHi, mapX, mapY)) {
-      const perpDist = side === 0
-        ? (mapX - posX + (1 - stepX) / 2) / (dirX === 0 ? 1e-6 : dirX)
-        : (mapY - posY + (1 - stepY) / 2) / (dirY === 0 ? 1e-6 : dirY);
-      const distance = Math.max(0.02, Math.abs(perpDist));
-      let wallX = side === 0 ? posY + perpDist * dirY : posX + perpDist * dirX;
-      wallX -= Math.floor(wallX);
-      let texX = Math.floor(wallX * TEXTURE_SIZE) & (TEXTURE_SIZE - 1);
-      if (side === 0 && dirX > 0) texX = (TEXTURE_SIZE - 1) - texX;
-      if (side === 1 && dirY < 0) texX = (TEXTURE_SIZE - 1) - texX;
-      return { distance, side, tileX: mapX, tileY: mapY, texX };
-    }
-  }
-  return null;
-}
-
-function castRayPlane(
-  plane0: Uint16Array,
-  mapWidth: number,
-  mapHeight: number,
-  posX: number,
-  posY: number,
-  dirX: number,
-  dirY: number,
-): RayHit | null {
-  let mapX = Math.floor(posX);
-  let mapY = Math.floor(posY);
-  if (!Number.isFinite(posX) || !Number.isFinite(posY) || !Number.isFinite(dirX) || !Number.isFinite(dirY)) {
-    return null;
-  }
-
-  const deltaDistX = dirX === 0 ? 1e30 : Math.abs(1 / dirX);
-  const deltaDistY = dirY === 0 ? 1e30 : Math.abs(1 / dirY);
-
-  const stepX = dirX < 0 ? -1 : 1;
-  const stepY = dirY < 0 ? -1 : 1;
-  let sideDistX = dirX < 0 ? (posX - mapX) * deltaDistX : (mapX + 1 - posX) * deltaDistX;
-  let sideDistY = dirY < 0 ? (posY - mapY) * deltaDistY : (mapY + 1 - posY) * deltaDistY;
-
-  let side: 0 | 1 = 0;
-  for (let i = 0; i < 512; i++) {
-    if (sideDistX < sideDistY) {
-      sideDistX += deltaDistX;
-      mapX += stepX;
-      side = 0;
-    } else {
-      sideDistY += deltaDistY;
-      mapY += stepY;
-      side = 1;
-    }
-
-    if (wallAtPlane(plane0, mapWidth, mapHeight, mapX, mapY)) {
-      const perpDist = side === 0
-        ? (mapX - posX + (1 - stepX) / 2) / (dirX === 0 ? 1e-6 : dirX)
-        : (mapY - posY + (1 - stepY) / 2) / (dirY === 0 ? 1e-6 : dirY);
-      const distance = Math.max(0.02, Math.abs(perpDist));
-      let wallX = side === 0 ? posY + perpDist * dirY : posX + perpDist * dirX;
-      wallX -= Math.floor(wallX);
-      let texX = Math.floor(wallX * TEXTURE_SIZE) & (TEXTURE_SIZE - 1);
-      if (side === 0 && dirX > 0) texX = (TEXTURE_SIZE - 1) - texX;
-      if (side === 1 && dirY < 0) texX = (TEXTURE_SIZE - 1) - texX;
-      return { distance, side, tileX: mapX, tileY: mapY, texX };
-    }
-  }
-  return null;
-}
-
 export class WolfApp {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
@@ -194,8 +84,6 @@ export class WolfApp {
     audio: new WebAudioRuntimeAdapter(),
     scenarioLoader: () => loadWl1RuntimeScenarios('/assets/wl1', 64),
   });
-  private wallTextures: Uint8Array[] = [];
-  private wallTexturesReady = false;
   private loopHandle = 0;
   private lastMouseClientX: number | null = null;
 
@@ -234,12 +122,10 @@ export class WolfApp {
       const bytes = new Uint8Array(await response.arrayBuffer());
       const textures = parseVswapWallTextures(bytes, MAX_WALL_TEXTURES);
       if (textures.length > 0) {
-        this.wallTextures = textures;
-        this.wallTexturesReady = true;
+        this.controller.setWallTextures(textures);
       }
     } catch {
-      this.wallTextures = [];
-      this.wallTexturesReady = false;
+      // Keep runtime on procedural fallback if textures cannot be loaded.
     }
   }
 
@@ -357,70 +243,25 @@ export class WolfApp {
 
     const mapLo = snapshot.mapLo >>> 0;
     const mapHi = snapshot.mapHi >>> 0;
-    const mapWidth = scenario?.config.mapWidth ?? 8;
-    const mapHeight = scenario?.config.mapHeight ?? 8;
-    const plane0 = scenario?.config.plane0;
-    const useFullMap = !!plane0 && mapWidth > 0 && mapHeight > 0;
     const posXQ8 = (snapshot.worldXQ8 ?? snapshot.xQ8) | 0;
     const posYQ8 = (snapshot.worldYQ8 ?? snapshot.yQ8) | 0;
     const pixels = this.image.data;
-    pixels.fill(0);
-
-    // Runtime bridge frame bytes are still synthetic; render from runtime state and WL1 textures.
-    const angleRad = (snapshot.angleDeg * Math.PI) / 180;
-    const posX = posXQ8 / 256;
-    const posY = posYQ8 / 256;
-    const textures = this.wallTexturesReady ? this.wallTextures : [];
-    for (let x = 0; x < WIDTH; x++) {
-      const camera = x / WIDTH - 0.5;
-      const rayAngle = angleRad - camera * FOV;
-      const dirX = Math.cos(rayAngle);
-      const dirY = -Math.sin(rayAngle);
-      const hit = useFullMap
-        ? castRayPlane(plane0!, mapWidth, mapHeight, posX, posY, dirX, dirY)
-        : castRayWindowBits(mapLo, mapHi, posX, posY, dirX, dirY);
-      const safeDist = hit ? hit.distance : 1000;
-      const wallHeight = Math.min(HEIGHT, Math.max(2, (HEIGHT / Math.max(0.001, safeDist)) | 0));
-      const top = (HEIGHT / 2 - wallHeight / 2) | 0;
-      const bottom = top + wallHeight;
-      const tex = hit && textures.length > 0
-        ? textures[Math.abs((hit.tileX * 13 + hit.tileY * 7 + hit.side * 3) | 0) % textures.length]!
-        : null;
-      const shade = Math.max(40, Math.min(220, (220 / (1 + safeDist * 0.65)) | 0));
-
-      for (let y = 0; y < HEIGHT; y++) {
-        const idx = (y * WIDTH + x) * 4;
-        if (hit && y >= top && y <= bottom) {
-          if (tex) {
-            const ty = ((((y - top) * TEXTURE_SIZE) / Math.max(1, wallHeight)) | 0) & (TEXTURE_SIZE - 1);
-            // VSWAP wall chunks are laid out per-column; sample in column-major order.
-            const sampleX = (TEXTURE_SIZE - 1 - hit.texX) & (TEXTURE_SIZE - 1);
-            const palIndex = tex[(sampleX * TEXTURE_SIZE + ty) & (TEXTURE_SIZE * TEXTURE_SIZE - 1)] ?? 0;
-            let [r, g, b] = paletteIndexToRgb(palIndex);
-            if (hit.side === 1) {
-              r = (r * 3) >> 2;
-              g = (g * 3) >> 2;
-              b = (b * 3) >> 2;
-            }
-            pixels[idx] = r;
-            pixels[idx + 1] = g;
-            pixels[idx + 2] = b;
-          } else {
-            pixels[idx] = shade;
-            pixels[idx + 1] = (shade * 0.4) | 0;
-            pixels[idx + 2] = (shade * 0.3) | 0;
-          }
-        } else if (y < HEIGHT / 2) {
-          const t = y / (HEIGHT / 2);
-          pixels[idx] = (16 + t * 20) | 0;
-          pixels[idx + 1] = (22 + t * 16) | 0;
-          pixels[idx + 2] = (56 + t * 24) | 0;
-        } else {
-          const t = (y - HEIGHT / 2) / (HEIGHT / 2);
-          pixels[idx] = (12 + t * 10) | 0;
-          pixels[idx + 1] = (10 + t * 8) | 0;
-          pixels[idx + 2] = (8 + t * 6) | 0;
-        }
+    const indexed = state.framebuffer?.indexedBuffer;
+    if (indexed && indexed.length >= WIDTH * HEIGHT) {
+      for (let i = 0; i < WIDTH * HEIGHT; i++) {
+        const idx = i * 4;
+        const [r, g, b] = paletteIndexToRgb(indexed[i] ?? 0);
+        pixels[idx] = r;
+        pixels[idx + 1] = g;
+        pixels[idx + 2] = b;
+        pixels[idx + 3] = 255;
+      }
+    } else {
+      for (let i = 0; i < WIDTH * HEIGHT; i++) {
+        const idx = i * 4;
+        pixels[idx] = 0;
+        pixels[idx + 1] = 0;
+        pixels[idx + 2] = 0;
         pixels[idx + 3] = 255;
       }
     }

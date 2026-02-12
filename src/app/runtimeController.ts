@@ -283,6 +283,11 @@ export class RuntimeAppController {
     this.mouseTurnAccumulator += deltaX;
   }
 
+  setWallTextures(textures: Uint8Array[]): void {
+    const runtimeWithTextures = this.runtime as RuntimePort & { setWallTextures?: (textures: Uint8Array[]) => void };
+    runtimeWithTextures.setWallTextures?.(textures);
+  }
+
   tick(nowMs: number): void {
     if (this.state.mode !== 'playing' || !this.state.currentScenario || !this.state.snapshot) {
       return;
