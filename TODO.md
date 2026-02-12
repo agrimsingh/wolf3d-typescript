@@ -1,6 +1,6 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In Progress (`K3` active)  
+**Status:** In Progress (`K5` active)  
 **Last Updated:** 2026-02-12
 
 ## Scope Lock
@@ -54,22 +54,22 @@
 
 ## K3: WL6 Runtime Data/Boot Pipeline
 
-- [ ] Replace 8x8 window boot model with full WL6 map planes and canonical spawn.
-- [ ] Migrate runtime scenarios to variant-aware full-world fixtures.
-- [ ] Gate: map decode parity (1k local / 10k CI where applicable)
-- [ ] Gate: representative boot trace parity
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k3: wl6 full-world boot and map decode parity`)
+- [x] Replace 8x8 window boot model with full WL6 map planes and canonical spawn.
+- [x] Migrate runtime scenarios to variant-aware full-world fixtures.
+- [x] Gate: map decode parity (1k local / 10k CI where applicable)
+- [x] Gate: representative boot trace parity
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k3: wl6 full-world boot and map decode parity`)
 
 ## K4: Oracle Runtime Driver WL6 Alignment
 
-- [ ] Align oracle runtime stepping/snapshot/frame/save-load for WL6 traces.
-- [ ] Gate: `pnpm runtime:parity:test`
-- [ ] Gate: deterministic replay equality suite
-- [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k4: wl6 oracle runtime determinism`)
+- [x] Align oracle runtime stepping/snapshot/frame/save-load for WL6 traces.
+- [x] Gate: `pnpm runtime:parity:test`
+- [x] Gate: deterministic replay equality suite
+- [x] Agent-browser check recorded
+- [x] Tests green
+- [x] Phase commit pushed (`k4: wl6 oracle runtime determinism`)
 
 ## K5: Symbol Classification Refresh (WL6)
 
