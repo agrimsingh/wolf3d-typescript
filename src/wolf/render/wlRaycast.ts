@@ -59,6 +59,12 @@ function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value | 0)) | 0;
 }
 
+function clampS32(value: number): number {
+  if (value > 0x7fffffff) return 0x7fffffff;
+  if (value < -0x80000000) return -0x80000000;
+  return value | 0;
+}
+
 function widthForSrc(scale: number, src: number): number {
   const scalerHeight = (scale | 0) * 2;
   if (scalerHeight <= 0) {
@@ -590,6 +596,148 @@ export function wlScaleSimpleScaleShapeHash(
   hash = fnv1a(hash, xcenter);
   hash = fnv1a(hash, leftpix);
   hash = fnv1a(hash, rightpix);
+  return hash >>> 0;
+}
+
+export function idVhVwMeasurePropStringHash(textLen: number, fontWidth: number, spacing: number, maxWidth: number): number {
+  const len = textLen < 0 ? 0 : (textLen | 0);
+  const fw = fontWidth < 1 ? 1 : (fontWidth | 0);
+  const sp = spacing < 0 ? 0 : (spacing | 0);
+  let width = clampS32(len * (fw + sp));
+  let clipped = 0;
+  if ((maxWidth | 0) > 0 && width > (maxWidth | 0)) {
+    width = maxWidth | 0;
+    clipped = 1;
+  }
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, len);
+  hash = fnv1a(hash, fw);
+  hash = fnv1a(hash, sp);
+  hash = fnv1a(hash, width);
+  hash = fnv1a(hash, clipped);
+  return hash >>> 0;
+}
+
+export function idVhVwbDrawPicHash(x: number, y: number, picnum: number, bufferofs: number, screenofs: number): number {
+  const drawOfs = ((bufferofs | 0) + (screenofs | 0)) | 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, picnum);
+  hash = fnv1a(hash, drawOfs);
+  return hash >>> 0;
+}
+
+export function idVhVwbBarHash(x: number, y: number, width: number, height: number, color: number): number {
+  const w = width < 0 ? 0 : (width | 0);
+  const h = height < 0 ? 0 : (height | 0);
+  const pixels = Math.imul(w, h) >>> 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, color);
+  hash = fnv1a(hash, pixels);
+  return hash >>> 0;
+}
+
+export function idVlVlBarHash(x: number, y: number, width: number, height: number, color: number, linewidth: number): number {
+  const w = width < 0 ? 0 : (width | 0);
+  const h = height < 0 ? 0 : (height | 0);
+  const lw = linewidth <= 0 ? 1 : (linewidth | 0);
+  const span = Math.imul(w, lw) >>> 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, color);
+  hash = fnv1a(hash, lw);
+  hash = fnv1a(hash, span);
+  return hash >>> 0;
+}
+
+export function idVlVlMemToScreenHash(srcLen: number, width: number, height: number, dest: number, mask: number): number {
+  const len = srcLen < 0 ? 0 : (srcLen | 0);
+  const w = width < 0 ? 0 : (width | 0);
+  const h = height < 0 ? 0 : (height | 0);
+  let copied = Math.imul(w, h) | 0;
+  if (copied > len) {
+    copied = len;
+  }
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, len);
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, dest);
+  hash = fnv1a(hash, mask);
+  hash = fnv1a(hash, copied);
+  return hash >>> 0;
+}
+
+export function idVlVlLatchToScreenHash(source: number, width: number, height: number, x: number, y: number): number {
+  const w = width < 0 ? 0 : (width | 0);
+  const h = height < 0 ? 0 : (height | 0);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, source);
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, h);
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  return hash >>> 0;
+}
+
+export function idVlVlFadeInHash(start: number, end: number, steps: number, paletteSeed: number): number {
+  const first = start < 0 ? 0 : (start | 0);
+  const last = (end | 0) < first ? first : (end | 0);
+  const count = ((last - first) + 1) | 0;
+  const s = steps <= 0 ? 1 : (steps | 0);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, first);
+  hash = fnv1a(hash, last);
+  hash = fnv1a(hash, s);
+  hash = fnv1a(hash, paletteSeed);
+  hash = fnv1a(hash, count);
+  return hash >>> 0;
+}
+
+export function idVlVlFadeOutHash(start: number, end: number, steps: number, paletteSeed: number): number {
+  const first = start < 0 ? 0 : (start | 0);
+  const last = (end | 0) < first ? first : (end | 0);
+  const s = steps <= 0 ? 1 : (steps | 0);
+  const span = ((last - first) + 1) >>> 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, first);
+  hash = fnv1a(hash, last);
+  hash = fnv1a(hash, s);
+  hash = fnv1a(hash, paletteSeed);
+  hash = fnv1a(hash, (span ^ 0xa5a5) >>> 0);
+  return hash >>> 0;
+}
+
+export function idVlVlPlotHash(x: number, y: number, color: number, linewidth: number): number {
+  const lw = linewidth <= 0 ? 1 : (linewidth | 0);
+  const pixel = ((Math.imul(x | 0, lw) & 0xffff) | (((y | 0) & 0xffff) << 16)) >>> 0;
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, color);
+  hash = fnv1a(hash, lw);
+  hash = fnv1a(hash, pixel);
+  return hash >>> 0;
+}
+
+export function idVlVlHlinHash(x: number, y: number, width: number, color: number, linewidth: number): number {
+  const w = width < 0 ? 0 : (width | 0);
+  const lw = linewidth <= 0 ? 1 : (linewidth | 0);
+  let hash = 2166136261 >>> 0;
+  hash = fnv1a(hash, x);
+  hash = fnv1a(hash, y);
+  hash = fnv1a(hash, w);
+  hash = fnv1a(hash, color);
+  hash = fnv1a(hash, lw);
+  hash = fnv1a(hash, Math.imul(w, lw));
   return hash >>> 0;
 }
 

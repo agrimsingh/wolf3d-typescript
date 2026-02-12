@@ -16,6 +16,16 @@ static uint32_t fnv1a_u32(uint32_t hash, uint32_t value) {
   return hash;
 }
 
+static int32_t clamp_s32_i64(int64_t value) {
+  if (value > 2147483647LL) {
+    return 2147483647;
+  }
+  if (value < -2147483648LL) {
+    return -2147483648LL;
+  }
+  return (int32_t)value;
+}
+
 static int32_t fixed_by_frac(int32_t a, int32_t b) {
   int sign = ((a < 0) ? 1 : 0) ^ ((b < 0) ? 1 : 0);
   uint32_t ua = (a < 0) ? (uint32_t)(-(int64_t)a) : (uint32_t)a;
@@ -672,5 +682,208 @@ EMSCRIPTEN_KEEPALIVE uint32_t oracle_wl_scale_simple_scale_shape_hash(
   hash = fnv1a_u32(hash, (uint32_t)xcenter);
   hash = fnv1a_u32(hash, (uint32_t)leftpix);
   hash = fnv1a_u32(hash, (uint32_t)rightpix);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vh_vw_measure_prop_string_hash(
+  int32_t text_len,
+  int32_t font_width,
+  int32_t spacing,
+  int32_t max_width
+) {
+  int32_t len = text_len < 0 ? 0 : text_len;
+  int32_t fw = font_width < 1 ? 1 : font_width;
+  int32_t sp = spacing < 0 ? 0 : spacing;
+  int32_t width = clamp_s32_i64((int64_t)len * (int64_t)(fw + sp));
+  int32_t clipped = 0;
+  if (max_width > 0 && width > max_width) {
+    width = max_width;
+    clipped = 1;
+  }
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)len);
+  hash = fnv1a_u32(hash, (uint32_t)fw);
+  hash = fnv1a_u32(hash, (uint32_t)sp);
+  hash = fnv1a_u32(hash, (uint32_t)width);
+  hash = fnv1a_u32(hash, (uint32_t)clipped);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vh_vwb_draw_pic_hash(
+  int32_t x,
+  int32_t y,
+  int32_t picnum,
+  int32_t bufferofs,
+  int32_t screenofs
+) {
+  int32_t draw_ofs = bufferofs + screenofs;
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)x);
+  hash = fnv1a_u32(hash, (uint32_t)y);
+  hash = fnv1a_u32(hash, (uint32_t)picnum);
+  hash = fnv1a_u32(hash, (uint32_t)draw_ofs);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vh_vwb_bar_hash(
+  int32_t x,
+  int32_t y,
+  int32_t width,
+  int32_t height,
+  int32_t color
+) {
+  int32_t w = width < 0 ? 0 : width;
+  int32_t h = height < 0 ? 0 : height;
+  uint32_t pixels = (uint32_t)((uint64_t)(uint32_t)w * (uint64_t)(uint32_t)h);
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)x);
+  hash = fnv1a_u32(hash, (uint32_t)y);
+  hash = fnv1a_u32(hash, (uint32_t)w);
+  hash = fnv1a_u32(hash, (uint32_t)h);
+  hash = fnv1a_u32(hash, (uint32_t)color);
+  hash = fnv1a_u32(hash, pixels);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vl_vl_bar_hash(
+  int32_t x,
+  int32_t y,
+  int32_t width,
+  int32_t height,
+  int32_t color,
+  int32_t linewidth
+) {
+  int32_t w = width < 0 ? 0 : width;
+  int32_t h = height < 0 ? 0 : height;
+  int32_t lw = linewidth <= 0 ? 1 : linewidth;
+  uint32_t span = (uint32_t)((uint64_t)(uint32_t)w * (uint64_t)(uint32_t)lw);
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)x);
+  hash = fnv1a_u32(hash, (uint32_t)y);
+  hash = fnv1a_u32(hash, (uint32_t)w);
+  hash = fnv1a_u32(hash, (uint32_t)h);
+  hash = fnv1a_u32(hash, (uint32_t)color);
+  hash = fnv1a_u32(hash, (uint32_t)lw);
+  hash = fnv1a_u32(hash, span);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vl_vl_mem_to_screen_hash(
+  int32_t src_len,
+  int32_t width,
+  int32_t height,
+  int32_t dest,
+  int32_t mask
+) {
+  int32_t len = src_len < 0 ? 0 : src_len;
+  int32_t w = width < 0 ? 0 : width;
+  int32_t h = height < 0 ? 0 : height;
+  int32_t copied = (int32_t)((uint32_t)w * (uint32_t)h);
+  if (copied > len) {
+    copied = len;
+  }
+
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)len);
+  hash = fnv1a_u32(hash, (uint32_t)w);
+  hash = fnv1a_u32(hash, (uint32_t)h);
+  hash = fnv1a_u32(hash, (uint32_t)dest);
+  hash = fnv1a_u32(hash, (uint32_t)mask);
+  hash = fnv1a_u32(hash, (uint32_t)copied);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vl_vl_latch_to_screen_hash(
+  int32_t source,
+  int32_t width,
+  int32_t height,
+  int32_t x,
+  int32_t y
+) {
+  int32_t w = width < 0 ? 0 : width;
+  int32_t h = height < 0 ? 0 : height;
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)source);
+  hash = fnv1a_u32(hash, (uint32_t)w);
+  hash = fnv1a_u32(hash, (uint32_t)h);
+  hash = fnv1a_u32(hash, (uint32_t)x);
+  hash = fnv1a_u32(hash, (uint32_t)y);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vl_vl_fade_in_hash(
+  int32_t start,
+  int32_t end,
+  int32_t steps,
+  int32_t palette_seed
+) {
+  int32_t first = start < 0 ? 0 : start;
+  int32_t last = end < first ? first : end;
+  int32_t count = (last - first) + 1;
+  int32_t s = steps <= 0 ? 1 : steps;
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)first);
+  hash = fnv1a_u32(hash, (uint32_t)last);
+  hash = fnv1a_u32(hash, (uint32_t)s);
+  hash = fnv1a_u32(hash, (uint32_t)palette_seed);
+  hash = fnv1a_u32(hash, (uint32_t)count);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vl_vl_fade_out_hash(
+  int32_t start,
+  int32_t end,
+  int32_t steps,
+  int32_t palette_seed
+) {
+  int32_t first = start < 0 ? 0 : start;
+  int32_t last = end < first ? first : end;
+  int32_t s = steps <= 0 ? 1 : steps;
+  uint32_t span = (uint32_t)((last - first) + 1);
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)first);
+  hash = fnv1a_u32(hash, (uint32_t)last);
+  hash = fnv1a_u32(hash, (uint32_t)s);
+  hash = fnv1a_u32(hash, (uint32_t)palette_seed);
+  hash = fnv1a_u32(hash, span ^ 0xa5a5u);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vl_vl_plot_hash(
+  int32_t x,
+  int32_t y,
+  int32_t color,
+  int32_t linewidth
+) {
+  int32_t lw = linewidth <= 0 ? 1 : linewidth;
+  uint32_t product = (uint32_t)x * (uint32_t)lw;
+  uint32_t pixel = (uint32_t)((product & 0xffffu) | (((uint32_t)y & 0xffffu) << 16));
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)x);
+  hash = fnv1a_u32(hash, (uint32_t)y);
+  hash = fnv1a_u32(hash, (uint32_t)color);
+  hash = fnv1a_u32(hash, (uint32_t)lw);
+  hash = fnv1a_u32(hash, pixel);
+  return hash;
+}
+
+EMSCRIPTEN_KEEPALIVE uint32_t oracle_id_vl_vl_hlin_hash(
+  int32_t x,
+  int32_t y,
+  int32_t width,
+  int32_t color,
+  int32_t linewidth
+) {
+  int32_t w = width < 0 ? 0 : width;
+  int32_t lw = linewidth <= 0 ? 1 : linewidth;
+  uint32_t span = (uint32_t)((uint64_t)(uint32_t)w * (uint64_t)(uint32_t)lw);
+  uint32_t hash = 2166136261u;
+  hash = fnv1a_u32(hash, (uint32_t)x);
+  hash = fnv1a_u32(hash, (uint32_t)y);
+  hash = fnv1a_u32(hash, (uint32_t)w);
+  hash = fnv1a_u32(hash, (uint32_t)color);
+  hash = fnv1a_u32(hash, (uint32_t)lw);
+  hash = fnv1a_u32(hash, span);
   return hash;
 }

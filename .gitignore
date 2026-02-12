@@ -9,6 +9,7 @@ src/oracle/generated/*.map
 assets/wl1/
 assets/wolf3dsw.zip
 test/repro/*.json
+test/repro/**/*.json
 .build/
 artifacts/
 c-oracle/wolfsrc-sanitized/

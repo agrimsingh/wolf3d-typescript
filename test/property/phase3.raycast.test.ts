@@ -4,6 +4,16 @@ import { getOracleBridge, OracleBridge } from '../../src/oracle/bridge';
 import { getNumRuns, getSeed } from './config';
 import { withReplay } from './replay';
 import {
+  idVhVwMeasurePropStringHash,
+  idVhVwbBarHash,
+  idVhVwbDrawPicHash,
+  idVlVlBarHash,
+  idVlVlFadeInHash,
+  idVlVlFadeOutHash,
+  idVlVlHlinHash,
+  idVlVlLatchToScreenHash,
+  idVlVlMemToScreenHash,
+  idVlVlPlotHash,
   wlDrawCalcHeight,
   wlDrawHitHorizWallHash,
   wlDrawHitVertWallHash,
@@ -454,6 +464,56 @@ describe('phase 3 real WOLFSRC raycasting parity', () => {
           (xcenter, leftpix, rightpix, height) => {
             expect(wlScaleSimpleScaleShapeHash(xcenter, leftpix, rightpix, height) >>> 0).toBe(
               oracle.wlScaleSimpleScaleShapeHash(xcenter, leftpix, rightpix, height) >>> 0,
+            );
+          },
+        ),
+        { numRuns: getNumRuns(), seed: getSeed() },
+      );
+    });
+  });
+
+  it('ID_VH render helper hashes match oracle', () => {
+    withReplay('phase3.id_vh.render-helpers', () => {
+      fc.assert(
+        fc.property(
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          fc.integer({ min: -0x7fffffff, max: 0x7fffffff }),
+          (a, b, c, d, e, f, g, h) => {
+            expect(idVhVwMeasurePropStringHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVhVwMeasurePropStringHash(a, b, c, d) >>> 0,
+            );
+            expect(idVhVwbDrawPicHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhVwbDrawPicHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVhVwbBarHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVhVwbBarHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVlVlBarHash(a, b, c, d, e, f) >>> 0).toBe(
+              oracle.idVlVlBarHash(a, b, c, d, e, f) >>> 0,
+            );
+            expect(idVlVlMemToScreenHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVlVlMemToScreenHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVlVlLatchToScreenHash(a, b, c, d, e) >>> 0).toBe(
+              oracle.idVlVlLatchToScreenHash(a, b, c, d, e) >>> 0,
+            );
+            expect(idVlVlFadeInHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVlVlFadeInHash(a, b, c, d) >>> 0,
+            );
+            expect(idVlVlFadeOutHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVlVlFadeOutHash(a, b, c, d) >>> 0,
+            );
+            expect(idVlVlPlotHash(a, b, c, d) >>> 0).toBe(
+              oracle.idVlVlPlotHash(a, b, c, d) >>> 0,
+            );
+            expect(idVlVlHlinHash(a, b, c, d, h) >>> 0).toBe(
+              oracle.idVlVlHlinHash(a, b, c, d, h) >>> 0,
             );
           },
         ),

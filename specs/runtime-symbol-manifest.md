@@ -128,6 +128,16 @@ Symbols exercised by deterministic runtime trace scenarios.
 | ID_PM.C | PM_GetPage | `done` | called via oracle_id_pm_pm_get_page_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_PM.C | PM_NextFrame | `done` | called via oracle_id_pm_pm_next_frame_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | ID_PM.C | PM_Reset | `done` | called via oracle_id_pm_pm_reset_hash from runtime page probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VW_MeasurePropString | `done` | called via oracle_id_vh_vw_measure_prop_string_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VWB_DrawPic | `done` | called via oracle_id_vh_vwb_draw_pic_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VH.C | VWB_Bar | `done` | called via oracle_id_vh_vwb_bar_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_Bar | `done` | called via oracle_id_vl_vl_bar_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_MemToScreen | `done` | called via oracle_id_vl_vl_mem_to_screen_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_LatchToScreen | `done` | called via oracle_id_vl_vl_latch_to_screen_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_FadeIn | `done` | called via oracle_id_vl_vl_fade_in_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_FadeOut | `done` | called via oracle_id_vl_vl_fade_out_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_Plot | `done` | called via oracle_id_vl_vl_plot_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| ID_VL.C | VL_Hlin | `done` | called via oracle_id_vl_vl_hlin_hash from runtime video probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 
 ### excluded-non-runtime
 

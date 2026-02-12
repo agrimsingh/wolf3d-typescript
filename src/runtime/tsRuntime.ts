@@ -57,6 +57,16 @@ import {
   wlPlayPlayLoopHash,
 } from '../wolf/player/wlPlayer';
 import {
+  idVhVwMeasurePropStringHash,
+  idVhVwbBarHash,
+  idVhVwbDrawPicHash,
+  idVlVlBarHash,
+  idVlVlFadeInHash,
+  idVlVlFadeOutHash,
+  idVlVlHlinHash,
+  idVlVlLatchToScreenHash,
+  idVlVlMemToScreenHash,
+  idVlVlPlotHash,
   wlDrawCalcHeight,
   wlDrawHitHorizWallHash,
   wlDrawHitVertWallHash,
@@ -774,6 +784,25 @@ export class TsRuntimePort implements RuntimePort {
         const pmPageNum = (this.state.tick + (rng & 31)) & 31;
         const pmFrame = this.state.tick & 0x7fff;
         const pmFrameSeed = (this.state.tick ^ rng) | 0;
+        const vhFontWidth = 8 + (this.state.tick & 3);
+        const vhSpacing = (this.state.tick >> 2) & 3;
+        const vhMaxWidth = 320;
+        const vhPicX = (this.state.xQ8 >> 3) & 255;
+        const vhPicY = (this.state.yQ8 >> 3) & 191;
+        const vhPicNum = rng & 255;
+        const vhBufferOfs = (this.state.tick & 1) !== 0 ? 1024 : 0;
+        const vhScreenOfs = (this.state.tick & 2) !== 0 ? 160 : 0;
+        const vhBarW = 16 + ((rng >> 5) & 63);
+        const vhBarH = 8 + ((rng >> 8) & 31);
+        const vhColor = rng & 15;
+        const vlLineWidth = ((this.state.tick >> 1) & 3) + 1;
+        const vlSrcLen = 1024 + (rng & 0x1ff);
+        const vlDest = this.state.tick & 0x3fff;
+        const vlMask = this.state.flags | 0;
+        const vlFadeStart = 0;
+        const vlFadeEnd = 255;
+        const vlFadeSteps = ((this.state.tick >> 2) & 15) + 1;
+        const vlPaletteSeed = rng | 0;
         const carmackSource = new Uint8Array(carmackSourceLen);
         const rlewSourceBytes = new Uint8Array(rlewSourceLen);
         const mapHeadBytes = new Uint8Array(mapHeadLen);
@@ -1240,6 +1269,16 @@ export class TsRuntimePort implements RuntimePort {
         const pmGetPageHash = idPmGetPageHash(pmResidentMask, pmLockMask, pmPageNum, pmFrame) >>> 0;
         const pmNextFrameHash = idPmNextFrameHash(pmResidentMask, pmLockMask, pmFrame) >>> 0;
         const pmResetHash = idPmResetHash(pmPageCount, pmResidentMask, pmFrameSeed) >>> 0;
+        const vhMeasurePropStringHash = idVhVwMeasurePropStringHash(textLen, vhFontWidth, vhSpacing, vhMaxWidth) >>> 0;
+        const vhDrawPicHash = idVhVwbDrawPicHash(vhPicX, vhPicY, vhPicNum, vhBufferOfs, vhScreenOfs) >>> 0;
+        const vhBarHash = idVhVwbBarHash(vhPicX, vhPicY, vhBarW, vhBarH, vhColor) >>> 0;
+        const vlBarHash = idVlVlBarHash(vhPicX, vhPicY, vhBarW, vhBarH, vhColor, vlLineWidth) >>> 0;
+        const vlMemToScreenHash = idVlVlMemToScreenHash(vlSrcLen, vhBarW, vhBarH, vlDest, vlMask) >>> 0;
+        const vlLatchToScreenHash = idVlVlLatchToScreenHash(vhPicNum, vhBarW, vhBarH, vhPicX, vhPicY) >>> 0;
+        const vlFadeInHash = idVlVlFadeInHash(vlFadeStart, vlFadeEnd, vlFadeSteps, vlPaletteSeed) >>> 0;
+        const vlFadeOutHash = idVlVlFadeOutHash(vlFadeStart, vlFadeEnd, vlFadeSteps, vlPaletteSeed) >>> 0;
+        const vlPlotHash = idVlVlPlotHash(vhPicX, vhPicY, vhColor, vlLineWidth) >>> 0;
+        const vlHlinHash = idVlVlHlinHash(vhPicX, vhPicY, vhBarW, vhColor, vlLineWidth) >>> 0;
         const runtimeProbeMix =
           (spawnDoorHash ^
             pushWallHash ^
@@ -1301,7 +1340,17 @@ export class TsRuntimePort implements RuntimePort {
             pmGetPageAddressHash ^
             pmGetPageHash ^
             pmNextFrameHash ^
-            pmResetHash) >>> 0;
+            pmResetHash ^
+            vhMeasurePropStringHash ^
+            vhDrawPicHash ^
+            vhBarHash ^
+            vlBarHash ^
+            vlMemToScreenHash ^
+            vlLatchToScreenHash ^
+            vlFadeInHash ^
+            vlFadeOutHash ^
+            vlPlotHash ^
+            vlHlinHash) >>> 0;
 
         if ((playLoopHash & 1) !== 0) {
           this.state.flags |= 0x2000;
