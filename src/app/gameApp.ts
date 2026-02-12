@@ -10,10 +10,11 @@ const MINIMAP_TILE_SIZE = 8;
 const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
 const AREATILE = 107;
-const BASELINE_STATUS_TEXT = 'Baseline: WL6 migration in progress (K0)';
+const BASELINE_STATUS_TEXT = 'Wolf3D TS Runtime (WL6)';
 const DATA_VARIANT = 'WL6';
 const CAMPAIGN_BASE_URL = '/assets/wl6/raw';
 const MODERN_ASSET_BASE_URL = '/assets/wl6-modern';
+const MENU_SHEET_TARGET_ID = 'ui.menu.sheet';
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -96,6 +97,8 @@ export class WolfApp {
   private lastMouseClientX: number | null = null;
   private hudPanelImage: HTMLImageElement | null = null;
   private hudPanelRect: ModernAssetRect | null = null;
+  private menuSheetImage: HTMLImageElement | null = null;
+  private menuSheetRect: ModernAssetRect | null = null;
 
   constructor(container: HTMLElement) {
     this.canvas = document.createElement('canvas');
@@ -112,6 +115,7 @@ export class WolfApp {
     this.bindControls();
     void this.loadWallTextures();
     void this.loadHudPanel();
+    void this.loadMenuSkin();
     void this.controller.boot();
     this.loopHandle = requestAnimationFrame((now) => this.loop(now));
   }
@@ -145,6 +149,24 @@ export class WolfApp {
     } catch {
       this.hudPanelImage = null;
       this.hudPanelRect = null;
+    }
+  }
+
+  private async loadMenuSkin(): Promise<void> {
+    try {
+      const assetMap = await loadModernAssetMap();
+      const menuSheet = assetMap.entries.find((entry) => entry.targetKind === 'uiSprite' && entry.targetId === MENU_SHEET_TARGET_ID && !!entry.rect);
+      if (!menuSheet || !menuSheet.rect) {
+        return;
+      }
+      const image = new Image();
+      image.src = `${MODERN_ASSET_BASE_URL}/${menuSheet.sourceFile}`;
+      await image.decode();
+      this.menuSheetImage = image;
+      this.menuSheetRect = menuSheet.rect;
+    } catch {
+      this.menuSheetImage = null;
+      this.menuSheetRect = null;
     }
   }
 
@@ -211,8 +233,11 @@ export class WolfApp {
   }
 
   private drawTitleFrame(): void {
-    this.ctx.fillStyle = '#040814';
-    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    const drewMenuArt = this.drawMenuBackground();
+    if (!drewMenuArt) {
+      this.ctx.fillStyle = '#040814';
+      this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    }
     this.ctx.fillStyle = '#f7f1d1';
     this.ctx.font = '18px monospace';
     this.ctx.fillText('Wolf3D TS Runtime (WL6)', 34, 82);
@@ -224,8 +249,11 @@ export class WolfApp {
   private drawMenuFrame(): void {
     const state = this.controller.getState();
 
-    this.ctx.fillStyle = '#02060d';
-    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    const drewMenuArt = this.drawMenuBackground();
+    if (!drewMenuArt) {
+      this.ctx.fillStyle = '#02060d';
+      this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    }
     this.ctx.fillStyle = '#d6dfef';
     this.ctx.font = '14px monospace';
     this.ctx.fillText('Wolf3D TS Control Panel (WL6)', 18, 24);
@@ -249,8 +277,11 @@ export class WolfApp {
     const nextScenario = state.scenarios[(state.selectedScenarioIndex + 1) % Math.max(1, state.scenarios.length)];
     const remaining = Math.max(0, Math.ceil((state.intermissionRemainingMs | 0) / 1000));
 
-    this.ctx.fillStyle = '#0b060f';
-    this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    const drewMenuArt = this.drawMenuBackground();
+    if (!drewMenuArt) {
+      this.ctx.fillStyle = '#0b060f';
+      this.ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    }
     this.ctx.fillStyle = '#f9e6c1';
     this.ctx.font = '16px monospace';
     this.ctx.fillText('Intermission', 102, 62);
@@ -431,6 +462,41 @@ export class WolfApp {
         break;
     }
     this.drawBaselineStatus();
+  }
+
+  private drawMenuBackground(): boolean {
+    if (!this.menuSheetImage || !this.menuSheetRect) {
+      return false;
+    }
+
+    this.ctx.save();
+    this.ctx.imageSmoothingEnabled = false;
+    this.ctx.globalAlpha = 0.96;
+
+    const dstX = 0;
+    const dstY = 0;
+    const dstW = WIDTH;
+    const dstH = HEIGHT;
+    const dstRatio = dstW / dstH;
+    let sx = this.menuSheetRect.x | 0;
+    let sy = this.menuSheetRect.y | 0;
+    let sw = this.menuSheetRect.w | 0;
+    let sh = this.menuSheetRect.h | 0;
+    const srcRatio = sw / Math.max(1, sh);
+
+    if (srcRatio > dstRatio) {
+      const cropW = Math.round(sh * dstRatio);
+      sx = sx + Math.floor(Math.max(0, sw - cropW) / 2);
+      sw = Math.max(1, Math.min(sw, cropW));
+    } else {
+      const cropH = Math.round(sw / dstRatio);
+      sy = sy + Math.floor(Math.max(0, sh - cropH) / 2);
+      sh = Math.max(1, Math.min(sh, cropH));
+    }
+
+    this.ctx.drawImage(this.menuSheetImage, sx, sy, sw, sh, dstX, dstY, dstW, dstH);
+    this.ctx.restore();
+    return true;
   }
 
   private drawBaselineStatus(): void {
