@@ -17,9 +17,14 @@ The implementation model is strict parity:
 
 ## Project Status (Current Truth)
 
-- A substantial parity harness and runtime scaffolding already exist.
-- Browser runtime currently runs, but work remains to fully lock authentic WL6 gameplay presentation and progression against parity gates.
-- This track now targets canonical WL6 raw lumps plus deterministic modern asset mapping.
+- Core scaffolding, parity harness, and one-shot execution tooling are in progress.
+- Browser runtime is operational for smoke scenarios but still contains legacy synthetic map assumptions and incomplete gameplay-faithful state coverage.
+- This track now targets canonical WL6 runtime source behavior plus deterministic modern asset mapping.
+
+## Execution Track
+
+- Active one-shot runner: `pnpm one-shot:wl6-complete`
+- Phase tracker: `specs/generated/one-shot-wl6-state.json`
 
 ## What Was Executed Autonomously
 

@@ -47,7 +47,8 @@
     "assets:map:validate:wl6": "tsx scripts/assets/validate-modern-asset-map.ts",
     "assets:map:samples:write:wl6": "tsx scripts/assets/verify-modern-asset-samples.ts --write",
     "assets:map:samples:verify:wl6": "tsx scripts/assets/verify-modern-asset-samples.ts",
-    "verify:assets:wl6": "pnpm assets:validate:wl6"
+    "verify:assets:wl6": "pnpm assets:validate:wl6",
+    "one-shot:wl6-complete": "bash scripts/one-shot/run-wl6-gameplay-complete.sh"
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
