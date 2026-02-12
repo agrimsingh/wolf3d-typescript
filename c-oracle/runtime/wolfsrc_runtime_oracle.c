@@ -251,10 +251,27 @@ static void runtime_step_one(runtime_state_t *state, int32_t input_mask, int32_t
       else if (facing < 225) tx -= 1;
       else ty += 1;
       {
+        int32_t base_xq16 = state->xq8 << 8;
+        int32_t base_yq16 = state->yq8 << 8;
         int32_t target_xq16 = ((tx << 8) + 128) << 8;
         int32_t target_yq16 = ((ty << 8) + 128) << 8;
+        int32_t clip_x = base_xq16;
+        int32_t clip_y = base_yq16;
+        int32_t try_move_ok = 0;
+
+        trace_hit(TRACE_REAL_WL_AGENT_CLIP_MOVE_APPLY);
+        real_wl_agent_clip_move_apply(
+          &clip_x,
+          &clip_y,
+          target_xq16 - base_xq16,
+          target_yq16 - base_yq16,
+          state->map_lo,
+          state->map_hi,
+          0
+        );
         trace_hit(TRACE_REAL_WL_AGENT_TRY_MOVE);
-        blocked = oracle_real_wl_agent_try_move(target_xq16, target_yq16, state->map_lo, state->map_hi) ? 0 : 1;
+        try_move_ok = oracle_real_wl_agent_try_move(target_xq16, target_yq16, state->map_lo, state->map_hi);
+        blocked = ((clip_x != target_xq16) || (clip_y != target_yq16) || !try_move_ok) ? 1 : 0;
       }
       if (blocked) {
         state->flags |= 0x20;

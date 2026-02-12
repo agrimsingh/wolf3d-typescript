@@ -371,7 +371,20 @@ export class TsRuntimePort implements RuntimePort {
         else ty += 1;
         const targetXQ16 = (((tx << 8) + 128) << 8) | 0;
         const targetYQ16 = (((ty << 8) + 128) << 8) | 0;
-        if (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) === 0) {
+        const baseXQ16 = this.state.xQ8 << 8;
+        const baseYQ16 = this.state.yQ8 << 8;
+        const clipMove = wlAgentRealClipMoveQ16(
+          baseXQ16,
+          baseYQ16,
+          (targetXQ16 - baseXQ16) | 0,
+          (targetYQ16 - baseYQ16) | 0,
+          this.state.mapLo,
+          this.state.mapHi,
+          0,
+        );
+        const clipBlocked = (clipMove.x | 0) !== (targetXQ16 | 0) || (clipMove.y | 0) !== (targetYQ16 | 0);
+        const tryMoveBlocked = (wlAgentRealTryMove(targetXQ16, targetYQ16, this.state.mapLo, this.state.mapHi) | 0) === 0;
+        if (clipBlocked || tryMoveBlocked) {
           this.state.flags |= 0x20;
         } else {
           this.state.flags &= ~0x20;

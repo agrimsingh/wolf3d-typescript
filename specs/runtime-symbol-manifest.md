@@ -34,6 +34,7 @@ Symbols exercised by deterministic runtime trace scenarios.
 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_cooldown | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_flags | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_get_tick | `done` | snapshot readout; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
+| WL_AGENT.C | ClipMove | `done` | called via real_wl_agent_clip_move_apply shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | TryMove | `done` | called via oracle_real_wl_agent_try_move shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | ControlMovement | `done` | called via real_wl_agent_control_movement_apply shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | WL_AGENT.C | TakeDamage | `done` | called via real_wl_agent_take_damage_apply shim; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
@@ -48,7 +49,7 @@ Symbols known to the runtime trace map but not hit by current deterministic trac
 
 | File | Function | Reason |
 | :--- | :--- | :--- |
-| WL_AGENT.C | ClipMove | not hit by deterministic runtime-trace harness |
+| _none_ | _none_ | all traced symbols are currently required-runtime |
 
 ## Rules
 

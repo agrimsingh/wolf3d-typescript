@@ -70,6 +70,7 @@
     14,
     15,
     16,
+    17,
     18,
     19,
     20,
@@ -176,6 +177,12 @@
       "notes": "snapshot readout"
     },
     {
+      "id": 17,
+      "file": "WL_AGENT.C",
+      "func": "ClipMove",
+      "notes": "called via real_wl_agent_clip_move_apply shim"
+    },
+    {
       "id": 18,
       "file": "WL_AGENT.C",
       "func": "TryMove",
@@ -218,12 +225,5 @@
       "notes": "called via oracle_real_wl_state_check_sight from runtime sight probe"
     }
   ],
-  "excludedRuntimeSymbols": [
-    {
-      "id": 17,
-      "file": "WL_AGENT.C",
-      "func": "ClipMove",
-      "notes": "called via real_wl_agent_clip_move_apply shim"
-    }
-  ]
+  "excludedRuntimeSymbols": []
 }
