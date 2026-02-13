@@ -26,6 +26,8 @@ export interface RuntimeConfig {
   playerStartTileX?: number;
   playerStartTileY?: number;
   playerStartAngleDeg?: number;
+  // Wolf3D skill (0..3). Used for difficulty-gated actor markers when booting full-map levels.
+  difficulty?: number;
   // Legacy local-window start coordinates. If worldStart* is present these are treated as fallbacks.
   startXQ8: number;
   startYQ8: number;

@@ -752,31 +752,26 @@ function hashFullMapActors(actors: FullMapActor[]): number {
   return h >>> 0;
 }
 
-function isEnemySpawnTile(tile: number): boolean {
+function normalizedSpawnDifficulty(difficulty: number): 0 | 1 | 2 {
+  const d = difficulty | 0;
+  if (d >= 3) {
+    return 2;
+  }
+  if (d >= 2) {
+    return 1;
+  }
+  return 0;
+}
+
+function enemySpawnDifficultyTier(tile: number): 0 | 1 | 2 | null {
   const t = tile & 0xffff;
-  // Mirrors WL_GAME.C ScanInfoPlane enemy/boss/ghost marker handling.
-  return (
-    // Guard stand + patrol (easy/med/hard marker sets).
-    (t >= 108 && t <= 115)
-    || (t >= 144 && t <= 151)
-    || (t >= 180 && t <= 187)
-    // Officer stand + patrol.
-    || (t >= 116 && t <= 123)
-    || (t >= 152 && t <= 159)
-    || (t >= 188 && t <= 195)
-    // SS stand + patrol.
-    || (t >= 126 && t <= 133)
-    || (t >= 162 && t <= 169)
-    || (t >= 198 && t <= 205)
-    // Dog stand + patrol.
-    || (t >= 134 && t <= 141)
-    || (t >= 170 && t <= 177)
-    || (t >= 206 && t <= 213)
-    // Mutant stand + patrol (easy/med/hard marker sets).
+  // Mirrors WL_GAME.C ScanInfoPlane marker tiers:
+  // easy markers always spawn, medium markers spawn on difficulty >= gd_medium,
+  // hard markers spawn on difficulty >= gd_hard.
+  if (
+    (t >= 108 && t <= 123)
+    || (t >= 126 && t <= 141)
     || (t >= 216 && t <= 223)
-    || (t >= 234 && t <= 241)
-    || (t >= 252 && t <= 259)
-    // Bosses and ghosts (WL6).
     || t === 160
     || t === 178
     || t === 179
@@ -785,7 +780,22 @@ function isEnemySpawnTile(tile: number): boolean {
     || t === 214
     || t === 215
     || (t >= 224 && t <= 227)
-  );
+  ) {
+    return 0;
+  }
+  if (
+    (t >= 144 && t <= 177)
+    || (t >= 234 && t <= 241)
+  ) {
+    return 1;
+  }
+  if (
+    (t >= 180 && t <= 213)
+    || (t >= 252 && t <= 259)
+  ) {
+    return 2;
+  }
+  return null;
 }
 
 function spawnFullMapActors(
@@ -794,6 +804,7 @@ function spawnFullMapActors(
   height: number,
   playerTileX: number,
   playerTileY: number,
+  difficulty: number,
 ): FullMapActor[] {
   if (!plane1 || width <= 0 || height <= 0) {
     return [];
@@ -810,7 +821,11 @@ function spawnFullMapActors(
       if (tile >= PLAYER_START_MIN && tile <= PLAYER_START_MAX) {
         continue;
       }
-      if (!isEnemySpawnTile(tile)) {
+      const requiredTier = enemySpawnDifficultyTier(tile);
+      if (requiredTier === null) {
+        continue;
+      }
+      if (requiredTier > normalizedSpawnDifficulty(difficulty)) {
         continue;
       }
       actors.push({
@@ -1638,7 +1653,14 @@ export class TsRuntimePort implements RuntimePort {
 
       const playerTileX = clampI32((worldXQ8 >> 8) | 0, 0, (width - 1) | 0);
       const playerTileY = clampI32((worldYQ8 >> 8) | 0, 0, (height - 1) | 0);
-      const actors = spawnFullMapActors(plane1, width, height, playerTileX, playerTileY);
+      const actors = spawnFullMapActors(
+        plane1,
+        width,
+        height,
+        playerTileX,
+        playerTileY,
+        config.difficulty ?? 2,
+      );
 
       this.fullMap = {
         enabled: true,

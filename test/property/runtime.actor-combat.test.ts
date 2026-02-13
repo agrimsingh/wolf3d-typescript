@@ -25,7 +25,13 @@ function addBorderWalls(plane0: Uint16Array, width: number, height: number): voi
   }
 }
 
-function baseConfig(plane0: Uint16Array, plane1: Uint16Array, width: number, height: number): RuntimeConfig {
+function baseConfig(
+  plane0: Uint16Array,
+  plane1: Uint16Array,
+  width: number,
+  height: number,
+  difficulty = 2,
+): RuntimeConfig {
   return {
     mapLo: 0,
     mapHi: 0,
@@ -43,6 +49,7 @@ function baseConfig(plane0: Uint16Array, plane1: Uint16Array, width: number, hei
     startAngleDeg: 0,
     startHealth: 100,
     startAmmo: 16,
+    difficulty,
   };
 }
 
@@ -209,7 +216,7 @@ describe('runtime actor combat (full-map mode)', () => {
     expect(dogTravel).toBeGreaterThan(guardTravel);
   });
 
-  it('does not spawn non-enemy plane1 markers as active actors', async () => {
+  it('spawns actor markers according to WL6 difficulty tiers', async () => {
     const width = 16;
     const height = 16;
     const plane0 = makePlane(width, height, AREATILE);
@@ -222,11 +229,18 @@ describe('runtime actor combat (full-map mode)', () => {
     plane1[6 * width + 8] = 180;
     plane1[6 * width + 9] = 252;
     plane1[6 * width + 10] = 224;
+    plane1[6 * width + 11] = 144;
 
-    const runtime = new TsRuntimePort();
-    await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
-    const actors = runtime.debugActors();
-    expect(actors.length).toBe(4);
-    await runtime.shutdown();
+    const run = async (difficulty: number): Promise<number> => {
+      const runtime = new TsRuntimePort();
+      await runtime.bootWl6(baseConfig(plane0, plane1, width, height, difficulty));
+      const count = runtime.debugActors().length;
+      await runtime.shutdown();
+      return count;
+    };
+
+    expect(await run(0)).toBe(2);
+    expect(await run(2)).toBe(3);
+    expect(await run(3)).toBe(5);
   });
 });

@@ -140,6 +140,7 @@ export function buildWl6RuntimeScenariosFromBytes(
       startAngleDeg,
       startHealth: 100,
       startAmmo: 8,
+      difficulty: 2,
     };
 
     scenarios.push({
