@@ -2621,7 +2621,7 @@ export class TsRuntimePort implements RuntimePort {
       indexed.fill(29, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
     }
     for (let y = FRAME_HEIGHT / 2; y < FRAME_HEIGHT; y++) {
-      indexed.fill(6, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
+      indexed.fill(25, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
     }
 
     for (let x = 0; x < FRAME_WIDTH; x++) {

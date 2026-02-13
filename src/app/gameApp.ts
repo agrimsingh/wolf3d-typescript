@@ -8,6 +8,7 @@ import {
   decodeVswapIndex,
   decodeWallTexture,
 } from '../runtime/wl6AssetDecode';
+import { wl6PaletteIndexToRgb } from '../runtime/wl6Palette';
 
 const WIDTH = 320;
 const HEIGHT = 200;
@@ -40,29 +41,8 @@ function wallAtPlane(plane0: Uint16Array, mapWidth: number, mapHeight: number, x
 }
 
 
-function buildRenderPalette(): [number, number, number][] {
-  const palette: [number, number, number][] = new Array(256);
-  for (let i = 0; i < 256; i++) {
-    const r3 = (i >> 5) & 0x07;
-    const g3 = (i >> 2) & 0x07;
-    const b2 = i & 0x03;
-    const r = ((r3 * 255) / 7) | 0;
-    const g = ((g3 * 255) / 7) | 0;
-    const b = ((b2 * 255) / 3) | 0;
-    palette[i] = [r, g, b];
-  }
-  // Runtime-fixed color indices used by tsRuntime for non-textured spans.
-  palette[2] = [0, 0, 0];
-  palette[6] = [92, 92, 92];
-  palette[29] = [70, 70, 70];
-  palette[228] = [180, 180, 180];
-  return palette;
-}
-
-const RENDER_PALETTE = buildRenderPalette();
-
 function paletteIndexToRgb(index: number): [number, number, number] {
-  return RENDER_PALETTE[index & 0xff] ?? [0, 0, 0];
+  return wl6PaletteIndexToRgb(index);
 }
 
 function clampI32(v: number, minv: number, maxv: number): number {
