@@ -2,7 +2,7 @@ import type { RuntimeSnapshot } from '../runtime/contracts';
 import { loadRuntimeCampaign } from '../runtime/wl6Campaign';
 import { loadModernAssetMap, type ModernAssetRect } from '../assets/modernAssetMap';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
-import { RuntimeAppController, type RuntimeScenario } from './runtimeController';
+import { RuntimeAppController, type RuntimeDebugActor, type RuntimeScenario } from './runtimeController';
 
 const WIDTH = 320;
 const HEIGHT = 200;
@@ -10,11 +10,14 @@ const MINIMAP_TILE_SIZE = 8;
 const TEXTURE_SIZE = 64;
 const MAX_WALL_TEXTURES = 64;
 const AREATILE = 107;
+const RENDER_FOV = Math.PI / 3;
 const BASELINE_STATUS_TEXT = 'Wolf3D TS Runtime (WL6)';
 const DATA_VARIANT = 'WL6';
 const CAMPAIGN_BASE_URL = '/assets/wl6/raw';
 const MODERN_ASSET_BASE_URL = '/assets/wl6-modern';
 const MENU_SHEET_TARGET_ID = 'ui.menu.sheet';
+const GUARD_SHEET_TARGET_ID = 'actor.guard.sheet';
+const WALL_TEXTURE_TARGET_KIND = 'wallTexture';
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -80,6 +83,47 @@ function paletteIndexToRgb(index: number): [number, number, number] {
   return [r | 0, g | 0, b | 0];
 }
 
+function clampI32(v: number, minv: number, maxv: number): number {
+  return Math.max(minv, Math.min(maxv, v | 0)) | 0;
+}
+
+function normalizeRadians(angle: number): number {
+  let out = angle;
+  while (out < -Math.PI) out += Math.PI * 2;
+  while (out > Math.PI) out -= Math.PI * 2;
+  return out;
+}
+
+function buildSyntheticPalette(): [number, number, number][] {
+  const palette: [number, number, number][] = new Array(256);
+  for (let i = 0; i < 256; i++) {
+    palette[i] = paletteIndexToRgb(i);
+  }
+  return palette;
+}
+
+function nearestPaletteIndex(
+  r: number,
+  g: number,
+  b: number,
+  palette: [number, number, number][],
+): number {
+  let bestIndex = 0;
+  let bestError = Number.POSITIVE_INFINITY;
+  for (let i = 0; i < palette.length; i++) {
+    const [pr, pg, pb] = palette[i]!;
+    const dr = r - pr;
+    const dg = g - pg;
+    const db = b - pb;
+    const err = dr * dr + dg * dg + db * db;
+    if (err < bestError) {
+      bestError = err;
+      bestIndex = i;
+    }
+  }
+  return bestIndex | 0;
+}
+
 export class WolfApp {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
@@ -99,12 +143,17 @@ export class WolfApp {
   private hudPanelRect: ModernAssetRect | null = null;
   private menuSheetImage: HTMLImageElement | null = null;
   private menuSheetRect: ModernAssetRect | null = null;
+  private guardSprite: HTMLCanvasElement | null = null;
+  private loadedModernWallTextures = false;
 
   constructor(container: HTMLElement) {
     this.canvas = document.createElement('canvas');
     this.canvas.width = WIDTH;
     this.canvas.height = HEIGHT;
     this.canvas.tabIndex = 0;
+    this.canvas.style.width = 'min(96vw, 960px)';
+    this.canvas.style.height = 'auto';
+    this.canvas.style.aspectRatio = `${WIDTH} / ${HEIGHT}`;
     container.appendChild(this.canvas);
 
     const ctx = this.canvas.getContext('2d');
@@ -113,14 +162,22 @@ export class WolfApp {
     this.image = ctx.createImageData(WIDTH, HEIGHT);
 
     this.bindControls();
+    this.controller.setProceduralActorSpritesEnabled(false);
     void this.loadWallTextures();
     void this.loadHudPanel();
     void this.loadMenuSkin();
+    void this.loadGuardSprite();
     void this.controller.boot();
     this.loopHandle = requestAnimationFrame((now) => this.loop(now));
   }
 
   private async loadWallTextures(): Promise<void> {
+    const loadedModern = await this.loadModernWallTextures();
+    if (loadedModern) {
+      this.loadedModernWallTextures = true;
+      return;
+    }
+
     try {
       const response = await fetch(`${CAMPAIGN_BASE_URL}/VSWAP.${DATA_VARIANT}`);
       if (!response.ok) return;
@@ -132,6 +189,93 @@ export class WolfApp {
     } catch {
       // Keep runtime on procedural fallback if textures cannot be loaded.
     }
+  }
+
+  private async loadModernWallTextures(): Promise<boolean> {
+    try {
+      const assetMap = await loadModernAssetMap();
+      const wallEntries = assetMap.entries
+        .filter((entry) => entry.targetKind === WALL_TEXTURE_TARGET_KIND && !!entry.rect)
+        .sort((a, b) => a.targetId.localeCompare(b.targetId));
+      if (wallEntries.length === 0) {
+        return false;
+      }
+
+      const palette = buildSyntheticPalette();
+      const imageCache = new Map<string, HTMLImageElement>();
+      const extracted: Uint8Array[] = [];
+      for (const entry of wallEntries) {
+        const rect = entry.rect;
+        if (!rect) {
+          continue;
+        }
+        let image = imageCache.get(entry.sourceFile) ?? null;
+        if (!image) {
+          image = new Image();
+          image.src = `${MODERN_ASSET_BASE_URL}/${entry.sourceFile}`;
+          await image.decode();
+          imageCache.set(entry.sourceFile, image);
+        }
+        const texture = this.extractModernWallTexture(image, rect, palette);
+        if (texture) {
+          extracted.push(texture);
+        }
+      }
+
+      if (extracted.length === 0) {
+        return false;
+      }
+
+      // Fill up to runtime wall slots by repeating curated modern textures.
+      const expanded: Uint8Array[] = [];
+      for (let i = 0; i < MAX_WALL_TEXTURES; i++) {
+        expanded.push(extracted[i % extracted.length]!.slice());
+      }
+      this.controller.setWallTextures(expanded);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  private extractModernWallTexture(
+    image: HTMLImageElement,
+    rect: ModernAssetRect,
+    palette: [number, number, number][],
+  ): Uint8Array | null {
+    const canvas = document.createElement('canvas');
+    canvas.width = TEXTURE_SIZE;
+    canvas.height = TEXTURE_SIZE;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return null;
+    }
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(
+      image,
+      rect.x | 0,
+      rect.y | 0,
+      Math.max(1, rect.w | 0),
+      Math.max(1, rect.h | 0),
+      0,
+      0,
+      TEXTURE_SIZE,
+      TEXTURE_SIZE,
+    );
+    const pixels = ctx.getImageData(0, 0, TEXTURE_SIZE, TEXTURE_SIZE).data;
+    const out = new Uint8Array(TEXTURE_SIZE * TEXTURE_SIZE);
+    for (let y = 0; y < TEXTURE_SIZE; y++) {
+      for (let x = 0; x < TEXTURE_SIZE; x++) {
+        const src = (y * TEXTURE_SIZE + x) * 4;
+        const r = pixels[src] ?? 0;
+        const g = pixels[src + 1] ?? 0;
+        const b = pixels[src + 2] ?? 0;
+        // Runtime expects VSWAP-style column-major texels.
+        out[x * TEXTURE_SIZE + y] = nearestPaletteIndex(r, g, b, palette);
+      }
+    }
+    return out;
   }
 
   private async loadHudPanel(): Promise<void> {
@@ -168,6 +312,88 @@ export class WolfApp {
       this.menuSheetImage = null;
       this.menuSheetRect = null;
     }
+  }
+
+  private async loadGuardSprite(): Promise<void> {
+    try {
+      const assetMap = await loadModernAssetMap();
+      const guardSheet = assetMap.entries.find((entry) => entry.targetKind === 'actorSheet' && entry.targetId === GUARD_SHEET_TARGET_ID && !!entry.rect);
+      if (!guardSheet || !guardSheet.rect) {
+        return;
+      }
+      const image = new Image();
+      image.src = `${MODERN_ASSET_BASE_URL}/${guardSheet.sourceFile}`;
+      await image.decode();
+      this.guardSprite = this.extractGuardSprite(image, guardSheet.rect);
+    } catch {
+      this.guardSprite = null;
+    }
+  }
+
+  private extractGuardSprite(image: HTMLImageElement, rect: ModernAssetRect): HTMLCanvasElement {
+    const cols = 7;
+    const rows = 7;
+    const cellW = Math.max(1, Math.floor(rect.w / cols));
+    const cellH = Math.max(1, Math.floor(rect.h / rows));
+    const srcX = rect.x + 6;
+    const srcY = rect.y + 2;
+    const srcW = Math.max(1, cellW - 12);
+    const srcH = Math.max(1, cellH - 6);
+    const canvas = document.createElement('canvas');
+    canvas.width = srcW;
+    canvas.height = srcH;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      return canvas;
+    }
+
+    ctx.drawImage(image, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);
+    const imageData = ctx.getImageData(0, 0, srcW, srcH);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i] ?? 0;
+      const g = data[i + 1] ?? 0;
+      const b = data[i + 2] ?? 0;
+      const magenta = r >= 120 && b >= 120 && g <= 110 && Math.abs(r - b) <= 80;
+      if (magenta) {
+        data[i + 3] = 0;
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+
+    let minX = srcW;
+    let minY = srcH;
+    let maxX = -1;
+    let maxY = -1;
+    for (let y = 0; y < srcH; y++) {
+      for (let x = 0; x < srcW; x++) {
+        const alpha = data[(y * srcW + x) * 4 + 3] ?? 0;
+        if (alpha <= 6) {
+          continue;
+        }
+        if (x < minX) minX = x;
+        if (y < minY) minY = y;
+        if (x > maxX) maxX = x;
+        if (y > maxY) maxY = y;
+      }
+    }
+
+    if (maxX < minX || maxY < minY) {
+      return canvas;
+    }
+
+    const outW = (maxX - minX + 1) | 0;
+    const outH = (maxY - minY + 1) | 0;
+    const trimmed = document.createElement('canvas');
+    trimmed.width = outW;
+    trimmed.height = outH;
+    const trimmedCtx = trimmed.getContext('2d');
+    if (!trimmedCtx) {
+      return canvas;
+    }
+    trimmedCtx.imageSmoothingEnabled = false;
+    trimmedCtx.drawImage(canvas, minX, minY, outW, outH, 0, 0, outW, outH);
+    return trimmed;
   }
 
   private bindControls(): void {
@@ -341,32 +567,95 @@ export class WolfApp {
     }
 
     this.ctx.putImageData(this.image, 0, 0);
+    this.drawActorSprites(snapshot);
     this.drawHudOverlay();
     this.drawMiniMap(mapLo, mapHi, snapshot, scenario ?? null);
 
     this.ctx.fillStyle = '#f5f7ff';
     this.ctx.font = '10px monospace';
     if (scenario) {
-      this.ctx.fillText(`Map ${scenario.mapIndex}: ${scenario.mapName}`, 8, 12);
+      this.ctx.fillText(`WL6 Map ${scenario.mapIndex}`, 8, 12);
     } else {
       this.ctx.fillText('Runtime Framebuffer', 8, 12);
     }
     this.ctx.fillText(`hp:${snapshot.health} ammo:${snapshot.ammo} tick:${snapshot.tick}`, 8, 24);
     this.ctx.fillText(`x:${(posXQ8 / 256).toFixed(2)} y:${(posYQ8 / 256).toFixed(2)} angle:${snapshot.angleDeg}`, 8, 36);
-    this.ctx.fillText(`snapshot:${snapshot.hash >>> 0} frame:${state.frameHash >>> 0}`, 8, HEIGHT - 10);
   }
 
   private drawHudOverlay(): void {
     if (!this.hudPanelImage || !this.hudPanelRect) {
       return;
     }
-    const { x, y, w, h } = this.hudPanelRect;
-    const hudHeight = 44;
+    const srcX = this.hudPanelRect.x | 0;
+    const srcY = this.hudPanelRect.y | 0;
+    const srcW = Math.min(320, this.hudPanelRect.w | 0);
+    const srcH = Math.min(40, this.hudPanelRect.h | 0);
+    const hudHeight = 28;
     this.ctx.save();
-    this.ctx.globalAlpha = 0.75;
     this.ctx.imageSmoothingEnabled = false;
-    this.ctx.drawImage(this.hudPanelImage, x, y, w, h, 0, HEIGHT - hudHeight, WIDTH, hudHeight);
+    this.ctx.globalAlpha = 0.92;
+    this.ctx.drawImage(this.hudPanelImage, srcX, srcY, srcW, srcH, 0, HEIGHT - hudHeight, WIDTH, hudHeight);
     this.ctx.restore();
+  }
+
+  private drawActorSprites(snapshot: RuntimeSnapshot): void {
+    if (!this.guardSprite) {
+      return;
+    }
+
+    const actors = this.controller.getDebugActors().filter((actor) => (actor.hp | 0) > 0);
+    if (actors.length === 0) {
+      return;
+    }
+
+    const posX = (snapshot.worldXQ8 ?? snapshot.xQ8) / 256;
+    const posY = (snapshot.worldYQ8 ?? snapshot.yQ8) / 256;
+    const angleRad = ((snapshot.angleDeg | 0) * Math.PI) / 180;
+    actors.sort((a, b) => {
+      const adx = (a.xQ8 | 0) / 256 - posX;
+      const ady = (a.yQ8 | 0) / 256 - posY;
+      const bdx = (b.xQ8 | 0) / 256 - posX;
+      const bdy = (b.yQ8 | 0) / 256 - posY;
+      const da = (adx * adx) + (ady * ady);
+      const db = (bdx * bdx) + (bdy * bdy);
+      return db - da;
+    });
+
+    this.ctx.save();
+    this.ctx.imageSmoothingEnabled = false;
+
+    for (const actor of actors) {
+      this.drawActorSprite(actor, posX, posY, angleRad);
+    }
+    this.ctx.restore();
+  }
+
+  private drawActorSprite(actor: RuntimeDebugActor, posX: number, posY: number, angleRad: number): void {
+    if (!this.guardSprite) {
+      return;
+    }
+
+    const actorX = (actor.xQ8 | 0) / 256;
+    const actorY = (actor.yQ8 | 0) / 256;
+    const relX = actorX - posX;
+    const relY = actorY - posY;
+    const dist = Math.hypot(relX, relY);
+    if (dist < 0.2 || dist > 16) {
+      return;
+    }
+
+    const delta = normalizeRadians(Math.atan2(-relY, relX) - angleRad);
+    if (Math.abs(delta) > (RENDER_FOV * 0.65)) {
+      return;
+    }
+
+    const screenX = ((delta / RENDER_FOV) + 0.5) * WIDTH;
+    const spriteH = clampI32((HEIGHT / dist) | 0, 14, 110);
+    const spriteW = clampI32(((spriteH * this.guardSprite.width) / Math.max(1, this.guardSprite.height)) | 0, 8, 96);
+    const left = clampI32((screenX - (spriteW / 2)) | 0, -spriteW, WIDTH);
+    const top = clampI32(((HEIGHT / 2) - (spriteH / 2)) | 0, -spriteH, HEIGHT);
+    this.ctx.globalAlpha = actor.mode === 2 ? 0.95 : 0.88;
+    this.ctx.drawImage(this.guardSprite, left, top, spriteW, spriteH);
   }
 
   private drawMiniMap(mapLo: number, mapHi: number, snapshot: RuntimeSnapshot, scenario: RuntimeScenario | null): void {
@@ -441,7 +730,8 @@ export class WolfApp {
   }
 
   private drawFrame(): void {
-    switch (this.controller.getState().mode) {
+    const mode = this.controller.getState().mode;
+    switch (mode) {
       case 'loading':
         this.drawLoadingFrame();
         break;
@@ -461,7 +751,9 @@ export class WolfApp {
         this.drawErrorFrame();
         break;
     }
-    this.drawBaselineStatus();
+    if (mode !== 'playing') {
+      this.drawBaselineStatus();
+    }
   }
 
   private drawMenuBackground(): boolean {
@@ -500,11 +792,12 @@ export class WolfApp {
   }
 
   private drawBaselineStatus(): void {
+    const y = HEIGHT - 50;
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-    this.ctx.fillRect(4, HEIGHT - 22, 230, 16);
+    this.ctx.fillRect(4, y, 176, 12);
     this.ctx.fillStyle = '#dce6ff';
-    this.ctx.font = '8px monospace';
-    this.ctx.fillText(`${BASELINE_STATUS_TEXT} [asset profile: ${DATA_VARIANT}]`, 8, HEIGHT - 11);
+    this.ctx.font = '7px monospace';
+    this.ctx.fillText(`${BASELINE_STATUS_TEXT} [${DATA_VARIANT}]`, 8, y + 8);
   }
 
   private loop(now: number): void {

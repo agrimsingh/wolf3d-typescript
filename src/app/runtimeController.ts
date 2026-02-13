@@ -15,6 +15,14 @@ export interface RuntimeScenario {
   steps: RuntimeInput[];
 }
 
+export interface RuntimeDebugActor {
+  id: number;
+  xQ8: number;
+  yQ8: number;
+  hp: number;
+  mode: number;
+}
+
 export type RuntimeAppMode = 'loading' | 'title' | 'menu' | 'playing' | 'intermission' | 'error';
 
 export interface RuntimeAppState {
@@ -343,6 +351,16 @@ export class RuntimeAppController {
   setWallTextures(textures: Uint8Array[]): void {
     const runtimeWithTextures = this.runtime as RuntimePort & { setWallTextures?: (textures: Uint8Array[]) => void };
     runtimeWithTextures.setWallTextures?.(textures);
+  }
+
+  setProceduralActorSpritesEnabled(enabled: boolean): void {
+    const runtimeWithFlag = this.runtime as RuntimePort & { setProceduralActorSpritesEnabled?: (enabled: boolean) => void };
+    runtimeWithFlag.setProceduralActorSpritesEnabled?.(enabled);
+  }
+
+  getDebugActors(): RuntimeDebugActor[] {
+    const runtimeWithActors = this.runtime as RuntimePort & { debugActors?: () => RuntimeDebugActor[] };
+    return runtimeWithActors.debugActors?.() ?? [];
   }
 
   tick(nowMs: number): void {

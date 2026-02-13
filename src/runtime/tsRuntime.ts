@@ -538,6 +538,14 @@ type FullMapActor = {
   cooldown: number;
 };
 
+export type RuntimeDebugActor = {
+  id: number;
+  xQ8: number;
+  yQ8: number;
+  hp: number;
+  mode: number;
+};
+
 type FullMapState = {
   enabled: boolean;
   width: number;
@@ -857,6 +865,7 @@ export class TsRuntimePort implements RuntimePort {
   private angleFrac = 0;
   private bootAngleFrac = 0;
   private wallTextures: Uint8Array[] = [];
+  private drawProceduralActorSprites = true;
   private fullMap: FullMapState = {
     enabled: false,
     width: 0,
@@ -890,6 +899,10 @@ export class TsRuntimePort implements RuntimePort {
 
   setWallTextures(textures: Uint8Array[]): void {
     this.wallTextures = textures.slice();
+  }
+
+  setProceduralActorSpritesEnabled(enabled: boolean): void {
+    this.drawProceduralActorSprites = !!enabled;
   }
 
   private refreshMapWindowFromWorld(recenterWindow: boolean): void {
@@ -1310,48 +1323,68 @@ export class TsRuntimePort implements RuntimePort {
     let forward = 0;
     let strafe = 0;
     let turn = 0;
+    let controlX = 0;
+    let controlY = 0;
     let pendingDamageCalls = 0;
 
     if (inputMask & (1 << 0)) forward += 32;
     if (inputMask & (1 << 1)) forward -= 32;
-    if (inputMask & (1 << 2)) turn += 8;
-    if (inputMask & (1 << 3)) turn -= 8;
+    if (inputMask & (1 << 2)) turn -= 8;
+    if (inputMask & (1 << 3)) turn += 8;
     if (inputMask & (1 << 4)) strafe -= 24;
     if (inputMask & (1 << 5)) strafe += 24;
 
+    const strafePressed = strafe !== 0;
+    if (strafePressed) {
+      if (strafe < 0) {
+        controlX += 24;
+      } else if (strafe > 0) {
+        controlX -= 24;
+      }
+    } else {
+      if (turn < 0) {
+        controlX -= 8 * ANGLESCALE;
+      } else if (turn > 0) {
+        controlX += 8 * ANGLESCALE;
+      }
+    }
+    if (forward > 0) {
+      controlY -= 32;
+    } else if (forward < 0) {
+      controlY += 32;
+    }
+
     let xQ16 = this.state.xQ8 << 8;
     let yQ16 = this.state.yQ8 << 8;
-
-    if (strafe !== 0) {
-      if (strafe < 0) {
+    if (strafePressed) {
+      if (controlX > 0) {
         let angle = this.state.angleDeg - ANGLES / 4;
         if (angle < 0) angle += ANGLES;
-        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(24, MOVESCALE));
+        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(controlX, MOVESCALE));
         xQ16 = moved.xQ16;
         yQ16 = moved.yQ16;
-      } else if (strafe > 0) {
+      } else if (controlX < 0) {
         let angle = this.state.angleDeg + ANGLES / 4;
         if (angle >= ANGLES) angle -= ANGLES;
-        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(24, MOVESCALE));
+        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(-controlX, MOVESCALE));
         xQ16 = moved.xQ16;
         yQ16 = moved.yQ16;
       }
     } else {
-      const turnControl = turn < 0 ? -8 * ANGLESCALE : turn > 0 ? 8 * ANGLESCALE : 0;
-      this.angleFrac = (this.angleFrac + turnControl) | 0;
+      this.angleFrac = (this.angleFrac + controlX) | 0;
       const angleUnits = (this.angleFrac / ANGLESCALE) | 0;
       this.angleFrac = (this.angleFrac - Math.imul(angleUnits, ANGLESCALE)) | 0;
       this.state.angleDeg = normalizeAngleDeg(this.state.angleDeg - angleUnits);
     }
 
-    if (forward > 0) {
-      const moved = this.thrustQ16(xQ16, yQ16, this.state.angleDeg | 0, Math.imul(32, MOVESCALE));
+    if (controlY < 0) {
+      const moved = this.thrustQ16(xQ16, yQ16, this.state.angleDeg | 0, Math.imul(-controlY, MOVESCALE));
       xQ16 = moved.xQ16;
       yQ16 = moved.yQ16;
-    } else if (forward < 0) {
+    } else if (controlY > 0) {
       let angle = this.state.angleDeg + ANGLES / 2;
       if (angle >= ANGLES) angle -= ANGLES;
-      const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(32, BACKMOVESCALE));
+      const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(controlY, BACKMOVESCALE));
       xQ16 = moved.xQ16;
       yQ16 = moved.yQ16;
     }
@@ -2555,7 +2588,7 @@ export class TsRuntimePort implements RuntimePort {
         if (texture) {
           const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
           const sampleX = hit.texX & 63;
-          // VSWAP wall textures are row-major in these data files.
+          // VSWAP wall textures are stored row-major (y-major then x).
           indexed[y * FRAME_WIDTH + x] = texture[(ty * 64 + sampleX) & 4095] ?? wallIndex;
         } else {
           indexed[y * FRAME_WIDTH + x] = wallIndex;
@@ -2563,7 +2596,7 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
-    if (this.fullMap.actors.length > 0) {
+    if (this.drawProceduralActorSprites && this.fullMap.actors.length > 0) {
       const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);
       liveActors.sort((a, b) => {
         const adx = (a.xQ8 | 0) / 256 - posX;
@@ -2718,6 +2751,19 @@ export class TsRuntimePort implements RuntimePort {
       worldHeight: this.fullMap.height | 0,
       hash: snapshotHash(worldState, this.angleFrac),
     };
+  }
+
+  debugActors(): RuntimeDebugActor[] {
+    if (!this.fullMap.enabled || this.fullMap.actors.length === 0) {
+      return [];
+    }
+    return this.fullMap.actors.map((actor) => ({
+      id: actor.id | 0,
+      xQ8: actor.xQ8 | 0,
+      yQ8: actor.yQ8 | 0,
+      hp: actor.hp | 0,
+      mode: actor.mode | 0,
+    }));
   }
 
   saveState(): Uint8Array {
