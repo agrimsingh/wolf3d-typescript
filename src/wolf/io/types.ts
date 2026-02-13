@@ -16,7 +16,7 @@ export interface Wl1AssetPackage {
 }
 
 export interface Wl1AssetMetadata {
-  variant: 'WL1';
+  variant: 'WL6';
   validatedAt: string;
   fileSizes: Record<string, number>;
   checksums?: Record<string, string>;

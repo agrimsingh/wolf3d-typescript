@@ -29,7 +29,7 @@ if [[ "$requires_full_world" == "true" ]]; then
     exit 1
   fi
   if ! rg -q "plane0" "$WL1_DATA" || ! rg -q "plane1" "$WL1_DATA" || ! rg -q "worldStartXQ8|worldStartYQ8" "$WL1_DATA"; then
-    echo "Runtime world guard failed: WL1 loader is missing full plane data fields at phase '$phase'." >&2
+    echo "Runtime world guard failed: full-map loader is missing required plane data fields at phase '$phase'." >&2
     exit 1
   fi
   if ! rg -q "worldXQ8|worldYQ8|mapWidth|mapHeight" "$RUNTIME_CONTRACTS"; then

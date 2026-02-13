@@ -7,7 +7,7 @@ import {
   type RuntimeTraceCapture,
 } from '../../src/runtime/parityHarness';
 import { TsRuntimePort } from '../../src/runtime/tsRuntime';
-import { loadWl1RuntimeScenarios } from './runtime-fixtures';
+import { loadRuntimeScenarios } from './runtime-fixtures';
 
 function fnv1a(hash: number, value: number): number {
   return Math.imul((hash ^ (value >>> 0)) >>> 0, 16777619) >>> 0;
@@ -106,7 +106,7 @@ export interface RuntimeEpisodeArtifact {
 }
 
 export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap = 64): Promise<RuntimeEpisodeArtifact> {
-  const fixtures = await loadWl1RuntimeScenarios(rootDir, stepsPerMap);
+  const fixtures = await loadRuntimeScenarios(rootDir, stepsPerMap);
   if (fixtures.length === 0) {
     throw new Error('No runtime fixtures found. Run `pnpm verify:assets` and `pnpm verify:assets:wl6` to install/validate data files.');
   }
@@ -123,7 +123,7 @@ export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap
         config: fixture.config,
         steps: fixture.steps,
       };
-      const useOracleParity = (fixture.config.variant ?? 'WL1') !== 'WL6';
+      const useOracleParity = (fixture.config.variant ?? 'WL6') !== 'WL6';
       let canonicalTrace: RuntimeTraceCapture;
       if (useOracleParity) {
         const oracleTrace = await captureRuntimeTrace(oracle, scenario);

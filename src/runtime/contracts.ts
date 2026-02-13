@@ -1,6 +1,6 @@
 export interface RuntimeConfig {
   // Variant/profile selector for asset and fixture pipelines.
-  variant?: 'WL1' | 'WL6';
+  variant?: 'WL6';
   // Legacy 8x8 compatibility bits. Runtime derives these from full map state when omitted.
   mapLo?: number;
   mapHi?: number;
@@ -33,7 +33,7 @@ export interface RuntimeConfig {
 }
 
 export interface RuntimeBootParams {
-  variant: 'WL1' | 'WL6';
+  variant: 'WL6';
   episode: number;
   mapIndex: number;
   difficulty: number;

@@ -118,7 +118,7 @@ export function buildWl1RuntimeScenariosFromBytes(
   mapheadBytes: Uint8Array,
   gamemapsBytes: Uint8Array,
   stepsPerScenario = 64,
-  variant: 'WL1' | 'WL6' = 'WL1',
+  variant: 'WL6' = 'WL6',
 ): Wl1RuntimeScenarioData[] {
   const rlewTag = readU16(mapheadBytes, 0);
   const scenarios: Wl1RuntimeScenarioData[] = [];

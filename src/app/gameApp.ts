@@ -1,5 +1,5 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
-import { loadWl1Campaign } from '../runtime/wl1Campaign';
+import { loadRuntimeCampaign } from '../runtime/wl1Campaign';
 import { loadModernAssetMap, type ModernAssetRect } from '../assets/modernAssetMap';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController, type RuntimeScenario } from './runtimeController';
@@ -87,7 +87,7 @@ export class WolfApp {
   private readonly controller = new RuntimeAppController({
     audio: new WebAudioRuntimeAdapter(),
     scenarioLoader: () =>
-      loadWl1Campaign({
+      loadRuntimeCampaign({
         baseUrl: CAMPAIGN_BASE_URL,
         stepsPerScenario: 64,
         variant: DATA_VARIANT,

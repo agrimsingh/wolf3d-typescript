@@ -5,7 +5,7 @@ import { WolfsrcOraclePort } from '../../src/oracle/runtimeOracle';
 import { OracleBridge } from '../../src/oracle/bridge';
 import type { RuntimeConfig, RuntimeInput } from '../../src/runtime/contracts';
 import { buildRuntimeTraceSymbolMetadata, type RuntimeTraceSymbolMetadata } from './runtime-trace-symbols';
-import { loadWl1RuntimeScenarios as loadRuntimeFixtureScenarios } from './runtime-fixtures';
+import { loadRuntimeScenarios as loadRuntimeFixtureScenarios } from './runtime-fixtures';
 
 const AREATILE = 107;
 
@@ -298,7 +298,7 @@ async function main(): Promise<void> {
 
   const scenarios = await loadRuntimeScenarios(root);
   if (scenarios.length === 0) {
-    throw new Error('No runtime scenarios were extracted from available WL6/WL1 assets.');
+    throw new Error('No runtime scenarios were extracted from available WL6 assets.');
   }
   const menuTraceDigest = await runDeterministicMenuTraceDigest();
   const traceSymbols = await buildRuntimeTraceSymbolMetadata(root);

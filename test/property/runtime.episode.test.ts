@@ -5,7 +5,7 @@ import { computeRuntimeEpisodeArtifact, type RuntimeEpisodeArtifact } from '../.
 import { withReplay } from './replay';
 
 describe('runtime episode parity checkpoints', () => {
-  it('episode lock stays stable across all WL1 maps', async () => {
+    it('episode lock stays stable across all WL6 maps', async () => {
     await withReplay('runtime.episode.lock', async () => {
       const lockPath = path.join(process.cwd(), 'specs', 'generated', 'runtime-episode-checkpoints-lock.json');
       const lock = JSON.parse(await readFile(lockPath, 'utf8')) as RuntimeEpisodeArtifact;

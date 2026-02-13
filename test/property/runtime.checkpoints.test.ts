@@ -14,20 +14,20 @@ import {
   type RuntimeParityScenario,
 } from '../../src/runtime/parityHarness';
 import { persistRuntimeRepro } from './runtimeRepro';
-import { loadWl1RuntimeScenarios } from '../../scripts/runtime/runtime-fixtures';
+import { loadRuntimeScenarios } from '../../scripts/runtime/runtime-fixtures';
 import { computeRuntimeCheckpoints, type RuntimeCheckpointArtifact } from '../../scripts/runtime/runtime-checkpoints';
 
 describe('runtime fixture checkpoints', () => {
   let oracle: WolfsrcOraclePort;
   let tsRuntime: TsRuntimePort;
   let tsRuntimeMirror: TsRuntimePort;
-  let fixtureScenarios: Awaited<ReturnType<typeof loadWl1RuntimeScenarios>>;
+  let fixtureScenarios: Awaited<ReturnType<typeof loadRuntimeScenarios>>;
 
   beforeAll(async () => {
     oracle = new WolfsrcOraclePort();
     tsRuntime = new TsRuntimePort();
     tsRuntimeMirror = new TsRuntimePort();
-    fixtureScenarios = await loadWl1RuntimeScenarios(process.cwd(), 64);
+    fixtureScenarios = await loadRuntimeScenarios(process.cwd(), 64);
   });
 
   afterAll(async () => {
@@ -40,7 +40,7 @@ describe('runtime fixture checkpoints', () => {
     let oracleTrace: Awaited<ReturnType<typeof captureRuntimeTrace>> | undefined;
     let tsTrace: Awaited<ReturnType<typeof captureRuntimeTrace>> | undefined;
     try {
-      const useOracleParity = (scenario.config.variant ?? 'WL1') !== 'WL6';
+      const useOracleParity = (scenario.config.variant ?? 'WL6') !== 'WL6';
       if (useOracleParity) {
         oracleTrace = await captureRuntimeTrace(oracle, scenario);
       }
@@ -70,7 +70,7 @@ describe('runtime fixture checkpoints', () => {
     }
   }
 
-  it('checkpoint lock stays stable across deterministic WL1 fixtures', async () => {
+  it('checkpoint lock stays stable across deterministic WL6 fixtures', async () => {
     const lockPath = path.join(process.cwd(), 'specs', 'generated', 'runtime-checkpoints-lock.json');
     const lock = JSON.parse(await readFile(lockPath, 'utf8')) as RuntimeCheckpointArtifact;
     const generated = await computeRuntimeCheckpoints(process.cwd(), 64);
@@ -89,7 +89,7 @@ describe('runtime fixture checkpoints', () => {
           fc.integer({ min: 64, max: 400 }),
           async (scenarioIndex, prefixSteps, viewWidth, viewHeight) => {
             const fixture = fixtureScenarios[scenarioIndex]!;
-            const useOracleParity = (fixture.config.variant ?? 'WL1') !== 'WL6';
+            const useOracleParity = (fixture.config.variant ?? 'WL6') !== 'WL6';
             const scenario: RuntimeParityScenario = {
               id: `${fixture.id}-prefix-${prefixSteps}`,
               config: fixture.config,

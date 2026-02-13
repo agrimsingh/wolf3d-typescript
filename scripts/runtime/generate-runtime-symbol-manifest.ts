@@ -101,7 +101,7 @@ function renderManifest(hits: RuntimeHits, classification: RuntimeClassification
     .map(([file, count]) => `| ${file} | ${count} |`)
     .join('\n');
 
-  return `# Runtime Symbol Manifest (WL1 Runtime Path)
+  return `# Runtime Symbol Manifest (WL6 Runtime Path)
 
 Authoritative runtime symbol checklist generated from deterministic trace artifacts and full WOLFSRC classification.
 
@@ -109,7 +109,7 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 
 - Current state: \`frozen\`
 - Source of truth: \`specs/generated/runtime-symbol-hits.json\` + \`specs/generated/wolfsrc-runtime-classification.json\`
-- Trace scenarios: ${hits.scenarioCount} (WL1 asset-backed)
+- Trace scenarios: ${hits.scenarioCount} (WL6 asset-backed)
 - Deterministic menu-trace digest: \`${hits.menuTraceDigest >>> 0}\`
 - Required runtime trace symbols: ${hits.requiredRuntimeSymbolIds.length}
 - WOLFSRC required-runtime symbols: ${classification.totals.requiredRuntime}

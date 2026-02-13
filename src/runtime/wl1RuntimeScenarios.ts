@@ -1,7 +1,10 @@
 import { buildWl1RuntimeScenariosFromBytes, type Wl1RuntimeScenarioData } from './wl1LevelData';
 
 export type Wl1RuntimeScenario = Wl1RuntimeScenarioData;
-export type WolfDataVariant = 'WL1' | 'WL6';
+export type RuntimeScenario = Wl1RuntimeScenarioData;
+export type WolfDataVariant = 'WL6';
+
+export type RuntimeScenarios = RuntimeScenario[];
 
 async function fetchBytes(url: string): Promise<Uint8Array> {
   const response = await fetch(url);
@@ -19,4 +22,13 @@ export async function loadWl1RuntimeScenarios(
   const mapheadBytes = await fetchBytes(`${baseUrl}/MAPHEAD.${variant}`);
   const gamemapsBytes = await fetchBytes(`${baseUrl}/GAMEMAPS.${variant}`);
   return buildWl1RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
+}
+
+export async function loadRuntimeScenarios(
+  baseUrl = '/assets/wl6/raw',
+  stepsPerScenario = 64,
+  variant: WolfDataVariant = 'WL6',
+): Promise<RuntimeScenario[]> {
+  const scenarios = await loadWl1RuntimeScenarios(baseUrl, stepsPerScenario, variant);
+  return scenarios;
 }
