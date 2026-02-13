@@ -4,7 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 import { WolfsrcOraclePort } from '../../src/oracle/runtimeOracle';
 import { TsRuntimePort } from '../../src/runtime/tsRuntime';
-import { buildWl1RuntimeScenariosFromBytes } from '../../src/runtime/wl1LevelData';
+import { buildWl6RuntimeScenariosFromBytes } from '../../src/runtime/wl6LevelData';
 import { wlGameSetupGameLevelHash } from '../../src/wolf/map/wlMap';
 import { getOracleBridge, type OracleBridge } from '../../src/oracle/bridge';
 import type { RuntimeConfig } from '../../src/runtime/contracts';
@@ -15,7 +15,7 @@ describe('runtime level-load parity', () => {
   let oracle: WolfsrcOraclePort;
   let tsRuntime: TsRuntimePort;
   let symbolOracle: OracleBridge;
-  let scenarios = buildWl1RuntimeScenariosFromBytes(new Uint8Array(0), new Uint8Array(0), 1);
+  let scenarios = buildWl6RuntimeScenariosFromBytes(new Uint8Array(0), new Uint8Array(0), 1);
 
   beforeAll(async () => {
     oracle = new WolfsrcOraclePort();
@@ -26,7 +26,7 @@ describe('runtime level-load parity', () => {
   const wl6GameMaps = join(process.cwd(), 'assets', 'wl6', 'raw', 'GAMEMAPS.WL6');
   const maphead = new Uint8Array(readFileSync(wl6MapHead));
   const gamemaps = new Uint8Array(readFileSync(wl6GameMaps));
-  scenarios = buildWl1RuntimeScenariosFromBytes(maphead, gamemaps, 2, 'WL6');
+  scenarios = buildWl6RuntimeScenariosFromBytes(maphead, gamemaps, 2, 'WL6');
   });
 
   afterAll(async () => {

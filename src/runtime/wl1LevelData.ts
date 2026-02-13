@@ -3,7 +3,7 @@ import { idCaCarmackExpandWords, idCaRlewExpandWords } from '../wolf/map/wlMap';
 const PLAYER_START_MIN = 19;
 const PLAYER_START_MAX = 22;
 
-export interface Wl1RuntimeScenarioData {
+export interface Wl6RuntimeScenarioData {
   id: string;
   mapIndex: number;
   mapName: string;
@@ -12,8 +12,8 @@ export interface Wl1RuntimeScenarioData {
   steps: RuntimeInput[];
 }
 
-export type Wl6RuntimeScenarioData = Wl1RuntimeScenarioData;
-export type RuntimeScenarioData = Wl1RuntimeScenarioData;
+export type Wl1RuntimeScenarioData = Wl6RuntimeScenarioData;
+export type RuntimeScenarioData = Wl6RuntimeScenarioData;
 
 function readU16(bytes: Uint8Array, offset: number): number {
   if (offset < 0 || offset + 1 >= bytes.length) {
@@ -117,7 +117,7 @@ function buildScenarioSteps(seed: number, count: number): RuntimeInput[] {
   return steps;
 }
 
-export function buildWl1RuntimeScenariosFromBytes(
+export function buildWl6RuntimeScenariosFromBytes(
   mapheadBytes: Uint8Array,
   gamemapsBytes: Uint8Array,
   stepsPerScenario = 64,
@@ -208,7 +208,7 @@ export function buildWl1RuntimeScenariosFromBytes(
   return scenarios;
 }
 
-export const buildWl6RuntimeScenariosFromBytes = buildWl1RuntimeScenariosFromBytes;
+export const buildWl1RuntimeScenariosFromBytes = buildWl6RuntimeScenariosFromBytes;
 
 export function buildRuntimeScenariosFromBytes(
   mapheadBytes: Uint8Array,
@@ -216,5 +216,5 @@ export function buildRuntimeScenariosFromBytes(
   stepsPerScenario = 64,
   variant: 'WL6' = 'WL6',
 ): RuntimeScenarioData[] {
-  return buildWl1RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
+  return buildWl6RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
 }

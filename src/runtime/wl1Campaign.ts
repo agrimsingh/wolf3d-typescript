@@ -20,6 +20,8 @@ export async function loadWl1Campaign(options: CampaignLoadOptions = {}) {
   });
 }
 
+export { loadWl6Campaign as loadWl6Campaign };
+
 export async function loadRuntimeCampaign(options: CampaignLoadOptions = {}) {
   const {
     baseUrl = '/assets/wl6/raw',

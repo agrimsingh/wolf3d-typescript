@@ -1,5 +1,8 @@
-import { buildRuntimeScenariosFromBytes as buildRuntimeScenariosFromBytesLegacy, type RuntimeScenarioData as LegacyRuntimeScenarioData } from './wl1LevelData';
-import { buildWl1RuntimeScenariosFromBytes as buildWl1RuntimeScenariosFromBytesLegacy } from './wl1LevelData';
+import {
+  buildRuntimeScenariosFromBytes as buildRuntimeScenariosFromBytes,
+  buildWl6RuntimeScenariosFromBytes as buildWl6RuntimeScenariosFromBytesLegacy,
+  type RuntimeScenarioData as LegacyRuntimeScenarioData,
+} from './wl1LevelData';
 
 export type Wl6RuntimeScenarioData = LegacyRuntimeScenarioData;
 export type RuntimeScenarioData = Wl6RuntimeScenarioData;
@@ -10,7 +13,8 @@ export function buildWl6RuntimeScenariosFromBytes(
   stepsPerScenario = 64,
   variant: 'WL6' = 'WL6',
 ): RuntimeScenarioData[] {
-  return buildWl1RuntimeScenariosFromBytesLegacy(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
+  return buildWl6RuntimeScenariosFromBytesLegacy(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
 }
 
-export { buildRuntimeScenariosFromBytesLegacy as buildRuntimeScenariosFromBytes };
+export { buildRuntimeScenariosFromBytes };
+export { buildWl1RuntimeScenariosFromBytes } from './wl1LevelData';

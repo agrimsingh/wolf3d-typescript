@@ -4,7 +4,7 @@
 
 This project ports the original Wolfenstein 3D C codebase to TypeScript for browser execution, using a C-to-WASM oracle and property-based testing as the primary correctness mechanism. Correctness is defined by parity with original C behavior.
 
-Current execution track is the runtime-complete WL1 plan (`R0..R8`). Legacy phase `0..8` completion reflects prototype oracle wrappers and is superseded for full runtime acceptance.
+Current execution track is the runtime-complete WL6 plan (`K0..K12`). Legacy WL1-phase work reflects prototype oracle wrappers and is superseded by the active WL6 runtime acceptance plan.
 
 ## Architecture
 
@@ -56,8 +56,8 @@ Rules:
 - Run runtime parity harness tests: `pnpm runtime:parity:test`
 - Generate deterministic runtime tick/frame checkpoints: `pnpm runtime:checkpoints:generate`
 - Verify runtime checkpoint lock: `pnpm runtime:checkpoints:verify`
-- Generate deterministic WL1 episode checkpoints: `pnpm runtime:episode:generate`
-- Verify WL1 episode checkpoint lock: `pnpm runtime:episode:verify`
+- Generate deterministic WL6 episode checkpoints: `pnpm runtime:episode:generate`
+- Verify WL6 episode checkpoint lock: `pnpm runtime:episode:verify`
 - Run browser-runtime smoke suite: `pnpm runtime:browser:smoke`
 - Verify required-runtime symbol parity coverage + no-fallback policy: `pnpm runtime:required:verify`
 - Verify runtime core mode guard (`synthetic` vs `real`): `bash scripts/runtime/verify-runtime-core-guard.sh`
@@ -88,7 +88,7 @@ Rules:
 | Variable | Purpose | Required |
 | :--- | :--- | :--- |
 | `WOLF3D_SRC_DIR` | Absolute path to original C source root (`.../wolf3d-master/WOLFSRC`) used for explicit `--refresh` workflows | No |
-| `WOLF3D_DATA_DIR` | Path to canonical WL1 shareware game data used for test fixtures | Yes |
+| `WOLF3D_DATA_DIR` | Path to canonical WL6 game data used for test fixtures | Yes |
 | `EMSDK` | Emscripten SDK root when `emcc` is not globally available | Yes |
 | `ORACLE_WASM_PATH` | Optional override for compiled oracle artifact path | No |
 

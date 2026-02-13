@@ -4,7 +4,7 @@ import { RuntimeAppController } from '../../src/app/runtimeController';
 import { TsRuntimePort } from '../../src/runtime/tsRuntime';
 import type { RuntimeAudioAdapter, RuntimeUiEvent } from '../../src/app/runtimeAudio';
 import type { RuntimeSnapshot } from '../../src/runtime/contracts';
-import type { RuntimeScenario } from '../../src/runtime/wl1RuntimeScenarios';
+import type { RuntimeScenario as Wl6RuntimeScenario } from '../../src/runtime/wl1RuntimeScenarios';
 import { getNumRuns, getSeed } from './config';
 import { withReplay } from './replay';
 
@@ -24,7 +24,7 @@ function makeBorderMapBits(): { mapLo: number; mapHi: number } {
   return { mapLo: mapLo >>> 0, mapHi: mapHi >>> 0 };
 }
 
-function makeScenario(mapIndex: number): RuntimeScenario {
+function makeScenario(mapIndex: number): Wl6RuntimeScenario {
   const bits = makeBorderMapBits();
   return {
     id: `menu-flow-map-${mapIndex}`,

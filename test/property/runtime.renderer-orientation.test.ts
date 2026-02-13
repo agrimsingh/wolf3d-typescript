@@ -83,11 +83,11 @@ function castRayForTest(
   return null;
 }
 
-function buildColumnMajorTexture(): Uint8Array {
+function buildRowMajorTexture(): Uint8Array {
   const texture = new Uint8Array(64 * 64);
   for (let x = 0; x < 64; x++) {
     for (let y = 0; y < 64; y++) {
-      texture[x * 64 + y] = x & 0xff;
+      texture[y * 64 + x] = x & 0xff;
     }
   }
   return texture;
@@ -104,7 +104,7 @@ describe('runtime renderer orientation', () => {
     await runtime.shutdown();
   });
 
-  it('samples VSWAP wall columns without an extra horizontal mirror pass', async () => {
+  it('samples VSWAP wall columns with row-major texture layout', async () => {
     const mapWidth = 8;
     const mapHeight = 8;
     const plane0 = buildOrientationPlane(mapWidth, mapHeight);
@@ -130,7 +130,7 @@ describe('runtime renderer orientation', () => {
       startAmmo: 8,
     };
 
-    runtime.setWallTextures([buildColumnMajorTexture()]);
+    runtime.setWallTextures([buildRowMajorTexture()]);
     await runtime.init(config);
     runtime.reset();
 
