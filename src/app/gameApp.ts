@@ -2,48 +2,23 @@ import type { RuntimeSnapshot } from '../runtime/contracts';
 import { loadRuntimeCampaign } from '../runtime/wl6Campaign';
 import { loadModernAssetMap, type ModernAssetRect } from '../assets/modernAssetMap';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
-import { RuntimeAppController, type RuntimeDebugActor, type RuntimeScenario } from './runtimeController';
+import { RuntimeAppController, type RuntimeScenario } from './runtimeController';
+import {
+  decodeSpriteChunk,
+  decodeVswapIndex,
+  decodeWallTexture,
+} from '../runtime/wl6AssetDecode';
 
 const WIDTH = 320;
 const HEIGHT = 200;
 const MINIMAP_TILE_SIZE = 8;
-const TEXTURE_SIZE = 64;
-const MAX_WALL_TEXTURES = 64;
+const MAX_WALL_TEXTURES = 128;
 const AREATILE = 107;
-const RENDER_FOV = Math.PI / 3;
 const BASELINE_STATUS_TEXT = 'Wolf3D TS Runtime (WL6)';
 const DATA_VARIANT = 'WL6';
 const CAMPAIGN_BASE_URL = '/assets/wl6/raw';
 const MODERN_ASSET_BASE_URL = '/assets/wl6-modern';
 const MENU_SHEET_TARGET_ID = 'ui.menu.sheet';
-const GUARD_SHEET_TARGET_ID = 'actor.guard.sheet';
-const WALL_TEXTURE_TARGET_KIND = 'wallTexture';
-const MODERN_WALLS_SOURCE_FILE = 'textures/walls.png';
-const MODERN_WALL_TILE_SIZE = 64;
-const MODERN_WALL_TILE_GAP = 1;
-const MODERN_WALL_GRID_ORIGIN_X = 1;
-const MODERN_WALL_GRID_ORIGIN_Y = 18;
-const DOOR_TILE_MIN = 90;
-const DOOR_TILE_MAX = 101;
-
-const CURATED_WL6_WALL_SLOT_MAP: Array<{ tileId: number; row: number; col: number }> = [
-  // Episode 1 opening room blue wall family.
-  { tileId: 1, row: 2, col: 0 },
-  { tileId: 2, row: 2, col: 1 },
-  { tileId: 3, row: 2, col: 0 },
-  { tileId: 5, row: 1, col: 6 },
-  { tileId: 6, row: 1, col: 7 },
-  { tileId: 7, row: 2, col: 1 },
-  { tileId: 8, row: 1, col: 6 },
-  { tileId: 9, row: 1, col: 7 },
-  // Adjacent light stone band in opening.
-  { tileId: 21, row: 0, col: 2 },
-  // Opening room teal door family.
-  { tileId: 90, row: 7, col: 0 },
-  { tileId: 91, row: 7, col: 1 },
-  { tileId: 100, row: 7, col: 0 },
-  { tileId: 106, row: 7, col: 1 },
-];
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -64,42 +39,6 @@ function wallAtPlane(plane0: Uint16Array, mapWidth: number, mapHeight: number, x
   return (tile & 0xffff) < AREATILE;
 }
 
-function readU16LE(bytes: Uint8Array, offset: number): number {
-  if (offset < 0 || offset + 1 >= bytes.length) return 0;
-  return (bytes[offset]! | (bytes[offset + 1]! << 8)) & 0xffff;
-}
-
-function readU32LE(bytes: Uint8Array, offset: number): number {
-  if (offset < 0 || offset + 3 >= bytes.length) return 0;
-  return (
-    (bytes[offset]!) |
-    (bytes[offset + 1]! << 8) |
-    (bytes[offset + 2]! << 16) |
-    (bytes[offset + 3]! << 24)
-  ) >>> 0;
-}
-
-function parseVswapWallTextures(bytes: Uint8Array, maxTextures = MAX_WALL_TEXTURES): Uint8Array[] {
-  if (bytes.length < 10) return [];
-  const chunks = readU16LE(bytes, 0);
-  const spriteStart = readU16LE(bytes, 2);
-  if (chunks <= 0 || spriteStart <= 0) return [];
-
-  const offsetTableStart = 6;
-  const lengthTableStart = offsetTableStart + chunks * 4;
-  if (lengthTableStart + chunks * 2 > bytes.length) return [];
-
-  const out: Uint8Array[] = [];
-  const wallChunks = Math.min(spriteStart, chunks, maxTextures);
-  for (let i = 0; i < wallChunks; i++) {
-    const off = readU32LE(bytes, offsetTableStart + i * 4);
-    const len = readU16LE(bytes, lengthTableStart + i * 2);
-    if (off === 0 || len < TEXTURE_SIZE * TEXTURE_SIZE) continue;
-    if (off + len > bytes.length) continue;
-    out.push(bytes.slice(off, off + TEXTURE_SIZE * TEXTURE_SIZE));
-  }
-  return out;
-}
 
 function buildRenderPalette(): [number, number, number][] {
   const palette: [number, number, number][] = new Array(256);
@@ -130,72 +69,6 @@ function clampI32(v: number, minv: number, maxv: number): number {
   return Math.max(minv, Math.min(maxv, v | 0)) | 0;
 }
 
-function normalizeRadians(angle: number): number {
-  let out = angle;
-  while (out < -Math.PI) out += Math.PI * 2;
-  while (out > Math.PI) out -= Math.PI * 2;
-  return out;
-}
-
-function wallAtTile(plane0: Uint16Array, mapWidth: number, mapHeight: number, x: number, y: number): boolean {
-  if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight) {
-    return true;
-  }
-  const tile = plane0[y * mapWidth + x] ?? 0;
-  return (tile & 0xffff) < AREATILE;
-}
-
-function castWallDistance(
-  plane0: Uint16Array,
-  mapWidth: number,
-  mapHeight: number,
-  startX: number,
-  startY: number,
-  dirX: number,
-  dirY: number,
-  maxDistance: number,
-): number {
-  const step = 0.05;
-  let traveled = 0.0;
-  while (traveled <= maxDistance) {
-    const x = startX + dirX * traveled;
-    const y = startY + dirY * traveled;
-    const tx = Math.floor(x);
-    const ty = Math.floor(y);
-    if (wallAtTile(plane0, mapWidth, mapHeight, tx, ty)) {
-      return traveled;
-    }
-    traveled += step;
-  }
-  return Number.POSITIVE_INFINITY;
-}
-
-function buildSyntheticPalette(): [number, number, number][] {
-  return RENDER_PALETTE;
-}
-
-function nearestPaletteIndex(
-  r: number,
-  g: number,
-  b: number,
-  palette: [number, number, number][],
-): number {
-  let bestIndex = 0;
-  let bestError = Number.POSITIVE_INFINITY;
-  for (let i = 0; i < palette.length; i++) {
-    const [pr, pg, pb] = palette[i]!;
-    const dr = r - pr;
-    const dg = g - pg;
-    const db = b - pb;
-    const err = dr * dr + dg * dg + db * db;
-    if (err < bestError) {
-      bestError = err;
-      bestIndex = i;
-    }
-  }
-  return bestIndex | 0;
-}
-
 export class WolfApp {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
@@ -215,8 +88,6 @@ export class WolfApp {
   private hudPanelRect: ModernAssetRect | null = null;
   private menuSheetImage: HTMLImageElement | null = null;
   private menuSheetRect: ModernAssetRect | null = null;
-  private guardSprite: HTMLCanvasElement | null = null;
-  private loadedModernWallTextures = false;
 
   constructor(container: HTMLElement) {
     this.canvas = document.createElement('canvas');
@@ -238,165 +109,43 @@ export class WolfApp {
     void this.loadWallTextures();
     void this.loadHudPanel();
     void this.loadMenuSkin();
-    void this.loadGuardSprite();
     void this.controller.boot();
     this.loopHandle = requestAnimationFrame((now) => this.loop(now));
   }
 
   private async loadWallTextures(): Promise<void> {
-    const loadedModern = await this.loadModernWallTextures();
-    if (loadedModern) {
-      this.loadedModernWallTextures = true;
-      return;
-    }
-
     try {
       const response = await fetch(`${CAMPAIGN_BASE_URL}/VSWAP.${DATA_VARIANT}`);
       if (!response.ok) return;
       const bytes = new Uint8Array(await response.arrayBuffer());
-      const textures = parseVswapWallTextures(bytes, MAX_WALL_TEXTURES);
+      const index = decodeVswapIndex(bytes);
+      const textures: Uint8Array[] = [];
+      const maxTextures = Math.min(index.wallCount | 0, MAX_WALL_TEXTURES);
+      for (let i = 0; i < maxTextures; i++) {
+        textures.push(decodeWallTexture(bytes, index, i));
+      }
       if (textures.length > 0) {
         this.controller.setWallTextures(textures);
+        this.controller.setVswapAssetIndex({
+          ...index,
+          bytes,
+        });
+        this.controller.setSpriteDecoder({
+          decodeSprite: (spriteId: number) => {
+            if (!Number.isInteger(spriteId) || spriteId < 0) {
+              return null;
+            }
+            const sprite = decodeSpriteChunk(bytes, index, spriteId | 0);
+            if (sprite.lastCol < sprite.firstCol || sprite.pixelPool.length <= 0) {
+              return null;
+            }
+            return sprite;
+          },
+        });
       }
     } catch {
       // Keep runtime on procedural fallback if textures cannot be loaded.
     }
-  }
-
-  private async loadModernWallTextures(): Promise<boolean> {
-    try {
-      const assetMap = await loadModernAssetMap();
-      const wallEntries = assetMap.entries
-        .filter((entry) => entry.targetKind === WALL_TEXTURE_TARGET_KIND && !!entry.rect)
-        .sort((a, b) => a.targetId.localeCompare(b.targetId));
-      if (wallEntries.length === 0) {
-        return false;
-      }
-
-      const palette = buildSyntheticPalette();
-      const imageCache = new Map<string, HTMLImageElement>();
-      const extracted: Uint8Array[] = [];
-      for (const entry of wallEntries) {
-        const rect = entry.rect;
-        if (!rect) {
-          continue;
-        }
-        let image = imageCache.get(entry.sourceFile) ?? null;
-        if (!image) {
-          image = new Image();
-          image.src = `${MODERN_ASSET_BASE_URL}/${entry.sourceFile}`;
-          await image.decode();
-          imageCache.set(entry.sourceFile, image);
-        }
-        const texture = this.extractModernWallTexture(image, rect, palette);
-        if (texture) {
-          extracted.push(texture);
-        }
-      }
-
-      if (extracted.length === 0) {
-        return false;
-      }
-
-      // Fill runtime slots with a coherent blue-wall default first.
-      const expanded: Uint8Array[] = [];
-
-      // Then force specific wall tile ids to known-correct atlas locations.
-      let wallsImage = imageCache.get(MODERN_WALLS_SOURCE_FILE) ?? null;
-      if (!wallsImage) {
-        wallsImage = new Image();
-        wallsImage.src = `${MODERN_ASSET_BASE_URL}/${MODERN_WALLS_SOURCE_FILE}`;
-        await wallsImage.decode();
-        imageCache.set(MODERN_WALLS_SOURCE_FILE, wallsImage);
-      }
-      const defaultBlueRect = {
-        x: MODERN_WALL_GRID_ORIGIN_X + 0 * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
-        y: MODERN_WALL_GRID_ORIGIN_Y + 2 * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
-        w: MODERN_WALL_TILE_SIZE,
-        h: MODERN_WALL_TILE_SIZE,
-      };
-      const defaultBlue = this.extractModernWallTexture(wallsImage, defaultBlueRect, palette) ?? extracted[0]!;
-      for (let i = 0; i < MAX_WALL_TEXTURES; i++) {
-        expanded.push(defaultBlue.slice());
-      }
-      for (const mapping of CURATED_WL6_WALL_SLOT_MAP) {
-        const slot = (mapping.tileId - 1) | 0;
-        if (slot < 0 || slot >= MAX_WALL_TEXTURES) {
-          continue;
-        }
-        const rect = {
-          x: MODERN_WALL_GRID_ORIGIN_X + mapping.col * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
-          y: MODERN_WALL_GRID_ORIGIN_Y + mapping.row * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
-          w: MODERN_WALL_TILE_SIZE,
-          h: MODERN_WALL_TILE_SIZE,
-        };
-        const texture = this.extractModernWallTexture(wallsImage, rect, palette);
-        if (texture) {
-          expanded[slot] = texture;
-        }
-      }
-      for (let tileId = DOOR_TILE_MIN; tileId <= DOOR_TILE_MAX; tileId++) {
-        const slot = (tileId - 1) | 0;
-        if (slot < 0 || slot >= MAX_WALL_TEXTURES) {
-          continue;
-        }
-        const col = (tileId & 1) === 0 ? 0 : 1;
-        const rect = {
-          x: MODERN_WALL_GRID_ORIGIN_X + col * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
-          y: MODERN_WALL_GRID_ORIGIN_Y + 7 * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
-          w: MODERN_WALL_TILE_SIZE,
-          h: MODERN_WALL_TILE_SIZE,
-        };
-        const texture = this.extractModernWallTexture(wallsImage, rect, palette);
-        if (texture) {
-          expanded[slot] = texture;
-        }
-      }
-      this.controller.setWallTextures(expanded);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  private extractModernWallTexture(
-    image: HTMLImageElement,
-    rect: ModernAssetRect,
-    palette: [number, number, number][],
-  ): Uint8Array | null {
-    const canvas = document.createElement('canvas');
-    canvas.width = TEXTURE_SIZE;
-    canvas.height = TEXTURE_SIZE;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      return null;
-    }
-
-    ctx.imageSmoothingEnabled = false;
-    ctx.drawImage(
-      image,
-      rect.x | 0,
-      rect.y | 0,
-      Math.max(1, rect.w | 0),
-      Math.max(1, rect.h | 0),
-      0,
-      0,
-      TEXTURE_SIZE,
-      TEXTURE_SIZE,
-    );
-    const pixels = ctx.getImageData(0, 0, TEXTURE_SIZE, TEXTURE_SIZE).data;
-    const out = new Uint8Array(TEXTURE_SIZE * TEXTURE_SIZE);
-    for (let y = 0; y < TEXTURE_SIZE; y++) {
-      for (let x = 0; x < TEXTURE_SIZE; x++) {
-        const src = (y * TEXTURE_SIZE + x) * 4;
-        const r = pixels[src] ?? 0;
-        const g = pixels[src + 1] ?? 0;
-        const b = pixels[src + 2] ?? 0;
-        // Runtime expects VSWAP-style column-major texels.
-        out[x * TEXTURE_SIZE + y] = nearestPaletteIndex(r, g, b, palette);
-      }
-    }
-    return out;
   }
 
   private async loadHudPanel(): Promise<void> {
@@ -433,88 +182,6 @@ export class WolfApp {
       this.menuSheetImage = null;
       this.menuSheetRect = null;
     }
-  }
-
-  private async loadGuardSprite(): Promise<void> {
-    try {
-      const assetMap = await loadModernAssetMap();
-      const guardSheet = assetMap.entries.find((entry) => entry.targetKind === 'actorSheet' && entry.targetId === GUARD_SHEET_TARGET_ID && !!entry.rect);
-      if (!guardSheet || !guardSheet.rect) {
-        return;
-      }
-      const image = new Image();
-      image.src = `${MODERN_ASSET_BASE_URL}/${guardSheet.sourceFile}`;
-      await image.decode();
-      this.guardSprite = this.extractGuardSprite(image, guardSheet.rect);
-    } catch {
-      this.guardSprite = null;
-    }
-  }
-
-  private extractGuardSprite(image: HTMLImageElement, rect: ModernAssetRect): HTMLCanvasElement {
-    const cols = 7;
-    const rows = 7;
-    const cellW = Math.max(1, Math.floor(rect.w / cols));
-    const cellH = Math.max(1, Math.floor(rect.h / rows));
-    const srcX = rect.x + 6;
-    const srcY = rect.y + 2;
-    const srcW = Math.max(1, cellW - 12);
-    const srcH = Math.max(1, cellH - 6);
-    const canvas = document.createElement('canvas');
-    canvas.width = srcW;
-    canvas.height = srcH;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) {
-      return canvas;
-    }
-
-    ctx.drawImage(image, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);
-    const imageData = ctx.getImageData(0, 0, srcW, srcH);
-    const data = imageData.data;
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i] ?? 0;
-      const g = data[i + 1] ?? 0;
-      const b = data[i + 2] ?? 0;
-      const magenta = r >= 120 && b >= 120 && g <= 110 && Math.abs(r - b) <= 80;
-      if (magenta) {
-        data[i + 3] = 0;
-      }
-    }
-    ctx.putImageData(imageData, 0, 0);
-
-    let minX = srcW;
-    let minY = srcH;
-    let maxX = -1;
-    let maxY = -1;
-    for (let y = 0; y < srcH; y++) {
-      for (let x = 0; x < srcW; x++) {
-        const alpha = data[(y * srcW + x) * 4 + 3] ?? 0;
-        if (alpha <= 6) {
-          continue;
-        }
-        if (x < minX) minX = x;
-        if (y < minY) minY = y;
-        if (x > maxX) maxX = x;
-        if (y > maxY) maxY = y;
-      }
-    }
-
-    if (maxX < minX || maxY < minY) {
-      return canvas;
-    }
-
-    const outW = (maxX - minX + 1) | 0;
-    const outH = (maxY - minY + 1) | 0;
-    const trimmed = document.createElement('canvas');
-    trimmed.width = outW;
-    trimmed.height = outH;
-    const trimmedCtx = trimmed.getContext('2d');
-    if (!trimmedCtx) {
-      return canvas;
-    }
-    trimmedCtx.imageSmoothingEnabled = false;
-    trimmedCtx.drawImage(canvas, minX, minY, outW, outH, 0, 0, outW, outH);
-    return trimmed;
   }
 
   private bindControls(): void {
@@ -688,7 +355,6 @@ export class WolfApp {
     }
 
     this.ctx.putImageData(this.image, 0, 0);
-    this.drawActorSprites(snapshot, scenario ?? null);
     this.drawHudOverlay();
     this.drawMiniMap(mapLo, mapHi, snapshot, scenario ?? null);
 
@@ -717,85 +383,6 @@ export class WolfApp {
     this.ctx.globalAlpha = 0.92;
     this.ctx.drawImage(this.hudPanelImage, srcX, srcY, srcW, srcH, 0, HEIGHT - hudHeight, WIDTH, hudHeight);
     this.ctx.restore();
-  }
-
-  private drawActorSprites(snapshot: RuntimeSnapshot, scenario: RuntimeScenario | null): void {
-    if (!this.guardSprite) {
-      return;
-    }
-
-    const actors = this.controller.getDebugActors().filter((actor) => (actor.hp | 0) > 0);
-    if (actors.length === 0) {
-      return;
-    }
-
-    const posX = (snapshot.worldXQ8 ?? snapshot.xQ8) / 256;
-    const posY = (snapshot.worldYQ8 ?? snapshot.yQ8) / 256;
-    const angleRad = ((snapshot.angleDeg | 0) * Math.PI) / 180;
-    actors.sort((a, b) => {
-      const adx = (a.xQ8 | 0) / 256 - posX;
-      const ady = (a.yQ8 | 0) / 256 - posY;
-      const bdx = (b.xQ8 | 0) / 256 - posX;
-      const bdy = (b.yQ8 | 0) / 256 - posY;
-      const da = (adx * adx) + (ady * ady);
-      const db = (bdx * bdx) + (bdy * bdy);
-      return db - da;
-    });
-
-    this.ctx.save();
-    this.ctx.imageSmoothingEnabled = false;
-    const plane0 = scenario?.config.plane0 ?? null;
-    const mapWidth = scenario?.config.mapWidth ?? 0;
-    const mapHeight = scenario?.config.mapHeight ?? 0;
-
-    for (const actor of actors) {
-      this.drawActorSprite(actor, posX, posY, angleRad, plane0, mapWidth, mapHeight);
-    }
-    this.ctx.restore();
-  }
-
-  private drawActorSprite(
-    actor: RuntimeDebugActor,
-    posX: number,
-    posY: number,
-    angleRad: number,
-    plane0: Uint16Array | null,
-    mapWidth: number,
-    mapHeight: number,
-  ): void {
-    if (!this.guardSprite) {
-      return;
-    }
-
-    const actorX = (actor.xQ8 | 0) / 256;
-    const actorY = (actor.yQ8 | 0) / 256;
-    const relX = actorX - posX;
-    const relY = actorY - posY;
-    const dist = Math.hypot(relX, relY);
-    if (dist < 0.2 || dist > 16) {
-      return;
-    }
-    if (plane0 && mapWidth > 0 && mapHeight > 0) {
-      const dirX = relX / Math.max(0.0001, dist);
-      const dirY = relY / Math.max(0.0001, dist);
-      const wallDistance = castWallDistance(plane0, mapWidth, mapHeight, posX, posY, dirX, dirY, dist);
-      if (wallDistance + 0.08 < dist) {
-        return;
-      }
-    }
-
-    const delta = normalizeRadians(Math.atan2(-relY, relX) - angleRad);
-    if (Math.abs(delta) > (RENDER_FOV * 0.65)) {
-      return;
-    }
-
-    const screenX = ((delta / RENDER_FOV) + 0.5) * WIDTH;
-    const spriteH = clampI32((HEIGHT / dist) | 0, 14, 110);
-    const spriteW = clampI32(((spriteH * this.guardSprite.width) / Math.max(1, this.guardSprite.height)) | 0, 8, 96);
-    const left = clampI32((screenX - (spriteW / 2)) | 0, -spriteW, WIDTH);
-    const top = clampI32(((HEIGHT / 2) - (spriteH / 2)) | 0, -spriteH, HEIGHT);
-    this.ctx.globalAlpha = actor.mode === 2 ? 0.95 : 0.88;
-    this.ctx.drawImage(this.guardSprite, left, top, spriteW, spriteH);
   }
 
   private drawMiniMap(mapLo: number, mapHi: number, snapshot: RuntimeSnapshot, scenario: RuntimeScenario | null): void {
