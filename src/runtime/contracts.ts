@@ -1,3 +1,5 @@
+import type { DecodedSpriteChunk, Wl6VswapIndexMetadata } from '../wolf/io/types';
+
 export interface RuntimeConfig {
   // Variant/profile selector for asset and fixture pipelines.
   variant?: 'WL6';
@@ -123,6 +125,14 @@ export interface RuntimeSaveBlob {
   bytes: Uint8Array;
 }
 
+export interface DecodedVswapAssetIndex extends Wl6VswapIndexMetadata {
+  bytes: Uint8Array;
+}
+
+export interface RuntimeSpriteDecoder {
+  decodeSprite(spriteId: number): DecodedSpriteChunk | null;
+}
+
 export interface RuntimePort {
   bootWl6(config: RuntimeConfig): Promise<void>;
   stepFrame(input: RuntimeFrameInput): RuntimeStepResult;
@@ -139,4 +149,6 @@ export interface RuntimePort {
   serialize(): Uint8Array;
   deserialize(data: Uint8Array): void;
   shutdown(): Promise<void>;
+  setVswapAssetIndex?(index: DecodedVswapAssetIndex): void;
+  setSpriteDecoder?(decoder: RuntimeSpriteDecoder): void;
 }

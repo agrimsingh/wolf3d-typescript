@@ -66,9 +66,35 @@ export interface DecodedMapLevel {
 
 export interface Wl6VswapIndexMetadata {
   chunkCount: number;
+  chunkOffsets: Uint32Array;
+  chunkLengths: Uint16Array;
+  wallCount: number;
   spriteStart: number;
   soundStart: number;
   wallTextureChunks: number;
+}
+
+export interface DecodedWallTexture {
+  id: number;
+  // 64x64 palette indexes in column-major order (VSWAP native layout).
+  pixelsColumnMajor64x64: Uint8Array;
+}
+
+export interface DecodedSpritePost {
+  startRow: number;
+  endRow: number;
+  pixelOffset: number;
+  pixelCount: number;
+}
+
+export interface DecodedSpriteChunk {
+  id: number;
+  chunkId: number;
+  firstCol: number;
+  lastCol: number;
+  columnOffsets: Uint16Array;
+  postsByColumn: DecodedSpritePost[][];
+  pixelPool: Uint8Array;
 }
 
 export interface Wl6AudioIndexMetadata {
