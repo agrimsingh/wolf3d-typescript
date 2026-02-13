@@ -164,6 +164,7 @@ import {
 } from '../wolf/menu/wlMenuText';
 import { spriteIdForActorKind } from './wl6SpriteMap';
 import {
+  isWl6BlockingThingMarker,
   isWl6BlockingPropMarker,
   isWl6EnemyMarker,
   isWl6PlayerStartMarker,
@@ -938,6 +939,35 @@ type RaycastHit = {
   texX: number;
 };
 
+type BillboardProjection = {
+  screenX: number;
+  distance: number;
+};
+
+function projectBillboard(
+  relX: number,
+  relY: number,
+  dirX: number,
+  dirY: number,
+  fov: number,
+): BillboardProjection | null {
+  const planeScale = Math.tan(fov / 2);
+  const planeX = -dirY * planeScale;
+  const planeY = dirX * planeScale;
+  const det = (planeX * dirY) - (dirX * planeY);
+  if (Math.abs(det) < 1e-9) {
+    return null;
+  }
+  const invDet = 1.0 / det;
+  const transformX = invDet * ((dirY * relX) - (dirX * relY));
+  const transformY = invDet * ((-planeY * relX) + (planeX * relY));
+  if (transformY <= 0.01) {
+    return null;
+  }
+  const screenX = (FRAME_WIDTH / 2) * (1 + (transformX / transformY));
+  return { screenX, distance: transformY };
+}
+
 function castRayFullMap(
   plane0: Uint16Array,
   width: number,
@@ -1426,7 +1456,7 @@ export class TsRuntimePort implements RuntimePort {
     }
     if (this.fullMap.plane1) {
       const marker = this.fullMap.plane1[tileY * this.fullMap.width + tileX] ?? 0;
-      if (isWl6BlockingPropMarker(marker)) {
+      if (isWl6BlockingThingMarker(marker)) {
         return false;
       }
     }
@@ -1480,6 +1510,8 @@ export class TsRuntimePort implements RuntimePort {
     const playerYQ16 = playerYQ8 << 8;
     const firePressed = (inputMask & (1 << 6)) !== 0;
     const angleRad = ((this.state.angleDeg | 0) * Math.PI) / 180;
+    const viewDirX = Math.cos(angleRad);
+    const viewDirY = -Math.sin(angleRad);
     const viewX = Math.cos(angleRad);
     const viewY = -Math.sin(angleRad);
     const doorMask = (this.state.mapLo ^ this.state.mapHi) & 0xff;
@@ -3018,6 +3050,8 @@ export class TsRuntimePort implements RuntimePort {
     const posX = (this.fullMap.worldXQ8 | 0) / 256;
     const posY = (this.fullMap.worldYQ8 | 0) / 256;
     const angleRad = ((this.state.angleDeg | 0) * Math.PI) / 180;
+    const viewDirX = Math.cos(angleRad);
+    const viewDirY = -Math.sin(angleRad);
 
     const indexed = new Uint8Array(FRAME_WIDTH * FRAME_HEIGHT);
     const depth = new Float64Array(FRAME_WIDTH);
@@ -3161,15 +3195,12 @@ export class TsRuntimePort implements RuntimePort {
       for (const thing of statics) {
         const relX = thing.x - posX;
         const relY = thing.y - posY;
-        const dist = Math.hypot(relX, relY);
-        if (dist < 0.12 || dist > 24) {
+        const projection = projectBillboard(relX, relY, viewDirX, viewDirY, RENDER_FOV);
+        if (!projection) {
           continue;
         }
-
-        let delta = Math.atan2(-relY, relX) - angleRad;
-        while (delta < -Math.PI) delta += Math.PI * 2;
-        while (delta > Math.PI) delta -= Math.PI * 2;
-        if (Math.abs(delta) > (RENDER_FOV * 0.75)) {
+        const dist = projection.distance;
+        if (dist < 0.48 || dist > 24) {
           continue;
         }
 
@@ -3178,7 +3209,7 @@ export class TsRuntimePort implements RuntimePort {
           continue;
         }
 
-        const screenX = ((delta / RENDER_FOV) + 0.5) * FRAME_WIDTH;
+        const screenX = projection.screenX;
         const spriteH = clampI32((FRAME_HEIGHT / dist) | 0, 8, 140);
         const spriteW = clampI32((spriteH * 64 / 64) | 0, 8, 140);
         const left = ((screenX - (spriteW / 2)) | 0);
@@ -3204,15 +3235,12 @@ export class TsRuntimePort implements RuntimePort {
         const actorY = (actor.yQ8 | 0) / 256;
         const relX = actorX - posX;
         const relY = actorY - posY;
-        const dist = Math.hypot(relX, relY);
-        if (dist < 0.12 || dist > 16) {
+        const projection = projectBillboard(relX, relY, viewDirX, viewDirY, RENDER_FOV);
+        if (!projection) {
           continue;
         }
-
-        let delta = Math.atan2(-relY, relX) - angleRad;
-        while (delta < -Math.PI) delta += Math.PI * 2;
-        while (delta > Math.PI) delta -= Math.PI * 2;
-        if (Math.abs(delta) > (RENDER_FOV * 0.65)) {
+        const dist = projection.distance;
+        if (dist < 0.12 || dist > 16) {
           continue;
         }
 
@@ -3222,7 +3250,7 @@ export class TsRuntimePort implements RuntimePort {
           continue;
         }
 
-        const screenX = ((delta / RENDER_FOV) + 0.5) * FRAME_WIDTH;
+        const screenX = projection.screenX;
         const spriteH = clampI32((FRAME_HEIGHT / dist) | 0, 12, 120);
         const spriteW = clampI32((spriteH * 64 / 64) | 0, 10, 128);
         const left = ((screenX - (spriteW / 2)) | 0);
@@ -3247,19 +3275,16 @@ export class TsRuntimePort implements RuntimePort {
         const actorY = (actor.yQ8 | 0) / 256;
         const relX = actorX - posX;
         const relY = actorY - posY;
-        const dist = Math.hypot(relX, relY);
+        const projection = projectBillboard(relX, relY, viewDirX, viewDirY, RENDER_FOV);
+        if (!projection) {
+          continue;
+        }
+        const dist = projection.distance;
         if (dist < 0.12 || dist > 16) {
           continue;
         }
 
-        let delta = Math.atan2(-relY, relX) - angleRad;
-        while (delta < -Math.PI) delta += Math.PI * 2;
-        while (delta > Math.PI) delta -= Math.PI * 2;
-        if (Math.abs(delta) > (RENDER_FOV * 0.65)) {
-          continue;
-        }
-
-        const screenX = ((delta / RENDER_FOV) + 0.5) * FRAME_WIDTH;
+        const screenX = projection.screenX;
         const spriteH = clampI32((FRAME_HEIGHT / dist) | 0, 12, 120);
         const spriteW = clampI32(((spriteH * 3) / 5) | 0, 6, 96);
         const left = clampI32(((screenX - (spriteW / 2)) | 0), 0, FRAME_WIDTH - 1);

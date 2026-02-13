@@ -41,6 +41,10 @@ export function isWl6DeadGuardMarker(marker: number): boolean {
   return normalizeMarker(marker) === WL6_DEAD_GUARD_MARKER;
 }
 
+export function isWl6BlockingThingMarker(marker: number): boolean {
+  return isWl6BlockingPropMarker(marker);
+}
+
 export function isWl6PropMarker(marker: number): boolean {
   const m = normalizeMarker(marker);
   return m >= WL6_PROP_MIN && m <= WL6_PROP_MAX;

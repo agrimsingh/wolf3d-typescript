@@ -265,6 +265,19 @@ describe('runtime actor sprite rendering', () => {
       }
     }
     expect(deadGuardPixels).toBeGreaterThan(200);
+
+    // Move into the same tile; near-clip should suppress sticky billboard artifacts.
+    runtime.step({ inputMask: 1 << 0, tics: 10, rng: 0x9911 });
+    const overlap = runtime.framebuffer(true).indexedBuffer!;
+    let overlapPixels = 0;
+    for (let y = 40; y < 180; y++) {
+      for (let x = 120; x < 210; x++) {
+        if ((overlap[(y * 320) + x] ?? 0) === 233) {
+          overlapPixels++;
+        }
+      }
+    }
+    expect(overlapPixels).toBeLessThanOrEqual(deadGuardPixels);
     await runtime.shutdown();
   });
 });
