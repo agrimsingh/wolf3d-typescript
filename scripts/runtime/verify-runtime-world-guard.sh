@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 MODE_FILE="$ROOT_DIR/specs/generated/runtime-core-mode.json"
-WL1_DATA="$ROOT_DIR/src/runtime/wl1LevelData.ts"
+FULL_WORLD_DATA="$ROOT_DIR/src/runtime/wl1LevelData.ts"
 RUNTIME_CONTRACTS="$ROOT_DIR/src/runtime/contracts.ts"
 RUNTIME_CONTROLLER="$ROOT_DIR/src/app/runtimeController.ts"
 
@@ -28,7 +28,7 @@ if [[ "$requires_full_world" == "true" ]]; then
     echo "Runtime world guard failed: runtime controller is not initializing from full scenario config at phase '$phase'." >&2
     exit 1
   fi
-  if ! rg -q "plane0" "$WL1_DATA" || ! rg -q "plane1" "$WL1_DATA" || ! rg -q "worldStartXQ8|worldStartYQ8" "$WL1_DATA"; then
+  if ! rg -q "plane0" "$FULL_WORLD_DATA" || ! rg -q "plane1" "$FULL_WORLD_DATA" || ! rg -q "worldStartXQ8|worldStartYQ8" "$FULL_WORLD_DATA"; then
     echo "Runtime world guard failed: full-map loader is missing required plane data fields at phase '$phase'." >&2
     exit 1
   fi

@@ -12,6 +12,7 @@ export interface Wl1RuntimeScenarioData {
   steps: RuntimeInput[];
 }
 
+export type Wl6RuntimeScenarioData = Wl1RuntimeScenarioData;
 export type RuntimeScenarioData = Wl1RuntimeScenarioData;
 
 function readU16(bytes: Uint8Array, offset: number): number {
@@ -206,6 +207,8 @@ export function buildWl1RuntimeScenariosFromBytes(
   scenarios.sort((a, b) => a.mapIndex - b.mapIndex);
   return scenarios;
 }
+
+export const buildWl6RuntimeScenariosFromBytes = buildWl1RuntimeScenariosFromBytes;
 
 export function buildRuntimeScenariosFromBytes(
   mapheadBytes: Uint8Array,

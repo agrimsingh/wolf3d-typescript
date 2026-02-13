@@ -1,5 +1,5 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
-import { loadRuntimeCampaign } from '../runtime/wl1Campaign';
+import { loadRuntimeCampaign } from '../runtime/wl6Campaign';
 import { loadModernAssetMap, type ModernAssetRect } from '../assets/modernAssetMap';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController, type RuntimeScenario } from './runtimeController';

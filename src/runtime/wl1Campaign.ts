@@ -1,8 +1,4 @@
-import {
-  loadRuntimeScenarios,
-  loadWl1RuntimeScenarios,
-  type WolfDataVariant,
-} from './wl1RuntimeScenarios';
+import { loadWl6Campaign, loadRuntimeScenarios as loadWl6RuntimeScenarios, type WolfDataVariant } from './wl6Campaign';
 
 export interface CampaignLoadOptions {
   baseUrl?: string;
@@ -17,7 +13,11 @@ export async function loadWl1Campaign(options: CampaignLoadOptions = {}) {
     variant = 'WL6',
   } = options;
 
-  return loadWl1RuntimeScenarios(baseUrl, stepsPerScenario, variant);
+  return loadWl6Campaign({
+    baseUrl,
+    stepsPerScenario,
+    variant,
+  });
 }
 
 export async function loadRuntimeCampaign(options: CampaignLoadOptions = {}) {
@@ -27,5 +27,5 @@ export async function loadRuntimeCampaign(options: CampaignLoadOptions = {}) {
     variant = 'WL6',
   } = options;
 
-  return loadRuntimeScenarios(baseUrl, stepsPerScenario, variant);
+  return loadWl6RuntimeScenarios(baseUrl, stepsPerScenario, variant);
 }
