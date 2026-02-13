@@ -10,6 +10,7 @@ import type {
   RuntimeSnapshot,
   RuntimeStepResult,
 } from './contracts';
+import type { DecodedSpriteChunk } from '../wolf/io/types';
 import {
   wlStateRealCheckLine,
   wlStateRealCheckSight,
@@ -181,8 +182,6 @@ const DOOR_TILE_MIN = 90;
 const DOOR_TILE_MAX = 101;
 const PLAYER_START_MIN = 19;
 const PLAYER_START_MAX = 22;
-const ACTOR_TILE_MIN = 108;
-const ACTOR_TILE_MAX = 223;
 const FRAME_WIDTH = 320;
 const FRAME_HEIGHT = 200;
 const RENDER_FOV = Math.PI / 3;
@@ -753,6 +752,23 @@ function hashFullMapActors(actors: FullMapActor[]): number {
   return h >>> 0;
 }
 
+function isEnemySpawnTile(tile: number): boolean {
+  const t = tile & 0xffff;
+  return (
+    (t >= 108 && t < 116)
+    || (t >= 116 && t < 124)
+    || (t >= 126 && t < 142)
+    || (t >= 144 && t < 178)
+    || t === 160
+    || t === 178
+    || t === 179
+    || t === 196
+    || t === 197
+    || (t >= 214 && t < 228)
+    || (t >= 234 && t < 242)
+  );
+}
+
 function spawnFullMapActors(
   plane1: Uint16Array | null,
   width: number,
@@ -775,7 +791,7 @@ function spawnFullMapActors(
       if (tile >= PLAYER_START_MIN && tile <= PLAYER_START_MAX) {
         continue;
       }
-      if (tile < ACTOR_TILE_MIN || tile > ACTOR_TILE_MAX) {
+      if (!isEnemySpawnTile(tile)) {
         continue;
       }
       actors.push({
@@ -2970,6 +2986,76 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
+    const drawDecodedSprite = (
+      sprite: DecodedSpriteChunk,
+      left: number,
+      top: number,
+      spriteW: number,
+      spriteH: number,
+      distance: number | null,
+    ): void => {
+      const firstCol = sprite.firstCol | 0;
+      const lastCol = sprite.lastCol | 0;
+      const colCount = (lastCol - firstCol + 1) | 0;
+      for (let c = 0; c < colCount; c++) {
+        const spriteCol = firstCol + c;
+        const x0 = left + ((spriteCol * spriteW / 64) | 0);
+        const x1 = left + ((((spriteCol + 1) * spriteW) / 64) | 0) - 1;
+        if (x1 < 0 || x0 >= FRAME_WIDTH) {
+          continue;
+        }
+        const sx0 = clampI32(x0, 0, FRAME_WIDTH - 1);
+        const sx1 = clampI32(Math.max(x0, x1), 0, FRAME_WIDTH - 1);
+        if (sx1 < sx0) {
+          continue;
+        }
+        if (distance !== null) {
+          let occluded = true;
+          for (let x = sx0; x <= sx1; x++) {
+            if (distance < (depth[x] ?? 1e9)) {
+              occluded = false;
+              break;
+            }
+          }
+          if (occluded) {
+            continue;
+          }
+        }
+
+        const posts = sprite.postsByColumn[c] ?? [];
+        for (const post of posts) {
+          const start = clampI32(post.startRow, 0, 63);
+          const end = clampI32(post.endRow, 0, 64);
+          for (let row = start; row < end; row++) {
+            const y0 = top + ((row * spriteH / 64) | 0);
+            const y1 = top + ((((row + 1) * spriteH) / 64) | 0) - 1;
+            if (y1 < 0 || y0 >= FRAME_HEIGHT) {
+              continue;
+            }
+            const sy0 = clampI32(y0, 0, FRAME_HEIGHT - 1);
+            const sy1 = clampI32(Math.max(y0, y1), 0, FRAME_HEIGHT - 1);
+            if (sy1 < sy0) {
+              continue;
+            }
+            const srcOffset = (post.pixelOffset + (row - start)) | 0;
+            if (srcOffset < 0 || srcOffset >= sprite.pixelPool.length) {
+              continue;
+            }
+            const color = (sprite.pixelPool[srcOffset] ?? 0) & 0xff;
+            for (let x = sx0; x <= sx1; x++) {
+              if (distance !== null && distance >= (depth[x] ?? 1e9)) {
+                continue;
+              }
+              const rowOffset = x;
+              for (let y = sy0; y <= sy1; y++) {
+                indexed[y * FRAME_WIDTH + rowOffset] = color;
+              }
+            }
+          }
+        }
+      }
+    };
+
     if (!this.drawProceduralActorSprites && this.spriteDecoder && this.fullMap.actors.length > 0) {
       const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);
       liveActors.sort((a, b) => {
@@ -3011,40 +3097,7 @@ export class TsRuntimePort implements RuntimePort {
         const left = ((screenX - (spriteW / 2)) | 0);
         const top = clampI32(((FRAME_HEIGHT / 2 - spriteH / 2) | 0), -spriteH, FRAME_HEIGHT);
 
-        const firstCol = sprite.firstCol | 0;
-        const lastCol = sprite.lastCol | 0;
-        const colCount = (lastCol - firstCol + 1) | 0;
-        for (let c = 0; c < colCount; c++) {
-          const spriteCol = firstCol + c;
-          const screenCol = left + ((spriteCol * spriteW / 64) | 0);
-          if (screenCol < 0 || screenCol >= FRAME_WIDTH) {
-            continue;
-          }
-          if (dist >= (depth[screenCol] ?? 1e9)) {
-            continue;
-          }
-          const posts = sprite.postsByColumn[c] ?? [];
-          if (posts.length === 0) {
-            continue;
-          }
-          for (const post of posts) {
-            const start = clampI32(post.startRow, 0, 63);
-            const end = clampI32(post.endRow, 0, 64);
-            for (let row = start; row < end; row++) {
-              const localY = ((row * spriteH / 64) | 0);
-              const screenY = top + localY;
-              if (screenY < 0 || screenY >= FRAME_HEIGHT) {
-                continue;
-              }
-              const srcOffset = (post.pixelOffset + (row - start)) | 0;
-              if (srcOffset < 0 || srcOffset >= sprite.pixelPool.length) {
-                continue;
-              }
-              const color = sprite.pixelPool[srcOffset] ?? 0;
-              indexed[screenY * FRAME_WIDTH + screenCol] = color & 0xff;
-            }
-          }
-        }
+        drawDecodedSprite(sprite, left, top, spriteW, spriteH, dist);
       }
     } else if (this.drawProceduralActorSprites && this.fullMap.actors.length > 0) {
       const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);
@@ -3126,33 +3179,7 @@ export class TsRuntimePort implements RuntimePort {
         const spriteW = 220;
         const left = ((FRAME_WIDTH - spriteW) / 2) | 0;
         const top = (FRAME_HEIGHT - spriteH + 10) | 0;
-        const firstCol = weaponSprite.firstCol | 0;
-        const lastCol = weaponSprite.lastCol | 0;
-        const totalCols = Math.max(1, (lastCol - firstCol + 1) | 0);
-        for (let c = 0; c < totalCols; c++) {
-          const spriteCol = firstCol + c;
-          const screenCol = left + ((spriteCol * spriteW / 64) | 0);
-          if (screenCol < 0 || screenCol >= FRAME_WIDTH) {
-            continue;
-          }
-          const posts = weaponSprite.postsByColumn[c] ?? [];
-          for (const post of posts) {
-            const startRow = clampI32(post.startRow | 0, 0, 63);
-            const endRow = clampI32(post.endRow | 0, startRow, 64);
-            for (let row = startRow; row < endRow; row++) {
-              const localY = ((row * spriteH / 64) | 0);
-              const screenY = top + localY;
-              if (screenY < 0 || screenY >= FRAME_HEIGHT) {
-                continue;
-              }
-              const srcOffset = (post.pixelOffset + (row - startRow)) | 0;
-              if (srcOffset < 0 || srcOffset >= weaponSprite.pixelPool.length) {
-                continue;
-              }
-              indexed[screenY * FRAME_WIDTH + screenCol] = (weaponSprite.pixelPool[srcOffset] ?? 0) & 0xff;
-            }
-          }
-        }
+        drawDecodedSprite(weaponSprite, left, top, spriteW, spriteH, null);
         weaponDrawn = true;
       }
     }

@@ -208,4 +208,22 @@ describe('runtime actor combat (full-map mode)', () => {
     const dogTravel = await runDistance(134);
     expect(dogTravel).toBeGreaterThan(guardTravel);
   });
+
+  it('does not spawn non-enemy plane1 markers as active actors', async () => {
+    const width = 16;
+    const height = 16;
+    const plane0 = makePlane(width, height, AREATILE);
+    const plane1 = makePlane(width, height, 0);
+    addBorderWalls(plane0, width, height);
+    // Dead guard marker, should not spawn an actor.
+    plane1[6 * width + 6] = 124;
+    // Valid enemy marker, should spawn.
+    plane1[6 * width + 7] = 108;
+
+    const runtime = new TsRuntimePort();
+    await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
+    const actors = runtime.debugActors();
+    expect(actors.length).toBe(1);
+    await runtime.shutdown();
+  });
 });
