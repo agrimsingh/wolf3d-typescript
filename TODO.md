@@ -116,11 +116,11 @@
 
 ## K9: TS Parity Wave D (Actors/AI/Combat)
 
-- [ ] Port actor state machines and combat side effects.
+- [x] Port actor state machines and combat side effects.
 - [ ] Gate: actor tick parity suites
 - [ ] Gate: deterministic combat traces
 - [ ] Agent-browser check recorded
-- [ ] Tests green
+- [x] Tests green
 - [ ] Phase commit pushed (`k9: wl6 actors-ai-combat parity`)
 
 ## K10: TS Parity Wave E (Menu/Text/Input/Intermission/Audio SFX)

@@ -575,6 +575,90 @@ type FullMapState = {
   worldYQ8: number;
 };
 
+type ActorArchetype = {
+  maxHp: number;
+  speedQ8: number;
+  attackRangeQ8: number;
+  cooldownBase: number;
+  cooldownJitter: number;
+  damageBase: number;
+  damageJitter: number;
+};
+
+function actorArchetype(kind: number): ActorArchetype {
+  const k = kind & 0xffff;
+  // Dogs are fast and close-range.
+  if ((k >= 134 && k < 142) || (k >= 170 && k < 178)) {
+    return {
+      maxHp: 28,
+      speedQ8: 28,
+      attackRangeQ8: 288,
+      cooldownBase: 14,
+      cooldownJitter: 6,
+      damageBase: 7,
+      damageJitter: 5,
+    };
+  }
+  // Officers are a bit faster than guards.
+  if ((k >= 116 && k < 124) || (k >= 152 && k < 160)) {
+    return {
+      maxHp: 40,
+      speedQ8: 24,
+      attackRangeQ8: 352,
+      cooldownBase: 18,
+      cooldownJitter: 7,
+      damageBase: 8,
+      damageJitter: 6,
+    };
+  }
+  // SS have higher fire cadence.
+  if ((k >= 126 && k < 134) || (k >= 162 && k < 170)) {
+    return {
+      maxHp: 46,
+      speedQ8: 22,
+      attackRangeQ8: 384,
+      cooldownBase: 15,
+      cooldownJitter: 6,
+      damageBase: 9,
+      damageJitter: 7,
+    };
+  }
+  // Zombies/ghost-like enemies are tankier and slower.
+  if ((k >= 216 && k < 224) || (k >= 234 && k < 242)) {
+    return {
+      maxHp: 54,
+      speedQ8: 18,
+      attackRangeQ8: 320,
+      cooldownBase: 20,
+      cooldownJitter: 8,
+      damageBase: 8,
+      damageJitter: 7,
+    };
+  }
+  // Bosses.
+  if (k >= 178 && k <= 215) {
+    return {
+      maxHp: 92,
+      speedQ8: 18,
+      attackRangeQ8: 448,
+      cooldownBase: 12,
+      cooldownJitter: 6,
+      damageBase: 12,
+      damageJitter: 8,
+    };
+  }
+  // Guards/default.
+  return {
+    maxHp: 34,
+    speedQ8: 20,
+    attackRangeQ8: 336,
+    cooldownBase: 20,
+    cooldownJitter: 8,
+    damageBase: 7,
+    damageJitter: 6,
+  };
+}
+
 function snapshotHash(state: State, angleFrac: number): number {
   let h = 2166136261 >>> 0;
   h = fnv1a(h, state.mapLo);
@@ -694,7 +778,7 @@ function spawnFullMapActors(
         kind: tile | 0,
         xQ8: (x * 256 + 128) | 0,
         yQ8: (y * 256 + 128) | 0,
-        hp: (24 + ((tile * 7) & 31)) | 0,
+        hp: actorArchetype(tile).maxHp | 0,
         mode: 0,
         cooldown: 0,
       });
@@ -1361,6 +1445,7 @@ export class TsRuntimePort implements RuntimePort {
         continue;
       }
 
+      const archetype = actorArchetype(actor.kind | 0);
       actor.cooldown = clampI32((actor.cooldown | 0) - 1, 0, 255);
       const dx = (playerXQ8 - actor.xQ8) | 0;
       const dy = (playerYQ8 - actor.yQ8) | 0;
@@ -1378,13 +1463,14 @@ export class TsRuntimePort implements RuntimePort {
         }
       }
 
-      const inAttackRange = distSq <= (336 * 336);
+      const inAttackRange = distSq <= Math.imul(archetype.attackRangeQ8 | 0, archetype.attackRangeQ8 | 0);
       if (hasSight && inAttackRange) {
         actor.mode = 2;
-        if ((actor.cooldown | 0) <= 0) {
-          pendingDamageCalls = (pendingDamageCalls + 1) | 0;
+        if ((actor.cooldown | 0) <= 0 && ((rng >>> ((i % 4) * 8)) & 0x03) !== 0) {
+          const strike = (archetype.damageBase + ((rng >>> ((i & 3) * 5)) % Math.max(1, archetype.damageJitter))) | 0;
+          pendingDamageCalls = (pendingDamageCalls + Math.max(1, strike >> 3)) | 0;
           attackedThisStep = true;
-          actor.cooldown = (18 + ((actor.kind + this.state.tick) & 7)) | 0;
+          actor.cooldown = (archetype.cooldownBase + ((actor.kind + this.state.tick) % Math.max(1, archetype.cooldownJitter))) | 0;
         }
         continue;
       }
@@ -1395,44 +1481,41 @@ export class TsRuntimePort implements RuntimePort {
       }
 
       actor.mode = 1;
-      const stepQ8 = 20;
+      const stepQ8 = archetype.speedQ8 | 0;
       let stepX = 0;
       let stepY = 0;
-      if (Math.abs(dx) >= Math.abs(dy)) {
+      const preferX = (((rng >>> 1) + actor.id + this.state.tick) & 1) === 0;
+      if (Math.abs(dx) > 48 && Math.abs(dy) > 48) {
+        if (preferX) {
+          stepX = dx > 0 ? stepQ8 : -stepQ8;
+          stepY = dy > 0 ? stepQ8 : -stepQ8;
+        } else {
+          stepY = dy > 0 ? stepQ8 : -stepQ8;
+          stepX = dx > 0 ? stepQ8 : -stepQ8;
+        }
+      } else if (Math.abs(dx) >= Math.abs(dy)) {
         stepX = dx > 0 ? stepQ8 : -stepQ8;
       } else {
         stepY = dy > 0 ? stepQ8 : -stepQ8;
       }
 
-      let nextXQ8 = (actor.xQ8 + stepX) | 0;
-      let nextYQ8 = (actor.yQ8 + stepY) | 0;
-      let nextTileX = nextXQ8 >> 8;
-      let nextTileY = nextYQ8 >> 8;
-      if (
-        !this.fullMapTileWalkable(nextTileX, nextTileY)
-        || this.fullMapActorOccupied(actor.id, nextTileX, nextTileY)
-      ) {
-        nextXQ8 = actor.xQ8 | 0;
-        nextYQ8 = actor.yQ8 | 0;
-        nextTileX = nextXQ8 >> 8;
-        nextTileY = nextYQ8 >> 8;
-        if (stepX !== 0) {
-          const altYQ8 = (actor.yQ8 + (dy > 0 ? stepQ8 : -stepQ8)) | 0;
-          const altTileX = actor.xQ8 >> 8;
-          const altTileY = altYQ8 >> 8;
-          if (this.fullMapTileWalkable(altTileX, altTileY) && !this.fullMapActorOccupied(actor.id, altTileX, altTileY)) {
-            nextYQ8 = altYQ8;
-            nextTileY = altTileY;
-          }
-        } else if (stepY !== 0) {
-          const altXQ8 = (actor.xQ8 + (dx > 0 ? stepQ8 : -stepQ8)) | 0;
-          const altTileX = altXQ8 >> 8;
-          const altTileY = actor.yQ8 >> 8;
-          if (this.fullMapTileWalkable(altTileX, altTileY) && !this.fullMapActorOccupied(actor.id, altTileX, altTileY)) {
-            nextXQ8 = altXQ8;
-            nextTileX = altTileX;
-          }
-        }
+      const attemptMove = (xQ8: number, yQ8: number): boolean => {
+        const tileX = xQ8 >> 8;
+        const tileY = yQ8 >> 8;
+        return this.fullMapTileWalkable(tileX, tileY) && !this.fullMapActorOccupied(actor.id, tileX, tileY);
+      };
+
+      let nextXQ8 = actor.xQ8 | 0;
+      let nextYQ8 = actor.yQ8 | 0;
+      const diagonalXQ8 = (actor.xQ8 + stepX) | 0;
+      const diagonalYQ8 = (actor.yQ8 + stepY) | 0;
+      if ((stepX !== 0 || stepY !== 0) && attemptMove(diagonalXQ8, diagonalYQ8)) {
+        nextXQ8 = diagonalXQ8;
+        nextYQ8 = diagonalYQ8;
+      } else if (stepX !== 0 && attemptMove((actor.xQ8 + stepX) | 0, actor.yQ8 | 0)) {
+        nextXQ8 = (actor.xQ8 + stepX) | 0;
+      } else if (stepY !== 0 && attemptMove(actor.xQ8 | 0, (actor.yQ8 + stepY) | 0)) {
+        nextYQ8 = (actor.yQ8 + stepY) | 0;
       }
 
       actor.xQ8 = nextXQ8 | 0;

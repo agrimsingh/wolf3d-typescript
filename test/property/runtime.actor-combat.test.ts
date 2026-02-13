@@ -183,4 +183,29 @@ describe('runtime actor combat (full-map mode)', () => {
 
     await runtime.shutdown();
   });
+
+  it('dog-class actors close distance faster than guard-class actors', async () => {
+    const width = 16;
+    const height = 16;
+    const plane0 = makePlane(width, height, AREATILE);
+    const plane1 = makePlane(width, height, 0);
+    addBorderWalls(plane0, width, height);
+
+    const runDistance = async (kind: number): Promise<number> => {
+      const runtime = new TsRuntimePort();
+      await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
+      injectActor(runtime, 10, 5, 36, kind);
+      const start = actorSnapshot(runtime);
+      for (let i = 0; i < 24; i++) {
+        runtime.step({ inputMask: 0, tics: 1, rng: (0x3300 + i) | 0 });
+      }
+      const end = actorSnapshot(runtime);
+      await runtime.shutdown();
+      return Math.abs((start.xQ8 | 0) - (end.xQ8 | 0)) + Math.abs((start.yQ8 | 0) - (end.yQ8 | 0));
+    };
+
+    const guardTravel = await runDistance(108);
+    const dogTravel = await runDistance(134);
+    expect(dogTravel).toBeGreaterThan(guardTravel);
+  });
 });
