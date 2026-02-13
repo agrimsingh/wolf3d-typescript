@@ -9,11 +9,15 @@ export interface Wl1AssetPaths {
   audiot: string;
 }
 
+export type RuntimeAssetPaths = Wl1AssetPaths;
+
 export interface Wl1AssetPackage {
   rootDir: string;
   files: Wl1AssetPaths;
   metadata?: Wl1AssetMetadata;
 }
+
+export type RuntimeAssetPackage = Wl1AssetPackage;
 
 export interface Wl1AssetMetadata {
   variant: 'WL6';
@@ -21,6 +25,15 @@ export interface Wl1AssetMetadata {
   fileSizes: Record<string, number>;
   checksums?: Record<string, string>;
 }
+
+export interface RuntimeAssetMetadata {
+  variant: 'WL6';
+  validatedAt: string;
+  fileSizes: Record<string, number>;
+  checksums?: Record<string, string>;
+}
+
+export type Wl1RuntimeAssetMetadata = Wl1AssetMetadata;
 
 export interface ChunkIndexEntry {
   chunkId: number;

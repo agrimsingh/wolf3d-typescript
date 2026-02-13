@@ -12,6 +12,8 @@ export interface Wl1RuntimeScenarioData {
   steps: RuntimeInput[];
 }
 
+export type RuntimeScenarioData = Wl1RuntimeScenarioData;
+
 function readU16(bytes: Uint8Array, offset: number): number {
   if (offset < 0 || offset + 1 >= bytes.length) {
     return 0;
@@ -119,9 +121,9 @@ export function buildWl1RuntimeScenariosFromBytes(
   gamemapsBytes: Uint8Array,
   stepsPerScenario = 64,
   variant: 'WL6' = 'WL6',
-): Wl1RuntimeScenarioData[] {
+): RuntimeScenarioData[] {
   const rlewTag = readU16(mapheadBytes, 0);
-  const scenarios: Wl1RuntimeScenarioData[] = [];
+  const scenarios: RuntimeScenarioData[] = [];
 
   for (let mapIndex = 0; mapIndex < 100; mapIndex++) {
     const headerOffset = readS32(mapheadBytes, 2 + mapIndex * 4);
@@ -203,4 +205,13 @@ export function buildWl1RuntimeScenariosFromBytes(
 
   scenarios.sort((a, b) => a.mapIndex - b.mapIndex);
   return scenarios;
+}
+
+export function buildRuntimeScenariosFromBytes(
+  mapheadBytes: Uint8Array,
+  gamemapsBytes: Uint8Array,
+  stepsPerScenario = 64,
+  variant: 'WL6' = 'WL6',
+): RuntimeScenarioData[] {
+  return buildWl1RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
 }

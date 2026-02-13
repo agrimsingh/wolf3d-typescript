@@ -1,7 +1,7 @@
-import { buildWl1RuntimeScenariosFromBytes, type Wl1RuntimeScenarioData } from './wl1LevelData';
+import { buildRuntimeScenariosFromBytes, buildWl1RuntimeScenariosFromBytes, type RuntimeScenarioData } from './wl1LevelData';
 
-export type Wl1RuntimeScenario = Wl1RuntimeScenarioData;
-export type RuntimeScenario = Wl1RuntimeScenarioData;
+export type Wl1RuntimeScenario = RuntimeScenarioData;
+export type RuntimeScenario = RuntimeScenarioData;
 export type WolfDataVariant = 'WL6';
 
 export type RuntimeScenarios = RuntimeScenario[];
@@ -21,7 +21,7 @@ export async function loadWl1RuntimeScenarios(
 ): Promise<Wl1RuntimeScenario[]> {
   const mapheadBytes = await fetchBytes(`${baseUrl}/MAPHEAD.${variant}`);
   const gamemapsBytes = await fetchBytes(`${baseUrl}/GAMEMAPS.${variant}`);
-  return buildWl1RuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
+  return buildRuntimeScenariosFromBytes(mapheadBytes, gamemapsBytes, stepsPerScenario, variant);
 }
 
 export async function loadRuntimeScenarios(
