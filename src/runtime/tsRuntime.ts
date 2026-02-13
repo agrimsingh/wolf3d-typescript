@@ -165,10 +165,12 @@ import {
 import { spriteIdForActorKind } from './wl6SpriteMap';
 import {
   isWl6BlockingPropMarker,
+  isWl6EnemyMarker,
   isWl6PlayerStartMarker,
   isWl6PushwallMarker,
-  wl6EnemySpawnDifficultyTier,
+  wl6EnemySpawnInfo,
   wl6PickupEffect,
+  wl6ThingSpriteId,
 } from './wl6Plane1Markers';
 
 export const RUNTIME_CORE_KIND = 'real' as const;
@@ -555,6 +557,8 @@ type FullMapActor = {
   xQ8: number;
   yQ8: number;
   hp: number;
+  dir: number;
+  alerted: number;
   mode: number;
   cooldown: number;
 };
@@ -752,6 +756,8 @@ function hashFullMapActors(actors: FullMapActor[]): number {
     h = fnv1a(h, actor.xQ8 | 0);
     h = fnv1a(h, actor.yQ8 | 0);
     h = fnv1a(h, actor.hp | 0);
+    h = fnv1a(h, actor.dir | 0);
+    h = fnv1a(h, actor.alerted | 0);
     h = fnv1a(h, actor.mode | 0);
   }
   return h >>> 0;
@@ -791,11 +797,11 @@ function spawnFullMapActors(
       if (isWl6PlayerStartMarker(tile)) {
         continue;
       }
-      const requiredTier = wl6EnemySpawnDifficultyTier(tile);
-      if (requiredTier === null) {
+      const spawnInfo = wl6EnemySpawnInfo(tile);
+      if (spawnInfo === null) {
         continue;
       }
-      if (requiredTier > normalizedSpawnDifficulty(difficulty)) {
+      if (spawnInfo.tier > normalizedSpawnDifficulty(difficulty)) {
         continue;
       }
       actors.push({
@@ -804,7 +810,9 @@ function spawnFullMapActors(
         xQ8: (x * 256 + 128) | 0,
         yQ8: (y * 256 + 128) | 0,
         hp: actorArchetype(tile).maxHp | 0,
-        mode: 0,
+        dir: spawnInfo.dir | 0,
+        alerted: 0,
+        mode: spawnInfo.patrol ? 4 : 0,
         cooldown: 0,
       });
     }
@@ -1494,16 +1502,29 @@ export class TsRuntimePort implements RuntimePort {
       const dy = (playerYQ8 - actor.yQ8) | 0;
       const distSq = (dx * dx) + (dy * dy);
       const hasSight = (wlStateRealCheckLine(actor.xQ8 << 8, actor.yQ8 << 8, playerXQ16, playerYQ16, doorMask, doorPosQ8) | 0) !== 0;
+      const alertRangeQ8 = 11 * 256;
+      const inAlertRange = distSq <= Math.imul(alertRangeQ8, alertRangeQ8);
+      const alerted = (actor.alerted | 0) !== 0;
+      if (!alerted && hasSight && inAlertRange) {
+        actor.alerted = 1;
+      }
 
       if (firePressed && this.actorInFireCone(actor, playerXQ8, playerYQ8, viewX, viewY) && hasSight) {
         const damage = (18 + ((rng >> ((i & 3) * 4)) & 0x0f)) | 0;
         actor.hp = (actor.hp - damage) | 0;
+        actor.alerted = 1;
         if ((actor.hp | 0) <= 0) {
           actor.hp = 0;
           actor.mode = 3;
           killedThisStep = true;
           continue;
         }
+      }
+
+      const movingNow = (actor.mode | 0) === 4 || (actor.mode | 0) === 1;
+      if ((actor.alerted | 0) === 0 && !movingNow) {
+        actor.mode = 0;
+        continue;
       }
 
       const inAttackRange = distSq <= Math.imul(archetype.attackRangeQ8 | 0, archetype.attackRangeQ8 | 0);
@@ -1515,6 +1536,37 @@ export class TsRuntimePort implements RuntimePort {
           attackedThisStep = true;
           actor.cooldown = (archetype.cooldownBase + ((actor.kind + this.state.tick) % Math.max(1, archetype.cooldownJitter))) | 0;
         }
+        continue;
+      }
+
+      const attemptMove = (xQ8: number, yQ8: number): boolean => {
+        const tileX = xQ8 >> 8;
+        const tileY = yQ8 >> 8;
+        return this.fullMapTileWalkable(tileX, tileY) && !this.fullMapActorOccupied(actor.id, tileX, tileY);
+      };
+
+      if ((actor.alerted | 0) === 0 && (actor.mode | 0) === 4) {
+        // Patrol state before alert: move in facing direction, turning clockwise when blocked.
+        const stepQ8 = Math.max(12, ((archetype.speedQ8 * 3) >> 2) | 0);
+        let moved = false;
+        for (let turnTry = 0; turnTry < 4 && !moved; turnTry++) {
+          const dir = ((actor.dir | 0) + turnTry) & 0x3;
+          let sx = 0;
+          let sy = 0;
+          if (dir === 0) sy = -stepQ8;
+          else if (dir === 1) sx = stepQ8;
+          else if (dir === 2) sy = stepQ8;
+          else sx = -stepQ8;
+          const nx = (actor.xQ8 + sx) | 0;
+          const ny = (actor.yQ8 + sy) | 0;
+          if (attemptMove(nx, ny)) {
+            actor.xQ8 = nx | 0;
+            actor.yQ8 = ny | 0;
+            actor.dir = dir | 0;
+            moved = true;
+          }
+        }
+        actor.mode = 4;
         continue;
       }
 
@@ -1541,12 +1593,6 @@ export class TsRuntimePort implements RuntimePort {
       } else {
         stepY = dy > 0 ? stepQ8 : -stepQ8;
       }
-
-      const attemptMove = (xQ8: number, yQ8: number): boolean => {
-        const tileX = xQ8 >> 8;
-        const tileY = yQ8 >> 8;
-        return this.fullMapTileWalkable(tileX, tileY) && !this.fullMapActorOccupied(actor.id, tileX, tileY);
-      };
 
       let nextXQ8 = actor.xQ8 | 0;
       let nextYQ8 = actor.yQ8 | 0;
@@ -3084,6 +3130,62 @@ export class TsRuntimePort implements RuntimePort {
         }
       }
     };
+
+    if (this.spriteDecoder && this.fullMap.plane1) {
+      const plane1 = this.fullMap.plane1;
+      const statics: Array<{ x: number; y: number; distSq: number; spriteId: number }> = [];
+      for (let y = 0; y < mapHeight; y++) {
+        for (let x = 0; x < mapWidth; x++) {
+          const marker = (plane1[y * mapWidth + x] ?? 0) & 0xffff;
+          if (marker === 0 || isWl6PlayerStartMarker(marker) || isWl6PushwallMarker(marker) || isWl6EnemyMarker(marker)) {
+            continue;
+          }
+          const spriteId = wl6ThingSpriteId(marker);
+          if (spriteId === null) {
+            continue;
+          }
+          const worldX = x + 0.5;
+          const worldY = y + 0.5;
+          const dx = worldX - posX;
+          const dy = worldY - posY;
+          statics.push({
+            x: worldX,
+            y: worldY,
+            distSq: (dx * dx) + (dy * dy),
+            spriteId: spriteId | 0,
+          });
+        }
+      }
+
+      statics.sort((a, b) => b.distSq - a.distSq);
+      for (const thing of statics) {
+        const relX = thing.x - posX;
+        const relY = thing.y - posY;
+        const dist = Math.hypot(relX, relY);
+        if (dist < 0.12 || dist > 24) {
+          continue;
+        }
+
+        let delta = Math.atan2(-relY, relX) - angleRad;
+        while (delta < -Math.PI) delta += Math.PI * 2;
+        while (delta > Math.PI) delta -= Math.PI * 2;
+        if (Math.abs(delta) > (RENDER_FOV * 0.75)) {
+          continue;
+        }
+
+        const sprite = this.spriteDecoder.decodeSprite(thing.spriteId | 0);
+        if (!sprite || sprite.lastCol < sprite.firstCol || sprite.pixelPool.length <= 0) {
+          continue;
+        }
+
+        const screenX = ((delta / RENDER_FOV) + 0.5) * FRAME_WIDTH;
+        const spriteH = clampI32((FRAME_HEIGHT / dist) | 0, 8, 140);
+        const spriteW = clampI32((spriteH * 64 / 64) | 0, 8, 140);
+        const left = ((screenX - (spriteW / 2)) | 0);
+        const top = clampI32(((FRAME_HEIGHT / 2 - spriteH / 2) | 0), -spriteH, FRAME_HEIGHT);
+        drawDecodedSprite(sprite, left, top, spriteW, spriteH, dist);
+      }
+    }
 
     if (!this.drawProceduralActorSprites && this.spriteDecoder && this.fullMap.actors.length > 0) {
       const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);

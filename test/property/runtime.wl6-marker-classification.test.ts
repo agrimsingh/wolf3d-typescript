@@ -7,6 +7,7 @@ import {
   isWl6PushwallMarker,
   wl6EnemySpawnDifficultyTier,
   wl6PickupEffect,
+  wl6ThingSpriteId,
 } from '../../src/runtime/wl6Plane1Markers';
 
 describe('runtime WL6 plane1 marker classification', () => {
@@ -42,6 +43,11 @@ describe('runtime WL6 plane1 marker classification', () => {
     expect(wl6PickupEffect(52)).toEqual({ kind: 'treasure' });
     expect(wl6PickupEffect(0)).toBeNull();
     expect(isWl6BlockingPropMarker(24)).toBe(true);
+    expect(isWl6BlockingPropMarker(62)).toBe(true);
     expect(isWl6BlockingPropMarker(47)).toBe(false);
+    expect(wl6ThingSpriteId(23)).toBe(2);
+    expect(wl6ThingSpriteId(52)).toBe(31);
+    expect(wl6ThingSpriteId(124)).toBe(95);
+    expect(wl6ThingSpriteId(108)).toBeNull();
   });
 });

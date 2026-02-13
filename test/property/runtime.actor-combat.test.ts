@@ -1,7 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import fc from 'fast-check';
 import { TsRuntimePort } from '../../src/runtime/tsRuntime';
 import type { RuntimeConfig, RuntimeInput } from '../../src/runtime/contracts';
+import { buildWl6RuntimeScenariosFromBytes } from '../../src/runtime/wl6LevelData';
 import { getNumRuns, getSeed } from './config';
 import { withReplay } from './replay';
 
@@ -242,5 +245,25 @@ describe('runtime actor combat (full-map mode)', () => {
     expect(await run(0)).toBe(2);
     expect(await run(2)).toBe(3);
     expect(await run(3)).toBe(5);
+  });
+
+  it('E1M1 medium start keeps nearest active enemy away from immediate door zone', async () => {
+    const maphead = new Uint8Array(readFileSync(join(process.cwd(), 'assets', 'wl6', 'raw', 'MAPHEAD.WL6')));
+    const gamemaps = new Uint8Array(readFileSync(join(process.cwd(), 'assets', 'wl6', 'raw', 'GAMEMAPS.WL6')));
+    const map0 = buildWl6RuntimeScenariosFromBytes(maphead, gamemaps, 1, 'WL6').find((s) => s.mapIndex === 0);
+    expect(map0).toBeDefined();
+
+    const runtime = new TsRuntimePort();
+    await runtime.bootWl6(map0!.config);
+    const snap = runtime.snapshot();
+    const playerX = ((snap.worldXQ8 ?? snap.xQ8) >> 8) | 0;
+    const playerY = ((snap.worldYQ8 ?? snap.yQ8) >> 8) | 0;
+    const nearest = runtime
+      .debugActors()
+      .map((a) => Math.abs(((a.xQ8 >> 8) | 0) - playerX) + Math.abs(((a.yQ8 >> 8) | 0) - playerY))
+      .reduce((best, d) => Math.min(best, d), 0x7fffffff);
+    await runtime.shutdown();
+
+    expect(nearest).toBeGreaterThanOrEqual(12);
   });
 });

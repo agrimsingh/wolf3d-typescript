@@ -233,4 +233,38 @@ describe('runtime actor sprite rendering', () => {
     expect(weaponPixels).toBeGreaterThan(200);
     await runtime.shutdown();
   });
+
+  it('renders dead-guard static sprite from plane1 marker 124 near spawn', async () => {
+    const width = 16;
+    const height = 16;
+    const plane0 = bordered(width, height);
+    const plane1 = plane(width, height, 0);
+    // Dead guard one tile in front of player.
+    plane1[3 * width + 4] = 124;
+
+    const runtime = new TsRuntimePort();
+    runtime.setProceduralActorSpritesEnabled(false);
+    runtime.setSpriteDecoder({
+      decodeSprite: (id: number) => {
+        if (id === 95) {
+          return simpleSprite(233);
+        }
+        return null;
+      },
+    });
+    runtime.setWallTextures([new Uint8Array(4096).fill(40)]);
+    await runtime.init(baseConfig(plane0, plane1, width, height));
+
+    const frame = runtime.framebuffer(true).indexedBuffer!;
+    let deadGuardPixels = 0;
+    for (let y = 40; y < 180; y++) {
+      for (let x = 120; x < 210; x++) {
+        if ((frame[(y * 320) + x] ?? 0) === 233) {
+          deadGuardPixels++;
+        }
+      }
+    }
+    expect(deadGuardPixels).toBeGreaterThan(200);
+    await runtime.shutdown();
+  });
 });
