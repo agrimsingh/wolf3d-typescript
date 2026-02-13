@@ -91,9 +91,9 @@ export class RuntimeAppController {
       case 'ArrowRight':
         return 1 << 3;
       case 'KeyA':
-        return 1 << 4;
-      case 'KeyD':
         return 1 << 5;
+      case 'KeyD':
+        return 1 << 4;
       case 'Space':
         return 1 << 6;
       case 'KeyE':
@@ -184,8 +184,8 @@ export class RuntimeAppController {
     if (key('KeyS') || key('ArrowDown')) inputMask |= 1 << 1;
     if (key('ArrowLeft')) inputMask |= 1 << 2;
     if (key('ArrowRight')) inputMask |= 1 << 3;
-    if (key('KeyA')) inputMask |= 1 << 4;
-    if (key('KeyD')) inputMask |= 1 << 5;
+    if (key('KeyA')) inputMask |= 1 << 5;
+    if (key('KeyD')) inputMask |= 1 << 4;
     if (key('Space')) inputMask |= 1 << 6;
     if (key('KeyE') || key('Enter')) inputMask |= 1 << 7;
 
