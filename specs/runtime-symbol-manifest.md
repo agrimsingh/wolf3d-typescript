@@ -45,11 +45,11 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 | 158 | c-oracle/wolf_oracle.c | oracle_menu_reduce_packed | `done` | called via oracle_menu_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | 159 | c-oracle/wolf_oracle.c | oracle_measure_text_packed | `done` | called via oracle_measure_text_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | 160 | c-oracle/wolf_oracle.c | oracle_audio_reduce_packed | `done` | called via oracle_audio_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
-| 166 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_state_size | `done` | binary state save-size API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 167 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_save_state | `done` | binary state save API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 168 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_load_state | `done` | binary state load API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 169 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_framebuffer_size | `done` | indexed framebuffer size API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 170 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_indexed_frame | `done` | indexed framebuffer render API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
+| 166 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_state_size | `done` | binary state save-size API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 167 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_save_state | `done` | binary state save API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 168 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_load_state | `done` | binary state load API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 169 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_framebuffer_size | `done` | indexed framebuffer size API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 170 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_indexed_frame | `done` | indexed framebuffer render API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
 
 ### required-runtime (WOLFSRC symbol inventory)
 

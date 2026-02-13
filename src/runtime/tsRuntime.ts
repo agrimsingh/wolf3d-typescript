@@ -1205,7 +1205,7 @@ export class TsRuntimePort implements RuntimePort {
     return clampI32(pendingDamageCalls, 0, 8);
   }
 
-  async bootWl1(config: RuntimeConfig): Promise<void> {
+  async bootWl6(config: RuntimeConfig): Promise<void> {
     await this.init(config);
   }
 

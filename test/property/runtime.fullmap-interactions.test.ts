@@ -53,7 +53,7 @@ describe('runtime full-map interactions', () => {
     plane0[5 * width + 6] = 90;
 
     const runtime = new TsRuntimePort();
-    await runtime.bootWl1(baseConfig(plane0, plane1, width, height));
+    await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
     const before = runtime.snapshot();
     runtime.step({ inputMask: 1 << 7, tics: 1, rng: 0x1234 });
     runtime.step({ inputMask: 1 << 0, tics: 8, rng: 0x2345 });
@@ -73,7 +73,7 @@ describe('runtime full-map interactions', () => {
     plane1[5 * width + 5] = 4;
 
     const runtime = new TsRuntimePort();
-    await runtime.bootWl1(baseConfig(plane0, plane1, width, height));
+    await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
     const before = runtime.snapshot();
     runtime.step({ inputMask: 0, tics: 1, rng: 0x3456 });
     const after = runtime.snapshot();

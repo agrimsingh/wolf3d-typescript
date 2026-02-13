@@ -124,7 +124,7 @@ export interface RuntimeSaveBlob {
 }
 
 export interface RuntimePort {
-  bootWl1(config: RuntimeConfig): Promise<void>;
+  bootWl6(config: RuntimeConfig): Promise<void>;
   stepFrame(input: RuntimeFrameInput): RuntimeStepResult;
   framebuffer(includeRaw?: boolean): RuntimeFramebufferView;
   saveState(): Uint8Array;

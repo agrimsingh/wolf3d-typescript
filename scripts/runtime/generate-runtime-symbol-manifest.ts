@@ -39,7 +39,7 @@ type RuntimeClassification = {
 const REQUIRED_SYMBOLS_TEST =
   'test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity';
 const LIFECYCLE_TEST =
-  'test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic';
+  'test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic';
 
 const LIFECYCLE_RUNTIME_FUNCS = new Set<string>([
   'oracle_runtime_state_size',

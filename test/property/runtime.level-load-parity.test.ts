@@ -61,8 +61,8 @@ describe('runtime level-load parity', () => {
               enableFullMapRuntime: false,
             };
 
-            await oracle.bootWl1(config);
-            await tsRuntime.bootWl1(config);
+            await oracle.bootWl6(config);
+            await tsRuntime.bootWl6(config);
             expect(tsRuntime.snapshot()).toEqual(oracle.snapshot());
 
             oracle.reset();

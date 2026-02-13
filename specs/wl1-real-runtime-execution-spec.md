@@ -17,7 +17,7 @@ Execution rules:
 
 1. `src/runtime/contracts.ts`
 - Use full runtime boot payload (not 8x8 bit-window boot).
-- Keep `RuntimePort` lifecycle methods: `bootWl1`, `stepFrame`, `snapshot`, `framebuffer`, `saveState`, `loadState`, `shutdown`.
+- Keep `RuntimePort` lifecycle methods: `bootWl6`, `stepFrame`, `snapshot`, `framebuffer`, `saveState`, `loadState`, `shutdown`.
 - Expand `RuntimeCoreSnapshot` for runtime-critical state parity (world/map index, player, doors/pushwalls, actor summaries, weapons/ammo, score/lives/keys, menu/intermission mode, RNG/time counters).
 
 2. `src/wolf/state/types.ts`

@@ -104,7 +104,7 @@ async function runTrace(seed: number, bytes: number[]): Promise<number> {
   addBorderWalls(plane0, width, height);
 
   const runtime = new TsRuntimePort();
-  await runtime.bootWl1(baseConfig(plane0, plane1, width, height));
+  await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
   injectActor(runtime, 8, 5, 34, 118);
 
   let traceHash = 2166136261 >>> 0;
@@ -151,7 +151,7 @@ describe('runtime actor combat (full-map mode)', () => {
     addBorderWalls(plane0, width, height);
 
     const runtime = new TsRuntimePort();
-    await runtime.bootWl1(baseConfig(plane0, plane1, width, height));
+    await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
     injectActor(runtime, 7, 5, 36, 122);
 
     const actorStart = actorSnapshot(runtime);

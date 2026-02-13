@@ -32,7 +32,7 @@ if [[ "$requires_no_fixture_loader" == "true" ]]; then
     exit 1
   fi
 
-  if rg -n "wl1Campaign|wl1LevelData|Wl1RuntimeScenario" "$RUNTIME_CONTROLLER" "$GAME_APP" >/tmp/runtime_legacy_links.txt 2>/dev/null; then
+  if rg -n "Wl1RuntimeScenario|wl1Campaign|wl1LevelData" "$RUNTIME_CONTROLLER" "$GAME_APP" >/tmp/runtime_legacy_links.txt 2>/dev/null; then
     echo "Runtime scenario fixture guard failed: legacy WL1 runtime links remain in production app/runtime path at phase '$phase'." >&2
     cat /tmp/runtime_legacy_links.txt >&2
     rm -f /tmp/runtime_legacy_links.txt
