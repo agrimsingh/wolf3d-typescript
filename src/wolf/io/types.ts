@@ -1,4 +1,4 @@
-export interface Wl1AssetPaths {
+export interface Wl6AssetPaths {
   gamemaps: string;
   maphead: string;
   vswap: string;
@@ -9,17 +9,17 @@ export interface Wl1AssetPaths {
   audiot: string;
 }
 
-export type RuntimeAssetPaths = Wl1AssetPaths;
+export type RuntimeAssetPaths = Wl6AssetPaths;
 
-export interface Wl1AssetPackage {
+export interface Wl6AssetPackage {
   rootDir: string;
-  files: Wl1AssetPaths;
-  metadata?: Wl1AssetMetadata;
+  files: Wl6AssetPaths;
+  metadata?: Wl6AssetMetadata;
 }
 
-export type RuntimeAssetPackage = Wl1AssetPackage;
+export type RuntimeAssetPackage = Wl6AssetPackage;
 
-export interface Wl1AssetMetadata {
+export interface Wl6AssetMetadata {
   variant: 'WL6';
   validatedAt: string;
   fileSizes: Record<string, number>;
@@ -33,7 +33,7 @@ export interface RuntimeAssetMetadata {
   checksums?: Record<string, string>;
 }
 
-export type Wl1RuntimeAssetMetadata = Wl1AssetMetadata;
+export type Wl6RuntimeAssetMetadata = Wl6AssetMetadata;
 
 export interface ChunkIndexEntry {
   chunkId: number;
@@ -64,14 +64,14 @@ export interface DecodedMapLevel {
   planes: [DecodedMapPlane, DecodedMapPlane, DecodedMapPlane];
 }
 
-export interface Wl1VswapIndexMetadata {
+export interface Wl6VswapIndexMetadata {
   chunkCount: number;
   spriteStart: number;
   soundStart: number;
   wallTextureChunks: number;
 }
 
-export interface Wl1AudioIndexMetadata {
+export interface Wl6AudioIndexMetadata {
   chunkCount: number;
   offsets: Uint32Array;
 }

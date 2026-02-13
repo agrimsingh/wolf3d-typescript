@@ -17,5 +17,3 @@ export async function loadWl6RuntimeScenarios(rootDir: string, stepsPerScenario 
 export async function loadRuntimeScenarios(rootDir: string, stepsPerScenario = 64): Promise<RuntimeFixtureScenario[]> {
   return loadWl6RuntimeScenarios(rootDir, stepsPerScenario);
 }
-
-export const loadWl1RuntimeScenarios = loadWl6RuntimeScenarios;

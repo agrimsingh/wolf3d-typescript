@@ -37,8 +37,6 @@
     "ci:property:shard": "tsx scripts/ci/run-parity-shard.ts",
     "ci:triage:collect": "tsx scripts/ci/collect-triage.ts",
     "runtime:replay": "tsx scripts/runtime/replay-runtime-artifact.ts",
-    "assets:fetch:wl1": "bash scripts/assets/fetch-wl1.sh",
-    "assets:validate:wl1": "tsx scripts/assets/validate-wl1.ts",
     "assets:fetch": "bash scripts/assets/fetch-wl6.sh",
     "assets:validate": "tsx scripts/assets/validate-wl6.ts",
     "verify:assets": "pnpm assets:validate",
