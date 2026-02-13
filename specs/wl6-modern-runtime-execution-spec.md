@@ -62,3 +62,4 @@ This document is the authoritative execution spec for migrating the current runt
  - `94/95` require silver key.
 5. Runtime property coverage includes explicit locked-door and door-animation interaction checks.
 6. Actor update loop uses deterministic WL6 archetype classes (guard/officer/SS/dog/zombie/boss) for chase speed, attack cadence, and combat pressure.
+7. First-person weapon view now renders canonical VSWAP weapon sprites (`421..425`) instead of procedural placeholder geometry.

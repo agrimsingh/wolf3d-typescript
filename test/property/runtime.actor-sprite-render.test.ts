@@ -56,6 +56,21 @@ function simpleSprite(color = 200): DecodedSpriteChunk {
   };
 }
 
+function weaponSprite(color = 210): DecodedSpriteChunk {
+  const firstCol = 12;
+  const lastCol = 52;
+  const colCount = (lastCol - firstCol + 1) | 0;
+  return {
+    id: 421,
+    chunkId: 527,
+    firstCol,
+    lastCol,
+    columnOffsets: new Uint16Array(colCount),
+    postsByColumn: new Array(colCount).fill(null).map(() => [{ startRow: 26, endRow: 63, pixelOffset: 0, pixelCount: 37 }]),
+    pixelPool: new Uint8Array(128).fill(color),
+  };
+}
+
 describe('runtime actor sprite rendering', () => {
   it('is deterministic for identical seed/config', async () => {
     const width = 16;
@@ -90,41 +105,92 @@ describe('runtime actor sprite rendering', () => {
     await runtime.shutdown();
   });
 
-  it('keeps sprite occluded behind wall columns', async () => {
+  it('reduces visible sprite columns when a wall barrier is present', async () => {
+    const width = 16;
+    const height = 16;
+    const plane0Blocked = bordered(width, height);
+    const plane0Open = bordered(width, height);
+    const plane1 = plane(width, height, 0);
+    // Full vertical wall barrier between player and actor.
+    for (let y = 1; y < height - 1; y++) {
+      plane0Blocked[y * width + 5] = 2;
+    }
+
+    const setup = async (runtime: TsRuntimePort, p0: Uint16Array): Promise<void> => {
+      runtime.setProceduralActorSpritesEnabled(false);
+      runtime.setSpriteDecoder({
+        decodeSprite: () => simpleSprite(220),
+      });
+      runtime.setWallTextures([new Uint8Array(4096).fill(32), new Uint8Array(4096).fill(33), new Uint8Array(4096).fill(34)]);
+      await runtime.init(baseConfig(p0, plane1, width, height));
+      const internal = runtime as unknown as {
+        fullMap: { actors: Array<{ id: number; kind: number; xQ8: number; yQ8: number; hp: number; mode: number; cooldown: number }> };
+      };
+      internal.fullMap.actors = [{
+        id: 1,
+        kind: 108,
+        xQ8: (7 * 256 + 128) | 0,
+        yQ8: (3 * 256 + 128) | 0,
+        hp: 40,
+        mode: 0,
+        cooldown: 0,
+      }];
+    };
+
+    const actorPixels = (frame: Uint8Array): number => {
+      let count = 0;
+      for (let y = 40; y < 160; y++) {
+        for (let x = 120; x < 200; x++) {
+          if ((frame[(y * 320) + x] ?? 0) === 220) {
+            count++;
+          }
+        }
+      }
+      return count;
+    };
+
+    const runtimeBlocked = new TsRuntimePort();
+    await setup(runtimeBlocked, plane0Blocked);
+    const blockedCount = actorPixels(runtimeBlocked.framebuffer(true).indexedBuffer!);
+    await runtimeBlocked.shutdown();
+
+    const runtimeOpen = new TsRuntimePort();
+    await setup(runtimeOpen, plane0Open);
+    const openCount = actorPixels(runtimeOpen.framebuffer(true).indexedBuffer!);
+    await runtimeOpen.shutdown();
+
+    expect(blockedCount).toBeLessThan(openCount);
+  });
+
+  it('draws weapon overlay from decoded vswap sprite when available', async () => {
     const width = 16;
     const height = 16;
     const plane0 = bordered(width, height);
     const plane1 = plane(width, height, 0);
-    // Vertical wall between player and actor.
-    for (let y = 2; y <= 5; y++) {
-      plane0[y * width + 5] = 2;
-    }
 
     const runtime = new TsRuntimePort();
     runtime.setProceduralActorSpritesEnabled(false);
     runtime.setSpriteDecoder({
-      decodeSprite: () => simpleSprite(220),
+      decodeSprite: (id: number) => {
+        if (id >= 421 && id <= 425) {
+          return weaponSprite(211);
+        }
+        return null;
+      },
     });
-    runtime.setWallTextures([new Uint8Array(4096).fill(32), new Uint8Array(4096).fill(33), new Uint8Array(4096).fill(34)]);
+    runtime.setWallTextures([new Uint8Array(4096).fill(40)]);
     await runtime.init(baseConfig(plane0, plane1, width, height));
 
-    const internal = runtime as unknown as {
-      fullMap: { actors: Array<{ id: number; kind: number; xQ8: number; yQ8: number; hp: number; mode: number; cooldown: number }> };
-    };
-    internal.fullMap.actors = [{
-      id: 1,
-      kind: 108,
-      xQ8: (7 * 256 + 128) | 0,
-      yQ8: (3 * 256 + 128) | 0,
-      hp: 40,
-      mode: 0,
-      cooldown: 0,
-    }];
-
     const frame = runtime.framebuffer(true).indexedBuffer!;
-    // Center column should still show wall color, not actor color 220.
-    const center = frame[(100 * 320) + 160] ?? 0;
-    expect(center).not.toBe(220);
+    let weaponPixels = 0;
+    for (let y = 110; y < 200; y++) {
+      for (let x = 120; x < 200; x++) {
+        if ((frame[(y * 320) + x] ?? 0) === 211) {
+          weaponPixels++;
+        }
+      }
+    }
+    expect(weaponPixels).toBeGreaterThan(200);
     await runtime.shutdown();
   });
 });

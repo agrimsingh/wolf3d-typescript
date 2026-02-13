@@ -191,6 +191,11 @@ const FLAG_DOOR_OPEN = 1 << 18;
 const FLAG_PUSHWALL = 1 << 19;
 const FLAG_ACTOR_KILLED = 1 << 20;
 const FLAG_ACTOR_ATTACKED = 1 << 21;
+const WEAPON_SPRITE_IDLE = 421;
+const WEAPON_SPRITE_FIRE_1 = 422;
+const WEAPON_SPRITE_FIRE_2 = 423;
+const WEAPON_SPRITE_FIRE_3 = 424;
+const WEAPON_SPRITE_FIRE_4 = 425;
 const KEY_GOLD = 1 << 0;
 const KEY_SILVER = 1 << 1;
 const DOOR_MODE_CLOSED = 0;
@@ -3098,14 +3103,70 @@ export class TsRuntimePort implements RuntimePort {
       }
     }
 
-    const weaponTop = FRAME_HEIGHT - 40;
-    for (let y = weaponTop; y < FRAME_HEIGHT; y++) {
-      const width = 34 - (((y - weaponTop) / 2) | 0);
-      const left = ((FRAME_WIDTH / 2) | 0) - width;
-      const right = ((FRAME_WIDTH / 2) | 0) + width;
-      for (let x = left; x <= right; x++) {
-        if (x >= 0 && x < FRAME_WIDTH) {
-          indexed[y * FRAME_WIDTH + x] = 228;
+    let weaponDrawn = false;
+    if (this.spriteDecoder) {
+      let weaponSpriteId = WEAPON_SPRITE_IDLE;
+      if ((this.state.flags & 0x10) !== 0) {
+        weaponSpriteId = WEAPON_SPRITE_FIRE_1;
+      } else if ((this.state.cooldown | 0) > 6) {
+        weaponSpriteId = WEAPON_SPRITE_FIRE_2;
+      } else if ((this.state.cooldown | 0) > 3) {
+        weaponSpriteId = WEAPON_SPRITE_FIRE_3;
+      } else if ((this.state.cooldown | 0) > 0) {
+        weaponSpriteId = WEAPON_SPRITE_FIRE_4;
+      }
+
+      let weaponSprite = this.spriteDecoder.decodeSprite(weaponSpriteId) ?? null;
+      if (!weaponSprite || weaponSprite.lastCol < weaponSprite.firstCol || weaponSprite.pixelPool.length <= 0) {
+        weaponSprite = this.spriteDecoder.decodeSprite(WEAPON_SPRITE_IDLE) ?? null;
+      }
+
+      if (weaponSprite && weaponSprite.lastCol >= weaponSprite.firstCol && weaponSprite.pixelPool.length > 0) {
+        const spriteH = 220;
+        const spriteW = 220;
+        const left = ((FRAME_WIDTH - spriteW) / 2) | 0;
+        const top = (FRAME_HEIGHT - spriteH + 10) | 0;
+        const firstCol = weaponSprite.firstCol | 0;
+        const lastCol = weaponSprite.lastCol | 0;
+        const totalCols = Math.max(1, (lastCol - firstCol + 1) | 0);
+        for (let c = 0; c < totalCols; c++) {
+          const spriteCol = firstCol + c;
+          const screenCol = left + ((spriteCol * spriteW / 64) | 0);
+          if (screenCol < 0 || screenCol >= FRAME_WIDTH) {
+            continue;
+          }
+          const posts = weaponSprite.postsByColumn[c] ?? [];
+          for (const post of posts) {
+            const startRow = clampI32(post.startRow | 0, 0, 63);
+            const endRow = clampI32(post.endRow | 0, startRow, 64);
+            for (let row = startRow; row < endRow; row++) {
+              const localY = ((row * spriteH / 64) | 0);
+              const screenY = top + localY;
+              if (screenY < 0 || screenY >= FRAME_HEIGHT) {
+                continue;
+              }
+              const srcOffset = (post.pixelOffset + (row - startRow)) | 0;
+              if (srcOffset < 0 || srcOffset >= weaponSprite.pixelPool.length) {
+                continue;
+              }
+              indexed[screenY * FRAME_WIDTH + screenCol] = (weaponSprite.pixelPool[srcOffset] ?? 0) & 0xff;
+            }
+          }
+        }
+        weaponDrawn = true;
+      }
+    }
+
+    if (!weaponDrawn) {
+      const weaponTop = FRAME_HEIGHT - 40;
+      for (let y = weaponTop; y < FRAME_HEIGHT; y++) {
+        const width = 34 - (((y - weaponTop) / 2) | 0);
+        const left = ((FRAME_WIDTH / 2) | 0) - width;
+        const right = ((FRAME_WIDTH / 2) | 0) + width;
+        for (let x = left; x <= right; x++) {
+          if (x >= 0 && x < FRAME_WIDTH) {
+            indexed[y * FRAME_WIDTH + x] = 228;
+          }
         }
       }
     }
