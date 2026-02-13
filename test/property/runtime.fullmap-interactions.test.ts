@@ -199,6 +199,39 @@ describe('runtime full-map interactions', () => {
     await runtimePush.shutdown();
   });
 
+  it('blocking props stop movement while collectible props can be picked up', async () => {
+    const width = 16;
+    const height = 16;
+    const plane0 = makePlane(width, height, AREATILE);
+    const plane1 = makePlane(width, height, 0);
+    addBorderWalls(plane0, width, height);
+    // Blocking prop directly in front.
+    plane1[5 * width + 6] = 24;
+
+    const blocked = new TsRuntimePort();
+    await blocked.bootWl6(baseConfig(plane0, plane1, width, height));
+    const beforeBlocked = blocked.snapshot();
+    blocked.step({ inputMask: 1 << 0, tics: 8, rng: 0x5501 });
+    const afterBlocked = blocked.snapshot();
+    expect((afterBlocked.xQ8 >> 8) | 0).toBe((beforeBlocked.xQ8 >> 8) | 0);
+    await blocked.shutdown();
+
+    const plane0Collect = makePlane(width, height, AREATILE);
+    const plane1Collect = makePlane(width, height, 0);
+    addBorderWalls(plane0Collect, width, height);
+    // Cross treasure directly in front.
+    plane1Collect[5 * width + 6] = 52;
+
+    const collectible = new TsRuntimePort();
+    await collectible.bootWl6(baseConfig(plane0Collect, plane1Collect, width, height));
+    collectible.step({ inputMask: 1 << 0, tics: 8, rng: 0x5502 });
+    const afterCollect = collectible.snapshot();
+    const collectState = (collectible as unknown as { fullMap: { plane1: Uint16Array | null } }).fullMap;
+    expect(afterCollect.xQ8).toBeGreaterThan((5 * 256 + 128) + 16);
+    expect(collectState.plane1![5 * width + 6]).toBe(0);
+    await collectible.shutdown();
+  });
+
   it('door animation changes frame hash while door tile id remains unchanged', async () => {
     const width = 16;
     const height = 16;
