@@ -6,7 +6,7 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 
 - Current state: `frozen`
 - Source of truth: `specs/generated/runtime-symbol-hits.json` + `specs/generated/wolfsrc-runtime-classification.json`
-- Trace scenarios: 10 (WL1 asset-backed)
+- Trace scenarios: 60 (WL1 asset-backed)
 - Deterministic menu-trace digest: `3960187756`
 - Required runtime trace symbols: 169
 - WOLFSRC required-runtime symbols: 130

@@ -5,6 +5,7 @@ import { WolfsrcOraclePort } from '../../src/oracle/runtimeOracle';
 import { OracleBridge } from '../../src/oracle/bridge';
 import type { RuntimeConfig, RuntimeInput } from '../../src/runtime/contracts';
 import { buildRuntimeTraceSymbolMetadata, type RuntimeTraceSymbolMetadata } from './runtime-trace-symbols';
+import { loadWl1RuntimeScenarios as loadRuntimeFixtureScenarios } from './runtime-fixtures';
 
 const AREATILE = 107;
 
@@ -237,36 +238,15 @@ function buildScenarioSteps(seed: number, count: number): RuntimeInput[] {
   return steps;
 }
 
-async function loadWl1Scenarios(root: string): Promise<TraceScenario[]> {
-  const assetsDir = path.join(root, 'assets', 'wl1');
-  const mapheadBytes = new Uint8Array(await readFile(path.join(assetsDir, 'MAPHEAD.WL1')));
-  const gamemapsBytes = new Uint8Array(await readFile(path.join(assetsDir, 'GAMEMAPS.WL1')));
-
-  const scenarios: TraceScenario[] = [];
-  for (let mapIndex = 0; mapIndex < 100; mapIndex++) {
-    const plane = extractPlane0Map(gamemapsBytes, mapheadBytes, mapIndex);
-    if (!plane) {
-      continue;
-    }
-    const seed = (Math.imul(mapIndex + 1, 0x45d9f3b) ^ 0x9e3779b9) >>> 0;
-    const mapBits = buildMapBitsFromPlane(plane, seed);
-    scenarios.push({
-      mapIndex,
-      mapName: plane.mapName,
-      seed,
-      config: {
-        mapLo: mapBits.mapLo,
-        mapHi: mapBits.mapHi,
-        startXQ8: mapBits.startXQ8,
-        startYQ8: mapBits.startYQ8,
-        startAngleDeg: (mapIndex * 37) % 360,
-        startHealth: 45 + (mapIndex % 40),
-        startAmmo: 8 + (mapIndex % 12),
-      },
-      steps: buildScenarioSteps(seed | 0, 64),
-    });
-  }
-  return scenarios;
+async function loadRuntimeScenarios(root: string): Promise<TraceScenario[]> {
+  const fixtureScenarios = await loadRuntimeFixtureScenarios(root, 64);
+  return fixtureScenarios.map((scenario) => ({
+    mapIndex: scenario.mapIndex | 0,
+    mapName: scenario.mapName,
+    seed: scenario.seed >>> 0,
+    config: { ...scenario.config },
+    steps: [...scenario.steps],
+  }));
 }
 
 async function runDeterministicMenuTraceDigest(): Promise<number> {
@@ -316,9 +296,9 @@ async function main(): Promise<void> {
   const generatedDir = path.join(root, 'specs', 'generated');
   const hitsPath = path.join(generatedDir, 'runtime-symbol-hits.json');
 
-  const scenarios = await loadWl1Scenarios(root);
+  const scenarios = await loadRuntimeScenarios(root);
   if (scenarios.length === 0) {
-    throw new Error('No WL1 runtime scenarios were extracted from MAPHEAD.WL1/GAMEMAPS.WL1');
+    throw new Error('No runtime scenarios were extracted from available WL6/WL1 assets.');
   }
   const menuTraceDigest = await runDeterministicMenuTraceDigest();
   const traceSymbols = await buildRuntimeTraceSymbolMetadata(root);

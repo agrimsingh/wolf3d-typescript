@@ -12,9 +12,9 @@ async function fetchBytes(url: string): Promise<Uint8Array> {
 }
 
 export async function loadWl1RuntimeScenarios(
-  baseUrl = '/assets/wl1',
+  baseUrl = '/assets/wl6/raw',
   stepsPerScenario = 64,
-  variant: WolfDataVariant = 'WL1',
+  variant: WolfDataVariant = 'WL6',
 ): Promise<Wl1RuntimeScenario[]> {
   const mapheadBytes = await fetchBytes(`${baseUrl}/MAPHEAD.${variant}`);
   const gamemapsBytes = await fetchBytes(`${baseUrl}/GAMEMAPS.${variant}`);

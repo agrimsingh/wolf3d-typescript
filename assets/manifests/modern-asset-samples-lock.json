@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-02-12T18:58:37.671Z",
+  "generatedAt": "2026-02-13T03:32:40.731Z",
   "samples": [
     {
       "targetKind": "wallTexture",
@@ -15,7 +15,7 @@
     {
       "targetKind": "uiSprite",
       "targetId": "ui.hud.panel",
-      "sha256": "df50f1eb86e11d2966838c8e082b441fe66f7191bccad951397520ad23ea969f"
+      "sha256": "460984658b267b81039732e8b4c5f90669e35791409c03c2a28e1888b07c9dd0"
     },
     {
       "targetKind": "actorSheet",

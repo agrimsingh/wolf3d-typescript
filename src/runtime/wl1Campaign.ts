@@ -8,9 +8,9 @@ export interface CampaignLoadOptions {
 
 export async function loadWl1Campaign(options: CampaignLoadOptions = {}) {
   const {
-    baseUrl = '/assets/wl1',
+    baseUrl = '/assets/wl6/raw',
     stepsPerScenario = 64,
-    variant = 'WL1',
+    variant = 'WL6',
   } = options;
 
   return loadWl1RuntimeScenarios(baseUrl, stepsPerScenario, variant);

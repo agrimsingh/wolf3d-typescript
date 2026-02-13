@@ -1,56 +1,306 @@
 {
-  "scenarioCount": 10,
+  "scenarioCount": 60,
   "menuTraceDigest": 3960187756,
   "traceScenarios": [
     {
       "mapIndex": 0,
       "mapName": "Wolf1 Map1",
-      "seedHex": "0x9a6ae682"
+      "seedHex": "0x8297c8b"
     },
     {
       "mapIndex": 1,
       "mapName": "Wolf1 Map2",
-      "seedHex": "0x968c47cf"
+      "seedHex": "0x94e15c69"
     },
     {
       "mapIndex": 2,
       "mapName": "Wolf1 Map3",
-      "seedHex": "0x932fa408"
+      "seedHex": "0x7b998b7f"
     },
     {
       "mapIndex": 3,
       "mapName": "Wolf1 Map4",
-      "seedHex": "0x8f410555"
+      "seedHex": "0x92520d01"
     },
     {
       "mapIndex": 4,
       "mapName": "Wolf1 Map5",
-      "seedHex": "0x8be3659e"
+      "seedHex": "0xb078369b"
     },
     {
       "mapIndex": 5,
       "mapName": "Wolf1 Map6",
-      "seedHex": "0x8406c2db"
+      "seedHex": "0xb1525219"
     },
     {
       "mapIndex": 6,
       "mapName": "Wolf1 Map7",
-      "seedHex": "0x80b82324"
+      "seedHex": "0x44a980f7"
     },
     {
       "mapIndex": 7,
       "mapName": "Wolf1 Map8",
-      "seedHex": "0xbcdb8061"
+      "seedHex": "0x857fd3e1"
     },
     {
       "mapIndex": 8,
       "mapName": "Wolf1 Boss",
-      "seedHex": "0xb97de0aa"
+      "seedHex": "0xf3519ca7"
     },
     {
       "mapIndex": 9,
       "mapName": "Wolf1 Secret",
-      "seedHex": "0xb59f41f7"
+      "seedHex": "0xf39b3699"
+    },
+    {
+      "mapIndex": 10,
+      "mapName": "Wolf2 Map1",
+      "seedHex": "0xe3a088d6"
+    },
+    {
+      "mapIndex": 11,
+      "mapName": "Wolf2 Map2",
+      "seedHex": "0xcd7a8c0"
+    },
+    {
+      "mapIndex": 12,
+      "mapName": "Wolf2 Map3",
+      "seedHex": "0x5634c4ba"
+    },
+    {
+      "mapIndex": 13,
+      "mapName": "Wolf2 Map4",
+      "seedHex": "0x3090d1b0"
+    },
+    {
+      "mapIndex": 14,
+      "mapName": "Wolf2 Map5",
+      "seedHex": "0x77024676"
+    },
+    {
+      "mapIndex": 15,
+      "mapName": "Wolf2 Map6",
+      "seedHex": "0xa5a086d0"
+    },
+    {
+      "mapIndex": 16,
+      "mapName": "Wolf2 Map7",
+      "seedHex": "0xe7109652"
+    },
+    {
+      "mapIndex": 17,
+      "mapName": "Wolf2 Map8",
+      "seedHex": "0x8e571b90"
+    },
+    {
+      "mapIndex": 18,
+      "mapName": "Wolf2 Boss",
+      "seedHex": "0x70e2c49a"
+    },
+    {
+      "mapIndex": 19,
+      "mapName": "Wolf2 Secret",
+      "seedHex": "0x6888c08"
+    },
+    {
+      "mapIndex": 20,
+      "mapName": "Wolf3 Map1",
+      "seedHex": "0xc5b8e8a5"
+    },
+    {
+      "mapIndex": 21,
+      "mapName": "Wolf3 Map2",
+      "seedHex": "0x81bc3c3b"
+    },
+    {
+      "mapIndex": 22,
+      "mapName": "Wolf3 Map3",
+      "seedHex": "0xeaca1a99"
+    },
+    {
+      "mapIndex": 23,
+      "mapName": "Wolf3 Map4",
+      "seedHex": "0x9ea3e7fb"
+    },
+    {
+      "mapIndex": 24,
+      "mapName": "Wolf3 Map5",
+      "seedHex": "0xa9658e1d"
+    },
+    {
+      "mapIndex": 25,
+      "mapName": "Wolf3 Map6",
+      "seedHex": "0x958c059b"
+    },
+    {
+      "mapIndex": 26,
+      "mapName": "Wolf3 Map7",
+      "seedHex": "0xb5bc9ce9"
+    },
+    {
+      "mapIndex": 27,
+      "mapName": "Wolf3 Map8",
+      "seedHex": "0xd6bbe32b"
+    },
+    {
+      "mapIndex": 28,
+      "mapName": "Wolf3 Boss",
+      "seedHex": "0x46d66349"
+    },
+    {
+      "mapIndex": 29,
+      "mapName": "Wolf3 Secret",
+      "seedHex": "0xe5d08253"
+    },
+    {
+      "mapIndex": 30,
+      "mapName": "Wolf4 Map 1",
+      "seedHex": "0xa9f146a2"
+    },
+    {
+      "mapIndex": 31,
+      "mapName": "Wolf4 Map 2",
+      "seedHex": "0xcdaec8a6"
+    },
+    {
+      "mapIndex": 32,
+      "mapName": "Wolf4 Map 3",
+      "seedHex": "0x9fb400ee"
+    },
+    {
+      "mapIndex": 33,
+      "mapName": "Wolf4 Map 4",
+      "seedHex": "0xdb5e564a"
+    },
+    {
+      "mapIndex": 34,
+      "mapName": "Wolf4 Map 5",
+      "seedHex": "0x2d6ed8a"
+    },
+    {
+      "mapIndex": 35,
+      "mapName": "Wolf4 Map 6",
+      "seedHex": "0x563eda56"
+    },
+    {
+      "mapIndex": 36,
+      "mapName": "Wolf4 Map 7",
+      "seedHex": "0x71506f5e"
+    },
+    {
+      "mapIndex": 37,
+      "mapName": "Wolf4 Map 8",
+      "seedHex": "0x881104c2"
+    },
+    {
+      "mapIndex": 38,
+      "mapName": "Wolf4 Boss",
+      "seedHex": "0x26beea38"
+    },
+    {
+      "mapIndex": 39,
+      "mapName": "Wolf4 Secret",
+      "seedHex": "0x5ed005a6"
+    },
+    {
+      "mapIndex": 40,
+      "mapName": "Wolf5 Map 1",
+      "seedHex": "0xc09b45f"
+    },
+    {
+      "mapIndex": 41,
+      "mapName": "Wolf5 Map 2",
+      "seedHex": "0x5bd66117"
+    },
+    {
+      "mapIndex": 42,
+      "mapName": "Wolf5 Map 3",
+      "seedHex": "0xcd444faf"
+    },
+    {
+      "mapIndex": 43,
+      "mapName": "Wolf5 Map 4",
+      "seedHex": "0xbc9680c7"
+    },
+    {
+      "mapIndex": 44,
+      "mapName": "Wolf5 Map 5",
+      "seedHex": "0x2aab1b07"
+    },
+    {
+      "mapIndex": 45,
+      "mapName": "Wolf5 Map 6",
+      "seedHex": "0xde41725f"
+    },
+    {
+      "mapIndex": 46,
+      "mapName": "Wolf5 Map 7",
+      "seedHex": "0x95c51ad7"
+    },
+    {
+      "mapIndex": 47,
+      "mapName": "Wolf5 Map 8",
+      "seedHex": "0x757d14df"
+    },
+    {
+      "mapIndex": 48,
+      "mapName": "Wolf5 Boss",
+      "seedHex": "0x9d522fd3"
+    },
+    {
+      "mapIndex": 49,
+      "mapName": "Wolf5 Secret",
+      "seedHex": "0x9c753a85"
+    },
+    {
+      "mapIndex": 50,
+      "mapName": "Wolf6 Map 1",
+      "seedHex": "0x5860dba4"
+    },
+    {
+      "mapIndex": 51,
+      "mapName": "Wolf6 Map 2",
+      "seedHex": "0x3f32e150"
+    },
+    {
+      "mapIndex": 52,
+      "mapName": "Wolf6 Map 3",
+      "seedHex": "0xbcc0898"
+    },
+    {
+      "mapIndex": 53,
+      "mapName": "Wolf6 Map 4",
+      "seedHex": "0x8c1bd20c"
+    },
+    {
+      "mapIndex": 54,
+      "mapName": "Wolf6 Map 5",
+      "seedHex": "0xf5aa41ac"
+    },
+    {
+      "mapIndex": 55,
+      "mapName": "Wolf6 Map 6",
+      "seedHex": "0xc06d1b40"
+    },
+    {
+      "mapIndex": 56,
+      "mapName": "Wolf6 Map 7",
+      "seedHex": "0xc3b0b068"
+    },
+    {
+      "mapIndex": 57,
+      "mapName": "Wolf6 Map 8",
+      "seedHex": "0x7efc11d4"
+    },
+    {
+      "mapIndex": 58,
+      "mapName": "Wolf6 Boss",
+      "seedHex": "0x9246461e"
+    },
+    {
+      "mapIndex": 59,
+      "mapName": "Wolf6 Secret",
+      "seedHex": "0x7e6d57c4"
     }
   ],
   "traceSymbolIndex": [
