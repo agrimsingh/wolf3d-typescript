@@ -51,3 +51,13 @@ This document is the authoritative execution spec for migrating the current runt
 1. Per-function parity: local 1k and CI 10k runs for required-runtime symbols.
 2. Per-tic trace parity: snapshot + indexed framebuffer exact compare.
 3. Browser acceptance scripts pass phase-specific scenarios with captured artifacts.
+
+## Implementation Notes (2026-02-13)
+
+1. Renderer now uses canonical WL6 palette conversion for indexed frame presentation (`src/runtime/wl6Palette.ts` and app wiring).
+2. Floor/ceiling indexed span defaults are aligned to reference behavior (`25` floor, `29` ceiling).
+3. Full-map doors now preserve door tile IDs and use runtime door state (open amount, opening/open/closing modes, hold time) instead of mutating door tiles to floor.
+4. Locked door semantics are enforced in runtime interaction path:
+ - `92/93` require gold key.
+ - `94/95` require silver key.
+5. Runtime property coverage includes explicit locked-door and door-animation interaction checks.

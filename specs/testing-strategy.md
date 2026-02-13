@@ -47,6 +47,7 @@ Property generators should emphasize:
 - Symmetry cases (positive/negative pairs).
 - Gameplay-realistic domains (tile coordinates, angles, map dimensions).
 - Stress cases near discontinuities (angle wrap, clipping boundaries, door thresholds).
+- Stateful interaction domains (door open/hold/close timers, locked-door key states, actor-vs-door occupancy).
 
 ## Equality Semantics
 
