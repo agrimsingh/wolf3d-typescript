@@ -26,6 +26,7 @@ This project ports Wolf3D C code to TypeScript in strict, test-first parity mode
 - Local development gate per function: at least `1,000` random cases.
 - CI phase-completion gate per function: at least `10,000` random cases.
 - Replay support: all failures must print seed and shrinking path for deterministic reruns.
+- Runtime visual gate: deterministic browser-scene screenshot hash checks must pass when render/entity behavior changes.
 
 ## Implement-And-Verify Loop (Mandatory)
 
@@ -76,5 +77,6 @@ A phase can be marked complete only when all are true:
 
 - All function checkboxes in the phase are complete.
 - Local and CI property gates are green.
+- Deterministic browser-scene hash gate is green for runtime-affecting changes.
 - `TODO.md` gate checklist is complete, including phase commit checkbox.
 - Phase commit has been created.

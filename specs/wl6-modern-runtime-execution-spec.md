@@ -63,3 +63,7 @@ This document is the authoritative execution spec for migrating the current runt
 5. Runtime property coverage includes explicit locked-door and door-animation interaction checks.
 6. Actor update loop uses deterministic WL6 archetype classes (guard/officer/SS/dog/zombie/boss) for chase speed, attack cadence, and combat pressure.
 7. First-person weapon view now renders canonical VSWAP weapon sprites (`421..425`) instead of procedural placeholder geometry.
+8. Plane 1 runtime semantics are centralized in a canonical classifier (`src/runtime/wl6Plane1Markers.ts`) for player starts, enemy difficulty tiers, dead-guard markers, pushwall markers, props, and pickup classes.
+9. Full-map pushwalls are now interaction-gated by plane1 marker `98` and no longer trigger on arbitrary wall tiles.
+10. Full-map pickup flow now uses explicit WL6 marker IDs (keys/health/ammo/weapons/treasure/life-up) instead of heuristic modulo mapping.
+11. Deterministic browser scene checks are scripted via `scripts/one-shot/run-wl6-browser-scene-check.sh` with hash manifests under `artifacts/one-shot-hardening/browser/`.

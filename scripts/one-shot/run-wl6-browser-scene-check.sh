@@ -23,15 +23,6 @@ run_ab() {
   agent-browser --session "$SESSION" "$@"
 }
 
-hold_key() {
-  local code=$1
-  local key=$2
-  local ms=$3
-  run_ab eval "window.dispatchEvent(new KeyboardEvent('keydown',{code:'${code}',key:'${key}'}));" >/dev/null
-  run_ab wait "$ms" >/dev/null
-  run_ab eval "window.dispatchEvent(new KeyboardEvent('keyup',{code:'${code}',key:'${key}'}));" >/dev/null
-}
-
 capture_scene() {
   local scene_id=$1
   local map_index=$2
@@ -57,33 +48,30 @@ done
 
 run_ab set viewport 1280 720 >/dev/null
 run_ab open "$URL" >/dev/null
-run_ab wait 1400 >/dev/null
-run_ab click canvas >/dev/null
-run_ab press Enter >/dev/null
-run_ab wait 200 >/dev/null
-run_ab press Enter >/dev/null
-run_ab wait 1400 >/dev/null
+run_ab wait 1000 >/dev/null
 
-capture_scene "e1m1_spawn_opening_area" 0 "map0 start after deterministic boot"
+run_ab eval "(async()=>{for(let i=0;i<300;i++){const c=window.__wolfDebugController;if(c&&typeof c.getState==='function'&&c.getState().mode!=='loading'){return c.getState().mode;} await new Promise(r=>setTimeout(r,10));} throw new Error('Runtime controller not ready');})()" >/dev/null
+run_ab eval "(()=>{const c=window.__wolfDebugController; if(!c){throw new Error('missing debug controller');} const d=window.__wl6Det || {controller:c,time:0}; d.origTick=d.origTick||c.tick.bind(c); d.time=0; c.tick=()=>{}; window.__wl6Det=d; return true;})()" >/dev/null
+run_ab eval "(async()=>{const d=window.__wl6Det; await d.controller.startScenario(0); d.time=0; d.origTick(0); d.origTick(100); d.origTick(200); d.origTick(300); return d.controller.getState().mode;})()" >/dev/null
+run_ab wait 80 >/dev/null
 
-hold_key "KeyW" "w" 700
-run_ab wait 250 >/dev/null
-capture_scene "e1m1_deadguard_corridor_zone" 0 "map0 corridor move from spawn"
+capture_scene "e1m1_spawn_opening_area" 0 "map0 deterministic start"
 
-run_ab eval "window.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyW',key:'w'}));" >/dev/null
-run_ab eval "window.dispatchEvent(new KeyboardEvent('keydown',{code:'KeyS',key:'s'}));" >/dev/null
-run_ab wait 700 >/dev/null
-run_ab eval "window.dispatchEvent(new KeyboardEvent('keyup',{code:'KeyS',key:'s'}));" >/dev/null
-run_ab wait 200 >/dev/null
-capture_scene "door_before_interaction" 0 "door closed before use"
+run_ab eval "(()=>{const d=window.__wl6Det; const c=d.controller; c.onKeyDown('KeyW'); for(let i=0;i<10;i++){ d.time += 80; d.origTick(d.time); } c.onKeyUp('KeyW'); return c.getState().snapshot?.tick ?? -1;})()" >/dev/null
+run_ab wait 60 >/dev/null
+capture_scene "e1m1_deadguard_corridor_zone" 0 "map0 deterministic forward move"
 
-run_ab press e >/dev/null
-run_ab wait 900 >/dev/null
-capture_scene "door_after_interaction" 0 "same view after use interaction"
+run_ab eval "(async()=>{const d=window.__wl6Det; await d.controller.startScenario(0); d.time=0; d.origTick(0); d.origTick(100); d.origTick(200); return true;})()" >/dev/null
+run_ab wait 60 >/dev/null
+capture_scene "door_before_interaction" 0 "deterministic door view before use"
 
-hold_key "ArrowLeft" "ArrowLeft" 550
-run_ab wait 250 >/dev/null
-capture_scene "enemy_occlusion_probe" 0 "occlusion probe view"
+run_ab eval "(()=>{const d=window.__wl6Det; const c=d.controller; c.onKeyDown('KeyE'); d.time += 120; d.origTick(d.time); c.onKeyUp('KeyE'); for(let i=0;i<8;i++){ d.time += 80; d.origTick(d.time); } return c.getState().snapshot?.tick ?? -1;})()" >/dev/null
+run_ab wait 60 >/dev/null
+capture_scene "door_after_interaction" 0 "same deterministic view after use"
+
+run_ab eval "(()=>{const d=window.__wl6Det; const c=d.controller; c.onKeyDown('ArrowLeft'); for(let i=0;i<8;i++){ d.time += 80; d.origTick(d.time); } c.onKeyUp('ArrowLeft'); return c.getState().snapshot?.angleDeg ?? -1;})()" >/dev/null
+run_ab wait 60 >/dev/null
+capture_scene "enemy_occlusion_probe" 0 "deterministic rotated occlusion probe"
 
 node - "$ART_DIR/.scene_rows.tsv" "$MANIFEST_PATH" <<'EOF_NODE'
 const fs = require('fs');
@@ -100,7 +88,7 @@ const scenes = lines.map((line) => {
       mapIndex: Number(mapIndex),
       note,
       seed: 0,
-      config: 'wl6-default',
+      config: 'wl6-deterministic-debug-tick',
     },
   };
 });
@@ -113,7 +101,10 @@ const payload = {
 fs.writeFileSync(outPath, JSON.stringify(payload, null, 2) + '\n', 'utf8');
 EOF_NODE
 
-if [[ ! -f "$LOCK_PATH" ]]; then
+if [[ "${UPDATE_SCENE_LOCK:-0}" == "1" ]]; then
+  cp "$MANIFEST_PATH" "$LOCK_PATH"
+  echo "Updated lock manifest: $LOCK_PATH"
+elif [[ ! -f "$LOCK_PATH" ]]; then
   cp "$MANIFEST_PATH" "$LOCK_PATH"
   echo "Created lock manifest: $LOCK_PATH"
 else
