@@ -162,6 +162,46 @@ describe('runtime actor sprite rendering', () => {
     expect(blockedCount).toBeLessThanOrEqual(openCount);
   });
 
+  it('renders actor sprite as a solid blit instead of sparse dots', async () => {
+    const width = 16;
+    const height = 16;
+    const plane0 = bordered(width, height);
+    const plane1 = plane(width, height, 0);
+
+    const runtime = new TsRuntimePort();
+    runtime.setProceduralActorSpritesEnabled(false);
+    runtime.setSpriteDecoder({
+      decodeSprite: () => simpleSprite(222),
+    });
+    runtime.setWallTextures([new Uint8Array(4096).fill(44)]);
+    await runtime.init(baseConfig(plane0, plane1, width, height));
+
+    const internal = runtime as unknown as {
+      fullMap: { actors: Array<{ id: number; kind: number; xQ8: number; yQ8: number; hp: number; mode: number; cooldown: number }> };
+    };
+    internal.fullMap.actors = [{
+      id: 1,
+      kind: 108,
+      xQ8: (6 * 256 + 128) | 0,
+      yQ8: (3 * 256 + 128) | 0,
+      hp: 40,
+      mode: 0,
+      cooldown: 0,
+    }];
+
+    const frame = runtime.framebuffer(true).indexedBuffer!;
+    let actorPixels = 0;
+    for (let y = 40; y < 170; y++) {
+      for (let x = 120; x < 210; x++) {
+        if ((frame[(y * 320) + x] ?? 0) === 222) {
+          actorPixels++;
+        }
+      }
+    }
+    expect(actorPixels).toBeGreaterThan(300);
+    await runtime.shutdown();
+  });
+
   it('draws weapon overlay from decoded vswap sprite when available', async () => {
     const width = 16;
     const height = 16;

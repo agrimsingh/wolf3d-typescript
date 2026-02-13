@@ -9,5 +9,10 @@ describe('wl6 palette mapping', () => {
     expect(wl6PaletteIndexToRgb(29)).toEqual([56, 56, 56]);
     expect(wl6PaletteIndexToRgb(255)).toEqual([152, 0, 136]);
   });
-});
 
+  it('normalizes indexes to 8-bit palette space', () => {
+    expect(wl6PaletteIndexToRgb(-1)).toEqual(wl6PaletteIndexToRgb(255));
+    expect(wl6PaletteIndexToRgb(256)).toEqual(wl6PaletteIndexToRgb(0));
+    expect(wl6PaletteIndexToRgb(257)).toEqual(wl6PaletteIndexToRgb(1));
+  });
+});
