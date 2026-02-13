@@ -754,18 +754,37 @@ function hashFullMapActors(actors: FullMapActor[]): number {
 
 function isEnemySpawnTile(tile: number): boolean {
   const t = tile & 0xffff;
+  // Mirrors WL_GAME.C ScanInfoPlane enemy/boss/ghost marker handling.
   return (
-    (t >= 108 && t < 116)
-    || (t >= 116 && t < 124)
-    || (t >= 126 && t < 142)
-    || (t >= 144 && t < 178)
+    // Guard stand + patrol (easy/med/hard marker sets).
+    (t >= 108 && t <= 115)
+    || (t >= 144 && t <= 151)
+    || (t >= 180 && t <= 187)
+    // Officer stand + patrol.
+    || (t >= 116 && t <= 123)
+    || (t >= 152 && t <= 159)
+    || (t >= 188 && t <= 195)
+    // SS stand + patrol.
+    || (t >= 126 && t <= 133)
+    || (t >= 162 && t <= 169)
+    || (t >= 198 && t <= 205)
+    // Dog stand + patrol.
+    || (t >= 134 && t <= 141)
+    || (t >= 170 && t <= 177)
+    || (t >= 206 && t <= 213)
+    // Mutant stand + patrol (easy/med/hard marker sets).
+    || (t >= 216 && t <= 223)
+    || (t >= 234 && t <= 241)
+    || (t >= 252 && t <= 259)
+    // Bosses and ghosts (WL6).
     || t === 160
     || t === 178
     || t === 179
     || t === 196
     || t === 197
-    || (t >= 214 && t < 228)
-    || (t >= 234 && t < 242)
+    || t === 214
+    || t === 215
+    || (t >= 224 && t <= 227)
   );
 }
 

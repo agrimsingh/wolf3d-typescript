@@ -217,13 +217,16 @@ describe('runtime actor combat (full-map mode)', () => {
     addBorderWalls(plane0, width, height);
     // Dead guard marker, should not spawn an actor.
     plane1[6 * width + 6] = 124;
-    // Valid enemy marker, should spawn.
+    // Valid enemy markers from ScanInfoPlane should spawn.
     plane1[6 * width + 7] = 108;
+    plane1[6 * width + 8] = 180;
+    plane1[6 * width + 9] = 252;
+    plane1[6 * width + 10] = 224;
 
     const runtime = new TsRuntimePort();
     await runtime.bootWl6(baseConfig(plane0, plane1, width, height));
     const actors = runtime.debugActors();
-    expect(actors.length).toBe(1);
+    expect(actors.length).toBe(4);
     await runtime.shutdown();
   });
 });

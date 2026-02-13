@@ -77,11 +77,13 @@ export class WolfApp {
     this.canvas.style.width = 'min(96vw, 960px)';
     this.canvas.style.height = 'auto';
     this.canvas.style.aspectRatio = `${WIDTH} / ${HEIGHT}`;
+    this.canvas.style.imageRendering = 'pixelated';
     container.appendChild(this.canvas);
 
     const ctx = this.canvas.getContext('2d');
     if (!ctx) throw new Error('2D context unavailable');
     this.ctx = ctx;
+    this.ctx.imageSmoothingEnabled = false;
     this.image = ctx.createImageData(WIDTH, HEIGHT);
 
     this.bindControls();
