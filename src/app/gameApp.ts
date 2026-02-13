@@ -1,14 +1,19 @@
 import type { RuntimeSnapshot } from '../runtime/contracts';
-import { loadWl1Campaign } from '../runtime/wl1Campaign';
+import { loadRuntimeCampaign } from '../runtime/wl6Campaign';
 import { loadModernAssetMap, type ModernAssetRect } from '../assets/modernAssetMap';
 import { WebAudioRuntimeAdapter } from './runtimeAudio';
 import { RuntimeAppController, type RuntimeScenario } from './runtimeController';
+import {
+  decodeSpriteChunk,
+  decodeVswapIndex,
+  decodeWallTexture,
+} from '../runtime/wl6AssetDecode';
+import { wl6PaletteIndexToRgb } from '../runtime/wl6Palette';
 
 const WIDTH = 320;
 const HEIGHT = 200;
 const MINIMAP_TILE_SIZE = 8;
-const TEXTURE_SIZE = 64;
-const MAX_WALL_TEXTURES = 64;
+const MAX_WALL_TEXTURES = 128;
 const AREATILE = 107;
 const BASELINE_STATUS_TEXT = 'Wolf3D TS Runtime (WL6)';
 const DATA_VARIANT = 'WL6';
@@ -35,49 +40,13 @@ function wallAtPlane(plane0: Uint16Array, mapWidth: number, mapHeight: number, x
   return (tile & 0xffff) < AREATILE;
 }
 
-function readU16LE(bytes: Uint8Array, offset: number): number {
-  if (offset < 0 || offset + 1 >= bytes.length) return 0;
-  return (bytes[offset]! | (bytes[offset + 1]! << 8)) & 0xffff;
-}
-
-function readU32LE(bytes: Uint8Array, offset: number): number {
-  if (offset < 0 || offset + 3 >= bytes.length) return 0;
-  return (
-    (bytes[offset]!) |
-    (bytes[offset + 1]! << 8) |
-    (bytes[offset + 2]! << 16) |
-    (bytes[offset + 3]! << 24)
-  ) >>> 0;
-}
-
-function parseVswapWallTextures(bytes: Uint8Array, maxTextures = MAX_WALL_TEXTURES): Uint8Array[] {
-  if (bytes.length < 10) return [];
-  const chunks = readU16LE(bytes, 0);
-  const spriteStart = readU16LE(bytes, 2);
-  if (chunks <= 0 || spriteStart <= 0) return [];
-
-  const offsetTableStart = 6;
-  const lengthTableStart = offsetTableStart + chunks * 4;
-  if (lengthTableStart + chunks * 2 > bytes.length) return [];
-
-  const out: Uint8Array[] = [];
-  const wallChunks = Math.min(spriteStart, chunks, maxTextures);
-  for (let i = 0; i < wallChunks; i++) {
-    const off = readU32LE(bytes, offsetTableStart + i * 4);
-    const len = readU16LE(bytes, lengthTableStart + i * 2);
-    if (off === 0 || len < TEXTURE_SIZE * TEXTURE_SIZE) continue;
-    if (off + len > bytes.length) continue;
-    out.push(bytes.slice(off, off + TEXTURE_SIZE * TEXTURE_SIZE));
-  }
-  return out;
-}
 
 function paletteIndexToRgb(index: number): [number, number, number] {
-  const c = index & 0xff;
-  const r = Math.min(255, c * 3);
-  const g = Math.min(255, c * 2);
-  const b = Math.min(255, c + ((c >> 5) * 8));
-  return [r | 0, g | 0, b | 0];
+  return wl6PaletteIndexToRgb(index);
+}
+
+function clampI32(v: number, minv: number, maxv: number): number {
+  return Math.max(minv, Math.min(maxv, v | 0)) | 0;
 }
 
 export class WolfApp {
@@ -87,7 +56,7 @@ export class WolfApp {
   private readonly controller = new RuntimeAppController({
     audio: new WebAudioRuntimeAdapter(),
     scenarioLoader: () =>
-      loadWl1Campaign({
+      loadRuntimeCampaign({
         baseUrl: CAMPAIGN_BASE_URL,
         stepsPerScenario: 64,
         variant: DATA_VARIANT,
@@ -105,6 +74,9 @@ export class WolfApp {
     this.canvas.width = WIDTH;
     this.canvas.height = HEIGHT;
     this.canvas.tabIndex = 0;
+    this.canvas.style.width = 'min(96vw, 960px)';
+    this.canvas.style.height = 'auto';
+    this.canvas.style.aspectRatio = `${WIDTH} / ${HEIGHT}`;
     container.appendChild(this.canvas);
 
     const ctx = this.canvas.getContext('2d');
@@ -113,6 +85,7 @@ export class WolfApp {
     this.image = ctx.createImageData(WIDTH, HEIGHT);
 
     this.bindControls();
+    this.controller.setProceduralActorSpritesEnabled(false);
     void this.loadWallTextures();
     void this.loadHudPanel();
     void this.loadMenuSkin();
@@ -125,9 +98,30 @@ export class WolfApp {
       const response = await fetch(`${CAMPAIGN_BASE_URL}/VSWAP.${DATA_VARIANT}`);
       if (!response.ok) return;
       const bytes = new Uint8Array(await response.arrayBuffer());
-      const textures = parseVswapWallTextures(bytes, MAX_WALL_TEXTURES);
+      const index = decodeVswapIndex(bytes);
+      const textures: Uint8Array[] = [];
+      const maxTextures = Math.min(index.wallCount | 0, MAX_WALL_TEXTURES);
+      for (let i = 0; i < maxTextures; i++) {
+        textures.push(decodeWallTexture(bytes, index, i));
+      }
       if (textures.length > 0) {
         this.controller.setWallTextures(textures);
+        this.controller.setVswapAssetIndex({
+          ...index,
+          bytes,
+        });
+        this.controller.setSpriteDecoder({
+          decodeSprite: (spriteId: number) => {
+            if (!Number.isInteger(spriteId) || spriteId < 0) {
+              return null;
+            }
+            const sprite = decodeSpriteChunk(bytes, index, spriteId | 0);
+            if (sprite.lastCol < sprite.firstCol || sprite.pixelPool.length <= 0) {
+              return null;
+            }
+            return sprite;
+          },
+        });
       }
     } catch {
       // Keep runtime on procedural fallback if textures cannot be loaded.
@@ -347,25 +341,27 @@ export class WolfApp {
     this.ctx.fillStyle = '#f5f7ff';
     this.ctx.font = '10px monospace';
     if (scenario) {
-      this.ctx.fillText(`Map ${scenario.mapIndex}: ${scenario.mapName}`, 8, 12);
+      this.ctx.fillText(`WL6 Map ${scenario.mapIndex}`, 8, 12);
     } else {
       this.ctx.fillText('Runtime Framebuffer', 8, 12);
     }
     this.ctx.fillText(`hp:${snapshot.health} ammo:${snapshot.ammo} tick:${snapshot.tick}`, 8, 24);
     this.ctx.fillText(`x:${(posXQ8 / 256).toFixed(2)} y:${(posYQ8 / 256).toFixed(2)} angle:${snapshot.angleDeg}`, 8, 36);
-    this.ctx.fillText(`snapshot:${snapshot.hash >>> 0} frame:${state.frameHash >>> 0}`, 8, HEIGHT - 10);
   }
 
   private drawHudOverlay(): void {
     if (!this.hudPanelImage || !this.hudPanelRect) {
       return;
     }
-    const { x, y, w, h } = this.hudPanelRect;
-    const hudHeight = 44;
+    const srcX = this.hudPanelRect.x | 0;
+    const srcY = this.hudPanelRect.y | 0;
+    const srcW = Math.min(320, this.hudPanelRect.w | 0);
+    const srcH = Math.min(40, this.hudPanelRect.h | 0);
+    const hudHeight = 28;
     this.ctx.save();
-    this.ctx.globalAlpha = 0.75;
     this.ctx.imageSmoothingEnabled = false;
-    this.ctx.drawImage(this.hudPanelImage, x, y, w, h, 0, HEIGHT - hudHeight, WIDTH, hudHeight);
+    this.ctx.globalAlpha = 0.92;
+    this.ctx.drawImage(this.hudPanelImage, srcX, srcY, srcW, srcH, 0, HEIGHT - hudHeight, WIDTH, hudHeight);
     this.ctx.restore();
   }
 
@@ -441,7 +437,8 @@ export class WolfApp {
   }
 
   private drawFrame(): void {
-    switch (this.controller.getState().mode) {
+    const mode = this.controller.getState().mode;
+    switch (mode) {
       case 'loading':
         this.drawLoadingFrame();
         break;
@@ -461,7 +458,9 @@ export class WolfApp {
         this.drawErrorFrame();
         break;
     }
-    this.drawBaselineStatus();
+    if (mode !== 'playing') {
+      this.drawBaselineStatus();
+    }
   }
 
   private drawMenuBackground(): boolean {
@@ -500,11 +499,12 @@ export class WolfApp {
   }
 
   private drawBaselineStatus(): void {
+    const y = HEIGHT - 50;
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-    this.ctx.fillRect(4, HEIGHT - 22, 230, 16);
+    this.ctx.fillRect(4, y, 176, 12);
     this.ctx.fillStyle = '#dce6ff';
-    this.ctx.font = '8px monospace';
-    this.ctx.fillText(`${BASELINE_STATUS_TEXT} [asset profile: ${DATA_VARIANT}]`, 8, HEIGHT - 11);
+    this.ctx.font = '7px monospace';
+    this.ctx.fillText(`${BASELINE_STATUS_TEXT} [${DATA_VARIANT}]`, 8, y + 8);
   }
 
   private loop(now: number): void {

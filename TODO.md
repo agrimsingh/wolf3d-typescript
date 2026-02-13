@@ -1,7 +1,7 @@
 # Wolf3D TypeScript WL6 Runtime TODO (K-Phases)
 
-**Status:** In progress (`K0` active)  
-**Last Updated:** 2026-02-12
+**Status:** In progress (`K8` active)  
+**Last Updated:** 2026-02-13
 
 ## Scope Lock
 
@@ -95,23 +95,23 @@
 
 ## K7: TS Parity Wave B (Renderer/Orientation/Sprites/HUD)
 
-- [ ] Drive renderer from TS runtime framebuffer semantics.
-- [ ] Fix mirror/axis/orientation issues across runtime visuals.
+- [x] Drive renderer from TS runtime framebuffer semantics.
+- [x] Fix mirror/axis/orientation issues across runtime visuals.
 - [ ] Integrate mapped modern HUD/UI assets where VGA lumps are unavailable.
 - [ ] Gate: helper parity + per-tic indexed framebuffer parity
 - [ ] Gate: orientation-sensitive screenshot hash baselines
 - [ ] Agent-browser check recorded
-- [ ] Tests green
-- [ ] Phase commit pushed (`k7: wl6 renderer and orientation parity`)
+- [x] Tests green
+- [x] Phase commit pushed (`k7: wl6 renderer and orientation parity`)
 
 ## K8: TS Parity Wave C (Player/Doors/Pushwalls/Game Loop)
 
-- [ ] Port player movement/use/fire/collision and door/pushwall loop transitions.
+- [x] Port player movement/use/fire/collision and door/pushwall loop transitions.
 - [ ] Remove synthetic countdown behavior from gameplay flow.
 - [ ] Gate: stateful property suites
 - [ ] Gate: deterministic interaction traces
 - [ ] Agent-browser check recorded
-- [ ] Tests green
+- [x] Tests green
 - [ ] Phase commit pushed (`k8: wl6 player-doors-gameloop parity`)
 
 ## K9: TS Parity Wave D (Actors/AI/Combat)

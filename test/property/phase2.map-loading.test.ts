@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeAll, describe, expect, it } from 'vitest';
 import fc from 'fast-check';
@@ -154,11 +154,8 @@ describe('phase 2 real WOLFSRC map/cache parity', () => {
     oracle = await getOracleBridge();
     const wl6MapHead = join(process.cwd(), 'assets', 'wl6', 'raw', 'MAPHEAD.WL6');
     const wl6GameMaps = join(process.cwd(), 'assets', 'wl6', 'raw', 'GAMEMAPS.WL6');
-    const wl1MapHead = join(process.cwd(), 'assets', 'wl1', 'MAPHEAD.WL1');
-    const wl1GameMaps = join(process.cwd(), 'assets', 'wl1', 'GAMEMAPS.WL1');
-
-    const mapheadPath = existsSync(wl6MapHead) ? wl6MapHead : wl1MapHead;
-    const gamemapsPath = existsSync(wl6GameMaps) ? wl6GameMaps : wl1GameMaps;
+    const mapheadPath = wl6MapHead;
+    const gamemapsPath = wl6GameMaps;
 
     mapheadBytes = new Uint8Array(readFileSync(mapheadPath));
     gamemapsBytes = new Uint8Array(readFileSync(gamemapsPath));
@@ -356,7 +353,7 @@ describe('phase 2 real WOLFSRC map/cache parity', () => {
     });
   });
 
-  it('phase 2 WL1 deterministic setup-mapfile fixture stays in parity', () => {
+  it('phase 2 WL6 deterministic setup-mapfile fixture stays in parity', () => {
     expect(idCaSetupMapFileHash(mapheadBytes) >>> 0).toBe(oracle.idCaSetupMapFileHash(mapheadBytes) >>> 0);
   });
 });

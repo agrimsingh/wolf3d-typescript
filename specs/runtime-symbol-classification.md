@@ -1,9 +1,9 @@
 # WOLFSRC Runtime Symbol Classification
 
-- Generated: 2026-02-12T22:13:45.823Z
+- Generated: 2026-02-13T05:43:53.808Z
 - Source manifest: `specs/generated/wolfsrc-manifest.json`
 - Runtime hits: `specs/generated/runtime-symbol-hits.json`
-- Trace scenarios: 10
+- Trace scenarios: 60
 - Menu trace digest: 3960187756
 
 ## Totals

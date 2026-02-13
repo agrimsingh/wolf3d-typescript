@@ -203,8 +203,8 @@ async function main(): Promise<void> {
       primaryPhase: entry.primaryPhase,
       classification: 'excluded-non-runtime',
       traceIds: [],
-      evidence: `No trace-hit in deterministic runtime manifest (${runtimeHits.scenarioCount} WL1 scenarios; digest=${runtimeHits.menuTraceDigest >>> 0}).`,
-    };
+        evidence: `No trace-hit in deterministic runtime manifest (${runtimeHits.scenarioCount} WL6 scenarios; digest=${runtimeHits.menuTraceDigest >>> 0}).`,
+      };
   });
 
   const unmatchedRuntimeSymbols = [...requiredByKey.entries()]

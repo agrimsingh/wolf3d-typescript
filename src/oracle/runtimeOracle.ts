@@ -190,7 +190,7 @@ export class WolfsrcOraclePort implements RuntimePort {
     );
   }
 
-  async bootWl1(config: RuntimeConfig): Promise<void> {
+  async bootWl6(config: RuntimeConfig): Promise<void> {
     await this.init(config);
   }
 

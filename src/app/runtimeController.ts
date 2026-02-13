@@ -1,4 +1,12 @@
-import type { RuntimeConfig, RuntimeFramebufferView, RuntimeInput, RuntimePort, RuntimeSnapshot } from '../runtime/contracts';
+import type {
+  DecodedVswapAssetIndex,
+  RuntimeConfig,
+  RuntimeFramebufferView,
+  RuntimeInput,
+  RuntimePort,
+  RuntimeSnapshot,
+  RuntimeSpriteDecoder,
+} from '../runtime/contracts';
 import { TsRuntimePort } from '../runtime/tsRuntime';
 import { NullRuntimeAudioAdapter, type RuntimeAudioAdapter } from './runtimeAudio';
 
@@ -13,6 +21,14 @@ export interface RuntimeScenario {
   seed: number;
   config: RuntimeConfig;
   steps: RuntimeInput[];
+}
+
+export interface RuntimeDebugActor {
+  id: number;
+  xQ8: number;
+  yQ8: number;
+  hp: number;
+  mode: number;
 }
 
 export type RuntimeAppMode = 'loading' | 'title' | 'menu' | 'playing' | 'intermission' | 'error';
@@ -174,10 +190,10 @@ export class RuntimeAppController {
     if (key('KeyE') || key('Enter')) inputMask |= 1 << 7;
 
     if (this.mouseTurnAccumulator <= -2) {
-      inputMask |= 1 << 3;
+      inputMask |= 1 << 2;
       this.mouseTurnAccumulator += 2;
     } else if (this.mouseTurnAccumulator >= 2) {
-      inputMask |= 1 << 2;
+      inputMask |= 1 << 3;
       this.mouseTurnAccumulator -= 2;
     }
 
@@ -343,6 +359,24 @@ export class RuntimeAppController {
   setWallTextures(textures: Uint8Array[]): void {
     const runtimeWithTextures = this.runtime as RuntimePort & { setWallTextures?: (textures: Uint8Array[]) => void };
     runtimeWithTextures.setWallTextures?.(textures);
+  }
+
+  setVswapAssetIndex(index: DecodedVswapAssetIndex): void {
+    this.runtime.setVswapAssetIndex?.(index);
+  }
+
+  setSpriteDecoder(decoder: RuntimeSpriteDecoder): void {
+    this.runtime.setSpriteDecoder?.(decoder);
+  }
+
+  setProceduralActorSpritesEnabled(enabled: boolean): void {
+    const runtimeWithFlag = this.runtime as RuntimePort & { setProceduralActorSpritesEnabled?: (enabled: boolean) => void };
+    runtimeWithFlag.setProceduralActorSpritesEnabled?.(enabled);
+  }
+
+  getDebugActors(): RuntimeDebugActor[] {
+    const runtimeWithActors = this.runtime as RuntimePort & { debugActors?: () => RuntimeDebugActor[] };
+    return runtimeWithActors.debugActors?.() ?? [];
   }
 
   tick(nowMs: number): void {

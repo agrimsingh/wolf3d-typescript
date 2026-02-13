@@ -5,9 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wolf3D TypeScript Port</title>
     <style>
-      body { margin: 0; background: #111; color: #eee; font-family: monospace; }
-      #app { display: grid; place-items: center; min-height: 100vh; }
-      canvas { border: 2px solid #444; image-rendering: pixelated; }
+      body {
+        margin: 0;
+        color: #eee;
+        font-family: monospace;
+        background: radial-gradient(circle at 50% 25%, #1f2434 0%, #080a0f 62%);
+      }
+      #app {
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        padding: 12px;
+        box-sizing: border-box;
+      }
+      canvas {
+        border: 2px solid #5e93ff;
+        border-radius: 4px;
+        box-shadow: 0 14px 44px rgba(0, 0, 0, 0.48);
+        image-rendering: pixelated;
+      }
     </style>
   </head>
   <body>

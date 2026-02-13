@@ -1,6 +1,6 @@
 {
   "phase": "R2",
-  "scenarioCount": 10,
+  "scenarioCount": 60,
   "menuTraceDigest": 3960187756,
   "requiredRuntimeSymbolIds": [
     1,

@@ -104,7 +104,7 @@ describe('runtime renderer orientation', () => {
     await runtime.shutdown();
   });
 
-  it('samples VSWAP wall columns without an extra horizontal mirror pass', async () => {
+  it('samples VSWAP wall columns with row-major texture layout', async () => {
     const mapWidth = 8;
     const mapHeight = 8;
     const plane0 = buildOrientationPlane(mapWidth, mapHeight);

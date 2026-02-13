@@ -1,4 +1,4 @@
-# Runtime Symbol Manifest (WL1 Runtime Path)
+# Runtime Symbol Manifest (WL6 Runtime Path)
 
 Authoritative runtime symbol checklist generated from deterministic trace artifacts and full WOLFSRC classification.
 
@@ -6,7 +6,7 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 
 - Current state: `frozen`
 - Source of truth: `specs/generated/runtime-symbol-hits.json` + `specs/generated/wolfsrc-runtime-classification.json`
-- Trace scenarios: 10 (WL1 asset-backed)
+- Trace scenarios: 60 (WL6 asset-backed)
 - Deterministic menu-trace digest: `3960187756`
 - Required runtime trace symbols: 169
 - WOLFSRC required-runtime symbols: 130
@@ -45,11 +45,11 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 | 158 | c-oracle/wolf_oracle.c | oracle_menu_reduce_packed | `done` | called via oracle_menu_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | 159 | c-oracle/wolf_oracle.c | oracle_measure_text_packed | `done` | called via oracle_measure_text_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
 | 160 | c-oracle/wolf_oracle.c | oracle_audio_reduce_packed | `done` | called via oracle_audio_reduce_packed from runtime core probe; parity: test/property/runtime.required-symbols.test.ts:required runtime API symbols stay in parity |
-| 166 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_state_size | `done` | binary state save-size API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 167 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_save_state | `done` | binary state save API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 168 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_load_state | `done` | binary state load API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 169 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_framebuffer_size | `done` | indexed framebuffer size API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
-| 170 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_indexed_frame | `done` | indexed framebuffer render API; parity: test/property/runtime.lifecycle.test.ts:bootWl1/stepFrame/framebuffer/save-load parity remains deterministic |
+| 166 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_state_size | `done` | binary state save-size API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 167 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_save_state | `done` | binary state save API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 168 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_load_state | `done` | binary state load API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 169 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_framebuffer_size | `done` | indexed framebuffer size API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
+| 170 | runtime/wolfsrc_runtime_oracle.c | oracle_runtime_render_indexed_frame | `done` | indexed framebuffer render API; parity: test/property/runtime.lifecycle.test.ts:bootWl6/stepFrame/framebuffer/save-load parity remains deterministic |
 
 ### required-runtime (WOLFSRC symbol inventory)
 

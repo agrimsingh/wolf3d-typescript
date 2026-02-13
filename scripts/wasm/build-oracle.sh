@@ -71,21 +71,21 @@ REAL_WOLFSRC_CFLAGS=(
 emcc "${REAL_WOLFSRC_CFLAGS[@]}" \
   -I"$COMPAT_OVERLAY_DIR" -I"$SANITIZED_WOLFSRC" \
   -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h" \
-  -DWL1 -DWOLF3D -Dmenuitems=menuitems_wl_state -DTakeDamage=TakeDamage_stub \
+  -DWL6 -DWOLF3D -Dmenuitems=menuitems_wl_state -DTakeDamage=TakeDamage_stub \
   -c "$SANITIZED_WOLFSRC/WL_STATE.C" \
   -o "$BUILD_DIR/WL_STATE.real.o"
 
 emcc "${REAL_WOLFSRC_CFLAGS[@]}" \
   -I"$COMPAT_OVERLAY_DIR" -I"$SANITIZED_WOLFSRC" \
   -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h" \
-  -DWL1 -DWOLF3D -Dmenuitems=menuitems_wl_agent \
+  -DWL6 -DWOLF3D -Dmenuitems=menuitems_wl_agent \
   -c "$SANITIZED_WOLFSRC/WL_AGENT.C" \
   -o "$BUILD_DIR/WL_AGENT.real.o"
 
 emcc "${REAL_WOLFSRC_CFLAGS[@]}" \
   -I"$COMPAT_OVERLAY_DIR" -I"$SANITIZED_WOLFSRC" \
   -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h" \
-  -DWL1 -DWOLF3D \
+  -DWL6 -DWOLF3D \
   -c "$ROOT_DIR/c-oracle/wolfsrc_real_state_bridge.c" \
   -o "$BUILD_DIR/wolfsrc_real_state_bridge.o"
 

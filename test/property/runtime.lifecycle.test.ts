@@ -41,7 +41,7 @@ describe('runtime lifecycle api parity', () => {
     await tsRuntime.shutdown();
   });
 
-  it('bootWl1/stepFrame/framebuffer/save-load parity remains deterministic', async () => {
+  it('bootWl6/stepFrame/framebuffer/save-load parity remains deterministic', async () => {
     await withReplay('runtime.lifecycle.api', async () => {
       await fc.assert(
         fc.asyncProperty(
@@ -74,8 +74,8 @@ describe('runtime lifecycle api parity', () => {
               startAmmo,
             };
 
-            await oracle.bootWl1(config);
-            await tsRuntime.bootWl1(config);
+            await oracle.bootWl6(config);
+            await tsRuntime.bootWl6(config);
 
             for (const input of frameInputs as RuntimeFrameInput[]) {
               const oracleStep = oracle.stepFrame(input);
@@ -91,8 +91,8 @@ describe('runtime lifecycle api parity', () => {
             const oracleSave = oracle.saveState();
             const tsSave = tsRuntime.saveState();
 
-            await oracle.bootWl1(config);
-            await tsRuntime.bootWl1(config);
+            await oracle.bootWl6(config);
+            await tsRuntime.bootWl6(config);
 
             oracle.loadState(oracleSave);
             tsRuntime.loadState(tsSave);
@@ -117,8 +117,8 @@ describe('runtime lifecycle api parity', () => {
       startAmmo: 8,
     };
 
-    await oracle.bootWl1(config);
-    await tsRuntime.bootWl1(config);
+    await oracle.bootWl6(config);
+    await tsRuntime.bootWl6(config);
 
     const stepInput: RuntimeFrameInput = {
       keyboardMask: 0x13,

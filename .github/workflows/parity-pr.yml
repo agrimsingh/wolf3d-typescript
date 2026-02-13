@@ -39,7 +39,7 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
-      - name: Fetch WL1 assets
+      - name: Fetch WL6 assets
         run: pnpm assets:fetch
 
       - name: Validate assets

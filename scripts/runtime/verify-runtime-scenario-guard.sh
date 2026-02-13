@@ -31,7 +31,16 @@ if [[ "$requires_no_fixture_loader" == "true" ]]; then
     rm -f /tmp/runtime_fixture_guard_matches.txt
     exit 1
   fi
+
+  if rg -n "Wl1RuntimeScenario|wl1Campaign|wl1LevelData" "$RUNTIME_CONTROLLER" "$GAME_APP" >/tmp/runtime_legacy_links.txt 2>/dev/null; then
+    echo "Runtime scenario fixture guard failed: legacy WL1 runtime links remain in production app/runtime path at phase '$phase'." >&2
+    cat /tmp/runtime_legacy_links.txt >&2
+    rm -f /tmp/runtime_legacy_links.txt
+    exit 1
+  fi
+
   rm -f /tmp/runtime_fixture_guard_matches.txt
+  rm -f /tmp/runtime_legacy_links.txt
   echo "Runtime scenario fixture guard: no synthetic fixture loader usage detected for phase '$phase'."
   exit 0
 fi

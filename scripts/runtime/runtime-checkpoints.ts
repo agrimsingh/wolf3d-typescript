@@ -7,7 +7,7 @@ import {
   type RuntimeTraceCapture,
 } from '../../src/runtime/parityHarness';
 import { TsRuntimePort } from '../../src/runtime/tsRuntime';
-import { loadWl1RuntimeScenarios } from './runtime-fixtures';
+import { loadRuntimeScenarios } from './runtime-fixtures';
 
 function fnv1a(hash: number, value: number): number {
   return Math.imul((hash ^ (value >>> 0)) >>> 0, 16777619) >>> 0;
@@ -95,9 +95,9 @@ export interface RuntimeCheckpointArtifact {
 }
 
 export async function computeRuntimeCheckpoints(rootDir: string, stepsPerScenario = 64): Promise<RuntimeCheckpointArtifact> {
-  const fixtures = await loadWl1RuntimeScenarios(rootDir, stepsPerScenario);
+  const fixtures = await loadRuntimeScenarios(rootDir, stepsPerScenario);
   if (fixtures.length === 0) {
-    throw new Error('No WL1 runtime fixtures found. Run `pnpm verify:assets` to install and validate shareware data files.');
+    throw new Error('No WL6 runtime fixtures found. Run `pnpm verify:assets:wl6` to install and validate shareware data files.');
   }
 
   const oracle = new WolfsrcOraclePort();
@@ -112,7 +112,7 @@ export async function computeRuntimeCheckpoints(rootDir: string, stepsPerScenari
         config: fixture.config,
         steps: fixture.steps,
       };
-      const useOracleParity = (fixture.config.variant ?? 'WL1') !== 'WL6';
+      const useOracleParity = (fixture.config.variant ?? 'WL6') !== 'WL6';
       let canonicalTrace: RuntimeTraceCapture;
       if (useOracleParity) {
         const oracleTrace = await captureRuntimeTrace(oracle, scenario);

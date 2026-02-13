@@ -1,10 +1,12 @@
 import type {
+  DecodedVswapAssetIndex,
   RuntimeConfig,
   RuntimeCoreSnapshot,
   RuntimeFramebufferView,
   RuntimeFrameInput,
   RuntimeInput,
   RuntimePort,
+  RuntimeSpriteDecoder,
   RuntimeSnapshot,
   RuntimeStepResult,
 } from './contracts';
@@ -159,6 +161,7 @@ import {
   wlTextEndTextHash,
   wlTextHelpScreensHash,
 } from '../wolf/menu/wlMenuText';
+import { spriteIdForActorKind } from './wl6SpriteMap';
 
 export const RUNTIME_CORE_KIND = 'real' as const;
 
@@ -188,6 +191,15 @@ const FLAG_DOOR_OPEN = 1 << 18;
 const FLAG_PUSHWALL = 1 << 19;
 const FLAG_ACTOR_KILLED = 1 << 20;
 const FLAG_ACTOR_ATTACKED = 1 << 21;
+const KEY_GOLD = 1 << 0;
+const KEY_SILVER = 1 << 1;
+const DOOR_MODE_CLOSED = 0;
+const DOOR_MODE_OPENING = 1;
+const DOOR_MODE_OPEN = 2;
+const DOOR_MODE_CLOSING = 3;
+const DOOR_OPEN_STEP_Q8 = 8;
+const DOOR_HOLD_TICKS = 180;
+const PLAYER_RADIUS_Q8 = 90;
 
 {
   let angle = 0.0;
@@ -538,12 +550,23 @@ type FullMapActor = {
   cooldown: number;
 };
 
+export type RuntimeDebugActor = {
+  id: number;
+  xQ8: number;
+  yQ8: number;
+  hp: number;
+  mode: number;
+};
+
 type FullMapState = {
   enabled: boolean;
   width: number;
   height: number;
   plane0: Uint16Array | null;
   plane1: Uint16Array | null;
+  doorOpenQ8: Uint8Array | null;
+  doorMode: Uint8Array | null;
+  doorHoldTicks: Uint16Array | null;
   actors: FullMapActor[];
   nextActorId: number;
   originX: number;
@@ -604,6 +627,26 @@ function hashFullMapDoors(plane0: Uint16Array | null): number {
       h = fnv1a(h, i | 0);
       h = fnv1a(h, tile | 0);
     }
+  }
+  return h >>> 0;
+}
+
+function hashDoorRuntimeState(fullMap: FullMapState): number {
+  let h = hashFullMapDoors(fullMap.plane0) >>> 0;
+  if (!fullMap.doorOpenQ8 || !fullMap.doorMode || !fullMap.doorHoldTicks) {
+    return h >>> 0;
+  }
+  for (let i = 0; i < fullMap.doorOpenQ8.length; i++) {
+    const open = fullMap.doorOpenQ8[i] ?? 0;
+    const mode = fullMap.doorMode[i] ?? 0;
+    const hold = fullMap.doorHoldTicks[i] ?? 0;
+    if (open === 0 && mode === 0 && hold === 0) {
+      continue;
+    }
+    h = fnv1a(h, i | 0);
+    h = fnv1a(h, open | 0);
+    h = fnv1a(h, mode | 0);
+    h = fnv1a(h, hold | 0);
   }
   return h >>> 0;
 }
@@ -786,6 +829,7 @@ function castRayFullMap(
   posY: number,
   dirX: number,
   dirY: number,
+  doorOpenQ8At?: (tileX: number, tileY: number, tile: number) => number,
 ): RaycastHit | null {
   let mapX = Math.floor(posX);
   let mapY = Math.floor(posY);
@@ -809,7 +853,21 @@ function castRayFullMap(
       side = 1;
     }
 
-    if (planeWallAt(plane0, width, height, mapX, mapY)) {
+    if (mapX < 0 || mapY < 0 || mapX >= width || mapY >= height) {
+      return null;
+    }
+
+    const tile = (plane0[mapY * width + mapX] ?? 0) & 0xffff;
+    if (tile >= AREATILE) {
+      continue;
+    }
+    const isDoor = tile >= DOOR_TILE_MIN && tile <= DOOR_TILE_MAX;
+    const doorOpenQ8 = isDoor && doorOpenQ8At ? (doorOpenQ8At(mapX, mapY, tile) & 0xff) : 0;
+    if (isDoor && doorOpenQ8 >= 252) {
+      continue;
+    }
+
+    {
       const perpDist = side === 0
         ? (mapX - posX + (1 - stepX) / 2) / (dirX === 0 ? 1e-6 : dirX)
         : (mapY - posY + (1 - stepY) / 2) / (dirY === 0 ? 1e-6 : dirY);
@@ -818,6 +876,12 @@ function castRayFullMap(
       let texX = Math.floor(wallX * 64) & 63;
       if (side === 0 && dirX > 0) texX = 63 - texX;
       if (side === 1 && dirY < 0) texX = 63 - texX;
+      if (isDoor) {
+        texX = (texX - ((doorOpenQ8 * 64) >> 8)) | 0;
+        if (texX < 0) {
+          continue;
+        }
+      }
       return {
         distance: Math.max(0.02, Math.abs(perpDist)),
         side,
@@ -857,12 +921,18 @@ export class TsRuntimePort implements RuntimePort {
   private angleFrac = 0;
   private bootAngleFrac = 0;
   private wallTextures: Uint8Array[] = [];
+  private drawProceduralActorSprites = true;
+  private vswapAssetIndex: DecodedVswapAssetIndex | null = null;
+  private spriteDecoder: RuntimeSpriteDecoder | null = null;
   private fullMap: FullMapState = {
     enabled: false,
     width: 0,
     height: 0,
     plane0: null,
     plane1: null,
+    doorOpenQ8: null,
+    doorMode: null,
+    doorHoldTicks: null,
     actors: [],
     nextActorId: 1,
     originX: 0,
@@ -871,6 +941,8 @@ export class TsRuntimePort implements RuntimePort {
     worldYQ8: 0,
   };
   private bootFullMap: FullMapState = { ...this.fullMap };
+  private playerKeys = 0;
+  private bootPlayerKeys = 0;
 
   private cloneFullMapState(source: FullMapState): FullMapState {
     return {
@@ -879,6 +951,9 @@ export class TsRuntimePort implements RuntimePort {
       height: source.height | 0,
       plane0: source.plane0,
       plane1: source.plane1,
+      doorOpenQ8: source.doorOpenQ8 ? new Uint8Array(source.doorOpenQ8) : null,
+      doorMode: source.doorMode ? new Uint8Array(source.doorMode) : null,
+      doorHoldTicks: source.doorHoldTicks ? new Uint16Array(source.doorHoldTicks) : null,
       actors: source.actors.map((actor) => ({ ...actor })),
       nextActorId: source.nextActorId | 0,
       originX: source.originX | 0,
@@ -890,6 +965,68 @@ export class TsRuntimePort implements RuntimePort {
 
   setWallTextures(textures: Uint8Array[]): void {
     this.wallTextures = textures.slice();
+  }
+
+  setVswapAssetIndex(index: DecodedVswapAssetIndex): void {
+    this.vswapAssetIndex = index;
+  }
+
+  setSpriteDecoder(decoder: RuntimeSpriteDecoder): void {
+    this.spriteDecoder = decoder;
+  }
+
+  setProceduralActorSpritesEnabled(enabled: boolean): void {
+    this.drawProceduralActorSprites = !!enabled;
+  }
+
+  private resolveWallTextureSlot(tile: number, side: 0 | 1): number {
+    const t = tile & 0xffff;
+    if (t >= 1 && t <= 63) {
+      return side === 0 ? ((2 * t) - 1) : ((2 * t) - 2);
+    }
+    if (t >= DOOR_TILE_MIN && t <= DOOR_TILE_MAX) {
+      switch (t) {
+        case 90:
+          return 99;
+        case 91:
+          return 98;
+        case 92:
+          return 105;
+        case 93:
+          return 104;
+        case 94:
+          return 105;
+        case 95:
+          return 104;
+        case 100:
+          return 103;
+        case 101:
+          return 102;
+        default:
+          return 98;
+      }
+    }
+    return Math.max(0, (t - 1) | 0);
+  }
+
+  private sampleWallTexel(tile: number, side: 0 | 1, texX: number, texY: number): number {
+    if (this.wallTextures.length <= 0) {
+      let wallIndex = (96 + ((tile + texX * 3 + texY * 5) & 0x3f)) & 0xff;
+      if (side === 1) {
+        wallIndex = (wallIndex - 16) & 0xff;
+      }
+      return wallIndex & 0xff;
+    }
+
+    const slot = this.resolveWallTextureSlot(tile, side);
+    const texture = this.wallTextures[Math.abs(slot) % this.wallTextures.length];
+    if (!texture || texture.length < 4096) {
+      return 96;
+    }
+    const sx = texX & 63;
+    const sy = texY & 63;
+    // VSWAP-native texture layout: column-major.
+    return texture[(sx * 64 + sy) & 4095] ?? 0;
   }
 
   private refreshMapWindowFromWorld(recenterWindow: boolean): void {
@@ -958,6 +1095,101 @@ export class TsRuntimePort implements RuntimePort {
     return { dx: 0, dy: 1 };
   }
 
+  private isDoorTile(tile: number): boolean {
+    const t = tile & 0xffff;
+    return t >= DOOR_TILE_MIN && t <= DOOR_TILE_MAX;
+  }
+
+  private doorCellIndex(tileX: number, tileY: number): number {
+    return (tileY * (this.fullMap.width | 0) + tileX) | 0;
+  }
+
+  private doorOpenAmountQ8(tileX: number, tileY: number): number {
+    if (!this.fullMap.enabled || !this.fullMap.plane0 || !this.fullMap.doorOpenQ8) {
+      return 0;
+    }
+    if (tileX < 0 || tileY < 0 || tileX >= (this.fullMap.width | 0) || tileY >= (this.fullMap.height | 0)) {
+      return 0;
+    }
+    const idx = this.doorCellIndex(tileX, tileY);
+    return this.fullMap.doorOpenQ8[idx] ?? 0;
+  }
+
+  private doorCanClose(tileX: number, tileY: number): boolean {
+    if (!this.fullMap.enabled) {
+      return false;
+    }
+    const pxQ8 = this.fullMap.worldXQ8 | 0;
+    const pyQ8 = this.fullMap.worldYQ8 | 0;
+    const cxQ8 = (tileX << 8) + 128;
+    const cyQ8 = (tileY << 8) + 128;
+    if (Math.abs(pxQ8 - cxQ8) <= PLAYER_RADIUS_Q8 && Math.abs(pyQ8 - cyQ8) <= PLAYER_RADIUS_Q8) {
+      return false;
+    }
+    for (const actor of this.fullMap.actors) {
+      if ((actor.hp | 0) <= 0) {
+        continue;
+      }
+      const ax = actor.xQ8 >> 8;
+      const ay = actor.yQ8 >> 8;
+      if (ax === (tileX | 0) && ay === (tileY | 0)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private updateFullMapDoors(): void {
+    if (!this.fullMap.enabled || !this.fullMap.plane0 || !this.fullMap.doorMode || !this.fullMap.doorOpenQ8 || !this.fullMap.doorHoldTicks) {
+      return;
+    }
+    const plane0 = this.fullMap.plane0;
+    const width = this.fullMap.width | 0;
+    for (let idx = 0; idx < plane0.length; idx++) {
+      const tile = (plane0[idx] ?? 0) & 0xffff;
+      if (!this.isDoorTile(tile)) {
+        continue;
+      }
+      const mode = this.fullMap.doorMode[idx] ?? 0;
+      let open = this.fullMap.doorOpenQ8[idx] ?? 0;
+      let hold = this.fullMap.doorHoldTicks[idx] ?? 0;
+      if (mode === DOOR_MODE_OPENING) {
+        open = clampI32(open + DOOR_OPEN_STEP_Q8, 0, 255);
+        if (open >= 255) {
+          open = 255;
+          this.fullMap.doorMode[idx] = DOOR_MODE_OPEN;
+          hold = 0;
+        }
+      } else if (mode === DOOR_MODE_OPEN) {
+        hold = clampI32(hold + 1, 0, 0xffff);
+        if (hold >= DOOR_HOLD_TICKS) {
+          const x = idx % width;
+          const y = (idx / width) | 0;
+          if (this.doorCanClose(x, y)) {
+            this.fullMap.doorMode[idx] = DOOR_MODE_CLOSING;
+          } else {
+            hold = 0;
+          }
+        }
+      } else if (mode === DOOR_MODE_CLOSING) {
+        const x = idx % width;
+        const y = (idx / width) | 0;
+        if (!this.doorCanClose(x, y)) {
+          this.fullMap.doorMode[idx] = DOOR_MODE_OPENING;
+        } else {
+          open = clampI32(open - DOOR_OPEN_STEP_Q8, 0, 255);
+          if (open <= 0) {
+            open = 0;
+            hold = 0;
+            this.fullMap.doorMode[idx] = DOOR_MODE_CLOSED;
+          }
+        }
+      }
+      this.fullMap.doorOpenQ8[idx] = open;
+      this.fullMap.doorHoldTicks[idx] = hold;
+    }
+  }
+
   private tryUseFullMapTile(): boolean {
     if (!this.fullMap.enabled || !this.fullMap.plane0) {
       return false;
@@ -976,14 +1208,31 @@ export class TsRuntimePort implements RuntimePort {
     }
 
     const idx = ty * mapWidth + tx;
-    const tile = plane0[idx] ?? 0;
-    if ((tile & 0xffff) >= AREATILE) {
+    const tile = (plane0[idx] ?? 0) & 0xffff;
+    if (tile >= AREATILE) {
       return false;
     }
 
-    const isDoor = (tile & 0xffff) >= DOOR_TILE_MIN && (tile & 0xffff) <= DOOR_TILE_MAX;
-    if (isDoor) {
-      plane0[idx] = AREATILE;
+    if (this.isDoorTile(tile)) {
+      if ((tile === 92 || tile === 93) && (this.playerKeys & KEY_GOLD) === 0) {
+        return false;
+      }
+      if ((tile === 94 || tile === 95) && (this.playerKeys & KEY_SILVER) === 0) {
+        return false;
+      }
+      if (this.fullMap.doorMode && this.fullMap.doorHoldTicks) {
+        const mode = this.fullMap.doorMode[idx] ?? 0;
+        if (mode === DOOR_MODE_OPEN || mode === DOOR_MODE_OPENING) {
+          const doorX = idx % mapWidth;
+          const doorY = (idx / mapWidth) | 0;
+          if (this.doorCanClose(doorX, doorY)) {
+            this.fullMap.doorMode[idx] = DOOR_MODE_CLOSING;
+          }
+        } else {
+          this.fullMap.doorMode[idx] = DOOR_MODE_OPENING;
+        }
+        this.fullMap.doorHoldTicks[idx] = 0;
+      }
       this.state.flags |= FLAG_DOOR_OPEN;
       this.refreshMapWindowFromWorld(false);
       return true;
@@ -1000,7 +1249,7 @@ export class TsRuntimePort implements RuntimePort {
       return false;
     }
 
-    plane0[pushIdx] = tile & 0xffff;
+    plane0[pushIdx] = tile;
     plane0[idx] = AREATILE;
     this.state.flags |= FLAG_PUSHWALL;
     this.refreshMapWindowFromWorld(false);
@@ -1026,10 +1275,13 @@ export class TsRuntimePort implements RuntimePort {
       return;
     }
 
-    const itemClass = item % 3;
-    if (itemClass === 0) {
+    if (item === 43) {
+      this.playerKeys |= KEY_GOLD;
+    } else if (item === 44) {
+      this.playerKeys |= KEY_SILVER;
+    } else if (item % 3 === 0) {
       this.state.health = clampI32(this.state.health + 8, 0, 100);
-    } else if (itemClass === 1) {
+    } else if (item % 3 === 1) {
       this.state.ammo = clampI32(this.state.ammo + 6, 0, 99);
     }
     this.state.flags |= FLAG_PICKUP;
@@ -1044,7 +1296,14 @@ export class TsRuntimePort implements RuntimePort {
       return false;
     }
     const tile = this.fullMap.plane0[tileY * this.fullMap.width + tileX] ?? 0;
-    return (tile & 0xffff) >= AREATILE;
+    const value = tile & 0xffff;
+    if (value >= AREATILE) {
+      return true;
+    }
+    if (!this.isDoorTile(value)) {
+      return false;
+    }
+    return this.doorOpenAmountQ8(tileX, tileY) >= 224;
   }
 
   private fullMapActorOccupied(actorId: number, tileX: number, tileY: number): boolean {
@@ -1192,7 +1451,7 @@ export class TsRuntimePort implements RuntimePort {
     return clampI32(pendingDamageCalls, 0, 8);
   }
 
-  async bootWl1(config: RuntimeConfig): Promise<void> {
+  async bootWl6(config: RuntimeConfig): Promise<void> {
     await this.init(config);
   }
 
@@ -1203,6 +1462,9 @@ export class TsRuntimePort implements RuntimePort {
       height: 0,
       plane0: null,
       plane1: null,
+      doorOpenQ8: null,
+      doorMode: null,
+      doorHoldTicks: null,
       actors: [],
       nextActorId: 1,
       originX: 0,
@@ -1261,6 +1523,9 @@ export class TsRuntimePort implements RuntimePort {
         height: height | 0,
         plane0,
         plane1,
+        doorOpenQ8: new Uint8Array(width * height),
+        doorMode: new Uint8Array(width * height),
+        doorHoldTicks: new Uint16Array(width * height),
         actors,
         nextActorId: (actors.length + 1) | 0,
         originX,
@@ -1274,12 +1539,15 @@ export class TsRuntimePort implements RuntimePort {
     this.angleFrac = 0;
     this.bootAngleFrac = 0;
     this.bootState = { ...this.state };
+    this.playerKeys = 0;
+    this.bootPlayerKeys = this.playerKeys | 0;
     this.bootFullMap = this.cloneFullMapState(this.fullMap);
   }
 
   reset(): void {
     this.state = { ...this.bootState };
     this.angleFrac = this.bootAngleFrac;
+    this.playerKeys = this.bootPlayerKeys | 0;
     this.fullMap = this.cloneFullMapState(this.bootFullMap);
     if (this.fullMap.enabled) {
       this.refreshMapWindowFromWorld(false);
@@ -1294,6 +1562,39 @@ export class TsRuntimePort implements RuntimePort {
 
     const xmove = fixedByFrac(clampedSpeed, SIN_TABLE[(angle | 0) + ANGLEQUAD] ?? 0);
     const ymove = (-fixedByFrac(clampedSpeed, SIN_TABLE[angle | 0] ?? 0)) | 0;
+    if (this.fullMap.enabled && this.fullMap.plane0) {
+      const originXQ16 = Math.imul(this.fullMap.originX | 0, 1 << 16);
+      const originYQ16 = Math.imul(this.fullMap.originY | 0, 1 << 16);
+      const worldXQ16 = (xQ16 + originXQ16) | 0;
+      const worldYQ16 = (yQ16 + originYQ16) | 0;
+      let nextWorldXQ16 = (worldXQ16 + xmove) | 0;
+      let nextWorldYQ16 = (worldYQ16 + ymove) | 0;
+      const radiusQ16 = MINDIST;
+      const canOccupy = (wxQ16: number, wyQ16: number): boolean => {
+        const minX = (wxQ16 - radiusQ16) >> 16;
+        const maxX = (wxQ16 + radiusQ16) >> 16;
+        const minY = (wyQ16 - radiusQ16) >> 16;
+        const maxY = (wyQ16 + radiusQ16) >> 16;
+        return this.fullMapTileWalkable(minX, minY)
+          && this.fullMapTileWalkable(minX, maxY)
+          && this.fullMapTileWalkable(maxX, minY)
+          && this.fullMapTileWalkable(maxX, maxY);
+      };
+      if (!canOccupy(nextWorldXQ16, nextWorldYQ16)) {
+        if (canOccupy(nextWorldXQ16, worldYQ16)) {
+          nextWorldYQ16 = worldYQ16;
+        } else if (canOccupy(worldXQ16, nextWorldYQ16)) {
+          nextWorldXQ16 = worldXQ16;
+        } else {
+          nextWorldXQ16 = worldXQ16;
+          nextWorldYQ16 = worldYQ16;
+        }
+      }
+      return {
+        xQ16: (nextWorldXQ16 - originXQ16) | 0,
+        yQ16: (nextWorldYQ16 - originYQ16) | 0,
+      };
+    }
     const movedQ16 = wlAgentRealClipMoveQ16(xQ16 | 0, yQ16 | 0, xmove, ymove, this.state.mapLo, this.state.mapHi, 0);
     return { xQ16: movedQ16.x | 0, yQ16: movedQ16.y | 0 };
   }
@@ -1310,6 +1611,8 @@ export class TsRuntimePort implements RuntimePort {
     let forward = 0;
     let strafe = 0;
     let turn = 0;
+    let controlX = 0;
+    let controlY = 0;
     let pendingDamageCalls = 0;
 
     if (inputMask & (1 << 0)) forward += 32;
@@ -1319,39 +1622,57 @@ export class TsRuntimePort implements RuntimePort {
     if (inputMask & (1 << 4)) strafe -= 24;
     if (inputMask & (1 << 5)) strafe += 24;
 
+    const strafePressed = strafe !== 0;
+    if (strafePressed) {
+      if (strafe < 0) {
+        controlX += 24;
+      } else if (strafe > 0) {
+        controlX -= 24;
+      }
+    } else {
+      if (turn < 0) {
+        controlX -= 8 * ANGLESCALE;
+      } else if (turn > 0) {
+        controlX += 8 * ANGLESCALE;
+      }
+    }
+    if (forward > 0) {
+      controlY -= 32;
+    } else if (forward < 0) {
+      controlY += 32;
+    }
+
     let xQ16 = this.state.xQ8 << 8;
     let yQ16 = this.state.yQ8 << 8;
-
-    if (strafe !== 0) {
-      if (strafe < 0) {
+    if (strafePressed) {
+      if (controlX > 0) {
         let angle = this.state.angleDeg - ANGLES / 4;
         if (angle < 0) angle += ANGLES;
-        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(24, MOVESCALE));
+        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(controlX, MOVESCALE));
         xQ16 = moved.xQ16;
         yQ16 = moved.yQ16;
-      } else if (strafe > 0) {
+      } else if (controlX < 0) {
         let angle = this.state.angleDeg + ANGLES / 4;
         if (angle >= ANGLES) angle -= ANGLES;
-        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(24, MOVESCALE));
+        const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(-controlX, MOVESCALE));
         xQ16 = moved.xQ16;
         yQ16 = moved.yQ16;
       }
     } else {
-      const turnControl = turn < 0 ? -8 * ANGLESCALE : turn > 0 ? 8 * ANGLESCALE : 0;
-      this.angleFrac = (this.angleFrac + turnControl) | 0;
+      this.angleFrac = (this.angleFrac + controlX) | 0;
       const angleUnits = (this.angleFrac / ANGLESCALE) | 0;
       this.angleFrac = (this.angleFrac - Math.imul(angleUnits, ANGLESCALE)) | 0;
       this.state.angleDeg = normalizeAngleDeg(this.state.angleDeg - angleUnits);
     }
 
-    if (forward > 0) {
-      const moved = this.thrustQ16(xQ16, yQ16, this.state.angleDeg | 0, Math.imul(32, MOVESCALE));
+    if (controlY < 0) {
+      const moved = this.thrustQ16(xQ16, yQ16, this.state.angleDeg | 0, Math.imul(-controlY, MOVESCALE));
       xQ16 = moved.xQ16;
       yQ16 = moved.yQ16;
-    } else if (forward < 0) {
+    } else if (controlY > 0) {
       let angle = this.state.angleDeg + ANGLES / 2;
       if (angle >= ANGLES) angle -= ANGLES;
-      const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(32, BACKMOVESCALE));
+      const moved = this.thrustQ16(xQ16, yQ16, angle | 0, Math.imul(controlY, BACKMOVESCALE));
       xQ16 = moved.xQ16;
       yQ16 = moved.yQ16;
     }
@@ -1431,6 +1752,8 @@ export class TsRuntimePort implements RuntimePort {
         this.state.flags &= ~0x100;
       }
     }
+
+    this.updateFullMapDoors();
 
     this.applyFullMapPickupEffects();
 
@@ -2525,7 +2848,7 @@ export class TsRuntimePort implements RuntimePort {
       indexed.fill(29, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
     }
     for (let y = FRAME_HEIGHT / 2; y < FRAME_HEIGHT; y++) {
-      indexed.fill(6, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
+      indexed.fill(25, y * FRAME_WIDTH, (y + 1) * FRAME_WIDTH);
     }
 
     for (let x = 0; x < FRAME_WIDTH; x++) {
@@ -2533,7 +2856,16 @@ export class TsRuntimePort implements RuntimePort {
       const rayAngle = angleRad - camera * RENDER_FOV;
       const dirX = Math.cos(rayAngle);
       const dirY = -Math.sin(rayAngle);
-      const hit = castRayFullMap(plane0, mapWidth, mapHeight, posX, posY, dirX, dirY);
+      const hit = castRayFullMap(
+        plane0,
+        mapWidth,
+        mapHeight,
+        posX,
+        posY,
+        dirX,
+        dirY,
+        (tileX, tileY) => this.doorOpenAmountQ8(tileX, tileY),
+      );
       if (!hit) {
         continue;
       }
@@ -2543,27 +2875,90 @@ export class TsRuntimePort implements RuntimePort {
       const top = Math.max(0, (FRAME_HEIGHT / 2 - wallHeight / 2) | 0);
       const bottom = Math.min(FRAME_HEIGHT - 1, top + wallHeight);
       const tile = plane0[hit.tileY * mapWidth + hit.tileX] ?? 0;
-      const texture = this.wallTextures.length > 0
-        ? this.wallTextures[Math.abs((tile - 1) & 0xffff) % this.wallTextures.length]
-        : null;
-      let wallIndex = (96 + ((tile + hit.tileX * 3 + hit.tileY * 5) & 0x3f)) & 0xff;
-      if (hit.side === 1) {
-        wallIndex = (wallIndex - 16) & 0xff;
-      }
 
       for (let y = top; y <= bottom; y++) {
-        if (texture) {
-          const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
-          const sampleX = hit.texX & 63;
-          // VSWAP wall textures are column-major (x-major).
-          indexed[y * FRAME_WIDTH + x] = texture[(sampleX * 64 + ty) & 4095] ?? wallIndex;
-        } else {
-          indexed[y * FRAME_WIDTH + x] = wallIndex;
-        }
+        const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
+        indexed[y * FRAME_WIDTH + x] = this.sampleWallTexel(tile, hit.side, hit.texX, ty);
       }
     }
 
-    if (this.fullMap.actors.length > 0) {
+    if (!this.drawProceduralActorSprites && this.spriteDecoder && this.fullMap.actors.length > 0) {
+      const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);
+      liveActors.sort((a, b) => {
+        const adx = (a.xQ8 | 0) / 256 - posX;
+        const ady = (a.yQ8 | 0) / 256 - posY;
+        const bdx = (b.xQ8 | 0) / 256 - posX;
+        const bdy = (b.yQ8 | 0) / 256 - posY;
+        const da = (adx * adx) + (ady * ady);
+        const db = (bdx * bdx) + (bdy * bdy);
+        return db - da;
+      });
+
+      for (const actor of liveActors) {
+        const actorX = (actor.xQ8 | 0) / 256;
+        const actorY = (actor.yQ8 | 0) / 256;
+        const relX = actorX - posX;
+        const relY = actorY - posY;
+        const dist = Math.hypot(relX, relY);
+        if (dist < 0.12 || dist > 16) {
+          continue;
+        }
+
+        let delta = Math.atan2(-relY, relX) - angleRad;
+        while (delta < -Math.PI) delta += Math.PI * 2;
+        while (delta > Math.PI) delta -= Math.PI * 2;
+        if (Math.abs(delta) > (RENDER_FOV * 0.65)) {
+          continue;
+        }
+
+        const spriteId = spriteIdForActorKind(actor.kind | 0);
+        const sprite = this.spriteDecoder.decodeSprite(spriteId);
+        if (!sprite || sprite.lastCol < sprite.firstCol || sprite.pixelPool.length <= 0) {
+          continue;
+        }
+
+        const screenX = ((delta / RENDER_FOV) + 0.5) * FRAME_WIDTH;
+        const spriteH = clampI32((FRAME_HEIGHT / dist) | 0, 12, 120);
+        const spriteW = clampI32((spriteH * 64 / 64) | 0, 10, 128);
+        const left = ((screenX - (spriteW / 2)) | 0);
+        const top = clampI32(((FRAME_HEIGHT / 2 - spriteH / 2) | 0), -spriteH, FRAME_HEIGHT);
+
+        const firstCol = sprite.firstCol | 0;
+        const lastCol = sprite.lastCol | 0;
+        const colCount = (lastCol - firstCol + 1) | 0;
+        for (let c = 0; c < colCount; c++) {
+          const spriteCol = firstCol + c;
+          const screenCol = left + ((spriteCol * spriteW / 64) | 0);
+          if (screenCol < 0 || screenCol >= FRAME_WIDTH) {
+            continue;
+          }
+          if (dist >= (depth[screenCol] ?? 1e9)) {
+            continue;
+          }
+          const posts = sprite.postsByColumn[c] ?? [];
+          if (posts.length === 0) {
+            continue;
+          }
+          for (const post of posts) {
+            const start = clampI32(post.startRow, 0, 63);
+            const end = clampI32(post.endRow, 0, 64);
+            for (let row = start; row < end; row++) {
+              const localY = ((row * spriteH / 64) | 0);
+              const screenY = top + localY;
+              if (screenY < 0 || screenY >= FRAME_HEIGHT) {
+                continue;
+              }
+              const srcOffset = (post.pixelOffset + (row - start)) | 0;
+              if (srcOffset < 0 || srcOffset >= sprite.pixelPool.length) {
+                continue;
+              }
+              const color = sprite.pixelPool[srcOffset] ?? 0;
+              indexed[screenY * FRAME_WIDTH + screenCol] = color & 0xff;
+            }
+          }
+        }
+      }
+    } else if (this.drawProceduralActorSprites && this.fullMap.actors.length > 0) {
       const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);
       liveActors.sort((a, b) => {
         const adx = (a.xQ8 | 0) / 256 - posX;
@@ -2701,12 +3096,13 @@ export class TsRuntimePort implements RuntimePort {
       xQ8: this.fullMap.worldXQ8 | 0,
       yQ8: this.fullMap.worldYQ8 | 0,
     };
-    const doorsHash = hashFullMapDoors(this.fullMap.plane0);
+    const doorsHash = hashDoorRuntimeState(this.fullMap);
     const actorsHash = hashFullMapActors(this.fullMap.actors);
     return {
       ...runtimeCoreFields(worldState, {
         doorsHash,
         actorsHash,
+        keys: this.playerKeys | 0,
       }),
       localXQ8: this.state.xQ8 | 0,
       localYQ8: this.state.yQ8 | 0,
@@ -2718,6 +3114,19 @@ export class TsRuntimePort implements RuntimePort {
       worldHeight: this.fullMap.height | 0,
       hash: snapshotHash(worldState, this.angleFrac),
     };
+  }
+
+  debugActors(): RuntimeDebugActor[] {
+    if (!this.fullMap.enabled || this.fullMap.actors.length === 0) {
+      return [];
+    }
+    return this.fullMap.actors.map((actor) => ({
+      id: actor.id | 0,
+      xQ8: actor.xQ8 | 0,
+      yQ8: actor.yQ8 | 0,
+      hp: actor.hp | 0,
+      mode: actor.mode | 0,
+    }));
   }
 
   saveState(): Uint8Array {
@@ -2750,6 +3159,10 @@ export class TsRuntimePort implements RuntimePort {
       flags: parsed.flags | 0,
       tick: parsed.tick | 0,
     };
+    const parsedCore = parsed as unknown as Partial<RuntimeCoreSnapshot>;
+    this.playerKeys = Number.isInteger(parsedCore.keys)
+      ? ((parsedCore.keys as number) | 0)
+      : 0;
     if (this.fullMap.enabled) {
       if (Number.isInteger(parsed.runtimeWindowOriginX)) {
         this.fullMap.originX = clampWindowOrigin(parsed.runtimeWindowOriginX as number, this.fullMap.width);

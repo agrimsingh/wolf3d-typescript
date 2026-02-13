@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { RuntimeAppController } from '../../src/app/runtimeController';
 import { NullRuntimeAudioAdapter } from '../../src/app/runtimeAudio';
 import { TsRuntimePort } from '../../src/runtime/tsRuntime';
-import type { Wl1RuntimeScenario } from '../../src/runtime/wl1RuntimeScenarios';
+import type { RuntimeScenario } from '../../src/runtime/wl6RuntimeScenarios';
 
 function makeBorderMapBits(): { mapLo: number; mapHi: number } {
   let mapLo = 0;
@@ -20,7 +20,7 @@ function makeBorderMapBits(): { mapLo: number; mapHi: number } {
   return { mapLo: mapLo >>> 0, mapHi: mapHi >>> 0 };
 }
 
-function makeScenario(mapIndex: number): Wl1RuntimeScenario {
+function makeScenario(mapIndex: number): RuntimeScenario {
   const bits = makeBorderMapBits();
   return {
     id: `smoke-map-${mapIndex}`,

@@ -1,4 +1,4 @@
-export interface Wl1AssetPaths {
+export interface Wl6AssetPaths {
   gamemaps: string;
   maphead: string;
   vswap: string;
@@ -9,18 +9,31 @@ export interface Wl1AssetPaths {
   audiot: string;
 }
 
-export interface Wl1AssetPackage {
+export type RuntimeAssetPaths = Wl6AssetPaths;
+
+export interface Wl6AssetPackage {
   rootDir: string;
-  files: Wl1AssetPaths;
-  metadata?: Wl1AssetMetadata;
+  files: Wl6AssetPaths;
+  metadata?: Wl6AssetMetadata;
 }
 
-export interface Wl1AssetMetadata {
-  variant: 'WL1';
+export type RuntimeAssetPackage = Wl6AssetPackage;
+
+export interface Wl6AssetMetadata {
+  variant: 'WL6';
   validatedAt: string;
   fileSizes: Record<string, number>;
   checksums?: Record<string, string>;
 }
+
+export interface RuntimeAssetMetadata {
+  variant: 'WL6';
+  validatedAt: string;
+  fileSizes: Record<string, number>;
+  checksums?: Record<string, string>;
+}
+
+export type Wl6RuntimeAssetMetadata = Wl6AssetMetadata;
 
 export interface ChunkIndexEntry {
   chunkId: number;
@@ -51,14 +64,40 @@ export interface DecodedMapLevel {
   planes: [DecodedMapPlane, DecodedMapPlane, DecodedMapPlane];
 }
 
-export interface Wl1VswapIndexMetadata {
+export interface Wl6VswapIndexMetadata {
   chunkCount: number;
+  chunkOffsets: Uint32Array;
+  chunkLengths: Uint16Array;
+  wallCount: number;
   spriteStart: number;
   soundStart: number;
   wallTextureChunks: number;
 }
 
-export interface Wl1AudioIndexMetadata {
+export interface DecodedWallTexture {
+  id: number;
+  // 64x64 palette indexes in column-major order (VSWAP native layout).
+  pixelsColumnMajor64x64: Uint8Array;
+}
+
+export interface DecodedSpritePost {
+  startRow: number;
+  endRow: number;
+  pixelOffset: number;
+  pixelCount: number;
+}
+
+export interface DecodedSpriteChunk {
+  id: number;
+  chunkId: number;
+  firstCol: number;
+  lastCol: number;
+  columnOffsets: Uint16Array;
+  postsByColumn: DecodedSpritePost[][];
+  pixelPool: Uint8Array;
+}
+
+export interface Wl6AudioIndexMetadata {
   chunkCount: number;
   offsets: Uint32Array;
 }
