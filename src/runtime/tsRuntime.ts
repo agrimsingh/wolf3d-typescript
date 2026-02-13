@@ -163,6 +163,13 @@ import {
   wlTextHelpScreensHash,
 } from '../wolf/menu/wlMenuText';
 import { spriteIdForActorKind } from './wl6SpriteMap';
+import {
+  isWl6BlockingPropMarker,
+  isWl6PlayerStartMarker,
+  isWl6PushwallMarker,
+  wl6EnemySpawnDifficultyTier,
+  wl6PickupEffect,
+} from './wl6Plane1Markers';
 
 export const RUNTIME_CORE_KIND = 'real' as const;
 
@@ -180,8 +187,6 @@ const FULL_MAP_WINDOW_SIZE = 8;
 const AREATILE = 107;
 const DOOR_TILE_MIN = 90;
 const DOOR_TILE_MAX = 101;
-const PLAYER_START_MIN = 19;
-const PLAYER_START_MAX = 22;
 const FRAME_WIDTH = 320;
 const FRAME_HEIGHT = 200;
 const RENDER_FOV = Math.PI / 3;
@@ -763,41 +768,6 @@ function normalizedSpawnDifficulty(difficulty: number): 0 | 1 | 2 {
   return 0;
 }
 
-function enemySpawnDifficultyTier(tile: number): 0 | 1 | 2 | null {
-  const t = tile & 0xffff;
-  // Mirrors WL_GAME.C ScanInfoPlane marker tiers:
-  // easy markers always spawn, medium markers spawn on difficulty >= gd_medium,
-  // hard markers spawn on difficulty >= gd_hard.
-  if (
-    (t >= 108 && t <= 123)
-    || (t >= 126 && t <= 141)
-    || (t >= 216 && t <= 223)
-    || t === 160
-    || t === 178
-    || t === 179
-    || t === 196
-    || t === 197
-    || t === 214
-    || t === 215
-    || (t >= 224 && t <= 227)
-  ) {
-    return 0;
-  }
-  if (
-    (t >= 144 && t <= 177)
-    || (t >= 234 && t <= 241)
-  ) {
-    return 1;
-  }
-  if (
-    (t >= 180 && t <= 213)
-    || (t >= 252 && t <= 259)
-  ) {
-    return 2;
-  }
-  return null;
-}
-
 function spawnFullMapActors(
   plane1: Uint16Array | null,
   width: number,
@@ -818,10 +788,10 @@ function spawnFullMapActors(
       if (x === playerTileX && y === playerTileY) {
         continue;
       }
-      if (tile >= PLAYER_START_MIN && tile <= PLAYER_START_MAX) {
+      if (isWl6PlayerStartMarker(tile)) {
         continue;
       }
-      const requiredTier = enemySpawnDifficultyTier(tile);
+      const requiredTier = wl6EnemySpawnDifficultyTier(tile);
       if (requiredTier === null) {
         continue;
       }
@@ -1377,6 +1347,10 @@ export class TsRuntimePort implements RuntimePort {
       return true;
     }
 
+    if (!this.fullMap.plane1 || !isWl6PushwallMarker(this.fullMap.plane1[idx] ?? 0)) {
+      return false;
+    }
+
     const pushX = tx + dx;
     const pushY = ty + dy;
     if (pushX < 0 || pushY < 0 || pushX >= mapWidth || pushY >= mapHeight) {
@@ -1390,6 +1364,7 @@ export class TsRuntimePort implements RuntimePort {
 
     plane0[pushIdx] = tile;
     plane0[idx] = AREATILE;
+    this.fullMap.plane1[idx] = 0;
     this.state.flags |= FLAG_PUSHWALL;
     this.refreshMapWindowFromWorld(false);
     return true;
@@ -1414,14 +1389,21 @@ export class TsRuntimePort implements RuntimePort {
       return;
     }
 
-    if (item === 43) {
-      this.playerKeys |= KEY_GOLD;
-    } else if (item === 44) {
-      this.playerKeys |= KEY_SILVER;
-    } else if (item % 3 === 0) {
-      this.state.health = clampI32(this.state.health + 8, 0, 100);
-    } else if (item % 3 === 1) {
-      this.state.ammo = clampI32(this.state.ammo + 6, 0, 99);
+    const effect = wl6PickupEffect(item);
+    if (!effect) {
+      return;
+    }
+
+    if (effect.kind === 'key') {
+      this.playerKeys |= effect.keyMask;
+    } else if (effect.kind === 'health') {
+      this.state.health = clampI32(this.state.health + effect.amount, 0, 100);
+    } else if (effect.kind === 'ammo') {
+      this.state.ammo = clampI32(this.state.ammo + effect.amount, 0, 99);
+    } else if (effect.kind === 'weapon') {
+      this.state.ammo = clampI32(this.state.ammo + effect.ammoAmount, 0, 99);
+    } else if (effect.kind === 'lifeup') {
+      this.state.health = 100;
     }
     this.state.flags |= FLAG_PICKUP;
     this.fullMap.plane1[idx] = 0;
@@ -1433,6 +1415,12 @@ export class TsRuntimePort implements RuntimePort {
     }
     if (tileX < 0 || tileY < 0 || tileX >= this.fullMap.width || tileY >= this.fullMap.height) {
       return false;
+    }
+    if (this.fullMap.plane1) {
+      const marker = this.fullMap.plane1[tileY * this.fullMap.width + tileX] ?? 0;
+      if (isWl6BlockingPropMarker(marker)) {
+        return false;
+      }
     }
     const tile = this.fullMap.plane0[tileY * this.fullMap.width + tileX] ?? 0;
     const value = tile & 0xffff;

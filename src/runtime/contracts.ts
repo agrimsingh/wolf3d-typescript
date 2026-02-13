@@ -10,6 +10,7 @@ export interface RuntimeConfig {
   enableFullMapRuntime?: boolean;
   mapIndex?: number;
   mapName?: string;
+  // Canonical full-map dimensions for WL6 plane data. Required when plane0/plane1 are provided.
   mapWidth?: number;
   mapHeight?: number;
   // Deprecated: runtime derives window origin from world position when possible.
@@ -17,7 +18,7 @@ export interface RuntimeConfig {
   runtimeWindowOriginY?: number;
   plane0?: Uint16Array;
   plane1?: Uint16Array;
-  // Canonical world-space player start (16.8 fixed tile coordinates).
+  // Canonical world-space player start (16.8 fixed tile coordinates), derived from plane1 spawn marker when omitted.
   worldStartXQ8?: number;
   worldStartYQ8?: number;
   // Deprecated: retained for compatibility with older fixtures.
@@ -26,7 +27,9 @@ export interface RuntimeConfig {
   playerStartTileX?: number;
   playerStartTileY?: number;
   playerStartAngleDeg?: number;
-  // Wolf3D skill (0..3). Used for difficulty-gated actor markers when booting full-map levels.
+  // Wolf3D skill input (0..3). Runtime normalizes this to spawn tiers:
+  // 0..1 => easy-only, 2 => easy+medium, 3 => easy+medium+hard.
+  // Defaults to 2 (medium) for WL6 scenario loaders.
   difficulty?: number;
   // Legacy local-window start coordinates. If worldStart* is present these are treated as fallbacks.
   startXQ8: number;

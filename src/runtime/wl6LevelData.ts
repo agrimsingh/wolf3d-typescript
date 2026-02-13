@@ -1,8 +1,6 @@
 import type { RuntimeConfig, RuntimeInput } from './contracts';
 import { buildMapPlanes } from './wl6AssetDecode';
-
-const PLAYER_START_MIN = 19;
-const PLAYER_START_MAX = 22;
+import { angleFromWl6PlayerStartMarker, isWl6PlayerStartMarker } from './wl6Plane1Markers';
 
 export interface Wl6RuntimeScenarioData {
   id: string;
@@ -19,18 +17,6 @@ function fnv1a(hash: number, value: number): number {
   return Math.imul((hash ^ (value >>> 0)) >>> 0, 16777619) >>> 0;
 }
 
-function angleFromPlayerStartTile(tile: number): number {
-  const dir = tile - PLAYER_START_MIN;
-  if (dir < 0 || dir > 3) {
-    return 0;
-  }
-  let angle = (1 - dir) * 90;
-  if (angle < 0) {
-    angle += 360;
-  }
-  return angle | 0;
-}
-
 function findPlayerStart(
   plane1: Uint16Array,
   width: number,
@@ -39,11 +25,11 @@ function findPlayerStart(
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const tile = plane1[y * width + x] ?? 0;
-      if (tile >= PLAYER_START_MIN && tile <= PLAYER_START_MAX) {
+      if (isWl6PlayerStartMarker(tile)) {
         return {
           tileX: x | 0,
           tileY: y | 0,
-          angleDeg: angleFromPlayerStartTile(tile),
+          angleDeg: angleFromWl6PlayerStartMarker(tile),
         };
       }
     }
