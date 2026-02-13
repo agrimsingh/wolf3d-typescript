@@ -1,4 +1,4 @@
-# Runtime Symbol Manifest (WL1 Runtime Path)
+# Runtime Symbol Manifest (WL6 Runtime Path)
 
 Authoritative runtime symbol checklist generated from deterministic trace artifacts and full WOLFSRC classification.
 
@@ -6,7 +6,7 @@ Authoritative runtime symbol checklist generated from deterministic trace artifa
 
 - Current state: `frozen`
 - Source of truth: `specs/generated/runtime-symbol-hits.json` + `specs/generated/wolfsrc-runtime-classification.json`
-- Trace scenarios: 60 (WL1 asset-backed)
+- Trace scenarios: 60 (WL6 asset-backed)
 - Deterministic menu-trace digest: `3960187756`
 - Required runtime trace symbols: 169
 - WOLFSRC required-runtime symbols: 130
@@ -224,4 +224,3 @@ Complete per-symbol evidence is generated in `specs/generated/wolfsrc-runtime-cl
 1. No symbol may move from `required-runtime` to `excluded-non-runtime` without deterministic trace evidence and commit notes.
 2. Phase F4 completion requires all `required-runtime` symbols marked `done` with parity tests.
 3. Any new trace hit must regenerate runtime hits + classification + this manifest before merge.
-

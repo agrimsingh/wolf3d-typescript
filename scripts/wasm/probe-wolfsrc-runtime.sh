@@ -92,7 +92,7 @@ COMMON_FLAGS=(
   -I"$COMPAT_OVERLAY_DIR"
   -I"$SRC_DIR"
   -include "$COMPAT_OVERLAY_DIR/wolfsrc_compat.h"
-  -DWL1
+  -DWL6
   -DWOLF3D
 )
 

@@ -18,6 +18,32 @@ const MODERN_ASSET_BASE_URL = '/assets/wl6-modern';
 const MENU_SHEET_TARGET_ID = 'ui.menu.sheet';
 const GUARD_SHEET_TARGET_ID = 'actor.guard.sheet';
 const WALL_TEXTURE_TARGET_KIND = 'wallTexture';
+const MODERN_WALLS_SOURCE_FILE = 'textures/walls.png';
+const MODERN_WALL_TILE_SIZE = 64;
+const MODERN_WALL_TILE_GAP = 1;
+const MODERN_WALL_GRID_ORIGIN_X = 1;
+const MODERN_WALL_GRID_ORIGIN_Y = 18;
+const DOOR_TILE_MIN = 90;
+const DOOR_TILE_MAX = 101;
+
+const CURATED_WL6_WALL_SLOT_MAP: Array<{ tileId: number; row: number; col: number }> = [
+  // Episode 1 opening room blue wall family.
+  { tileId: 1, row: 2, col: 0 },
+  { tileId: 2, row: 2, col: 1 },
+  { tileId: 3, row: 2, col: 0 },
+  { tileId: 5, row: 1, col: 6 },
+  { tileId: 6, row: 1, col: 7 },
+  { tileId: 7, row: 2, col: 1 },
+  { tileId: 8, row: 1, col: 6 },
+  { tileId: 9, row: 1, col: 7 },
+  // Adjacent light stone band in opening.
+  { tileId: 21, row: 0, col: 2 },
+  // Opening room teal door family.
+  { tileId: 90, row: 7, col: 0 },
+  { tileId: 91, row: 7, col: 1 },
+  { tileId: 100, row: 7, col: 0 },
+  { tileId: 106, row: 7, col: 1 },
+];
 
 function wallAtWindowBits(mapLo: number, mapHi: number, x: number, y: number): boolean {
   if (x < 0 || x >= 8 || y < 0 || y >= 8) {
@@ -75,12 +101,29 @@ function parseVswapWallTextures(bytes: Uint8Array, maxTextures = MAX_WALL_TEXTUR
   return out;
 }
 
+function buildRenderPalette(): [number, number, number][] {
+  const palette: [number, number, number][] = new Array(256);
+  for (let i = 0; i < 256; i++) {
+    const r3 = (i >> 5) & 0x07;
+    const g3 = (i >> 2) & 0x07;
+    const b2 = i & 0x03;
+    const r = ((r3 * 255) / 7) | 0;
+    const g = ((g3 * 255) / 7) | 0;
+    const b = ((b2 * 255) / 3) | 0;
+    palette[i] = [r, g, b];
+  }
+  // Runtime-fixed color indices used by tsRuntime for non-textured spans.
+  palette[2] = [0, 0, 0];
+  palette[6] = [92, 92, 92];
+  palette[29] = [70, 70, 70];
+  palette[228] = [180, 180, 180];
+  return palette;
+}
+
+const RENDER_PALETTE = buildRenderPalette();
+
 function paletteIndexToRgb(index: number): [number, number, number] {
-  const c = index & 0xff;
-  const r = Math.min(255, c * 3);
-  const g = Math.min(255, c * 2);
-  const b = Math.min(255, c + ((c >> 5) * 8));
-  return [r | 0, g | 0, b | 0];
+  return RENDER_PALETTE[index & 0xff] ?? [0, 0, 0];
 }
 
 function clampI32(v: number, minv: number, maxv: number): number {
@@ -94,12 +137,41 @@ function normalizeRadians(angle: number): number {
   return out;
 }
 
-function buildSyntheticPalette(): [number, number, number][] {
-  const palette: [number, number, number][] = new Array(256);
-  for (let i = 0; i < 256; i++) {
-    palette[i] = paletteIndexToRgb(i);
+function wallAtTile(plane0: Uint16Array, mapWidth: number, mapHeight: number, x: number, y: number): boolean {
+  if (x < 0 || y < 0 || x >= mapWidth || y >= mapHeight) {
+    return true;
   }
-  return palette;
+  const tile = plane0[y * mapWidth + x] ?? 0;
+  return (tile & 0xffff) < AREATILE;
+}
+
+function castWallDistance(
+  plane0: Uint16Array,
+  mapWidth: number,
+  mapHeight: number,
+  startX: number,
+  startY: number,
+  dirX: number,
+  dirY: number,
+  maxDistance: number,
+): number {
+  const step = 0.05;
+  let traveled = 0.0;
+  while (traveled <= maxDistance) {
+    const x = startX + dirX * traveled;
+    const y = startY + dirY * traveled;
+    const tx = Math.floor(x);
+    const ty = Math.floor(y);
+    if (wallAtTile(plane0, mapWidth, mapHeight, tx, ty)) {
+      return traveled;
+    }
+    traveled += step;
+  }
+  return Number.POSITIVE_INFINITY;
+}
+
+function buildSyntheticPalette(): [number, number, number][] {
+  return RENDER_PALETTE;
 }
 
 function nearestPaletteIndex(
@@ -226,10 +298,59 @@ export class WolfApp {
         return false;
       }
 
-      // Fill up to runtime wall slots by repeating curated modern textures.
+      // Fill runtime slots with a coherent blue-wall default first.
       const expanded: Uint8Array[] = [];
+
+      // Then force specific wall tile ids to known-correct atlas locations.
+      let wallsImage = imageCache.get(MODERN_WALLS_SOURCE_FILE) ?? null;
+      if (!wallsImage) {
+        wallsImage = new Image();
+        wallsImage.src = `${MODERN_ASSET_BASE_URL}/${MODERN_WALLS_SOURCE_FILE}`;
+        await wallsImage.decode();
+        imageCache.set(MODERN_WALLS_SOURCE_FILE, wallsImage);
+      }
+      const defaultBlueRect = {
+        x: MODERN_WALL_GRID_ORIGIN_X + 0 * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
+        y: MODERN_WALL_GRID_ORIGIN_Y + 2 * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
+        w: MODERN_WALL_TILE_SIZE,
+        h: MODERN_WALL_TILE_SIZE,
+      };
+      const defaultBlue = this.extractModernWallTexture(wallsImage, defaultBlueRect, palette) ?? extracted[0]!;
       for (let i = 0; i < MAX_WALL_TEXTURES; i++) {
-        expanded.push(extracted[i % extracted.length]!.slice());
+        expanded.push(defaultBlue.slice());
+      }
+      for (const mapping of CURATED_WL6_WALL_SLOT_MAP) {
+        const slot = (mapping.tileId - 1) | 0;
+        if (slot < 0 || slot >= MAX_WALL_TEXTURES) {
+          continue;
+        }
+        const rect = {
+          x: MODERN_WALL_GRID_ORIGIN_X + mapping.col * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
+          y: MODERN_WALL_GRID_ORIGIN_Y + mapping.row * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
+          w: MODERN_WALL_TILE_SIZE,
+          h: MODERN_WALL_TILE_SIZE,
+        };
+        const texture = this.extractModernWallTexture(wallsImage, rect, palette);
+        if (texture) {
+          expanded[slot] = texture;
+        }
+      }
+      for (let tileId = DOOR_TILE_MIN; tileId <= DOOR_TILE_MAX; tileId++) {
+        const slot = (tileId - 1) | 0;
+        if (slot < 0 || slot >= MAX_WALL_TEXTURES) {
+          continue;
+        }
+        const col = (tileId & 1) === 0 ? 0 : 1;
+        const rect = {
+          x: MODERN_WALL_GRID_ORIGIN_X + col * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
+          y: MODERN_WALL_GRID_ORIGIN_Y + 7 * (MODERN_WALL_TILE_SIZE + MODERN_WALL_TILE_GAP),
+          w: MODERN_WALL_TILE_SIZE,
+          h: MODERN_WALL_TILE_SIZE,
+        };
+        const texture = this.extractModernWallTexture(wallsImage, rect, palette);
+        if (texture) {
+          expanded[slot] = texture;
+        }
       }
       this.controller.setWallTextures(expanded);
       return true;
@@ -567,7 +688,7 @@ export class WolfApp {
     }
 
     this.ctx.putImageData(this.image, 0, 0);
-    this.drawActorSprites(snapshot);
+    this.drawActorSprites(snapshot, scenario ?? null);
     this.drawHudOverlay();
     this.drawMiniMap(mapLo, mapHi, snapshot, scenario ?? null);
 
@@ -598,7 +719,7 @@ export class WolfApp {
     this.ctx.restore();
   }
 
-  private drawActorSprites(snapshot: RuntimeSnapshot): void {
+  private drawActorSprites(snapshot: RuntimeSnapshot, scenario: RuntimeScenario | null): void {
     if (!this.guardSprite) {
       return;
     }
@@ -623,14 +744,25 @@ export class WolfApp {
 
     this.ctx.save();
     this.ctx.imageSmoothingEnabled = false;
+    const plane0 = scenario?.config.plane0 ?? null;
+    const mapWidth = scenario?.config.mapWidth ?? 0;
+    const mapHeight = scenario?.config.mapHeight ?? 0;
 
     for (const actor of actors) {
-      this.drawActorSprite(actor, posX, posY, angleRad);
+      this.drawActorSprite(actor, posX, posY, angleRad, plane0, mapWidth, mapHeight);
     }
     this.ctx.restore();
   }
 
-  private drawActorSprite(actor: RuntimeDebugActor, posX: number, posY: number, angleRad: number): void {
+  private drawActorSprite(
+    actor: RuntimeDebugActor,
+    posX: number,
+    posY: number,
+    angleRad: number,
+    plane0: Uint16Array | null,
+    mapWidth: number,
+    mapHeight: number,
+  ): void {
     if (!this.guardSprite) {
       return;
     }
@@ -642,6 +774,14 @@ export class WolfApp {
     const dist = Math.hypot(relX, relY);
     if (dist < 0.2 || dist > 16) {
       return;
+    }
+    if (plane0 && mapWidth > 0 && mapHeight > 0) {
+      const dirX = relX / Math.max(0.0001, dist);
+      const dirY = relY / Math.max(0.0001, dist);
+      const wallDistance = castWallDistance(plane0, mapWidth, mapHeight, posX, posY, dirX, dirY, dist);
+      if (wallDistance + 0.08 < dist) {
+        return;
+      }
     }
 
     const delta = normalizeRadians(Math.atan2(-relY, relX) - angleRad);
