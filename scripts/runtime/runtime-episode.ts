@@ -108,7 +108,7 @@ export interface RuntimeEpisodeArtifact {
 export async function computeRuntimeEpisodeArtifact(rootDir: string, stepsPerMap = 64): Promise<RuntimeEpisodeArtifact> {
   const fixtures = await loadRuntimeScenarios(rootDir, stepsPerMap);
   if (fixtures.length === 0) {
-    throw new Error('No runtime fixtures found. Run `pnpm verify:assets` and `pnpm verify:assets:wl6` to install/validate data files.');
+    throw new Error('No runtime fixtures found. Run `pnpm verify:assets:wl6` to install/validate WL6 data files.');
   }
 
   const oracle = new WolfsrcOraclePort();

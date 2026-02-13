@@ -174,10 +174,10 @@ export class RuntimeAppController {
     if (key('KeyE') || key('Enter')) inputMask |= 1 << 7;
 
     if (this.mouseTurnAccumulator <= -2) {
-      inputMask |= 1 << 3;
+      inputMask |= 1 << 2;
       this.mouseTurnAccumulator += 2;
     } else if (this.mouseTurnAccumulator >= 2) {
-      inputMask |= 1 << 2;
+      inputMask |= 1 << 3;
       this.mouseTurnAccumulator -= 2;
     }
 

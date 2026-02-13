@@ -1314,8 +1314,8 @@ export class TsRuntimePort implements RuntimePort {
 
     if (inputMask & (1 << 0)) forward += 32;
     if (inputMask & (1 << 1)) forward -= 32;
-    if (inputMask & (1 << 2)) turn -= 8;
-    if (inputMask & (1 << 3)) turn += 8;
+    if (inputMask & (1 << 2)) turn += 8;
+    if (inputMask & (1 << 3)) turn -= 8;
     if (inputMask & (1 << 4)) strafe -= 24;
     if (inputMask & (1 << 5)) strafe += 24;
 
