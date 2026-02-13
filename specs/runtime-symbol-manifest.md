@@ -224,3 +224,4 @@ Complete per-symbol evidence is generated in `specs/generated/wolfsrc-runtime-cl
 1. No symbol may move from `required-runtime` to `excluded-non-runtime` without deterministic trace evidence and commit notes.
 2. Phase F4 completion requires all `required-runtime` symbols marked `done` with parity tests.
 3. Any new trace hit must regenerate runtime hits + classification + this manifest before merge.
+
