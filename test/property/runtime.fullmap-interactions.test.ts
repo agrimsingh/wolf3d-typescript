@@ -81,4 +81,36 @@ describe('runtime full-map interactions', () => {
     expect(after.health >= before.health || after.ammo >= before.ammo).toBe(true);
     await runtime.shutdown();
   });
+
+  it('door tile render hash differs from wall tile render hash', async () => {
+    const width = 16;
+    const height = 16;
+    const plane1 = makePlane(width, height, 0);
+    const textures: Uint8Array[] = [];
+    for (let i = 0; i < 128; i++) {
+      textures.push(new Uint8Array(4096).fill((i + 10) & 0xff));
+    }
+
+    const planeDoor = makePlane(width, height, AREATILE);
+    addBorderWalls(planeDoor, width, height);
+    planeDoor[5 * width + 6] = 90;
+
+    const planeWall = makePlane(width, height, AREATILE);
+    addBorderWalls(planeWall, width, height);
+    planeWall[5 * width + 6] = 1;
+
+    const runtimeDoor = new TsRuntimePort();
+    await runtimeDoor.bootWl6(baseConfig(planeDoor, plane1, width, height));
+    runtimeDoor.setWallTextures(textures);
+    const hashDoor = runtimeDoor.framebuffer(true).indexedHash >>> 0;
+    await runtimeDoor.shutdown();
+
+    const runtimeWall = new TsRuntimePort();
+    await runtimeWall.bootWl6(baseConfig(planeWall, plane1, width, height));
+    runtimeWall.setWallTextures(textures);
+    const hashWall = runtimeWall.framebuffer(true).indexedHash >>> 0;
+    await runtimeWall.shutdown();
+
+    expect(hashDoor).not.toBe(hashWall);
+  });
 });

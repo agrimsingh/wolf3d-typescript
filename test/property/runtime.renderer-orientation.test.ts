@@ -83,11 +83,11 @@ function castRayForTest(
   return null;
 }
 
-function buildRowMajorTexture(): Uint8Array {
+function buildColumnMajorTexture(): Uint8Array {
   const texture = new Uint8Array(64 * 64);
   for (let x = 0; x < 64; x++) {
     for (let y = 0; y < 64; y++) {
-      texture[y * 64 + x] = x & 0xff;
+      texture[x * 64 + y] = x & 0xff;
     }
   }
   return texture;
@@ -130,7 +130,7 @@ describe('runtime renderer orientation', () => {
       startAmmo: 8,
     };
 
-    runtime.setWallTextures([buildRowMajorTexture()]);
+    runtime.setWallTextures([buildColumnMajorTexture()]);
     await runtime.init(config);
     runtime.reset();
 

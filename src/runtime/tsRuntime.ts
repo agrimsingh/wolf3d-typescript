@@ -1,10 +1,12 @@
 import type {
+  DecodedVswapAssetIndex,
   RuntimeConfig,
   RuntimeCoreSnapshot,
   RuntimeFramebufferView,
   RuntimeFrameInput,
   RuntimeInput,
   RuntimePort,
+  RuntimeSpriteDecoder,
   RuntimeSnapshot,
   RuntimeStepResult,
 } from './contracts';
@@ -159,6 +161,7 @@ import {
   wlTextEndTextHash,
   wlTextHelpScreensHash,
 } from '../wolf/menu/wlMenuText';
+import { spriteIdForActorKind } from './wl6SpriteMap';
 
 export const RUNTIME_CORE_KIND = 'real' as const;
 
@@ -866,6 +869,8 @@ export class TsRuntimePort implements RuntimePort {
   private bootAngleFrac = 0;
   private wallTextures: Uint8Array[] = [];
   private drawProceduralActorSprites = true;
+  private vswapAssetIndex: DecodedVswapAssetIndex | null = null;
+  private spriteDecoder: RuntimeSpriteDecoder | null = null;
   private fullMap: FullMapState = {
     enabled: false,
     width: 0,
@@ -901,8 +906,66 @@ export class TsRuntimePort implements RuntimePort {
     this.wallTextures = textures.slice();
   }
 
+  setVswapAssetIndex(index: DecodedVswapAssetIndex): void {
+    this.vswapAssetIndex = index;
+  }
+
+  setSpriteDecoder(decoder: RuntimeSpriteDecoder): void {
+    this.spriteDecoder = decoder;
+  }
+
   setProceduralActorSpritesEnabled(enabled: boolean): void {
     this.drawProceduralActorSprites = !!enabled;
+  }
+
+  private resolveWallTextureSlot(tile: number, side: 0 | 1): number {
+    const t = tile & 0xffff;
+    if (t >= 1 && t <= 63) {
+      return side === 0 ? ((2 * t) - 1) : ((2 * t) - 2);
+    }
+    if (t >= DOOR_TILE_MIN && t <= DOOR_TILE_MAX) {
+      switch (t) {
+        case 90:
+          return 99;
+        case 91:
+          return 98;
+        case 92:
+          return 105;
+        case 93:
+          return 104;
+        case 94:
+          return 105;
+        case 95:
+          return 104;
+        case 100:
+          return 103;
+        case 101:
+          return 102;
+        default:
+          return 98;
+      }
+    }
+    return Math.max(0, (t - 1) | 0);
+  }
+
+  private sampleWallTexel(tile: number, side: 0 | 1, texX: number, texY: number): number {
+    if (this.wallTextures.length <= 0) {
+      let wallIndex = (96 + ((tile + texX * 3 + texY * 5) & 0x3f)) & 0xff;
+      if (side === 1) {
+        wallIndex = (wallIndex - 16) & 0xff;
+      }
+      return wallIndex & 0xff;
+    }
+
+    const slot = this.resolveWallTextureSlot(tile, side);
+    const texture = this.wallTextures[Math.abs(slot) % this.wallTextures.length];
+    if (!texture || texture.length < 4096) {
+      return 96;
+    }
+    const sx = texX & 63;
+    const sy = texY & 63;
+    // VSWAP-native texture layout: column-major.
+    return texture[(sx * 64 + sy) & 4095] ?? 0;
   }
 
   private refreshMapWindowFromWorld(recenterWindow: boolean): void {
@@ -2576,27 +2639,90 @@ export class TsRuntimePort implements RuntimePort {
       const top = Math.max(0, (FRAME_HEIGHT / 2 - wallHeight / 2) | 0);
       const bottom = Math.min(FRAME_HEIGHT - 1, top + wallHeight);
       const tile = plane0[hit.tileY * mapWidth + hit.tileX] ?? 0;
-      const texture = this.wallTextures.length > 0
-        ? this.wallTextures[Math.abs((tile - 1) & 0xffff) % this.wallTextures.length]
-        : null;
-      let wallIndex = (96 + ((tile + hit.tileX * 3 + hit.tileY * 5) & 0x3f)) & 0xff;
-      if (hit.side === 1) {
-        wallIndex = (wallIndex - 16) & 0xff;
-      }
 
       for (let y = top; y <= bottom; y++) {
-        if (texture) {
-          const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
-          const sampleX = hit.texX & 63;
-          // VSWAP wall textures are stored row-major (y-major then x).
-          indexed[y * FRAME_WIDTH + x] = texture[(ty * 64 + sampleX) & 4095] ?? wallIndex;
-        } else {
-          indexed[y * FRAME_WIDTH + x] = wallIndex;
-        }
+        const ty = ((((y - top) * 64) / Math.max(1, wallHeight)) | 0) & 63;
+        indexed[y * FRAME_WIDTH + x] = this.sampleWallTexel(tile, hit.side, hit.texX, ty);
       }
     }
 
-    if (this.drawProceduralActorSprites && this.fullMap.actors.length > 0) {
+    if (!this.drawProceduralActorSprites && this.spriteDecoder && this.fullMap.actors.length > 0) {
+      const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);
+      liveActors.sort((a, b) => {
+        const adx = (a.xQ8 | 0) / 256 - posX;
+        const ady = (a.yQ8 | 0) / 256 - posY;
+        const bdx = (b.xQ8 | 0) / 256 - posX;
+        const bdy = (b.yQ8 | 0) / 256 - posY;
+        const da = (adx * adx) + (ady * ady);
+        const db = (bdx * bdx) + (bdy * bdy);
+        return db - da;
+      });
+
+      for (const actor of liveActors) {
+        const actorX = (actor.xQ8 | 0) / 256;
+        const actorY = (actor.yQ8 | 0) / 256;
+        const relX = actorX - posX;
+        const relY = actorY - posY;
+        const dist = Math.hypot(relX, relY);
+        if (dist < 0.12 || dist > 16) {
+          continue;
+        }
+
+        let delta = Math.atan2(-relY, relX) - angleRad;
+        while (delta < -Math.PI) delta += Math.PI * 2;
+        while (delta > Math.PI) delta -= Math.PI * 2;
+        if (Math.abs(delta) > (RENDER_FOV * 0.65)) {
+          continue;
+        }
+
+        const spriteId = spriteIdForActorKind(actor.kind | 0);
+        const sprite = this.spriteDecoder.decodeSprite(spriteId);
+        if (!sprite || sprite.lastCol < sprite.firstCol || sprite.pixelPool.length <= 0) {
+          continue;
+        }
+
+        const screenX = ((delta / RENDER_FOV) + 0.5) * FRAME_WIDTH;
+        const spriteH = clampI32((FRAME_HEIGHT / dist) | 0, 12, 120);
+        const spriteW = clampI32((spriteH * 64 / 64) | 0, 10, 128);
+        const left = ((screenX - (spriteW / 2)) | 0);
+        const top = clampI32(((FRAME_HEIGHT / 2 - spriteH / 2) | 0), -spriteH, FRAME_HEIGHT);
+
+        const firstCol = sprite.firstCol | 0;
+        const lastCol = sprite.lastCol | 0;
+        const colCount = (lastCol - firstCol + 1) | 0;
+        for (let c = 0; c < colCount; c++) {
+          const spriteCol = firstCol + c;
+          const screenCol = left + ((spriteCol * spriteW / 64) | 0);
+          if (screenCol < 0 || screenCol >= FRAME_WIDTH) {
+            continue;
+          }
+          if (dist >= (depth[screenCol] ?? 1e9)) {
+            continue;
+          }
+          const posts = sprite.postsByColumn[c] ?? [];
+          if (posts.length === 0) {
+            continue;
+          }
+          for (const post of posts) {
+            const start = clampI32(post.startRow, 0, 63);
+            const end = clampI32(post.endRow, 0, 64);
+            for (let row = start; row < end; row++) {
+              const localY = ((row * spriteH / 64) | 0);
+              const screenY = top + localY;
+              if (screenY < 0 || screenY >= FRAME_HEIGHT) {
+                continue;
+              }
+              const srcOffset = (post.pixelOffset + (row - start)) | 0;
+              if (srcOffset < 0 || srcOffset >= sprite.pixelPool.length) {
+                continue;
+              }
+              const color = sprite.pixelPool[srcOffset] ?? 0;
+              indexed[screenY * FRAME_WIDTH + screenCol] = color & 0xff;
+            }
+          }
+        }
+      }
+    } else if (this.drawProceduralActorSprites && this.fullMap.actors.length > 0) {
       const liveActors = this.fullMap.actors.filter((actor) => (actor.hp | 0) > 0);
       liveActors.sort((a, b) => {
         const adx = (a.xQ8 | 0) / 256 - posX;
